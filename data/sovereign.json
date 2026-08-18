@@ -1,12 +1,12 @@
 {
   "_schema": "Gate 1 Tier A — national tests. Methodology §2.1. Tests A1, A2, A4 are binary gates; A3 is scored 0-1 (see §2.1 rationale).",
-  "_sourced": "2026-08-17",
+  "_sourced": "2026-08-18",
 
   "tests": {
     "A1_monetary_sovereignty": "Own currency; freely floating; not a global reserve currency; not in a currency union. BINARY.",
     "A2_solvency": "General government net debt/GDP <= 60% AND interest/revenue <= 10%. BINARY.",
     "A3_gold_as_export": "Gold's share of national goods exports. SCORED 0-1, not gated — failing means the state has no stake in defending you, not that it will expropriate.",
-    "A4_requisition": "No gold confiscation, monopsony purchase mandate or forced domestic sale in the modern era, INCLUDING statutory powers suspended rather than repealed. BINARY."
+    "A4_requisition": "No confiscation, compulsory delivery, administered monopsony or gold-export prohibition currently in operation; any dormant power requires a new public legislative or executive instrument before activation; and compulsory acquisition provides a published compensation mechanism or judicial review. Historical use and ease of activation are disclosed residual risks, not automatic failures. BINARY."
   },
 
   "countries": [
@@ -18,10 +18,10 @@
              "source": "https://tradingeconomics.com/australia/government-debt-to-gdp", "as_of": "2026-05"},
       "A3": {"score": 1.0, "note": "Gold has OVERTAKEN COAL as Australia's second-largest export by value, behind iron ore only — approximately A$68bn this financial year. The strongest single data point supporting the index thesis, and absent from v1.0.",
              "source": "https://www.australianresourcesandinvestment.com.au/2026/08/07/its-unprecedented-four-investor-takeaways-from-diggers-dealers-2026", "as_of": "2026-08"},
-      "A4": {"pass": null, "note": "QUERY, PARKED BY COMMITTEE 2026-08-17. Banking Act 1959 (Cth) Part IV contained gold requisition powers requiring delivery of privately held gold to the Reserve Bank. Suspended by proclamation January 1976; repeal status unconfirmed. If still on the statute book in suspended form it is reactivable by proclamation. Requires Australian counsel, not a search engine.",
-             "source": "unverified", "status": "accepted risk, §13.1"},
+      "A4": {"pass": true, "note": "Banking Act 1959 (Cth) Part IV remains in the current compilation but is inactive under s40(1). Activation requires a new public Proclamation under s40(2). If compulsory delivery is activated, s44 provides either payment at a Reserve Bank-published price or a court compensation action. Passes the revised safeguards test; ease of activation and administered-price risk remain disclosed residual risks.",
+             "source": "https://www.legislation.gov.au/C1959A00006/2026-03-31/2026-03-31/text/original/epub/OEBPS/document_1/document_1.html", "as_of": "2026-03-31", "status": "pass with residual risk, §11.1"},
       "verdict": "PASS",
-      "constitutional_note": "s51(xxxi) requires acquisition of property on just terms, with live precedent protecting mining tenements — Newcrest Mining v Commonwealth (1997) 190 CLR 513, where sterilisation of tenements by Kakadu proclamations was held an acquisition requiring compensation. CAVEAT: s51(xxxi) binds the Commonwealth, not the States. Mining tenure is granted under the WA Mining Act 1978 and state parliaments are not subject to the guarantee. Parked as an accepted risk (§13.1); it carries most of the residual jurisdictional risk in a ~100% Australian portfolio."
+      "constitutional_note": "s51(xxxi) requires acquisition of property on just terms, with live precedent protecting mining tenements — Newcrest Mining v Commonwealth (1997) 190 CLR 513, where sterilisation of tenements by Kakadu proclamations was held an acquisition requiring compensation. CAVEAT: s51(xxxi) binds the Commonwealth, not the States. Mining tenure is granted under the WA Mining Act 1978 and state parliaments are not subject to the guarantee. Parked as an accepted risk (§11.1); it carries most of the residual jurisdictional risk in a ~100% Australian portfolio."
     },
     {
       "iso": "NZ", "name": "New Zealand",
@@ -38,8 +38,8 @@
       "A2": {"pass": false, "note": "General government gross debt above 100% of GDP in 2026 (federal plus provincial), grouped by the IMF with Italy, France, Belgium, the UK and the US. Net is materially lower owing to public pension assets, but the general government gross position fails the threshold as specified.",
              "source": "IMF Fiscal Monitor April 2026", "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2026/april/english/msa.pdf"},
       "A3": {"score": 0.5, "note": "Gold a significant but not dominant export."},
-      "A4": {"pass": false, "note": "Foreign Exchange Control Act 1939-1951 — the Foreign Exchange Control Board required residents to surrender foreign exchange and gold. A modern-era requisition precedent."},
-      "verdict": "FAIL (marginal on A2, fails A4)",
+      "A4": {"pass": null, "note": "Foreign Exchange Control Act 1939-1951 required residents to surrender foreign exchange and gold. That history remains disclosed but is no longer an automatic failure under the revised A4 test; current-law activation and compensation safeguards require review."},
+      "verdict": "FAIL on A2 as currently recorded; A4 review pending",
       "note": "Consequence: Red Lake (Evolution) and Sugar Zone (Vault) are ineligible ounces. Agnico Eagle excluded at entity level."
     },
     {
@@ -58,8 +58,8 @@
              "note": "Net debt ~100% of GDP rising to just under 120% by 2029. Gross 126% in 2026 rising to 142% by 2031 — the largest absolute deterioration among advanced economies. Primary deficits averaging 6.7% of GDP for 2027-2031, against the ~3.5% associated with debt stabilisation.",
              "source": "IMF Fiscal Monitor April 2026", "url": "https://www.imf.org/en/publications/fm/issues/2026/04/15/fiscal-monitor-april-2026"},
       "A3": {"score": 0.02, "note": "US gold output ~155-170 t/yr is immaterial to exports and the sector is politically small. No constituency defends it."},
-      "A4": {"pass": false, "note": "EO 6102 (Apr 1933) confiscated privately held gold. Gold Reserve Act (Jan 1934) revalued $20.67 to $35 AFTER the state took possession, and required newly mined domestic gold be sold to the Treasury at the official price — monopsony, not seizure. WPB Order L-208 (Oct 1942) ordered non-essential gold mines shut outright to redirect labour and equipment, without compensation."},
-      "verdict": "FAIL (0 of 4)",
+      "A4": {"pass": null, "note": "EO 6102 (Apr 1933), the Gold Reserve Act (Jan 1934), and WPB Order L-208 (Oct 1942) remain material historical warnings but are no longer automatic failures under the revised A4 test; current-law activation and compensation safeguards require review."},
+      "verdict": "FAIL on A1 and A2; A4 review pending",
       "thesis_note": "The realistic mechanism is not nationalisation of producers — US mine output at ~$20bn/yr against a $37tn debt stock is fiscally irrelevant. The prize is the stock: 8,133 t in the Treasury's gold certificate account still carried at $42.22/oz. Revaluing that requires touching no mining company. The risk to producers is monopsony purchase at an administered price, plus capital and export controls. Consequence for the index: Pogo (Northern Star) is ineligible ounces, and every US-domiciled producer is out."
     }
   ]

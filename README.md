@@ -85,14 +85,19 @@ the machinery:
   does the adjustment for it. A reserve issuer has both a unique motive and unique
   tools.
 - **Solvent sovereign** — net debt ≤ 60% of GDP and interest ≤ 10% of revenue.
-- **No requisition history, and no sleeping powers** — no confiscation, monopsony
-  purchase mandate or forced domestic sale in the modern era, *including statutory
-  powers suspended rather than repealed.* A dormant power is a live one.
+- **No operative gold-control regime, and bounded dormant powers** — no
+  confiscation, compulsory delivery, administered monopsony or gold-export ban
+  is currently in force. A dormant power can pass only if activation requires a
+  new public act and compulsory acquisition carries a published compensation or
+  judicial-review route.
 
 Nothing here promises a state *cannot* take your gold. The claim is narrower and
-testable: these are places with no record of doing it, no law still on the books
-permitting it, and no structural reason to want to. It is a measured judgement
-about relative likelihood, and the measurements are in the repository.
+testable: no coercive gold regime is operating today, and latent machinery cannot
+be activated silently or operate without a compensation path. Historical use and
+ease of activation remain disclosed residual risks rather than permanent vetoes.
+Australia passes this narrower test: Part IV of the Banking Act is inactive,
+activation requires a public Proclamation, and s44 provides a published-price or
+court-compensation route. That is a bounded risk, not an assertion of immunity.
 
 **Gate 2 — who is still standing.** *Does this company reach the other side of a
 40% real gold drawdown without issuing equity?* Cash, undrawn facilities, free
@@ -200,7 +205,7 @@ considered and rejected, and why Gate 2 exists at all.
 
 | Scenario | How this index behaves |
 |---|---|
-| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 43% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency and no requisition statute has neither the motive nor the machinery to come for the metal. |
+| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 43% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency, no operative gold-control regime and only publicly activated, compensable dormant powers has materially less motive and immediate machinery to come for the metal. |
 | **The sector consolidates** | You are holding the list an acquirer screens for. Evidenced above, and running now. |
 | **Gold flat, miners de-rate** | The plain value case. Nothing needs to happen to the gold price; the position pays if A$ per ounce mean-reverts toward what the market pays elsewhere. |
 | **Gold drawdown** | You lose money. Nothing here is a hedge and the book is geared. What Gate 2 buys is that the loss is not made *permanent*: every constituent reaches the far side of a 40% real drawdown without issuing equity, so the ounces behind each share are the ones you started with. Dilution at the bottom is how gold equity holders were destroyed in the last cycle. |

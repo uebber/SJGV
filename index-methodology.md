@@ -18,8 +18,8 @@
 ## 0. Objective
 
 > **Own the largest possible claim on future unhedged gold ounces, per euro
-> invested, in jurisdictions with no record of taking them and no live power to
-> — and survive the drawdown in between.**
+> invested, in jurisdictions with no operative gold-control regime and no
+> unbounded dormant route to impose one — and survive the drawdown in between.**
 
 Formally:
 
@@ -113,7 +113,7 @@ Applied to the country of *asset location*, not of listing or incorporation.
 | A1 | **Monetary sovereignty** | Own currency; freely floating; not a global reserve currency; not a member of a currency union | Pass/Fail |
 | A2 | **Sovereign solvency** | General government net debt/GDP; interest/revenue; net international investment position | Net debt ≤ 60% of GDP **and** interest ≤ 10% of revenue |
 | A3 | **Gold as strategic export** | Gold's share of national goods exports | **Disclosed, not gated** — see note |
-| A4 | **Requisition history & dormant powers** | Gold confiscation, monopsony purchase mandates, or forced domestic sale in the modern era; **including statutory powers currently suspended rather than repealed** | Zero, and no live dormant power |
+| A4 | **Current gold controls & dormant-power safeguards** | (1) No confiscation, compulsory delivery, administered monopsony or gold-export prohibition currently in operation; (2) any dormant power requires a new public legislative or executive instrument before activation; and (3) compulsory acquisition provides a published compensation mechanism or judicial review | All three conditions must pass |
 
 **Rationale for A1.** A country whose currency devalues freely has no need to
 repress gold — the FX does the adjustment continuously and without policy
@@ -130,15 +130,25 @@ expropriation risk. **A3 is binary, and no
 code ever read it.** It is now disclosed per jurisdiction and reasoned about, not
 converted to a number that does nothing.
 
+**Rationale for A4, and why history is disclosed rather than gated.** An absolute
+ban on every dormant provision makes the investable set depend on statute-book
+hygiene rather than on the practical risk of losing the gold, and can empty the
+universe without distinguishing bounded from unbounded powers. A dormant power
+therefore does not fail merely by existing. It passes only when no gold-control
+regime is operating, activation requires a new public act, and compulsory
+acquisition has a published compensation or court-review route. Historical use
+and ease of activation remain disclosed residual risks. An operative regime, a
+silent activation route, or an uncompensated compulsory-acquisition power fails.
+
 ### 2.2 Tier A outcome as at August 2026
 
 | Country | A1 | A2 | A3 | A4 | Verdict |
 |---------|----|----|----|----|---------|
-| **Australia** | Pass — AUD free-floating, non-reserve, commodity currency | Pass — net debt ~19–20% of GDP, gross ~51% | **Strong — gold is the #2 export at ~A$68bn, having overtaken coal** | Query — Banking Act 1959 Pt IV *suspended* by proclamation Jan 1976, repeal status unconfirmed | **PASS** |
+| **Australia** | Pass — AUD free-floating, non-reserve, commodity currency | Pass — net debt ~19–20% of GDP, gross ~51% | **Strong — gold is the #2 export at ~A$68bn, having overtaken coal** | **Pass with residual risk** — Banking Act 1959 Pt IV is inactive; s40 requires a public Proclamation to activate it and s44 provides a published-price or court-compensation route | **PASS** |
 | New Zealand | Pass | Pass | Weak — immaterial to exports | Pass | **Pass** (no eligible listed vehicle) |
-| Canada | Pass | Marginal — general government gross >100% | Moderate | Query — Foreign Exchange Control Act 1939–51 | **Marginal — fail pending review** |
+| Canada | Pass | Marginal — general government gross >100% | Moderate | Review — the 1939–51 precedent is disclosed but no longer an automatic failure; current safeguards review pending | **FAIL on A2 as recorded; A4 review pending** |
 | Finland | **Fail — euro membership** | **Fail — gross ~80% and rising** | Weak | Pass | **FAIL (1 of 4)** |
-| United States | **Fail — reserve issuer** | **Fail — net 100% → ~120%; gross 126% → 142% by 2031** | **Weak** | **Fail — EO 6102 (1933), Gold Reserve Act (1934), WPB Order L-208 (1942)** | **FAIL (0 of 4)** |
+| United States | **Fail — reserve issuer** | **Fail — net 100% → ~120%; gross 126% → 142% by 2031** | **Weak** | Review — 1933–42 interventions are disclosed but no longer an automatic failure; current safeguards review pending | **FAIL on A1 and A2; A4 review pending** |
 
 Norway, Sweden and Switzerland pass cleanly and host no gold mining of scale.
 **Australia is the only Tier A pass with a material industry.**
@@ -880,13 +890,13 @@ Investors must understand four things:
    unencumbered physical held in a third jurisdiction addresses that, and this
    index does not claim to.
 
-### 11.1 Accepted risks — parked by committee decision
+### 11.1 Accepted residual risks — disclosed by committee decision
 
-Not resolved; accepted unquantified. Both are disclosure items.
+Not eliminated; accepted unquantified. Both are disclosure items.
 
 | Item | Nature of the residual risk |
 |------|------------------------------|
-| **Banking Act 1959 (Cth) Part IV** | Gold requisition powers suspended by proclamation in January 1976; repeal status unconfirmed. If the power remains on the statute book in suspended form, it is reactivable by proclamation — a Tier A A4 exposure the index does not currently price. |
+| **Banking Act 1959 (Cth) Part IV** | Part IV remains in the current compilation but is inactive under s40(1). Activation requires a public Proclamation under s40(2), and s44 provides a Reserve Bank published-price mechanism or a court compensation action. Australia therefore passes the revised A4 safeguards test; ease of activation and administered-price risk remain unpriced residual risks. |
 | **s51(xxxi) does not bind the States** | The constitutional just-terms guarantee reaches the Commonwealth. Mining tenure is granted under the WA Mining Act 1978, and state parliaments are not subject to it. In a ~100% Australian, predominantly Western Australian portfolio, this single question carries most of the residual jurisdictional risk in the product. |
 
 ---
@@ -974,7 +984,7 @@ be able to hand us, and how sure are we?**
 | `pp_moz` | Proven & Probable reserves | The **in-the-money strip** — ounces inside a funded mine plan at a published cost. This is the floor under the claim: the part that converts to metal without needing the gold price to do anything. | **1.03pp** |
 | `mi_non_reserve_moz` | Measured & Indicated resource not yet booked as reserve | The **near-money option, and the largest single source of the index's convexity.** Drilled densely enough to support a mine plan, not yet economic at the company's own price deck. These are precisely the ounces a rising gold price converts into reserves — the mechanism §0.2 says the product exists to own. | **0.65pp** |
 | `inferred_moz` | Inferred resource | The **far out-of-the-money tail.** Geologically real, sparsely drilled, worth little unless the price moves a long way — which is the exact payoff shape the sovereign-debasement thesis is buying. | **0.43pp** |
-| `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce a state can requisition is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. | **0.12pp** |
+| `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce exposed to an operative or unbounded gold-control regime is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. | **0.12pp** |
 | `hedge_share_fwd24m` | Production already sold forward | A sold-forward ounce is **a short gold position inside a long gold product.** It converts at a fixed price and cannot participate in the move the index exists to capture, so it is subtracted from the claim rather than scored against it. | **0.06pp** |
 | `production_koz_yr` | Annual production rate | In the ledger it does one job: converting the disclosed hedge *percentage* into hedged *ounces*. (Also a Gate 2 input, where it does much more.) | via hedge |
 | `confidence_weights.proven_probable` = 1.0 | Reserve ounce = the unit of account | The numéraire of the ledger. Every other ounce is priced relative to this one, so it is definitional rather than tunable. | **0.74pp** |
