@@ -1,12 +1,12 @@
 {
-  "_schema": "Gate 1 Tier A — national tests. Methodology §2.1. Tests A1, A2, A4 are binary gates; A3 is scored 0-1 (see §2.1 rationale).",
-  "_sourced": "2026-08-17",
+  "_schema": "Gate 1 Tier A — national tests. Methodology §2.1. Tests A1, A2, A4 are binary gates; A3 is scored 0-1 (see §2.1 rationale). A4 is PRESENT TENSE as of the v1.1 amendment: it asks whether a gold-control regime is in operation, not whether one ever was. Dormant statutory powers and historical use are recorded per country and carried as disclosed residual risk (§11.1), not gated.",
+  "_sourced": "2026-08-18",
 
   "tests": {
     "A1_monetary_sovereignty": "Own currency; freely floating; not a global reserve currency; not in a currency union. BINARY.",
     "A2_solvency": "General government net debt/GDP <= 60% AND interest/revenue <= 10%. BINARY.",
     "A3_gold_as_export": "Gold's share of national goods exports. SCORED 0-1, not gated — failing means the state has no stake in defending you, not that it will expropriate.",
-    "A4_requisition": "No gold confiscation, monopsony purchase mandate or forced domestic sale in the modern era, INCLUDING statutory powers suspended rather than repealed. BINARY."
+    "A4_gold_controls_in_operation": "No confiscation, compulsory delivery, administered monopsony or gold-export prohibition IN FORCE at the review date, verified against primary law. BINARY. Dormant powers and historical use do NOT fail this test; they are recorded in `dormant_powers` / `history` and disclosed under §11.1. See §2.1 for why the v1.0 formulation — which gated on history and on suspended-not-repealed powers — was withdrawn: Australia failed it, and was recorded PASS anyway."
   },
 
   "countries": [
@@ -18,28 +18,52 @@
              "source": "https://tradingeconomics.com/australia/government-debt-to-gdp", "as_of": "2026-05"},
       "A3": {"score": 1.0, "note": "Gold has OVERTAKEN COAL as Australia's second-largest export by value, behind iron ore only — approximately A$68bn this financial year. The strongest single data point supporting the index thesis, and absent from v1.0.",
              "source": "https://www.australianresourcesandinvestment.com.au/2026/08/07/its-unprecedented-four-investor-takeaways-from-diggers-dealers-2026", "as_of": "2026-08"},
-      "A4": {"pass": null, "note": "QUERY, PARKED BY COMMITTEE 2026-08-17. Banking Act 1959 (Cth) Part IV contained gold requisition powers requiring delivery of privately held gold to the Reserve Bank. Suspended by proclamation January 1976; repeal status unconfirmed. If still on the statute book in suspended form it is reactivable by proclamation. Requires Australian counsel, not a search engine.",
-             "source": "unverified", "status": "accepted risk, §13.1"},
+      "A4": {"pass": true, "note": "No gold-control regime in operation. Banking Act 1959 (Cth) Part IV — Gold ceased to be in operation on 30 January 1976 and has not been revived. Verified against primary law: the compilation endnote for every section of Part IV reads 'exp 30 Jan 1976 (s 40(3) and gaz 1976, No S17)'. Part IV has NOT been repealed and remains in the current compilation; s 40(2) permits revival. Dormant-power register below; residual risk disclosed at §11.1, not gated.",
+             "source": "https://www.legislation.gov.au/C1959A00006/latest/text",
+             "compilation": "C2026C00104, Compilation No. 69, compiled to 31 March 2026",
+             "text_read": "https://www.legislation.gov.au/C1959A00006/2026-03-31/2026-03-31/text/original/epub/OEBPS/document_1/document_1.html",
+             "as_of": "2026-03-31", "status": "pass, with the dormant-power register disclosed at §11.1"},
+      "dormant_powers": {
+        "instrument": "Banking Act 1959 (Cth) Part IV — Gold (ss 40-48)",
+        "status": "Not in operation since 30 Jan 1976. Not repealed, and not left to rot: ss 41, 42, 45 and 46 have been amended since suspension — penalty units and Criminal Code alignment — most recently by No 4, 2016. Parliament has kept the machinery serviceable.",
+        "history": "Part IV WAS in operation until 30 Jan 1976. Compulsory delivery of privately held gold to the Reserve Bank is not hypothetical in Australia; it is living memory. This is the fact the v1.0 A4 tripped on, and the reason that formulation could not be applied honestly.",
+        "activation": "s 40(2). Where the Governor-General is satisfied it is expedient for the protection of the currency or of the public credit of the Commonwealth, the Governor-General may by Proclamation declare that this Part — 'OR SUCH OF THE PROVISIONS OF THIS PART AS ARE SPECIFIED IN THE PROCLAMATION' — comes into operation. An executive act. Gazetted, so not silent; but no parliamentary vote, and effective on the day.",
+        "powers": [
+          {"s": 41, "power": "Gold may not be taken or sent out of Australia except with the written consent of the Reserve Bank. 200 penalty units, indictable.", "compensation": "NONE in Part IV"},
+          {"s": 42, "power": "A holder must deliver gold to the Reserve Bank within one month. Carve-outs for small gold-coin holdings and for gold lawfully held as trade or professional working stock.", "compensation": "s 44"},
+          {"s": 43, "power": "Gold delivered vests in the Reserve Bank.", "compensation": "s 44"},
+          {"s": 44, "power": "THE COMPENSATION PROVISION. 'The amount to be paid for any gold delivered in pursuance of section 42 shall be an amount determined in accordance with such price as is fixed and published by the Reserve Bank or, at the option of the person delivering the gold, such amount as is determined in an action for compensation against the Reserve Bank.'", "compensation": "scope is s 42 deliveries ONLY"},
+          {"s": 45, "power": "Gold may be sold only to, and bought only from, the Reserve Bank or a person it authorises in writing. This is an administered monopsony — the same instrument as the 1934 US Gold Reserve Act, held dormant.", "compensation": "NONE in Part IV"},
+          {"s": 46, "power": "Gold may not be worked or used in manufacture, other than gold lawfully held as trade or professional working stock.", "compensation": "NONE in Part IV"},
+          {"s": 48, "power": "The Reserve Bank may exempt any person from any or all of Part IV by written instrument.", "compensation": "n/a — a discretionary relief valve, not a right"}
+        ],
+        "two_gaps": "Both were missed by the first attempt at this record and both matter. (1) s 44 reaches only gold 'delivered in pursuance of section 42'. The export ban (s 41), the monopsony (s 45) and the prohibition on working gold (s 46) carry no compensation provision anywhere in Part IV. (2) s 40(2) permits PARTIAL activation. A Proclamation naming only ss 41, 45 and 46 delivers an export ban, a Reserve Bank purchase monopsony and a manufacturing prohibition with s 44 never switched on. The compensation route is therefore not a property of Part IV; it is a property of one limb of it, and the executive chooses which limbs operate.",
+        "constitutional_backstop": "s 51(xxxi) requires that any Commonwealth acquisition of property be on just terms, and Part IV is Commonwealth law, so the guarantee reaches it — this is distinct from, and stronger than, the state-tenure caveat in `constitutional_note` below. Newcrest Mining v Commonwealth (1997) 190 CLR 513 is live precedent that sterilisation of mining tenements can be an acquisition attracting compensation. UNRESOLVED, and the question for counsel: Australian law distinguishes acquisition of property from mere deprivation or regulation. Compulsory delivery and vesting (ss 42-43) is plainly an acquisition. An export ban, a monopsony or a ban on working gold may be characterised as regulation, attracting no just-terms obligation at all. The compensation floor is firm for the delivery limb and genuinely contestable for the control limbs.",
+        "residual_risk": "Activation is a same-day executive act on a currency-protection test the executive applies to itself. If the delivery limb is activated the price is administered by the Reserve Bank, with a court action as the only route to a different number. If only the control limbs are activated there is no priced route at all. Unquantified and unpriced. §11.1."
+      },
       "verdict": "PASS",
-      "constitutional_note": "s51(xxxi) requires acquisition of property on just terms, with live precedent protecting mining tenements — Newcrest Mining v Commonwealth (1997) 190 CLR 513, where sterilisation of tenements by Kakadu proclamations was held an acquisition requiring compensation. CAVEAT: s51(xxxi) binds the Commonwealth, not the States. Mining tenure is granted under the WA Mining Act 1978 and state parliaments are not subject to the guarantee. Parked as an accepted risk (§13.1); it carries most of the residual jurisdictional risk in a ~100% Australian portfolio."
+      "constitutional_note": "s51(xxxi) requires acquisition of property on just terms, with live precedent protecting mining tenements — Newcrest Mining v Commonwealth (1997) 190 CLR 513, where sterilisation of tenements by Kakadu proclamations was held an acquisition requiring compensation. CAVEAT: s51(xxxi) binds the Commonwealth, not the States. Mining tenure is granted under the WA Mining Act 1978 and state parliaments are not subject to the guarantee. Parked as an accepted risk (§11.1); it carries most of the residual jurisdictional risk in a ~100% Australian portfolio."
     },
     {
       "iso": "NZ", "name": "New Zealand",
       "A1": {"pass": true, "note": "NZD freely floating, non-reserve."},
       "A2": {"pass": true, "note": "Gross debt moderate, well inside the threshold."},
       "A3": {"score": 0.1, "note": "Gold immaterial to NZ goods exports; dairy dominates. Low score, not a gate failure."},
-      "A4": {"pass": true},
-      "verdict": "PASS (3 of 3 binary tests, low A3 score)",
+      "A4": {"pass": true, "note": "No gold-control regime in operation. No dormant-power register compiled — nil exposure, so it has not been researched to the standard applied to Australia. Recorded, not verified."},
+      "verdict": "PASS (A1, A2, A4; low A3 score)",
       "note": "No eligible listed vehicle. OceanaGold is the only material NZ gold producer and its NZ assets (Macraes, Waihi) are a minority against Haile (US, ~315 koz 2026) and Didipio (Philippines, 80%-owned). NZ remains in the eligible set should a pure-play emerge. Fast-track Approvals Act 2024 fully operational; amendments Dec 2025 and Mar 2026 expanded scope — policy direction has hardened pro-mining."
     },
     {
       "iso": "CA", "name": "Canada",
       "A1": {"pass": true, "note": "CAD freely floating, non-reserve."},
       "A2": {"pass": false, "note": "General government gross debt above 100% of GDP in 2026 (federal plus provincial), grouped by the IMF with Italy, France, Belgium, the UK and the US. Net is materially lower owing to public pension assets, but the general government gross position fails the threshold as specified.",
-             "source": "IMF Fiscal Monitor April 2026", "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2026/april/english/msa.pdf"},
+             "source": "IMF Fiscal Monitor April 2026", "url": "https://www.imf.org/-/media/files/publications/fiscal-monitor/2026/april/english/msa.pdf",
+             "_caveat": "THIS IS NOW THE SOLE BASIS FOR EXCLUDING CANADA, and it does not match the threshold as written. A2 is specified on NET debt (<= 60% of GDP) and interest/revenue (<= 10%). The recorded evidence is GROSS debt, and the note itself concedes net is materially lower owing to public pension assets. Neither specified metric is sourced for Canada. Until they are, Canada's exclusion — and Agnico Eagle's at entity level — rests on a test whose recorded evidence is the wrong measure. Before the v1.1 A4 amendment Canada also failed A4, so this was not load-bearing; it is now. Reopened as open item 4, §12.2. NOT resolved in this amendment, because sourcing it could change the eligible universe and that is a committee decision, not a documentation fix."},
       "A3": {"score": 0.5, "note": "Gold a significant but not dominant export."},
-      "A4": {"pass": false, "note": "Foreign Exchange Control Act 1939-1951 — the Foreign Exchange Control Board required residents to surrender foreign exchange and gold. A modern-era requisition precedent."},
-      "verdict": "FAIL (marginal on A2, fails A4)",
+      "A4": {"pass": true, "note": "No gold-control regime in operation. The Foreign Exchange Control Board regime of 1939-1951 required residents to surrender foreign exchange and gold; it ended in 1951 and no successor is in force. Historical use is disclosed, not gated (§2.1).",
+             "history": "Foreign Exchange Control Act 1939-1951 — the Foreign Exchange Control Board required residents to surrender foreign exchange and gold. A modern-era requisition precedent, retained as a disclosure.",
+             "gap": "No dormant-power register compiled. Whether Canadian current law retains latent bullion or exchange-control machinery has not been researched to the standard applied to Australia. Immaterial while A2 excludes Canada; it becomes material the moment open item 4 is worked."},
+      "verdict": "FAIL — A2",
       "note": "Consequence: Red Lake (Evolution) and Sugar Zone (Vault) are ineligible ounces. Agnico Eagle excluded at entity level."
     },
     {
@@ -47,8 +71,8 @@
       "A1": {"pass": false, "note": "Euro member. No monetary sovereignty, no independent devaluation channel, and no exit. In an EU-level debt event Finland receives whatever the ECB and Council decide — Cyprus 2013 and Greece 2015 are the proof of concept for capital controls imposed on a member state."},
       "A2": {"pass": false, "note": "General government gross debt approximately 80% of GDP and rising."},
       "A3": {"score": 0.1, "note": "Gold immaterial to exports."},
-      "A4": {"pass": true},
-      "verdict": "FAIL (1 of 4)",
+      "A4": {"pass": true, "note": "No gold-control regime in operation. No dormant-power register compiled — nil exposure since the Rupert delisting. Recorded, not verified."},
+      "verdict": "FAIL — A1 and A2",
       "note": "v1.0 treated Finland as eligible. Moot in practice — Rupert Resources, the only Finland-exposed constituent, delisted 16 Jun 2026 into Agnico Eagle. Separately, the Mined Minerals Tax (Act 1361/2025, effective 1 Jan 2026) raised the ad valorem rate on metallic ores 4.2x from 0.6% to 2.5% — not a Tier A failure but a 4.2x repricing of the state's claim, and exactly the fiscal-variance behaviour Tier B B2 exists to capture."
     },
     {
@@ -58,8 +82,11 @@
              "note": "Net debt ~100% of GDP rising to just under 120% by 2029. Gross 126% in 2026 rising to 142% by 2031 — the largest absolute deterioration among advanced economies. Primary deficits averaging 6.7% of GDP for 2027-2031, against the ~3.5% associated with debt stabilisation.",
              "source": "IMF Fiscal Monitor April 2026", "url": "https://www.imf.org/en/publications/fm/issues/2026/04/15/fiscal-monitor-april-2026"},
       "A3": {"score": 0.02, "note": "US gold output ~155-170 t/yr is immaterial to exports and the sector is politically small. No constituency defends it."},
-      "A4": {"pass": false, "note": "EO 6102 (Apr 1933) confiscated privately held gold. Gold Reserve Act (Jan 1934) revalued $20.67 to $35 AFTER the state took possession, and required newly mined domestic gold be sold to the Treasury at the official price — monopsony, not seizure. WPB Order L-208 (Oct 1942) ordered non-essential gold mines shut outright to redirect labour and equipment, without compensation."},
-      "verdict": "FAIL (0 of 4)",
+      "A4": {"pass": true, "note": "No gold-control regime in operation. EO 6102 and the Gold Reserve Act monopsony are spent; private gold ownership has been lawful since 31 December 1974 (Pub. L. 93-373), and WPB Order L-208 was rescinded in 1945. The United States therefore PASSES the present-tense A4. That is the uncomfortable and correct result — see `why_this_passes_and_it_does_not_matter`.",
+             "history": "EO 6102 (Apr 1933) confiscated privately held gold. Gold Reserve Act (Jan 1934) revalued $20.67 to $35 AFTER the state took possession, and required newly mined domestic gold be sold to the Treasury at the official price — monopsony, not seizure. WPB Order L-208 (Oct 1942) ordered non-essential gold mines shut outright to redirect labour and equipment, without compensation. The heaviest historical disclosure in this file, and it is a disclosure, not a gate.",
+             "why_this_passes_and_it_does_not_matter": "A4 tests machinery in operation, and none is operating. Note what this means for the gate's strength: a DORMANT EO 6102 would also pass, because it was a public executive instrument and surrender was paid at a published statutory price. That weakness is accepted deliberately (§2.1). Any A4 strong enough to catch a dormant EO 6102 also catches Banking Act Part IV — which is to say it catches Australia and leaves the index holding nothing. The United States is excluded by A1 and A2: reserve issuance and insolvency are where the motive the index actually fears is measured. A4 was never what kept the US out; it only looked that way.",
+             "gap": "No dormant-power register compiled for current US law — TWEA s 5(b), IEEPA and 31 U.S.C. ch. 51 have not been read to the standard applied to Australian Part IV. Immaterial while A1 and A2 exclude the US, and it would take an A1 and A2 reversal to make it matter."},
+      "verdict": "FAIL — A1 and A2",
       "thesis_note": "The realistic mechanism is not nationalisation of producers — US mine output at ~$20bn/yr against a $37tn debt stock is fiscally irrelevant. The prize is the stock: 8,133 t in the Treasury's gold certificate account still carried at $42.22/oz. Revaluing that requires touching no mining company. The risk to producers is monopsony purchase at an administered price, plus capital and export controls. Consequence for the index: Pogo (Northern Star) is ineligible ounces, and every US-domiciled producer is out."
     }
   ]

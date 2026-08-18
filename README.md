@@ -85,14 +85,31 @@ the machinery:
   does the adjustment for it. A reserve issuer has both a unique motive and unique
   tools.
 - **Solvent sovereign** — net debt ≤ 60% of GDP and interest ≤ 10% of revenue.
-- **No requisition history, and no sleeping powers** — no confiscation, monopsony
-  purchase mandate or forced domestic sale in the modern era, *including statutory
-  powers suspended rather than repealed.* A dormant power is a live one.
+- **No gold controls in operation** — no confiscation, compulsory delivery,
+  administered monopsony or gold-export ban in force today, checked against
+  primary law rather than recollection.
 
-Nothing here promises a state *cannot* take your gold. The claim is narrower and
-testable: these are places with no record of doing it, no law still on the books
-permitting it, and no structural reason to want to. It is a measured judgement
-about relative likelihood, and the measurements are in the repository.
+Nothing here promises a state *cannot* take your gold, and the earlier version of
+this README came close to implying it. The honest claim is narrower. Two of these
+three tests are about **motive** — a solvent state with a currency that devalues
+on its own has no reason to reach for the metal. The third is about **machinery**,
+and it is present tense: nothing is operating now.
+
+What it is not is a promise about tomorrow, and Australia is the reason to say so
+plainly. Part IV of the Banking Act 1959 — compulsory delivery of private gold to
+the Reserve Bank, an export ban, a purchase monopsony — *ran until 30 January
+1976*. It was switched off by Proclamation, never repealed, and Parliament has
+kept amending it as recently as 2016. It can be switched back on by an executive
+act, in part or in whole, on any day. Compensation reaches the delivery limb and
+arguably not the rest.
+
+An earlier draft of the methodology tried to gate that risk away by banning
+dormant powers outright. Australia fails that test, so the rule would have emptied
+the index; the v1.0 tables recorded a pass against it anyway. The rule is gone. In
+its place the exposure is written down in full — every section, how it activates,
+what it pays — in §11.1 of the methodology, and carried as a disclosed risk the
+index does not price. That is a smaller claim than the one it replaces, and it is
+one the repository can actually support.
 
 **Gate 2 — who is still standing.** *Does this company reach the other side of a
 40% real gold drawdown without issuing equity?* Cash, undrawn facilities, free
@@ -200,7 +217,7 @@ considered and rejected, and why Gate 2 exists at all.
 
 | Scenario | How this index behaves |
 |---|---|
-| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 43% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency and no requisition statute has neither the motive nor the machinery to come for the metal. |
+| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 43% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency and no gold controls running has neither the motive nor the standing machinery to come for the metal. What it does have is Part IV, switched off since 1976 and revivable by Proclamation; that is disclosed, not priced. |
 | **The sector consolidates** | You are holding the list an acquirer screens for. Evidenced above, and running now. |
 | **Gold flat, miners de-rate** | The plain value case. Nothing needs to happen to the gold price; the position pays if A$ per ounce mean-reverts toward what the market pays elsewhere. |
 | **Gold drawdown** | You lose money. Nothing here is a hedge and the book is geared. What Gate 2 buys is that the loss is not made *permanent*: every constituent reaches the far side of a 40% real drawdown without issuing equity, so the ounces behind each share are the ones you started with. Dilution at the bottom is how gold equity holders were destroyed in the last cycle. |

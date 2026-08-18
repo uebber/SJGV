@@ -2488,7 +2488,7 @@
    "ticker": "AEM",
    "name": "Agnico Eagle",
    "gate": "Gate 1 Tier A",
-   "reason": "Canada marginal on solvency (general government gross >100% of GDP) and carries a Foreign Exchange Control Act 1939-51 requisition precedent."
+   "reason": "Canada fails Tier A on A2 (solvency) and that is now the sole basis — see methodology §12.2 item 4, which reopens it: the recorded evidence is general government gross debt >100% of GDP against a threshold written on net debt. The Foreign Exchange Control Act 1939-51 requisition precedent is retained as a disclosure and no longer fails A4, which is present-tense as of v1.1."
   },
   {
    "ticker": "PRU/RSG/WAF/EMR",
