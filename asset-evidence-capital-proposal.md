@@ -1,352 +1,378 @@
-# Asset evidence and capital allocation — design proposal
+# Execution capital and optionality evidence — revised design proposal
 
-**Status:** proposal only — no production weight, gate, parameter or data change  
+**Status:** revised after maintainer replay; design only in this PR  
 **Base:** `category-shares-and-staleness`  
-**Decision requested:** approve a shadow evidence register and capital report; do not approve a new weighting term
+**Decision requested:** implement the capital-field split for every constituent in one production change; defer the asset-evidence overlay
 
-## 1. Decision summary
+## 1. Revised decision
 
-SJGV should preserve the current company-level ounce ledger as the production
-numerator. A current, Competent-Person-backed Mineral Resource is already a
-claim with a defined geological confidence category. Requiring reserve-level
-metallurgy, processing, permitting and capital evidence before M&I or Inferred
-ounces can count would turn the product into the reserves-only index it exists
-not to be.
+The current denominator contains a live defect. It adds a developer's
+**residual funding gap** to enterprise value when the economic quantity required
+is **remaining execution capital**. One field, `remaining_capex_aud_m`, currently
+does both jobs even though the two quantities answer incompatible questions.
 
-Asset evidence should instead be captured in a **non-weighting evidence
-overlay** with four observable levels. It should answer how much of the
-optional claim is asset-attributed, supported by resource-level assumptions,
-scheduled in a published production target, and attached to an executable
-capital plan. Missing evidence remains `unknown`; it is never silently treated
-as a failed asset or zero capital.
+The production fix should:
 
-Capital must be split into two different facts:
+1. split remaining execution capital from available project funding;
+2. derive residual funding gap only for the developer Gate 2 test;
+3. use `EV + remaining execution capital` as the denominator for producers and
+   developers under the same rule;
+4. source and classify the capital legs for every constituent before switching
+   the formula; and
+5. abort the build on missing execution capital instead of allowing absence to
+   flatter a name.
 
-1. **Residual funding gap** asks whether the company can finance the plan. It
-   remains a Gate 2 survival input and the current production denominator term.
-2. **Remaining execution capital** asks what must still be spent to deliver a
-   defined project plan. It may be reported in a shadow all-in denominator, but
-   it must be counted once at project scope, never labelled as capital belonging
-   only to the non-reserve ounces in that plan.
+Do not ship a developer-only fix. A board-approved mine build inside a producer
+is the same economic activity as a mine build inside a pure-play developer.
+Charging Rox while leaving Havieron at zero would make the denominator less
+comparable, not more.
 
-No evidence level or execution-capital figure should affect production weights
-until the required data exists for every eligible constituent and a same-market-
-data replay is separately approved.
+The optionality evidence proposal should be reduced. A Mineral Resource already
+embodies reasonable prospects for eventual economic extraction. Requiring a
+freshly republished Table 1 package would grade issuer disclosure habits. For
+now, retain the company-level category ledger and add at most a lightweight
+**scheduled / unscheduled / unknown** report when a production target discloses
+its category mix. Do not build a separate evidence database until there is a
+specific, approved weight rule it is capable of supporting.
 
-## 2. Why the binary asset gate failed
+## 2. The arithmetic correction
 
-The rejected design asked each non-reserve asset to prove all of the following:
-a current resource, category-specific jurisdiction and ownership, metallurgy
-and recovery, a processing route, land and permitting, a disclosed capital
-path, and complete encumbrances. An asset missing any item contributed no
-optionality.
-
-That combined three different questions:
-
-- **Does the mineral inventory exist at the stated confidence?**
-- **Has some of it entered an issuer-backed mine plan?**
-- **Is that plan executable and what remains to be spent?**
-
-JORC and ASX do not require the same disclosure depth for all three. The JORC
-Code requires a Mineral Resource to have reasonable prospects for eventual
-economic extraction and Table 1 asks for cut-off, mining, metallurgical and
-environmental assumptions. It also says resource-stage mining and metallurgy
-assumptions may not be rigorous, provided their basis and limitations are
-reported. Reserve conversion requires at least a PFS-level technically
-achievable and economically viable mine plan with the Modifying Factors
-considered.
-
-ASX Listing Rule 5.8 requires Table 1 disclosure for a material project's first
-or materially changed Resource. Annual statements may then aggregate holdings
-by material project or geographic area. A producer can therefore comply fully
-without republishing current asset-by-asset recoveries, processing routes,
-permits and capital paths for every non-reserve ounce each year.
-
-Production targets are the useful dividing line. Listing Rule 5.16 requires the
-material assumptions and the proportions of Reserves, Measured, Indicated and
-Inferred material underpinning a target. That evidence supports a separate
-statement that some optionality is **scheduled**. It does not invalidate the
-rest of the disclosed Resource.
-
-Primary references:
-
-- [JORC Code 2012](https://www.jorc.org/docs/JORC_code_2012.pdf), especially clauses 12, 15 and Table 1 sections 3–4
-- [ASX Listing Rules Chapter 5](https://www.asx.com.au/documents/rules/Chapter05.pdf), especially rules 5.8, 5.9, 5.16 and 5.21
-- [ASX Guidance Note 31](https://www.asx.com.au/documents/rules/gn31_reporting_on_mining_activities.pdf), especially sections 2.4 and 10.2
-
-## 3. Proposed evidence model
-
-### 3.1 Keep one canonical claim
-
-`data/companies.json` remains the only source of production ledger ounces:
+### 2.1 What enterprise value already contains
 
 ```text
-ClaimedMoz = eligible P&P
-           + 0.5 × eligible M&I non-reserve
-           + 0.2 × eligible Inferred
-           − forward-sold ounces
+EV = market capitalisation + drawn debt − cash
 ```
 
-The category-specific Gate 1 shares and the 18-month statement-currency gate
-apply exactly as they do on `category-shares-and-staleness`. The evidence
-overlay may reconcile to that claim and describe it, but may not mutate it.
+Buying the company means paying market capitalisation and inheriting both the
+debt and the cash. If a project still requires `C` of construction spend, its
+all-in acquisition-and-build cost is:
 
-### 3.2 Store evidence separately
-
-If implemented, use `data/project_evidence.json`, keyed by ticker and issuer-
-defined project or geographic scope. Do not duplicate the canonical company
-totals without a reconciliation record. Each company receives an explicit
-`unallocated` scope for ounces that are validly reported at group or geographic
-level but cannot be mapped further from public disclosure.
-
-Illustrative shape:
-
-```json
-{
-  "ticker": "RXL",
-  "scope_id": "youanmi-dfs-2025",
-  "scope_type": "material_project",
-  "resource": {
-    "document": "youanmi_dfs_2025",
-    "effective_date": "2025-11-13",
-    "attributable_moz": {
-      "pp": 0.674,
-      "mi_non_reserve": 0.048,
-      "inferred": 0.178
-    }
-  },
-  "resource_assumptions": {
-    "cut_off": "disclosed",
-    "mining": "disclosed",
-    "metallurgy": "disclosed",
-    "environment": "disclosed"
-  },
-  "production_target": {
-    "status": "current",
-    "category_mix_disclosed": true
-  },
-  "execution": {
-    "study_stage": "DFS",
-    "approvals": "disclosed",
-    "processing_route": "disclosed"
-  },
-  "capital": {
-    "remaining_execution_capex_aud_m": 382.6,
-    "spent_since_estimate_aud_m": "unknown",
-    "available_project_funding_aud_m": 472.7,
-    "residual_funding_gap_aud_m": 0.0,
-    "scope": "whole DFS production target"
-  }
-}
+```text
+AllInCost = EV + C
 ```
 
-The numbers above illustrate the rejected PR's Rox source record. Before a
-shadow calculation, the pre-production estimate must be rolled forward for any
-sourceable spend since the DFS; if it cannot be rolled forward it is reported
-as an estimate-date figure, not current remaining capital.
+Adding gross remaining execution capital to an EV that has netted cash is
+correct. The buyer inherits the cash but must still spend the capital. Spending
+cash reduces net cash; drawing a facility increases debt. Either way, funding
+availability changes who supplies the money, not whether the project costs
+money.
 
-### 3.3 Four evidence levels, all reports
+The earlier review of PR #2 was wrong to call `EV + gross capital` a cash double
+count for Rox. PR #2 still should not ship: it labelled shared whole-project
+capital as optionality-only capital, and its formula `EV + gap +
+optionality_capital` would double count whenever the gap was positive.
 
-| Level | Name | Minimum public evidence | Meaning |
-|---|---|---|---|
-| E1 | Attributed Resource | Current primary Resource statement, category, ownership/economic interest and location | The optional ounces can be mapped below group level. |
-| E2 | RPEEE basis | E1 plus disclosed cut-off and resource-level mining, metallurgical and environmental assumptions, including an “if not, why not” explanation where applicable | The issuer has stated the basis for reasonable prospects of eventual economic extraction. This is not a mine plan. |
-| E3 | Scheduled optionality | E2 plus a current production target or study disclosing the category mix underpinning the plan | A stated subset of M&I or Inferred material appears in an issuer-backed schedule. |
-| E4 | Execution evidenced | E3 plus study stage, material approvals/tenure, processing route and remaining execution capital | The scheduled plan has a sourceable delivery path. This is still not certainty. |
+### 2.2 Why the current formula is wrong
 
-These are ordinal disclosure states, not scores. An E1 ounce is not multiplied
-by a smaller number than an E4 ounce. The existing 1.0 / 0.5 / 0.2 confidence
-weights already distinguish the geological categories; another evidence
-haircut would double count uncertainty and systematically favour issuers that
-repeat more project detail.
+Current §7.1 uses:
 
-### 3.4 Reports produced
+```text
+FundedEV = EV + residual funding gap
+```
 
-At issuer and index level, report:
+If cash is subtracted once in EV and again when deriving the residual gap from
+project capital, the cash is credited twice. A fully funded project receives a
+zero denominator adjustment even though construction is not free. The existing
+developer inputs also use inconsistent conventions:
 
-- `asset_attributed_share_of_optional_claim`
-- `rpeee_evidenced_share_of_optional_claim`
-- `scheduled_share_of_optional_claim`
-- `execution_evidenced_share_of_optional_claim`
-- `capital_paired_share_of_scheduled_claim`
-- optional claim in an explicit `unallocated` scope
-- source date and age for every evidence record
+| Issuer | Current `remaining_capex_aud_m` convention | Result |
+|---|---|---|
+| AUC | Full pre-production capital; cash not sourced | Execution capital by accident |
+| AAR | Pre-production capital less cash | Cash credited twice in §7.1 |
+| RXL | Pre-production capital less cash and cash-drawable debt | Cash and facility credited twice in §7.1 |
 
-Use **evidenced**, **scheduled** and **unallocated**, not **qualified** and
-**failed**. The overlay measures disclosure coverage; it does not purport to
-re-estimate the Competent Person's Resource.
+The field cannot be repaired by replacing its values. Gate 2 D3 needs the gap;
+the denominator needs the gross remaining execution capital. Loading Rox's
+A$382.6m execution estimate into the current field would incorrectly test
+A$382.6m / A$710.7m = 54% against the 30% dilution limit and reject a project
+whose disclosed funding covers the spend.
 
-### 3.5 Encumbrances
+### 2.3 Maintainer replay
 
-Record streams, royalties, joint ventures and third-party interests when the
-issuer identifies them as material to the scope. Treat them according to their
-economics:
+Using the same recorded market data, the maintainer's deterministic replay found:
 
-- ownership and economic interests determine attributable ounces;
-- a gold stream or forward that transfers a quantifiable volume at a fixed or
-  formula price belongs in the existing sold-ounce treatment;
-- a royalty is an economic burden, not a transfer of geological ounces, and
-  must not be converted into an invented ounce haircut;
-- an undisclosed or unquantifiable encumbrance is `unknown`, not zero.
+| Probe | Index A$/oz | RXL A$/oz | GGP A$/oz | One-way turnover |
+|---|---:|---:|---:|---:|
+| Current denominator | 679 | 458 | 895 | — |
+| Developers only | 700 | 768 | 895 | 0.00pp |
+| All names, upper-bound probe | 736 | 768 | 1,070 | 1.28pp |
 
-## 4. Capital: definitions before arithmetic
+The zero turnover in the developer-only replay is a cap artefact, not evidence
+that the defect is immaterial. Raw value moves even when final capped weights do
+not. The all-name probe also makes the missing-data failure visible: RMS gains
+about 0.40pp solely because its committed-capital field is unsourced. No
+production formula may reward that absence.
 
-### 4.1 Rename the current field
+## 3. Proposed production fields
 
-The current `remaining_capex_aud_m` behaves as a **residual funding gap**: Rox
-is zero because disclosed cash and drawable debt cover its project capital.
-The name should eventually be migrated to `residual_funding_gap_aud_m` so that
-funding capacity cannot be mistaken for economic capital still to be spent.
+### 3.1 Keep the three concepts separate
 
-For a project `p`:
+For every material not-yet-complete mine build, restart or growth scope `p`:
 
 ```text
 RemainingExecutionCapex_p
-    = latest disclosed spend from the as-of date to completion
+    = sourceable spend from the as-of date to completion
 
 AvailableProjectFunding_p
-    = sourceable cash allocated to the project
-    + committed undrawn facilities
+    = sourceable cash allocated or available to the project
+    + committed cash-drawable facilities
     + other contracted funding
 
 ResidualFundingGap_p
     = max(0, RemainingExecutionCapex_p − AvailableProjectFunding_p)
 ```
 
-Only the last term belongs in Gate 2. Funding sources answer whether the plan
-can be paid for; they do not make construction free.
-
-### 4.2 Economic capital is project-wide, not optionality-only
-
-If a DFS plant and mine plan process 674 koz of Reserves plus scheduled M&I and
-Inferred material, the plant's capital does not belong only to the scheduled
-non-reserve ounces. Labelling the whole project estimate as
-`optionality_capital` creates a false attribution even when the denominator
-eventually applies to the company's total claim.
-
-The shadow measure should therefore be:
+At company level:
 
 ```text
-ExecutionAdjustedEV_i
-    = EV_i + Σ RemainingExecutionCapex_p
+RemainingExecutionCapex_i = Σ project scopes p, counted once each
 
-ExecutionAdjustedAUDPerClaimedOz_i
-    = ExecutionAdjustedEV_i / ClaimedMoz_i
+ResidualFundingGap_i = max(
+    0,
+    RemainingExecutionCapex_i − AvailableProjectFunding_i
+)
+
+AllInEV_i = EV_i + RemainingExecutionCapex_i
+
+RawWeight_i ∝ ClaimedMoz_i / AllInEV_i
 ```
 
-where the sum contains each material, not-yet-complete project scope once.
-Do **not** add both remaining execution capital and residual funding gap. The gap
-is a subset of the financing question, not additional construction spend.
+The denominator never adds both capital and gap. The residual gap remains a
+Gate 2 financing-capacity input; it is not an additional cost.
 
-For Rox this means the A$382.6m DFS estimate may be a legitimate estimate-date
-input to a **whole-project execution-adjusted company metric**. It is not
-legitimate as capital attached solely to 0.0596 confidence-weighted optional
-Moz. The production weight remains on the current denominator while this is a
-shadow report.
+### 3.2 Schema migration
 
-### 4.3 Treatment rules
+Add or rename fields as follows:
 
-1. **Define the scope first.** Use the issuer's material project, production
-   target or separately costed expansion—not an index-invented asset boundary.
-2. **Count spend once.** A plant serving Reserves, M&I and Inferred material is
-   one capital scope, not three category allocations.
-3. **Roll forward only from disclosure.** Subtract spent capital only when a
-   source gives cumulative or period spend that can be reconciled to the study
-   estimate. Otherwise preserve the estimate date and flag it stale/unknown.
-4. **Do not subtract financing.** Cash coverage and undrawn debt reduce the
-   funding gap, not remaining execution capital. Spending cash raises post-spend
-   EV by reducing net cash; drawing debt raises it by increasing debt.
-5. **Exclude sustaining capital after steady state.** It is paid from operating
-   production and belongs to the operating-cost/survival analysis. Include only
-   initial, restart or growth capital required to deliver the defined plan.
-6. **Do not allocate shared capital pro rata to optional ounces.** Tonnes or
-   ounces are not evidence of marginal capital causation. Use an issuer-disclosed
-   incremental expansion figure or retain the whole-project scope.
-7. **Unknown is not zero.** A producer without current project-capital disclosure
-   receives no execution-adjusted metric; its production weight is unchanged.
-8. **Avoid false comparability.** Never rank or weight a covered issuer against
-   an uncovered issuer on the shadow denominator.
+| Field | Role | Weight effect |
+|---|---|---|
+| `remaining_execution_capex_aud_m` | Gross sourceable remaining initial, restart or growth capital for material unfinished scopes | Added once to EV for all sleeves |
+| `available_project_funding_aud_m` | Cash, cash-drawable committed facilities and contracted funding available for those scopes | Developer Gate 2 only |
+| `residual_funding_gap_aud_m` | Engine-derived difference between the two fields | Developer Gate 2 and reporting only |
+| `committed_capex_aud_m` | Contracted/non-deferrable cash burn inside the stress horizon | Existing producer Gate 2 survival input; unchanged |
 
-## 5. What is deliberately rejected
+Delete `remaining_capex_aud_m` after migration. Keeping it as an alias would
+preserve the ambiguity that caused the defect.
+
+`committed_capex_aud_m` and `remaining_execution_capex_aud_m` may refer to some
+of the same physical spend, but they are not added together anywhere. One is a
+stress-horizon cash-burn input; the other is the all-in economic denominator.
+
+## 4. Capital sourcing and allocation rules
+
+### 4.1 Apply the rule to all sleeves at once
+
+The change must cover every constituent selected by the pre-weight gates,
+including unfinished material projects housed inside producers. At minimum:
+
+- Havieron's A$1,065m pre-production build cannot remain at zero because GGP is
+  labelled a producer;
+- Mt Gibson's A$474m build must be treated consistently with a standalone
+  developer build; and
+- Tower Hill's executed A$229m EPC sum is evidence of a project commitment, but
+  the denominator must use the sourceable **remaining total execution cost**,
+  not assume an EPC contract equals all owner and project costs.
+
+The existing company notes already contain a bounded starting inventory: 11 of
+the 12 current constituents have issuer-sourced committed-capital information.
+The blocking tasks are to source RMS and to separate pre-production/growth from
+sustaining and deferrable spend in every note. This is substantial but finite;
+the production target should not be described as unreachable.
+
+### 4.2 Scope rules
+
+1. **Use economic activity, not sleeve label.** A new mine, restart, new plant,
+   material expansion or pre-strip that unlocks a defined future plan is an
+   execution-capital scope whether the issuer is a producer or developer.
+2. **Count each scope once.** When company guidance overlaps a project total,
+   reconcile the hierarchy and retain the larger complete scope, not both.
+3. **Use remaining total cost, not just contracted cost.** An EPC contract may
+   omit owner costs, mining fleet, pre-production mining, contingency or other
+   required spend. Use the latest issuer total and roll it forward.
+4. **Roll forward from sources only.** Subtract spend since the estimate only
+   when cumulative or period expenditure can be reconciled to that scope.
+   Otherwise preserve the estimate date and block production adoption until a
+   current bound is sourceable.
+5. **Exclude sustaining capital after steady state.** It supports current
+   production and belongs to AISC and survival analysis, not the capital needed
+   to unlock future ounces.
+6. **Exclude deferrable exploration and pre-FID concepts.** They are options to
+   spend, not capital the current claimed plan requires.
+7. **Do not net financing from economic capital.** Cash and facilities affect
+   residual gap only.
+8. **Do not allocate shared capital to optionality alone.** A plant serving
+   Reserves, M&I and Inferred material is whole-project capital. At company level
+   it adjusts the denominator of the whole claimed-ounce ledger.
+9. **Do not allocate capital pro rata by ounces.** Tonnes or ounces are not
+   evidence of marginal capital causation. Use issuer-disclosed incremental
+   scope or retain the whole-project total.
+10. **Unknown is not zero.** A missing value aborts the build before weights are
+    calculated. It does not exclude one name and reweight the rest, and it never
+    enters a sensitivity bound as a favourable zero.
+
+### 4.3 Rox example
+
+Rox illustrates all three fields:
+
+```text
+Remaining execution capital    = A$382.6m at the DFS estimate date
+Available project funding      = A$152.7m cash + A$320m cash-drawable debt
+Residual funding gap           = A$0
+```
+
+Before production adoption, the execution estimate should be rolled forward for
+sourceable construction spend since the DFS. The full estimate can remain a
+conservative bound only if the report labels its estimate date and does not
+present it as a current point value.
+
+The economic denominator adds remaining execution capital once. Gate 2 reads
+the zero residual gap. Nothing is called `optionality_capital`: the same plant
+and development serve the 674 koz Reserve and the scheduled non-reserve material.
+
+## 5. Optionality evidence — narrower decision
+
+### 5.1 Delete E2
+
+The prior proposal's E2 “RPEEE basis” is near-vacuous as an asset ranking. Under
+JORC, reasonable prospects for eventual economic extraction are constitutive of
+a Mineral Resource. Table 1 asks for cut-off, mining, metallurgical and
+environmental assumptions, but ASX requires the full “if not, why not” package
+on first or materially changed reporting—not annual republication for every
+asset.
+
+E2 would therefore measure whether assumptions were republished recently more
+than whether the resource has a basis. It should be removed, not used as a gate,
+score or evidence haircut.
+
+### 5.2 Retain one lightweight report
+
+Where an issuer publishes a current production target with category proportions,
+report:
+
+- confidence-weighted M&I non-reserve and Inferred ounces scheduled in the plan;
+- disclosed optionality outside that schedule; and
+- `unknown` where public data cannot reconcile the split.
+
+This is a report only. Scheduled optionality does not replace the company-level
+Mineral Resource ledger, and unscheduled optionality is not deleted or
+haircut. The current 1.0 / 0.5 / 0.2 category weights remain the only confidence
+adjustment.
+
+Do not create a new project-evidence file, schema, reconciliation application or
+coverage suite merely to support this report. The capital migration will
+already require project-scoped notes. Add a separate evidence overlay only if a
+future proposal identifies a production rule that needs it and demonstrates
+that the required evidence is sourceable across the cohort.
+
+### 5.3 Primary citations verified
+
+The evidence discussion is supported by the primary rules:
+
+- [JORC Code 2012](https://www.jorc.org/docs/JORC_code_2012.pdf) clause 12 defines
+  Resources by geological confidence and makes Reserves a modified subset of
+  Measured and Indicated Resources; clause 15 requires annual review and the
+  effective date of each statement; Table 1 section 3 covers resource cut-off,
+  mining, metallurgical and environmental assumptions.
+- [ASX Listing Rules Chapter 5](https://www.asx.com.au/documents/rules/Chapter05.pdf)
+  rules 5.8 and 5.9 require detailed Table 1 reporting on first or materially
+  changed material-project Resources and Reserves; rule 5.16 requires production
+  targets to disclose the proportions of each Reserve and Resource category;
+  rule 5.21 permits annual holdings to be tabulated by material geographic area.
+- [ASX Guidance Note 31](https://www.asx.com.au/documents/rules/gn31_reporting_on_mining_activities.pdf)
+  explains the “if not, why not” Table 1 requirement and confirms annual
+  statements may be broken down by material project or geographic area.
+
+## 6. Alternatives rejected — retain as institutional memory
 
 | Alternative | Decision | Reason |
 |---|---|---|
 | Binary asset eligibility gate | Reject | Deletes optionality according to disclosure format and makes the book reserves-only. |
 | Evidence haircut or score | Reject | Double counts geological uncertainty already represented by category weights and rewards disclosure volume. |
 | Count only scheduled optionality | Reject for production; report separately | A production target is evidence of scheduling, not the definition of a Mineral Resource. |
-| Attach all project capex to scheduled optionality | Reject | The same plant and development commonly unlock Reserve and non-reserve material. |
-| Set capital to zero when fully funded | Reject | Financing capacity does not remove the economic spend. |
+| Attach whole-project capital to optionality only | Reject | The same plant and development commonly unlock Reserve and non-reserve material. |
+| Set execution capital to zero when fully funded | Reject | Financing capacity does not remove the economic spend. |
 | Add execution capital and residual gap | Reject | Counts the financing shortfall twice inside the same project cost. |
-| Impute producer project capital | Reject | A cohort ratio would manufacture a denominator input with direct weight impact. |
+| Developer-only denominator correction | Reject | Penalises pure-play developers while identical builds inside producers remain free. |
+| Impute missing producer capital | Reject | A cohort ratio would manufacture a direct denominator input. |
 
-## 6. Implementation sequence
+## 7. Production implementation sequence
 
-### Phase A — evidence inventory, no engine reads
+### Step 1 — source and classify
 
-- Add `data/project_evidence.json` and a schema validator.
-- Add a reconciliation tool proving that mapped plus unallocated category
-  ounces do not exceed the canonical company ledger.
-- Record evidence levels and capital dates from primary sources.
-- Emit coverage tables from a standalone report tool.
-- Assert mechanically that changing the evidence file cannot change a weight.
+- Source RMS from a current primary filing.
+- For all selected constituents, identify unfinished material initial, restart
+  and growth scopes.
+- Separate pre-production/growth from sustaining, exploration and pre-FID spend.
+- Roll project totals forward for sourceable spend and reconcile overlaps.
+- Source a defensible numeric zero when no material unfinished execution scope
+  exists; silence is not zero.
 
-### Phase B — shadow capital report
+### Step 2 — split the fields
 
-- Rename or alias the current developer field as residual funding gap.
-- Calculate execution-adjusted EV only for issuers with complete material-
-  project coverage.
-- Print current and execution-adjusted A$/claimed oz side by side.
-- Keep missing coverage out of rankings and portfolio aggregates.
-- Replay on one frozen market-data anchor and disclose the coverage boundary.
+- Add `remaining_execution_capex_aud_m` and
+  `available_project_funding_aud_m`.
+- Derive and report `residual_funding_gap_aud_m` in the engine.
+- Point developer Gate 2 D3 only at the residual gap.
+- Point the weight denominator only at remaining execution capital.
+- Retain `committed_capex_aud_m` only for the existing producer stress test.
+- Delete the ambiguous `remaining_capex_aud_m` input.
 
-### Phase C — separate adoption decision
+### Step 3 — switch all names together
 
-No production change is eligible for consideration until:
+- Fail the entire build if any selected constituent lacks a sourceable execution
+  capital value.
+- Apply `EV + remaining execution capital` to every sleeve in the same build.
+- Publish old and new denominators, raw weights, cap effects and final weights in
+  the transition report.
+- Keep the scheduled/unscheduled optionality split as a report only where it is
+  directly sourceable.
 
-1. every eligible constituent has either complete sourceable coverage of its
-   material not-yet-complete projects or an issuer source establishing that no
-   such project exists;
-2. every capital scope reconciles to a defined project or production target and
-   is counted once;
-3. no missing field defaults to zero and no capital amount is imputed;
-4. producer and developer coverage is comparable rather than structurally
-   determined by reporting style;
-5. a deterministic same-market-data replay separates ledger, capital, caps and
-   normalisation effects; and
-6. the committee explicitly chooses whether execution-adjusted EV should
-   replace—not supplement—the current residual-gap denominator.
+### Step 4 — replay and approve
 
-If those conditions cannot be met, the shadow report remains the answer. A
-useful limitation stated honestly is better than a precise weight built from an
-unobservable input.
+- Use one frozen market-data anchor and stub only market inputs.
+- Reproduce the current book exactly before changing the denominator.
+- Decompose each weight change into capital, normalisation and portfolio caps.
+- Inspect raw weights even when final turnover is zero.
+- Run a missing-value fault injection proving that RMS-like absence aborts the
+  build rather than improving the name.
+- Require a separate approval for the production switch after the sourced data
+  table and replay are reviewed.
 
-## 7. Required tests for Phases A and B
+## 8. Required tests
 
-- Missing evidence leaves `ClaimedMoz`, raw weights and final weights unchanged.
-- `mapped + unallocated` ounces reconcile to each company's canonical P&P,
-  M&I non-reserve and Inferred totals within disclosed rounding tolerance.
-- Evidence records cannot claim a category or ownership share absent from their
-  cited primary source.
-- A production target's scheduled category mix cannot exceed its mapped
-  Resource by category.
-- `unknown` capital is distinct from numeric zero in JSON, reports and CSV.
-- Additional cash or committed debt reduces residual funding gap but does not
-  reduce remaining execution capital.
-- One project referenced by several categories adds capital exactly once.
-- Capital shared by Reserve and non-reserve material is never labelled as
-  optionality-only capital.
-- M&I and Inferred remain in the sensitivity register.
-- The production build is byte-for-byte unchanged when only the evidence overlay
-  changes.
+- Additional cash or a committed facility reduces residual funding gap but does
+  not reduce remaining execution capital.
+- Remaining execution capital changes the denominator but cannot change the D3
+  funding-gap verdict by itself.
+- Available project funding can change D3 but cannot change the denominator.
+- A fully funded project can have zero residual gap and positive execution
+  capital.
+- `AllInEV = EV + remaining execution capital`; neither residual gap nor
+  committed stress capex is added again.
+- Producer and developer records with the same project economics receive the
+  same denominator treatment.
+- One project referenced by company guidance and a project study adds capital
+  exactly once.
+- Sustaining capital, exploration and pre-FID spend do not enter execution
+  capital.
+- Missing execution capital for any selected constituent aborts the build.
+- Numeric zero requires a primary-source note establishing the absence of a
+  material unfinished scope.
+- M&I non-reserve and Inferred remain active numerator and sensitivity inputs.
+- Scheduled/unscheduled reporting cannot change claimed ounces or weights.
+- The frozen replay reproduces the baseline before the formula switch.
 
-## 8. Proposed outcome
+## 9. Proposed outcome
 
-Approve Phases A and B as reporting work. Reject any immediate change to the
-ounce ledger or weights.
+Approve the capital definition, all-name sourcing pass, field split and test
+plan as the next production change. Preserve the same-market-data replay as a
+separate approval checkpoint before weights move.
 
-This preserves the product's optionality thesis, uses the strongest evidence
-the disclosure regime actually supplies, and turns capital into two auditable
-facts instead of one overloaded field. It also makes the future decision
-falsifiable: either complete project coverage supports an execution-adjusted
-denominator, or the data demonstrates why that denominator cannot be applied
-fairly across the book.
+Approve the rejected-alternatives table as institutional memory. Defer the
+asset-evidence overlay; implement only the lightweight scheduled/unscheduled
+report where a production target already supplies the category split.
+
+This is narrower than the first proposal and more actionable. It corrects a
+number that is wrong today, applies the same economics to producers and
+developers, and refuses to turn unavailable disclosure into either a favourable
+zero or an exclusion of the optionality the index exists to own.
