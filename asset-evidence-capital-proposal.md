@@ -1,7 +1,7 @@
 # Execution capital and optionality evidence — revised design proposal
 
-**Status:** revised after maintainer replay; design only in this PR  
-**Base:** `category-shares-and-staleness`  
+**Status:** second revision — closes the four blockers raised on the first, against the sourced inventory in `docs/execution-capital-inventory.md`. Design only; no engine, data, gate, parameter or weight change in this PR.  
+**Base:** `category-shares-and-staleness`, merged up to `f6ffc5c`  
 **Decision requested:** implement the capital-field split for every constituent in one production change; defer the asset-evidence overlay
 
 ## 1. Revised decision
@@ -18,10 +18,17 @@ The production fix should:
 3. use `EV + remaining execution capital` as the denominator for producers and
    developers under the same rule;
 4. source and classify the capital legs for every constituent before switching
-   the formula; and
+   the formula;
 5. require complete data for the initial switch, then use the bounded incumbent
    carry-forward and scheduled-rejection procedure instead of either a
-   favourable zero or a permanent global abort.
+   favourable zero or a permanent global abort;
+6. **admit no unbounded lower bound into the denominator**, at any stage (§4.4);
+7. **define execution capital as a finite approved scope with a disclosed
+   completion total**, leaving recurring annual growth guidance to Gate 2 (§4.5);
+8. **include execution capital in Gate 1 ineligible jurisdictions**, because
+   enterprise value is already a whole-entity quantity (§4.6); and
+9. **record an explicit input state and estimate quality on every figure**, so
+   that rule 6 is machine-enforced rather than argued case by case (§3.5).
 
 Do not ship a developer-only fix. A board-approved mine build inside a producer
 is the same economic activity as a mine build inside a pure-play developer.
@@ -65,7 +72,7 @@ optionality_capital` would double count whenever the gap was positive.
 
 ### 2.2 Why the current formula is wrong
 
-Current §7.1 uses:
+Current methodology §7.1 uses:
 
 ```text
 FundedEV = EV + residual funding gap
@@ -79,8 +86,8 @@ developer inputs also use inconsistent conventions:
 | Issuer | Current `remaining_capex_aud_m` convention | Result |
 |---|---|---|
 | AUC | Full pre-production capital; cash not sourced | Execution capital by accident |
-| AAR | Pre-production capital less cash | Cash credited twice in §7.1 |
-| RXL | Pre-production capital less cash and cash-drawable debt | Cash and facility credited twice in §7.1 |
+| AAR | Pre-production capital less cash | Cash credited twice in methodology §7.1 |
+| RXL | Pre-production capital less cash and cash-drawable debt | Cash and facility credited twice in methodology §7.1 |
 
 The field cannot be repaired by replacing its values. Gate 2 D3 needs the gap;
 the denominator needs the gross remaining execution capital. Loading Rox's
@@ -111,6 +118,37 @@ contain growth expenditure that the execution-capital definition will exclude.
 The direction of error therefore differs by issuer. Read the probe only as
 evidence that the denominator defect is worth roughly A$50/oz on the current
 headline and is large enough to source properly.
+
+### 2.4 Where the ruleset actually lands
+
+`docs/execution-capital-inventory.md` sourced every constituent against the
+disclosure. Applying §4.4 to §4.6 to that inventory, and replaying on the same
+frozen anchor, gives **index A$677 → A$711/oz on 1.07pp of one-way turnover**,
+with effective N unchanged at 11.2. GGP is the largest single move at −0.76pp.
+
+| | Exec capital A$m | State | Note |
+|---|---:|---|---|
+| GGP | 1,065 | `POINT` | Havieron to first gold; June 2025 cost base |
+| EVN | 1,210 | `UPPER_BOUND` | Gross-as-remaining; spend-to-date undisclosed |
+| CMM | 474 | `POINT` | No contingency, ±25% accuracy |
+| RMS | 381 | `UPPER_BOUND` | Exact on the FY26 Commitments note, 21 Aug 2026 |
+| NST | 385 | `POINT` | Three FY27 KCGM items; FY27 guidance 20 Aug 2026 |
+| RXL | 320 | `POINT` | A$382.6m rolled forward by A$62.877m of FY26 spend |
+| GMD | 280 | `UPPER_BOUND` | Issuer total, not the A$229m EPC sum; scheme risk (§4.8) |
+| VAU | 96 | `POINT` | Sugar Zone; scope-complete for FY27, production Q1 FY28 |
+| RRL / PNR / CYL | 0 | de minimis | Recurring annual guidance only (§4.5) |
+| **WGX** | — | **`UNRESOLVED`** | Deferred scope plus an uncosted committed one (§4.8) |
+
+**One correction to the inventory this proposal was revised against.** It
+recorded EVN as the single name blocked by disclosure rather than effort. That
+is wrong under §3.5: EVN's gross A$1,210m is admissible as `UPPER_BOUND` on
+exactly the convention Rox and Ramelius already use, because it omits no spend
+and can only overstate. EVN is not blocked. It is a *poor* bound — it assumes
+nothing has been spent on a programme drawing since FY25 and running to FY31 —
+and that is a reason to source spend-to-date, not a reason to exclude the name.
+
+The initial switch therefore blocks on **WGX alone**, at 12.3% of the book, and
+unblocks no earlier than the Strategic Outlook in early September 2026.
 
 ## 3. Proposed production fields
 
@@ -235,6 +273,33 @@ GGP's Havieron record, for example, must use one project basis and show which
 part of the A$1,065m total sits inside Gate 2 rather than allowing two unrelated
 figures to describe the same build.
 
+### 3.5 Input state and estimate quality
+
+Every capital amount carries a state. The state is what makes §4.4 enforceable
+by the engine instead of argued in a note, and it is the field the initial
+switch filters on.
+
+| State | Meaning | May enter the denominator? |
+|---|---|---|
+| `POINT` | Sourced remaining total to completion of the scope | Yes |
+| `UPPER_BOUND` | Sourced total that omits no spend and may overstate — typically a gross programme figure carried as if nothing had been spent | Yes |
+| `CARRY_FORWARD` | Last verified value held under §4.3, gross, no assumed spend-down | Yes, to the six-month limit |
+| `LOWER_BOUND` | A figure known to omit required spend — a contract sum without owner costs, one leg of a multi-leg programme, one year of a multi-year build | **No** |
+| `UNRESOLVED` | No sourceable point or conservative upper bound exists | **No** |
+
+Three quality attributes travel with the amount, because each changes whether a
+number is a point estimate or a bound:
+
+| Attribute | Why it is a field and not a note |
+|---|---|
+| `cost_base_date` | Distinct from the estimate's as-of date. Greatland's A$1,065m Havieron figure is struck on a **June 2025 cost base** and approved in June 2026; escalation between the two is real and undisclosed. |
+| `accuracy_range` | Capricorn's A$474m Mt Gibson estimate is at "±25% accuracy with a 90% confidence level". A ±25% figure is not the same kind of object as a contracted sum. |
+| `contingency_included` | The same Capricorn estimate states "no contingency has been allowed". An estimate without contingency is a lower bound on the delivered cost even when it is a point estimate of the scope. |
+
+`LOWER_BOUND` is a recorded state, not a rejection. The figure stays visible, is
+reported, and is available to Gate 2 where a *smaller* capital number makes the
+survival test harder rather than easier. It simply cannot reach the denominator.
+
 ## 4. Capital sourcing and allocation rules
 
 ### 4.1 Apply the rule to all sleeves at once
@@ -300,7 +365,7 @@ already-live index needs a deterministic response to a late or changed filing.
 | Initial production migration | Do not activate the new denominator until every selected constituent has a current sourced value or sourced de minimis zero. |
 | New entrant | No admission without current project reconciliation and execution capital. |
 | Incumbent, routine disclosure delayed | Carry forward the last verified **gross** remaining execution capital unchanged for up to six months. Assume no spend-down. Flag the input `CARRY-FORWARD`. |
-| Incumbent announces a new approved scope without total cost | Use the greater of the last verified company total and any newly sourceable contracted or guided minimum, flag `PROVISIONAL-LOWER-BOUND`, and open an event-driven sourcing item. Never infer the missing total. |
+| Incumbent announces a new approved scope without total cost | Carry the last verified value forward for the existing scopes. The new scope is `UNRESOLVED`: it may not be entered at a contracted or guided minimum, because that is a `LOWER_BOUND` (§4.4). Open an event-driven sourcing item; if it is unresolved at the next rebalance the constituent is ineligible. Never infer the missing total. |
 | Carry-forward reaches six months | Reject the constituent at the next quarterly rebalance under the ordinary data-quality rule; redistribute through normalisation. Do not abort the whole build. |
 | Project completes or is cancelled | Reduce or remove capital only on a primary source. Elapsed time is not evidence of completion. |
 
@@ -311,12 +376,84 @@ forward capital from quarterly disclosures. Board approval, cancellation,
 completion, a material cost change or a Gate 2 funding breach is event-driven.
 
 This hierarchy can temporarily preserve a conservative stale value, but it
-cannot create a favourable zero. A newly disclosed lower bound is explicitly not
-treated as a current point estimate, and it cannot survive beyond the carry-
-forward window. Structural code/config inconsistencies still hard-abort; issuer
-data absence follows this constituent lifecycle.
+cannot create a favourable zero and it cannot create a favourable *understatement*
+either. Structural code/config inconsistencies still hard-abort; issuer data
+absence follows this constituent lifecycle.
 
-### 4.4 Rox example
+### 4.4 No unbounded lower bound in the denominator
+
+A lower bound understates capital, shrinks the denominator and **raises** the
+weight. It is the same defect as a favourable zero, only partial, and the
+earlier draft of §4.3 admitted it for up to six months. It is now excluded
+outright at every stage, initial and recurring alike.
+
+The earlier rule was also weaker than it read. "Use the greater of the last
+verified company total and any newly sourceable contracted or guided minimum" is
+`max()`, not `sum()` — so a newly approved scope smaller than the existing total
+would have added **nothing at all**.
+
+Two lower bounds are already live in the data layer and would have passed:
+
+- **Genesis, Tower Hill.** The executed EPC contract sum is A$229m; the issuer's
+  own total anticipated capital cost is **A$250–280m**. The difference is a A$40m
+  owner's cost allowance the contract does not carry.
+- **Ramelius, Mt Magnet.** The A$223m plant leg is one of three in a
+  board-approved programme of A$223m + A$76m + A$82m = **A$381m**.
+
+Both were caught by hand in the sourcing notes. The `LOWER_BOUND` state makes it
+mechanical.
+
+**Bounded scope-completeness is not a lower bound.** A figure that covers a
+disclosed period in full, where the issuer states that period completes the
+pre-production programme, is a `POINT` estimate for that scope and is recorded
+with its boundary. Vault's Sugar Zone is the worked case: FY27 capital guidance
+"incorporates **all** Sugar Zone site expenditure", and production commences
+Q1 FY28. That is materially different from an open-ended annual run-rate, and
+rejecting it over one undisclosed quarter would eject a constituent on a
+technicality. The test is whether the omitted remainder is **bounded by a
+disclosed completion date**, not whether it is provably zero.
+
+### 4.5 Finite scopes, not recurring guidance
+
+Execution capital is a **finite, approved scope with a disclosed completion
+total**. Recurring annual growth guidance is not execution capital and stays a
+Gate 2 input.
+
+The distinction is empirical, not stylistic. Regis guided FY26 growth capital at
+A$240–255m and spent A$248.1m, then guided FY27 at A$250–270m. That is a stable
+run-rate funded from operations, not a depleting project balance; adding it to a
+denominator alongside Havieron's A$1,065m build would put two different kinds of
+object in one column. On the current book this leaves **RRL, PNR and CYL** at a
+sourced de minimis zero for execution capital, with their spend still charged to
+Gate 2 as before.
+
+Vault is the case that shows the rule needs care rather than a sleeve label: its
+A$173m FY27 growth capital contains A$96m of Sugar Zone pre-production, which is
+a finite build with a stated production date, alongside A$77m of fleet
+transition, stripping and tailings lifts that are not. The split is by scope, and
+the issuer supplies it.
+
+### 4.6 Ineligible-jurisdiction execution capital is included
+
+Vault will spend A$96m building Sugar Zone in Ontario, which Gate 1 rejects, so
+none of its ounces reach the numerator. That capital is nonetheless charged to
+the denominator.
+
+The reason is consistency rather than cash flow. **Enterprise value is already a
+whole-entity quantity.** Northern Star's EV contains the market's valuation of
+Pogo while methodology §2.4 excludes every Pogo ounce from the claim; the
+methodology handles ineligible exposure with a separate NAV cap (methodology
+§2.5), not by carving EV.
+Charging whole-entity EV while netting out ineligible capital would put the two
+halves of the same denominator on different bases. Inclusion is the choice that
+keeps them on one.
+
+This is conservative and should be labelled as such: it makes a mixed-jurisdiction
+issuer look more expensive per counted ounce, which is the direction that cannot
+mislead. It applies equally to Pogo and Red Lake if either ever discloses project
+capital.
+
+### 4.7 Rox example
 
 Rox illustrates all three fields:
 
@@ -334,6 +471,38 @@ present it as a current point value.
 The economic denominator adds remaining execution capital once. Gate 2 reads
 the zero residual gap. Nothing is called `optionality_capital`: the same plant
 and development serve the 674 koz Reserve and the scheduled non-reserve material.
+
+The roll-forward is available and should be applied: FY26 Appendix 5B discloses
+A$47.089m of PP&E plus A$15.788m of assets under construction, giving
+**A$319.7m** at 30 June 2026. Rox is single-asset, so no apportionment is needed.
+
+### 4.8 Conditionally obsolete scopes
+
+A scope can be live today and pointless on a foreseeable event. Two are live in
+the current book, and they need opposite treatments — which is why "retain until
+the issuer cancels it" is not sufficient on its own.
+
+| | Event | Replacement scope | Treatment |
+|---|---|---|---|
+| **GMD, Tower Hill** | Genesis/Vault scheme, signed 14 Jul 2026, targeting Nov 2026. The issuer's own guidance calls the mill "obviated post completion of Vault merger". | None — the scope disappears | **Retain** at A$250–280m until the scheme is effective or the issuer cancels. Retaining is conservative, and elapsed time is not evidence of cancellation. |
+| **WGX, Higginsville** | Board-approved 2.6 Mtpa stage now **deferred** in favour of an uncosted 4 Mtpa case | Larger and uncosted | **`UNRESOLVED`.** Retaining A$145m would retain a `LOWER_BOUND`, which §4.4 forbids. |
+
+The branch is therefore: retain when the replacement is smaller, absent or
+equal, because holding the old figure overstates and overstating is safe. Mark
+`UNRESOLVED` when the replacement is larger or uncosted, because holding the old
+figure understates.
+
+Westgold is the harder case in a second way. The 18 August 2026 Fletcher reserve
+announcement states that "by deferring the two-stage Higginsville expansion,
+Westgold can prioritise the 4Mtpa design case", that the 4 Mtpa study is only
+"to commence shortly" and completes "toward the end of FY27", and that "it would
+be premature to provide a definitive timeline". Capital is meanwhile being
+redirected to "additional milling capacity committed in, or planned for the
+Murchison" — a scope the issuer calls **committed** and does not cost at all.
+So A$145m is simultaneously a lower bound on a deferred scope and silent on a
+committed one. A preliminary 4 Mtpa assessment is expected in the Strategic
+Outlook in **early September 2026**; the definitive figure lands at the end of
+FY27.
 
 ## 5. Optionality evidence — narrower decision
 
@@ -404,6 +573,11 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 | Add execution capital and residual gap | Reject | Counts the financing shortfall twice inside the same project cost. |
 | Developer-only denominator correction | Reject | Penalises pure-play developers while identical builds inside producers remain free. |
 | Impute missing producer capital | Reject | A cohort ratio would manufacture a direct denominator input. |
+| Lower bound in the denominator | Reject | Understates capital and raises the weight — a favourable zero by degrees. Two are already live: GMD's A$229m EPC sum against a A$250-280m issuer total, and RMS's A$223m plant leg of a A$381m programme. |
+| `max(existing total, new scope minimum)` | Reject | The earlier §4.3 fallback. It is `max()`, not `sum()`, so a newly approved scope smaller than the existing total adds nothing at all. |
+| Recurring annual growth guidance as execution capital | Reject | RRL guided A$240-255m and spent A$248.1m, then guided A$250-270m. A stable run-rate is not a depleting project balance and does not belong in a column with Havieron. |
+| Netting ineligible-jurisdiction capital out of the denominator | Reject | EV is already whole-entity — NST's EV carries Pogo's value while methodology §2.4 excludes every Pogo ounce. Netting capital only would put the two halves of one denominator on different bases. |
+| Retaining a deferred scope superseded by a larger uncosted one | Reject | Retaining WGX's A$145m while the 4 Mtpa replacement is uncosted retains a lower bound. Retain only where the replacement is smaller, absent or equal. |
 
 ## 7. Production implementation sequence
 
@@ -413,7 +587,11 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 - For all selected constituents, identify unfinished material initial, restart
   and growth scopes.
 - Apply the 1% aggregate-of-EV materiality rule; list every sub-threshold scope
-  before testing the aggregate so fragmentation cannot erase a build.
+  before testing the aggregate so fragmentation cannot erase a build. On the
+  current book it excludes nobody: the lowest is NST at 1.18% of EV.
+- Classify each amount `POINT` / `UPPER_BOUND` / `LOWER_BOUND` / `UNRESOLVED`
+  per §3.5, and record cost-base date, accuracy range and contingency treatment.
+- Separate finite approved scopes from recurring annual growth guidance (§4.5).
 - Separate pre-production/growth from sustaining, exploration and pre-FID spend.
 - Build the §3.4 project bridge, roll totals forward for sourceable spend and
   reconcile overlaps with the Gate 2 committed-capex record.
@@ -435,8 +613,9 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 
 ### Step 3 — switch all names together
 
-- For the initial switch, require a current sourceable value or sourced de
-  minimis zero for every selected constituent.
+- For the initial switch, require a `POINT`, an `UPPER_BOUND`, or a sourced de
+  minimis zero for every selected constituent. `LOWER_BOUND` and `UNRESOLVED`
+  both block. On today's data that means WGX alone (§2.4 of this proposal).
 - Apply `EV + remaining execution capital` to every sleeve in the same build.
 - Publish old and new denominators, raw weights, cap effects and final weights in
   the transition report.
@@ -489,6 +668,20 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 - Missing execution capital blocks initial migration and new entry, but an
   incumbent follows carry-forward, expiry and scheduled rejection without a
   global build abort.
+- A `LOWER_BOUND` amount can never reach the denominator, at initial switch or
+  during recurring operations, and no combination of carry-forward and a new
+  unsourced scope can produce one.
+- A newly approved scope is added to the existing total, never `max()`-ed
+  against it.
+- A scope-complete figure with a disclosed completion date is `POINT`, not
+  `LOWER_BOUND`; an open-ended annual run-rate is neither and is excluded by §4.5.
+- Recurring annual growth guidance reaches Gate 2 and never the denominator.
+- Execution capital in a Gate 1 ineligible jurisdiction is included in the
+  denominator while its ounces stay excluded from the numerator.
+- A deferred scope whose replacement is larger or uncosted is `UNRESOLVED`, not
+  retained at the old figure.
+- Cost-base date, accuracy range and contingency treatment are present on every
+  `POINT` and `UPPER_BOUND` amount.
 - Carry-forward never assumes spend-down, never lasts beyond six months and can
   be cleared only by a primary source.
 - Numeric zero requires a primary-source note establishing the absence of a
@@ -500,9 +693,18 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 ## 9. Proposed outcome
 
 Approve the capital definition, configured materiality rule, project
-reconciliation, all-name sourcing pass, field split, recurring-operations
-procedure and test plan as the next production change. Preserve the same-market-
-data replay as a separate approval checkpoint before weights move.
+reconciliation, input-state schema, lower-bound exclusion, finite-scope
+definition, ineligible-jurisdiction treatment, conditional-obsolescence branch,
+all-name sourcing pass, field split, recurring-operations procedure and test
+plan as the next production change. Preserve the same-market-data replay as a
+separate approval checkpoint before weights move.
+
+The sourcing is further along than the first revision assumed. Eleven of twelve
+constituents resolve to a `POINT` or a conservative `UPPER_BOUND` today, and two
+of those become exact within days — Northern Star's FY27 guidance on 20 August
+and Ramelius's FY26 Commitments note on 21 August. The initial switch blocks on
+Westgold alone, and on a disclosure the issuer has scheduled: a preliminary
+4 Mtpa assessment in its Strategic Outlook in early September 2026.
 
 Approve the rejected-alternatives table as institutional memory. Defer the
 asset-evidence overlay; implement only the lightweight scheduled/unscheduled
