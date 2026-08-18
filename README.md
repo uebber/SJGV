@@ -48,12 +48,8 @@ Indicated at 0.5 and Inferred at 0.2. Those discounts are the only judgement lef
 anywhere in the weight, and they sit where a judgement belongs — deciding how
 many ounces are claimed, not scoring a company.
 
-This is the whole convexity position. Sub-economic ounces come into the money as
-the gold price rises and the cut-off grade falls; that mechanism is the *reason*
-a gold miner is geared to gold at all. An index counting only reserves owns the
-in-the-money strip and none of the option. The current book is **57% reserves,
-30% near-money M&I, 13% inferred tail** — and a book drifting toward reserves is
-a book quietly losing its optionality.
+The current book is **57% reserves, 30% near-money M&I, 13% inferred tail**.
+That mix is the convexity position, and the investment case below is about why.
 
 **Hedged ounces are subtracted.** Gold a company has already sold forward is gold
 you do not own the upside to. It comes off the reserve tranche first, because
@@ -119,6 +115,101 @@ a tenement dispute or a fraud does not mark a claim down — it removes it.
 | Single-asset company maximum | 10% |
 | Developer sleeve | ≤ 15%, per name ≤ 5% |
 | Ineligible-jurisdiction NAV per constituent | 25% |
+
+---
+
+## The investment case
+
+Three ways it pays, and one thing it protects.
+
+**You own more of the asset.** A$679 against A$917 per ounce is not a forecast, a
+factor premium or a backtest — it is the price of the same twelve companies'
+disclosed gold, arranged two ways. Nothing has to happen for that discount to be
+real; it is what you own on day one.
+
+**You own the option, not just the strip in the money.** 43% of the claim is
+Measured & Indicated and Inferred material — ounces in nobody's mine plan yet,
+already written down to 0.5 and 0.2 in the count before a euro is allocated to
+them. That tranche is where a gold miner's gearing to the gold price actually
+comes from, and a reserves-only count prices it at nothing.
+
+**You hold what an acquirer buys.** Acquirers in this sector transact on ounces
+in the ground, and this book is, by construction, the cheapest ounces in the only
+jurisdiction that passes Gate 1. That is not hypothetical here: **Vault is 8.4%
+of the book and under a signed Genesis scheme** targeting November 2026,
+Evolution is itself acquiring Carnaby, and five schemes have moved across the
+sector since May 2026 — one of them collapsing mid-flight when a rival outbid it,
+inside a ten-week window.
+
+**And Gate 1 protects you from being right.** The scenario this index exists for
+is the one in which gold becomes politically interesting. Owning the correct
+asset into that scenario is worth nothing if it sits somewhere with a motive to
+take it.
+
+### Where the convexity is — and where it is not
+
+A gold mine's convexity is not a modelling artefact, it is a physical mechanism:
+**as the gold price rises the cut-off grade falls, and rock that was waste
+becomes ore.** Ounces migrate from Inferred to M&I to Proven & Probable, and the
+ounce count itself grows without a single new drill hole. Counting the
+non-reserve tranches at 0.5 and 0.2 is how you own that migration *before* it
+happens. An index counting reserves alone owns the in-the-money strip and none of
+the option.
+
+Three things must be said plainly about how far that can be evidenced.
+
+**The NAV model shows zero gamma, and that is a statement about the model.**
+Modelled capture at ±40% is 1.61 up and 1.61 down — a ratio of exactly 1.00. On a
+fixed mine plan at a single AISC, NAV is `A × (deck − AISC) − debt`, which is
+linear in the deck, so every finite difference returns the same delta. The 1.00
+is arithmetic, not evidence of an absence.
+
+**The mechanism cannot be measured from public disclosure.** A survey of ≈11 MB
+of primary text found that **zero of twelve constituents publish a resource at two
+or more cut-off grades.** Issuers run the curve and table only its argmax. So the
+ledger is static in the gold price by necessity, not by choice, and no cut-off
+elasticity is assumed — assuming one would manufacture the exact number the
+product is judged on.
+
+**Realised up-versus-down capture is not a finding either.** β_up 1.70 against
+β_dn 1.15, a ratio of 1.48 against 1.28 for the same names cap-weighted — on 23
+down weeks, with a 95% interval of [0.12, 4.44]. That interval spans "no
+convexity at all" and "three times gold". It is reported because it was measured,
+not because it demonstrates anything.
+
+**So the convexity position is the ledger mix and nothing else: 57% reserves, 30%
+near-money M&I, 13% inferred tail.** That is made of disclosed ounces rather than
+of a model's output, and it is the number to watch — a book drifting toward
+reserves is a book losing its optionality.
+
+### Why not simply take leverage instead
+
+Because measured in ounces, linear leverage *must* lose over a round trip. Start
+at 1.00 oz; gold doubles and a 2× exposure triples the index, taking you to 1.50
+oz; gold halves back to where it began and symmetric capture destroys the
+position entirely. At a realistic 1.3× downside capture you end at 1.05 oz — a 5%
+gain from a full round trip in which gold went nowhere.
+
+Ounce accumulation across a cycle is therefore a function of **convexity, not
+leverage**, and this is the third and least-discussed reason gold equities failed
+to deliver leverage between 2011 and 2020. It is why β_gold is reported and
+checked against a 1.4–1.8 band rather than maximised, why a 2.0+ target was
+considered and rejected, and why Gate 2 exists at all.
+
+### When it is worth holding, and when it is not
+
+| Scenario | How this index behaves |
+|---|---|
+| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 43% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency and no requisition statute has neither the motive nor the machinery to come for the metal. |
+| **The sector consolidates** | You are holding the list an acquirer screens for. Evidenced above, and running now. |
+| **Gold flat, miners de-rate** | The plain value case. Nothing needs to happen to the gold price; the position pays if A$ per ounce mean-reverts toward what the market pays elsewhere. |
+| **Gold drawdown** | You lose money. Nothing here is a hedge and the book is geared. What Gate 2 buys is that the loss is not made *permanent*: every constituent reaches the far side of a 40% real drawdown without issuing equity, so the ounces behind each share are the ones you started with. Dilution at the bottom is how gold equity holders were destroyed in the last cycle. |
+| **Sustained bull led by expensive large caps** | The worst case, and structural rather than fixable. See below. |
+
+One asymmetry worth knowing: the ledger counts an ounce at A$1,717 AISC and an
+ounce at A$3,100 identically. High-cost ounces have the most operating leverage
+to a rising price and are the first to be worth nothing in a falling one, so the
+book is more geared in both directions than the ounce count alone suggests.
 
 ---
 
