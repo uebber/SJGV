@@ -19,8 +19,9 @@ The production fix should:
    developers under the same rule;
 4. source and classify the capital legs for every constituent before switching
    the formula; and
-5. abort the build on missing execution capital instead of allowing absence to
-   flatter a name.
+5. require complete data for the initial switch, then use the bounded incumbent
+   carry-forward and scheduled-rejection procedure instead of either a
+   favourable zero or a permanent global abort.
 
 Do not ship a developer-only fix. A board-approved mine build inside a producer
 is the same economic activity as a mine build inside a pure-play developer.
@@ -95,13 +96,21 @@ Using the same recorded market data, the maintainer's deterministic replay found
 |---|---:|---:|---:|---:|
 | Current denominator | 679 | 458 | 895 | — |
 | Developers only | 700 | 768 | 895 | 0.00pp |
-| All names, upper-bound probe | 736 | 768 | 1,070 | 1.28pp |
+| All names, incomplete sourcing probe | 736 | 768 | 1,070 | 1.28pp |
 
 The zero turnover in the developer-only replay is a cap artefact, not evidence
 that the defect is immaterial. Raw value moves even when final capped weights do
 not. The all-name probe also makes the missing-data failure visible: RMS gains
 about 0.40pp solely because its committed-capital field is unsourced. No
 production formula may reward that absence.
+
+The A$736/oz result is **not an upper bound and not the proposed answer**. GMD's
+A$229m executed EPC sum is a floor for its project scope because it can omit
+owner costs and other required spend; other `committed_capex_aud_m` records can
+contain growth expenditure that the execution-capital definition will exclude.
+The direction of error therefore differs by issuer. Read the probe only as
+evidence that the denominator defect is worth roughly A$50/oz on the current
+headline and is large enough to source properly.
 
 ## 3. Proposed production fields
 
@@ -140,13 +149,46 @@ RawWeight_i ∝ ClaimedMoz_i / AllInEV_i
 The denominator never adds both capital and gap. The residual gap remains a
 Gate 2 financing-capacity input; it is not an additional cost.
 
-### 3.2 Schema migration
+### 3.2 Define materiality as a parameter
+
+“Material” may not remain an analyst judgement because including a project
+changes what was paid for the claim. The production implementation must add the
+following parameters to `data/config.json` **in the same commit as their named
+engine consumers**:
+
+```json
+"execution_capital": {
+  "materiality_of_ev": 0.01,
+  "incumbent_max_carry_forward_months": 6
+}
+```
+
+| Parameter | Named consumer | Rule |
+|---|---|---|
+| `execution_capital.materiality_of_ev` | `build_index.execution_capital_ledger` | An issuer's unfinished initial, restart and growth scopes are summed before testing. If the aggregate is at least 1% of pre-capex EV, include every sourceable scope in that aggregate; otherwise report a sourced de minimis zero. |
+| `execution_capital.incumbent_max_carry_forward_months` | `build_index.resolve_execution_capital` | Maximum age of a carried-forward incumbent value under §4.3. |
+
+The aggregation step is mandatory: an issuer cannot split one build into several
+sub-1% contracts and have them disappear. An approved scope with no sourceable
+total is `unknown`, not presumed below the threshold. Materiality is tested at
+the annual deep rebalance and when an event-driven project approval occurs;
+quarterly price movement alone does not switch a scope in and out.
+
+The proposed 1% starting value means an omitted aggregate changes that issuer's
+pre-normalisation denominator by less than 1%. It remains a real weighting
+parameter: the production replay must show the book at 0%, 0.5%, 1% and 2%, and
+the committee must approve the value before it becomes live. This design-only PR
+does not add it to config now because the repository correctly rejects declared
+but unread parameters.
+
+### 3.3 Schema migration
 
 Add or rename fields as follows:
 
 | Field | Role | Weight effect |
 |---|---|---|
-| `remaining_execution_capex_aud_m` | Gross sourceable remaining initial, restart or growth capital for material unfinished scopes | Added once to EV for all sleeves |
+| `execution_capital_projects` | Structured per-project scope, as-of date, remaining total, stress-horizon committed portion, exclusions and sources | Feeds both capital totals and their reconciliation |
+| `remaining_execution_capex_aud_m` | Engine-derived sum of included project records | Added once to EV for all sleeves |
 | `available_project_funding_aud_m` | Cash, cash-drawable committed facilities and contracted funding available for those scopes | Developer Gate 2 only |
 | `residual_funding_gap_aud_m` | Engine-derived difference between the two fields | Developer Gate 2 and reporting only |
 | `committed_capex_aud_m` | Contracted/non-deferrable cash burn inside the stress horizon | Existing producer Gate 2 survival input; unchanged |
@@ -157,6 +199,41 @@ preserve the ambiguity that caused the defect.
 `committed_capex_aud_m` and `remaining_execution_capex_aud_m` may refer to some
 of the same physical spend, but they are not added together anywhere. One is a
 stress-horizon cash-burn input; the other is the all-in economic denominator.
+
+### 3.4 Mandatory project reconciliation
+
+The fact that the two totals are consumed in different formulas does not permit
+them to disagree about the same mine. Every `execution_capital_projects` record
+must bridge the two uses at one as-of date:
+
+| Project item | Required content |
+|---|---|
+| `project_id` and scope | Stable identifier and issuer-defined build, restart or expansion boundary |
+| `remaining_execution_capex_aud_m` | Total sourceable spend from the as-of date to completion |
+| `committed_within_gate2_horizon_aud_m` | Portion contracted/non-deferrable inside the stress horizon |
+| `excluded_aud_m` | Sustaining, exploration, pre-FID, post-completion or other excluded spend, itemised by reason |
+| `available_project_funding_aud_m` | Funding used to derive the developer residual gap, where applicable |
+| source and as-of date | Primary document for every amount and a common measurement date or an explicit roll-forward |
+
+At company level the bridge must satisfy:
+
+```text
+remaining_execution_capex_aud_m
+    = sum(included project remaining totals)
+
+committed_capex_aud_m
+    = sum(project committed-within-horizon portions)
+    + other non-project non-deferrable stress burn
+```
+
+Equality between the two company totals is neither expected nor required: one
+is total remaining project spend and the other is cash burn inside a fixed
+horizon. But every difference must be explained by horizon, exclusions or an
+identified non-project item. For the same project and as-of date,
+`committed_within_gate2_horizon_aud_m` cannot exceed remaining execution capital.
+GGP's Havieron record, for example, must use one project basis and show which
+part of the A$1,065m total sits inside Gate 2 rather than allowing two unrelated
+figures to describe the same build.
 
 ## 4. Capital sourcing and allocation rules
 
@@ -185,7 +262,8 @@ the production target should not be described as unreachable.
    material expansion or pre-strip that unlocks a defined future plan is an
    execution-capital scope whether the issuer is a producer or developer.
 2. **Count each scope once.** When company guidance overlaps a project total,
-   reconcile the hierarchy and retain the larger complete scope, not both.
+   reconcile the hierarchy under §3.4 and retain the larger complete scope, not
+   both.
 3. **Use remaining total cost, not just contracted cost.** An EPC contract may
    omit owner costs, mining fleet, pre-production mining, contingency or other
    required spend. Use the latest issuer total and roll it forward.
@@ -206,11 +284,39 @@ the production target should not be described as unreachable.
 9. **Do not allocate capital pro rata by ounces.** Tonnes or ounces are not
    evidence of marginal capital causation. Use issuer-disclosed incremental
    scope or retain the whole-project total.
-10. **Unknown is not zero.** A missing value aborts the build before weights are
-    calculated. It does not exclude one name and reweight the rest, and it never
-    enters a sensitivity bound as a favourable zero.
+10. **Unknown is not zero.** Initial migration cannot switch the production
+    formula until every selected constituent has a current value. Recurring
+    operations follow §4.3 rather than taking the index offline or silently
+    substituting zero.
 
-### 4.3 Rox example
+### 4.3 Recurring operations
+
+The migration completeness rule and the live-index rule are deliberately
+different. A one-time formula switch may wait for a complete cross-section; an
+already-live index needs a deterministic response to a late or changed filing.
+
+| Situation | Procedure |
+|---|---|
+| Initial production migration | Do not activate the new denominator until every selected constituent has a current sourced value or sourced de minimis zero. |
+| New entrant | No admission without current project reconciliation and execution capital. |
+| Incumbent, routine disclosure delayed | Carry forward the last verified **gross** remaining execution capital unchanged for up to six months. Assume no spend-down. Flag the input `CARRY-FORWARD`. |
+| Incumbent announces a new approved scope without total cost | Use the greater of the last verified company total and any newly sourceable contracted or guided minimum, flag `PROVISIONAL-LOWER-BOUND`, and open an event-driven sourcing item. Never infer the missing total. |
+| Carry-forward reaches six months | Reject the constituent at the next quarterly rebalance under the ordinary data-quality rule; redistribute through normalisation. Do not abort the whole build. |
+| Project completes or is cancelled | Reduce or remove capital only on a primary source. Elapsed time is not evidence of completion. |
+
+The six-month limit is two light quarterly cycles and is controlled by
+`execution_capital.incumbent_max_carry_forward_months`. The annual deep
+rebalance rebuilds every scope from primary sources. Light rebalances roll
+forward capital from quarterly disclosures. Board approval, cancellation,
+completion, a material cost change or a Gate 2 funding breach is event-driven.
+
+This hierarchy can temporarily preserve a conservative stale value, but it
+cannot create a favourable zero. A newly disclosed lower bound is explicitly not
+treated as a current point estimate, and it cannot survive beyond the carry-
+forward window. Structural code/config inconsistencies still hard-abort; issuer
+data absence follows this constituent lifecycle.
+
+### 4.4 Rox example
 
 Rox illustrates all three fields:
 
@@ -282,6 +388,10 @@ The evidence discussion is supported by the primary rules:
   explains the “if not, why not” Table 1 requirement and confirms annual
   statements may be broken down by material project or geographic area.
 
+The distinction is deliberate: Listing Rule 5.21.2 itself says **geographic
+area based on materiality**. The additional “project (if material) or
+geographical area” explanation appears in Guidance Note 31, not in the rule.
+
 ## 6. Alternatives rejected — retain as institutional memory
 
 | Alternative | Decision | Reason |
@@ -302,15 +412,21 @@ The evidence discussion is supported by the primary rules:
 - Source RMS from a current primary filing.
 - For all selected constituents, identify unfinished material initial, restart
   and growth scopes.
+- Apply the 1% aggregate-of-EV materiality rule; list every sub-threshold scope
+  before testing the aggregate so fragmentation cannot erase a build.
 - Separate pre-production/growth from sustaining, exploration and pre-FID spend.
-- Roll project totals forward for sourceable spend and reconcile overlaps.
+- Build the §3.4 project bridge, roll totals forward for sourceable spend and
+  reconcile overlaps with the Gate 2 committed-capex record.
 - Source a defensible numeric zero when no material unfinished execution scope
   exists; silence is not zero.
 
 ### Step 2 — split the fields
 
-- Add `remaining_execution_capex_aud_m` and
-  `available_project_funding_aud_m`.
+- Add `execution_capital_projects` and
+  `available_project_funding_aud_m` to the data schema.
+- Add the two `execution_capital` config parameters and their named consumers in
+  the same commit.
+- Derive `remaining_execution_capex_aud_m` from the included project records.
 - Derive and report `residual_funding_gap_aud_m` in the engine.
 - Point developer Gate 2 D3 only at the residual gap.
 - Point the weight denominator only at remaining execution capital.
@@ -319,11 +435,14 @@ The evidence discussion is supported by the primary rules:
 
 ### Step 3 — switch all names together
 
-- Fail the entire build if any selected constituent lacks a sourceable execution
-  capital value.
+- For the initial switch, require a current sourceable value or sourced de
+  minimis zero for every selected constituent.
 - Apply `EV + remaining execution capital` to every sleeve in the same build.
 - Publish old and new denominators, raw weights, cap effects and final weights in
   the transition report.
+- After activation, apply the six-month incumbent carry-forward and scheduled
+  rejection procedure in §4.3; do not turn issuer data absence into a permanent
+  global hard abort.
 - Keep the scheduled/unscheduled optionality split as a report only where it is
   directly sourceable.
 
@@ -333,8 +452,11 @@ The evidence discussion is supported by the primary rules:
 - Reproduce the current book exactly before changing the denominator.
 - Decompose each weight change into capital, normalisation and portfolio caps.
 - Inspect raw weights even when final turnover is zero.
-- Run a missing-value fault injection proving that RMS-like absence aborts the
-  build rather than improving the name.
+- Run materiality sensitivity at 0%, 0.5%, 1% and 2% of EV.
+- Label the maintainer's A$736/oz result as an incomplete sourcing probe, not a
+  target, bound or expected production result.
+- Run missing-value fault injection for initial migration, incumbent carry-
+  forward, expiry, new entrant and newly approved unsourced scope.
 - Require a separate approval for the production switch after the sourced data
   table and replay are reviewed.
 
@@ -353,9 +475,22 @@ The evidence discussion is supported by the primary rules:
   same denominator treatment.
 - One project referenced by company guidance and a project study adds capital
   exactly once.
+- Every project has one common-as-of bridge between total remaining execution
+  cost and its Gate 2 committed-within-horizon portion.
+- A project committed-within-horizon amount cannot exceed its remaining
+  execution total; every company-level difference is explained by horizon,
+  exclusions or identified non-project stress burn.
 - Sustaining capital, exploration and pre-FID spend do not enter execution
   capital.
-- Missing execution capital for any selected constituent aborts the build.
+- Individually sub-threshold scopes are aggregated before the 1% materiality
+  test; fragmenting one project cannot change inclusion.
+- The config audit proves both execution-capital parameters have the declared
+  consumers and no duplicate or unread threshold exists.
+- Missing execution capital blocks initial migration and new entry, but an
+  incumbent follows carry-forward, expiry and scheduled rejection without a
+  global build abort.
+- Carry-forward never assumes spend-down, never lasts beyond six months and can
+  be cleared only by a primary source.
 - Numeric zero requires a primary-source note establishing the absence of a
   material unfinished scope.
 - M&I non-reserve and Inferred remain active numerator and sensitivity inputs.
@@ -364,9 +499,10 @@ The evidence discussion is supported by the primary rules:
 
 ## 9. Proposed outcome
 
-Approve the capital definition, all-name sourcing pass, field split and test
-plan as the next production change. Preserve the same-market-data replay as a
-separate approval checkpoint before weights move.
+Approve the capital definition, configured materiality rule, project
+reconciliation, all-name sourcing pass, field split, recurring-operations
+procedure and test plan as the next production change. Preserve the same-market-
+data replay as a separate approval checkpoint before weights move.
 
 Approve the rejected-alternatives table as institutional memory. Defer the
 asset-evidence overlay; implement only the lightweight scheduled/unscheduled
