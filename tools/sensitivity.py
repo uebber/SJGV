@@ -83,10 +83,11 @@ def market_data(tickers: list[str], refresh: bool) -> dict:
     return md
 
 
-def run(constituents, prices, risk, gold_aud, meta, anchor) -> dict[str, float]:
+def run(constituents, prices, risk, gold_aud, meta, anchor,
+        as_of: str | None = None) -> dict[str, float]:
     """One full pipeline pass. Returns {ticker: final weight}."""
     rows, _ = B.compute_raw_weights(constituents, prices, risk, gold_aud, meta,
-                                    anchor_gold=anchor)
+                                    anchor_gold=anchor, as_of=as_of)
     if not rows:
         return {}
     B.apply_constraints(rows, meta)
@@ -231,7 +232,8 @@ def main() -> int:
                 B._join(md["gold_history"], md.get("audusd_history") or []) if f > 0]
     anchor = B.gold_anchor(aud_gold, gold_aud, meta)["anchor_aud"]
 
-    base = run(copy.deepcopy(cons), md["prices"], risk, gold_aud, meta, anchor)
+    base = run(copy.deepcopy(cons), md["prices"], risk, gold_aud, meta, anchor,
+               as_of=market["_sourced"])
     ranges = build_ranges(cons)
     weighted = set(base)
 
@@ -244,7 +246,8 @@ def main() -> int:
     def scenario(mutate) -> tuple[float, str, bool]:
         c2 = copy.deepcopy(cons)
         mutate(c2)
-        return delta(base, run(c2, md["prices"], risk, gold_aud, meta, anchor))
+        return delta(base, run(c2, md["prices"], risk, gold_aud, meta, anchor,
+                               as_of=market["_sourced"]))
 
     # ── Score and cap inputs, per name ────────────────────────────────────
     results = []

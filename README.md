@@ -48,7 +48,7 @@ Indicated at 0.5 and Inferred at 0.2. Those discounts are the only judgement lef
 anywhere in the weight, and they sit where a judgement belongs — deciding how
 many ounces are claimed, not scoring a company.
 
-The current book is **57% reserves, 30% near-money M&I, 13% inferred tail**.
+The current book is **58% reserves, 29% near-money M&I, 13% inferred tail**.
 That mix is the convexity position, and the investment case below is about why.
 
 **Hedged ounces are subtracted.** Gold a company has already sold forward is gold
@@ -144,7 +144,7 @@ factor premium or a backtest — it is the price of the same twelve companies'
 disclosed gold, arranged two ways. Nothing has to happen for that discount to be
 real; it is what you own on day one.
 
-**You own the option, not just the strip in the money.** 43% of the claim is
+**You own the option, not just the strip in the money.** 42% of the claim is
 Measured & Indicated and Inferred material — ounces in nobody's mine plan yet,
 already written down to 0.5 and 0.2 in the count before a euro is allocated to
 them. That tranche is where a gold miner's gearing to the gold price actually
@@ -194,7 +194,7 @@ down weeks, with a 95% interval of [0.12, 4.44]. That interval spans "no
 convexity at all" and "three times gold". It is reported because it was measured,
 not because it demonstrates anything.
 
-**So the convexity position is the ledger mix and nothing else: 57% reserves, 30%
+**So the convexity position is the ledger mix and nothing else: 58% reserves, 29%
 near-money M&I, 13% inferred tail.** That is made of disclosed ounces rather than
 of a model's output, and it is the number to watch — a book drifting toward
 reserves is a book losing its optionality.
@@ -217,7 +217,7 @@ considered and rejected, and why Gate 2 exists at all.
 
 | Scenario | How this index behaves |
 |---|---|
-| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 43% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency and no gold controls running has neither the motive nor the standing machinery to come for the metal. What it does have is Part IV, switched off since 1976 and revivable by Proclamation; that is disclosed, not priced. |
+| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 42% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency and no gold controls running has neither the motive nor the standing machinery to come for the metal. What it does have is Part IV, switched off since 1976 and revivable by Proclamation; that is disclosed, not priced. |
 | **The sector consolidates** | You are holding the list an acquirer screens for. Evidenced above, and running now. |
 | **Gold flat, miners de-rate** | The plain value case. Nothing needs to happen to the gold price; the position pays if A$ per ounce mean-reverts toward what the market pays elsewhere. |
 | **Gold drawdown** | You lose money. Nothing here is a hedge and the book is geared. What Gate 2 buys is that the loss is not made *permanent*: every constituent reaches the far side of a 40% real drawdown without issuing equity, so the ounces behind each share are the ones you started with. Dilution at the bottom is how gold equity holders were destroyed in the last cycle. |
@@ -286,7 +286,7 @@ survivorship or look-ahead bias.
 
 | Path | What it is |
 |---|---|
-| [`index-methodology.md`](index-methodology.md) | The methodology. §6 is the ounce ledger and §7 the weight — those two sections are the entire model. §13 is the factor inventory: 46 inputs, established by perturbing each one and measuring the book, and no others |
+| [`index-methodology.md`](index-methodology.md) | The methodology. §6 is the ounce ledger and §7 the weight — those two sections are the entire model. §13 is the factor inventory: 51 inputs, established by perturbing each one and measuring the book, and no others |
 | `build_index.py` | The engine: gates, ledger, weighting, caps, basket sizing |
 | `nav_model.py` | The §9 NAV model — implied deck and P/NAV. **Reporting only, by decision.** No output reaches a weight |
 | `data/` | The provenance-tracked data layer — every value names the document it came from. [`data/README.md`](data/README.md) has the schema |
