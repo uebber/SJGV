@@ -1,16 +1,16 @@
 # Build artefacts at the repository ROOT only. These patterns must stay
-# ANCHORED with a leading slash: unanchored, `weights_v2.json` matches at every
-# depth, which silently excluded snapshots/*/weights_v2.json and
-# snapshots/*/basket_v2.json from version control. A snapshot exists to freeze
+# ANCHORED with a leading slash: unanchored, `weights.json` matches at every
+# depth, which silently excluded snapshots/*/weights.json and
+# snapshots/*/basket.json from version control. A snapshot exists to freeze
 # the OUTPUT alongside the data and the parameters (tools/snapshot.py), so
 # committing one without its weights file records a rebalance nobody can
 # reconstruct — and it fails silently, which is the worst direction. Found
 # 2026-08-18, before the first snapshot was ever committed.
 /.cache/
-/weights_v2.csv
-/weights_v2.json
-/basket_v2.csv
-/basket_v2.json
+/weights.csv
+/weights.json
+/basket.csv
+/basket.json
 __pycache__/
 /asymmetry.json
 /asx_quotes.json

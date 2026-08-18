@@ -177,7 +177,7 @@ def check_coverage() -> None:
     Imported rather than re-parsed so the two lists cannot disagree.
     """
     sys.path.insert(0, str(ROOT))
-    from build_index_v2 import KNOWN_FIELDS
+    from build_index import KNOWN_FIELDS
 
     unaudited = KNOWN_FIELDS - set(FIELDS) - UNCONSUMED
     if unaudited:

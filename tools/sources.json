@@ -296,7 +296,7 @@
     "status": "RESOLVED IN CODE, not by fetching",
     "was": "The single largest blocking gap — 6 of 17 candidates (AAR, AUC, BC8, CYL, PNR, RXL).",
     "why_fetching_failed": "Share counts are not on R&R pages or site roots, which is where the registry pointed. Issuer sites publish Appendix 2A INCREMENTAL issuances that read like totals, and third-party aggregators disagree badly: Ausgold quoted at 2.296bn shares by one against market caps implying 450-650m; Astral at 1.80bn vs 1.45bn. The ASX company-data API (asx.com.au/asx/1/company/{code}) is retired and now returns uri-not-found.",
-    "fix": "build_index_v2.py now pulls shares outstanding from IBKR fundamentals in the same session as the price, falling back to data/companies.json. This also makes EV internally consistent: market cap becomes price x shares from one feed at one instant rather than a live price against a stale share count.",
+    "fix": "build_index.py now pulls shares outstanding from IBKR fundamentals in the same session as the price, falling back to data/companies.json. This also makes EV internally consistent: market cap becomes price x shares from one feed at one instant rather than a live price against a stale share count.",
     "residual": "Verify the IBKR figure against one filing per name before a live rebalance."
   }
 }

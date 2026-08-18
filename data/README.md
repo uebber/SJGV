@@ -1,6 +1,6 @@
 # SJGV — Data Layer
 
-Every input the index consumes lives here. The engine (`../build_index_v2.py`)
+Every input the index consumes lives here. The engine (`../build_index.py`)
 reads this directory and nothing else. Code and data are separated because the
 data changes at every rebalance and the code does not.
 
@@ -198,7 +198,7 @@ support an imputation, reject the affected names instead.
 
 ### The same three numbers, used the other way round
 
-`build_index_v2.reconcile_resource` now checks that
+`build_index.reconcile_resource` now checks that
 `pp_moz + mi_non_reserve_moz + inferred_moz` adds back to `mr_total_moz` within
 2%, and reports the gap on every build. A mismatch means a category was read off
 the wrong table, or one of the four numbers is a different vintage from the
