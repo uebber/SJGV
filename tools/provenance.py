@@ -50,7 +50,7 @@ GATE_FIELDS = {
 def load():
     companies = json.loads((ROOT / "data" / "companies.json").read_text())["companies"]
     weights = {}
-    wpath = ROOT / "weights_v2.json"
+    wpath = ROOT / "weights.json"
     if wpath.exists():
         weights = {r["ticker"]: r["weight"]
                    for r in json.loads(wpath.read_text())["weights"]}

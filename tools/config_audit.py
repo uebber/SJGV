@@ -28,10 +28,10 @@ importing KNOWN_FIELDS and checking both directions. This is the same idea for
 config.json, and it checks a third direction the static lists cannot:
 
   DECLARED   every parameter in config.json must be claimed by a consumer in
-             build_index_v2.CONFIG_PARAMS.
+             build_index.CONFIG_PARAMS.
   STALE      every claim must point at a parameter that still exists.
   OBSERVED   every claim of "engine" must show up in the reads a real build
-             actually recorded (weights_v2.json → config_reads_observed).
+             actually recorded (weights.json → config_reads_observed).
              This is the half that cannot be faked by writing a confident list.
   UNDECLARED the engine must not read a key config.json does not define, or a
              hardcoded default is quietly deciding the answer.
@@ -49,10 +49,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-import build_index_v2 as B  # noqa: E402
+import build_index as B  # noqa: E402
 
 CONFIG = ROOT / "data" / "config.json"
-LAST_RUN = ROOT / "weights_v2.json"
+LAST_RUN = ROOT / "weights.json"
 
 VERDICTS = {
     "unclaimed": ("BLOCK", "declared in config.json, no consumer claims it"),
@@ -95,7 +95,7 @@ def audit() -> dict:
             continue
         if not observed:
             findings.append({"path": path, "verdict": "unverified",
-                             "detail": "no weights_v2.json — run a build"})
+                             "detail": "no weights.json — run a build"})
         elif path not in observed:
             findings.append({"path": path, "verdict": "unread",
                              "detail": f"claims to be read for: {what}"})
@@ -139,7 +139,7 @@ def main() -> int:
         print(f"  checked against the build of {result['observed_at'][:19]}Z "
               f"({result['n_observed']} config reads recorded)")
     else:
-        print("  NO BUILD OUTPUT — run build_index_v2.py first; without it the "
+        print("  NO BUILD OUTPUT — run build_index.py first; without it the "
               "engine-read claims cannot be verified, only trusted.")
 
     for consumer, paths in sorted(result["by_consumer"].items()):

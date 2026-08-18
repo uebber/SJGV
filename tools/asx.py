@@ -14,7 +14,7 @@ no market cap, no EV, and no denominator for the §9 weight.
 
 It used to come from IBKR at build time. That route is gone — TWS API 10.47
 removed reqFundamentalData outright, with no successor (see the note above
-_history in build_index_v2.py). Sourcing it by hand from filings is the trap the
+_history in build_index.py). Sourcing it by hand from filings is the trap the
 data README warns about: issuer sites publish Appendix 2A *incremental*
 issuances that read like totals, and third-party aggregators disagree badly —
 Ausgold was quoted at 2.296bn against a market cap implying 450-650m, Astral at

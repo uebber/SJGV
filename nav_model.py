@@ -5,7 +5,7 @@ SJGV v1.0 §9 — the internal NAV model. REPORTING ONLY.
     from nav_model import value_company, value_all, implied_deck
 
 Built 17 August 2026 to feed Channel 1 of the convexity score. Later the same
-day the convexity score was deleted (see build_index_v2.py and methodology §10),
+day the convexity score was deleted (see build_index.py and methodology §10),
 and this model was kept — but demoted, deliberately and permanently, to a
 reporting instrument. Nothing it computes reaches a weight.
 

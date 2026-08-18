@@ -18,7 +18,7 @@ is the finding: 23 down weeks cannot separate 1.5 from 1.6 from 3.0.
     python tools/asymmetry.py            # 5Y window, weekly and monthly
     python tools/asymmetry.py --years 3
 
-Reads the basket from weights_v2.json, so run build_index_v2.py first.
+Reads the basket from weights.json, so run build_index.py first.
 
 DEMOTED. This was once the headline KPI. It is now secondary, and §10.2's
 A$ of EV per claimed ounce is the headline, because that number is computed from
@@ -67,7 +67,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
 
-import build_index_v2 as B  # noqa: E402
+import build_index as B  # noqa: E402
 
 HOST = os.getenv("IB_HOST", "127.0.0.1")
 PORT = int(os.getenv("IB_PORT", "7497"))
@@ -347,9 +347,9 @@ def main() -> int:
     args = ap.parse_args()
     duration = f"{args.years} Y"
 
-    wpath = ROOT / "weights_v2.json"
+    wpath = ROOT / "weights.json"
     if not wpath.exists():
-        print("ERROR: weights_v2.json not found — run build_index_v2.py first.",
+        print("ERROR: weights.json not found — run build_index.py first.",
               file=sys.stderr)
         return 2
     built = json.loads(wpath.read_text())

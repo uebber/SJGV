@@ -62,7 +62,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-import build_index_v2 as B  # noqa: E402
+import build_index as B  # noqa: E402
 
 CACHE = ROOT / ".cache" / "md_sensitivity.json"
 

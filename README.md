@@ -270,7 +270,7 @@ survivorship or look-ahead bias.
 | Path | What it is |
 |---|---|
 | [`index-methodology.md`](index-methodology.md) | The methodology. §6 is the ounce ledger and §7 the weight — those two sections are the entire model. §13 is the factor inventory: 46 inputs, established by perturbing each one and measuring the book, and no others |
-| `build_index_v2.py` | The engine: gates, ledger, weighting, caps, basket sizing |
+| `build_index.py` | The engine: gates, ledger, weighting, caps, basket sizing |
 | `nav_model.py` | The §9 NAV model — implied deck and P/NAV. **Reporting only, by decision.** No output reaches a weight |
 | `data/` | The provenance-tracked data layer — every value names the document it came from. [`data/README.md`](data/README.md) has the schema |
 | `tools/` | `gaps.py` (what is missing) · `provenance.py` (whether it is any good) · `sensitivity.py` (what each gap is worth in pp) · `config_audit.py` (does the code read what config declares) · `snapshot.py` (point-in-time record and turnover) · `asymmetry.py` (up-versus-down capture) · `asx.py` (share counts, ADVT) · `fetch.py` / `extract.py` (sourcing) |

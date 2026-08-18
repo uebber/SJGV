@@ -96,13 +96,13 @@ Setup
 
 Run
 ---
-    python build_index_v2.py                      # weights + diagnostics only
-    python build_index_v2.py 1000000              # size a €1,000,000 basket
-    python build_index_v2.py 1000000 --commission 0.1
-    python build_index_v2.py --nav-detail         # per-name §8 NAV, P/NAV, implied deck
-    python build_index_v2.py --gold-aud 6170 --euraud 1.636   # offline overrides
+    python build_index.py                      # weights + diagnostics only
+    python build_index.py 1000000              # size a €1,000,000 basket
+    python build_index.py 1000000 --commission 0.1
+    python build_index.py --nav-detail         # per-name §8 NAV, P/NAV, implied deck
+    python build_index.py --gold-aud 6170 --euraud 1.636   # offline overrides
 
-Outputs weights_v2.csv/json and, when sized, basket_v2.csv/json. Then:
+Outputs weights.csv/json and, when sized, basket.csv/json. Then:
 
     python tools/config_audit.py --strict         # after any config edit
     python tools/snapshot.py                      # after any rebalance
@@ -2499,8 +2499,8 @@ def main() -> int:
         "config_reads_observed": sorted(CONFIG_READS),
         "config_keys_missing": sorted(CONFIG_MISSES),
     }
-    (HERE / "weights_v2.json").write_text(json.dumps(out, indent=2, default=str))
-    with (HERE / "weights_v2.csv").open("w", newline="") as f:
+    (HERE / "weights.json").write_text(json.dumps(out, indent=2, default=str))
+    with (HERE / "weights.csv").open("w", newline="") as f:
         cols = ["ticker", "name", "sleeve", "weight", "claimed_moz", "aud_per_oz",
                 "aud_per_oz_ex_gap", "funded_ev_aud_m", "funding_gap_aud_m",
                 "pp_moz", "mi_moz", "inferred_moz", "eligible_share", "hedged_moz",
@@ -2510,7 +2510,7 @@ def main() -> int:
         wr.writeheader()
         wr.writerows({**r, **r["ledger"]}
                      for r in sorted(rows, key=lambda x: -x["weight"]))
-    print("\nWrote → weights_v2.csv, weights_v2.json")
+    print("\nWrote → weights.csv, weights.json")
 
     if args.amount is None:
         return 0
@@ -2545,15 +2545,15 @@ def main() -> int:
           f"deployed at A${gold_aud:,.0f}/oz "
           f"({numeraire[1].upper()} secondary: €{gold_eur:,.2f}/oz)")
 
-    with (HERE / "basket_v2.csv").open("w", newline="") as f:
+    with (HERE / "basket.csv").open("w", newline="") as f:
         wr = csv.DictWriter(f, fieldnames=list(basket[0].keys()), extrasaction="ignore")
         wr.writeheader()
         wr.writerows(basket)
-    (HERE / "basket_v2.json").write_text(json.dumps(
+    (HERE / "basket.json").write_text(json.dumps(
         {"amount_eur": args.amount, "euraud": euraud, "gold_aud_oz": gold_aud,
          "ounces_deployed": total["spend_eur"] / gold_eur,
          "commission_pct": args.commission, "basket": basket}, indent=2, default=str))
-    print("Wrote → basket_v2.csv, basket_v2.json")
+    print("Wrote → basket.csv, basket.json")
     return 0
 
 

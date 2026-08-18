@@ -31,7 +31,7 @@ recomputed from it:
     config.json      the parameters as they stood; a weight change caused by a
                      committee decision must be separable from one caused by the
                      market, and only this makes that possible
-    weights_v2.json  the output, including gate verdicts and NAV detail
+    weights.json  the output, including gate verdicts and NAV detail
     manifest.json    git commit, gold price, FX, and a digest of the weights
 
 The git commit matters: it identifies the ENGINE. Data, parameters and code are
@@ -59,8 +59,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOTS = ROOT / "snapshots"
-ARTEFACTS = ("data/companies.json", "data/config.json", "weights_v2.json",
-             "basket_v2.json")
+ARTEFACTS = ("data/companies.json", "data/config.json", "weights.json",
+             "basket.json")
 
 
 def git_commit() -> str | None:
@@ -91,9 +91,9 @@ def short(commit: str | None) -> str:
 
 
 def take(tag: str | None) -> Path:
-    weights_path = ROOT / "weights_v2.json"
+    weights_path = ROOT / "weights.json"
     if not weights_path.exists():
-        raise SystemExit("No weights_v2.json — run build_index_v2.py first. A "
+        raise SystemExit("No weights.json — run build_index.py first. A "
                          "snapshot of the data layer without the weights it "
                          "produced explains nothing.")
     weights = json.loads(weights_path.read_text())
@@ -242,7 +242,7 @@ def chronological() -> list:
 def listing() -> None:
     dirs = chronological()
     if not dirs:
-        print("No snapshots yet. Run build_index_v2.py, then tools/snapshot.py.")
+        print("No snapshots yet. Run build_index.py, then tools/snapshot.py.")
         return
     print(f"\n{'SNAPSHOT':<26}{'N':>4}{'EFF N':>7}{'β':>6}{'GOLD A$':>10}  COMMIT")
     print("─" * 74)

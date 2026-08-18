@@ -18,8 +18,8 @@
 ## 0. Objective
 
 > **Own the largest possible claim on future unhedged gold ounces, per euro
-> invested, in jurisdictions that cannot expropriate it — and survive the
-> drawdown in between.**
+> invested, in jurisdictions with no record of taking them and no live power to
+> — and survive the drawdown in between.**
 
 Formally:
 
@@ -942,7 +942,7 @@ forward-gold-share-of-NAV purity basis (§5, recorded as a limitation).
 ### 12.3 Process rule
 
 Every parameter in `config.json` must name a consumer in
-`build_index_v2.CONFIG_PARAMS`, and `tools/config_audit.py` cross-checks the
+`build_index.CONFIG_PARAMS`, and `tools/config_audit.py` cross-checks the
 declaration against the reads a real build recorded. The rule exists because a
 declared-and-unread parameter has been found three times — Gate 3's spread
 limits, then five constraints at once, then three parameters the engine had

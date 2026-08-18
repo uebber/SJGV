@@ -1,10 +1,10 @@
 {
-  "snapshot": "2026-08-17-v2.1",
-  "tag": "v2.1",
+  "snapshot": "2026-08-17-ledger",
+  "tag": "ledger",
   "taken_utc": "2026-08-17T20:55:55.958550+00:00",
   "build_generated_utc": "2026-08-17T20:53:25.141544+00:00",
   "git_commit": "a7afa86d3379b36ba68b2438ab46cecaa7316df4-dirty",
-  "methodology": "SJQGM v2.1",
+  "methodology": "SJGV v1.0",
   "data_sourced": "2026-08-17",
   "gold_aud_oz": 6215.900612374182,
   "euraud": 1.629945,
@@ -29,7 +29,7 @@
   "artefacts": [
     "data/companies.json",
     "data/config.json",
-    "weights_v2.json",
-    "basket_v2.json"
+    "weights.json",
+    "basket.json"
   ]
 }
