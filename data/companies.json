@@ -1087,6 +1087,18 @@
      "url": "https://mma.prnewswire.com/media/2762658/Westgold_Resources_Limited_WESTGOLD_2025_MINERAL_RESOURCE_ESTIMA.pdf?p=pdf",
      "date": "2025-09-03",
      "type": "primary"
+    },
+    "diggers_aug26": {
+     "title": "Diggers & Dealers Presentation (4 Aug 2026) — FY26 full-year actuals: 387 koz produced, AISC A$2,841/oz, treasury A$939m at 30 Jun 2026, debt free, >A$1.5B available liquidity",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03117978-6A1337347",
+     "date": "2026-08-04",
+     "type": "primary"
+    },
+    "fletcher_or_aug26": {
+     "title": "1.1Moz Maiden Fletcher Ore Reserve (18 Aug 2026) — maiden Probable 1,145 koz at Beta Hunt (Kambalda, WA); Fletcher MRE +30% to 3.025 Moz; the approved 2.6 Mtpa Higginsville stage is under review in favour of a 4 Mtpa case",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03122059-6A1338914",
+     "date": "2026-08-18",
+     "type": "primary"
     }
    },
    "fields": {
@@ -1131,8 +1143,8 @@
     },
     "hedge_share_fwd24m": {
      "v": 0.0,
-     "doc": "q3fy26",
-     "note": "Fully unhedged, confirmed."
+     "doc": "diggers_aug26",
+     "note": "Unhedged, and now stated in an August 2026 lodged document rather than inferred from the March quarterly: 'ASX100, unhedged gold producer of scale'. The full eligible P&P tranche therefore reaches the claim with no subtraction under §6.3."
     },
     "shares_out_m": {
      "v": 948.82,
@@ -1140,23 +1152,24 @@
      "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.4% vs the previously filed figure"
     },
     "net_debt_aud_m": {
-     "v": -856.0,
-     "doc": "q3fy26"
+     "v": -939.0,
+     "doc": "diggers_aug26",
+     "note": "Treasury of A$939m at 30 June 2026, debt free. REPLACES -856.0, which was the 31 MARCH 2026 figure carried forward with an EMPTY note — the only field in the weighted book with no provenance text at all. BASIS: the issuer's own 'Treasury (cash, bullion and liquid investments)' definition, stated in footnote 1 of the same slide. That basis is the same one used for GMD, PNR and CYL, which also count liquid investments; RMS is the cohort exception, and only because its A$100.8m is a strategic Benz Mining stake rather than treasury. GAP: Westgold does not disclose the cash/bullion/investments split, so a cash-only reading cannot be constructed — it would be less negative than -939 and the direction therefore FLATTERS the name, which matters because WGX is the largest weight in the book. Close from the FY26 annual report. Corroboration: treasury A$939m plus the A$600m undrawn facility reconciles to the separately stated '>$1.5B in available liquidity at 30 June 2026'."
     },
     "production_koz_yr": {
-     "v": 365,
-     "doc": "q3fy26",
-     "note": "FY26 guidance 345-385 koz, midpoint."
+     "v": 387,
+     "doc": "diggers_aug26",
+     "note": "FY26 ACTUAL, 387 koz — 'FY26 Guidance Exceeded: 387koz - ~20% increase on FY25 (326koz)' and 'Three consecutive record production years'. REPLACES 365, which was the midpoint of FY26 GUIDANCE (345-385 koz) recorded as though it were the outcome. That is the SEVENTH instance of this pattern in the cohort and, unusually, this one runs AGAINST the name: WGX's margin at the Gate 2 stress price is negative (-A$109/oz), so more ounces make stressed free cash flow worse, not better. No effect on the claim — production reaches the ledger only to size the hedge book, and WGX is unhedged. FY27 guidance was still pending at 4 Aug ('FY26 Dividend / FY27 Guidance in August 2026')."
     },
     "undrawn_facilities_aud_m": {
      "v": 600,
-     "doc": "q3fy26",
-     "note": "Unsecured credit facility established."
+     "doc": "diggers_aug26",
+     "note": "Value unchanged; citation moves from the March 2026 quarterly to the August 2026 lodged presentation and is now corroborated by arithmetic rather than asserted. 'Debt free with >$1.5B in available liquidity at 30 June 2026' against a A$939m treasury implies A$561m+ of undrawn facility, consistent with the A$600m unsecured facility previously recorded. The presentation does not restate the limit or the tenor, so neither is confirmed as at 30 June 2026 — a tenor inside the Gate 2 horizon would make the strictly conservative value zero, on the OBM and GMD precedent. It decides nothing: WGX survives on cash alone."
     },
     "committed_capex_aud_m": {
      "v": 145,
-     "doc": "q3fy26",
-     "note": "Approved Higginsville mill expansion, 1.6 to 2.6 Mtpa."
+     "doc": "fletcher_or_aug26",
+     "note": "VALUE UNCHANGED AT A$145m, BUT THE SCOPE IS NOW UNDER ISSUER REVIEW AND THE FIGURE SHOULD NOT BE TREATED AS SETTLED. A$145m is the Higginsville mill expansion from 1.6 to 2.6 Mtpa, approved March 2026. The 18 Aug 2026 Fletcher reserve announcement states that Westgold 'has accelerated definitive design work on a 4Mtpa expansion case and is reviewing the optimal timing and scope of the previously approved 2.6Mtpa stage', and that this 'may extend the period that Higginsville operates at its current 1.6Mtpa capacity'. So the approved scope may be deferred, resized or replaced by a larger uncosted one. This is the SECOND instance of conditional obsolescence in the book, after GMD's Tower Hill mill being 'obviated post completion of Vault merger' — see docs/execution-capital-inventory.md 7.3, which records that the schema has no state for a scope that is live today and contractually pointless on a foreseeable event. The 4 Mtpa case carries no disclosed capital figure, so nothing can replace the A$145m yet. Held unchanged because 4.3 removes capital only on a primary source and elapsed time is not evidence. FY26 non-sustaining capital actually spent was A$142m (Diggers presentation footnote 1), which is a spend rate, not a remaining balance, and is not substituted."
     },
     "advt_shares_m": {
      "v": 3.4937,
@@ -1170,10 +1183,15 @@
     }
    },
    "flags": [
-    "Most complete data record in the universe: full resource split, explicit reserve deck, confirmed unhedged. Use as the QA benchmark for the others.",
-    "FY26 statement pending alongside August full-year results."
+    "GROUP RESERVE AND RESOURCE STATEMENT IS PENDING AND THE LEDGER IS KNOWN TO BE PARTLY SUPERSEDED. On 18 Aug 2026 Westgold declared a MAIDEN FLETCHER ORE RESERVE of 13.474 Mt at 2.6 g/t for 1,145 koz Probable, and restated the Fletcher MRE. Fletcher, June 2025 to June 2026, above a 1.2 g/t cut-off: Indicated 295 -> 1,553 koz, Inferred 2,030 -> 1,472 koz, total 2,325 -> 3,025 koz. Resources are reported INCLUSIVE of the ounces converted to reserve, which matches this ledger's convention, so Fletcher M&I non-reserve is 1,553 - 1,145 = 408 koz. THE LEDGER IS NOT PATCHED FROM THIS. The record's pp_moz/mi_non_reserve_moz/inferred_moz are GROUP figures as at 30 Jun 2025 (rr2025); splicing a single deposit into them would require assuming nothing else in the group moved over a year in which Westgold mined 387 koz, which is an apportionment estimation_policy forbids. Supersede all three from the FY26 group statement, due alongside the August 2026 full-year results. INDICATIVE ONLY, not to be entered: on a Fletcher-only delta the group would read P&P 4.645, M&I non-reserve 5.813, Inferred 6.542 Moz, lifting the claim from 7.77 to 8.86 Moz (+14%) on the largest weight in the book.",
+    "Most complete data record in the universe: full resource split, explicit reserve deck, confirmed unhedged. Use as the QA benchmark for the others. THIS CLAIM IS WITHDRAWN as of 19 Aug 2026 — it was true of the resource split and false of everything else. Six fields ran off a March 2026 quarterly dated to the month only while the cohort ran off June quarterlies, and net_debt_aud_m carried an empty note.",
+    "FY26 full-year results, FY27 guidance and the FY26 dividend are due in August 2026 ('FY26 Dividend / FY27 Guidance in August 2026', 4 Aug presentation). That single document closes the AISC basis, the treasury split and the group reserve statement at once."
    ],
-   "gaps": []
+   "gaps": [
+    "aisc_aud_oz — the recorded A$2,931/oz is the MARCH 2026 quarter on an OWN-ORE basis. The 4 Aug 2026 presentation gives FY26 full-year AISC of A$2,841/oz but does not state whether that is group or own-ore, and Westgold reports both. NOT UPDATED: the change would lower the cost base by A$90/oz and make Gate 2 easier, which is the one direction that must not move on an unstated basis. Close from the FY26 annual report, which states the basis.",
+    "net_debt_aud_m — cash/bullion/liquid-investments split at 30 Jun 2026 is not disclosed; see the field note.",
+    "q3fy26 document date is recorded to the month only ('2026-04'). It backs no ledger tranche, so it does not reach the 6.4 statement-currency gate, but it cannot be tested at day resolution either."
+   ]
   },
   {
    "ticker": "VAU",
