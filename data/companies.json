@@ -84,6 +84,11 @@
      "doc": "rr2026",
      "note": "EXACT. Pogo confidence-weighted 4,308.7 koz (P&P 2,385 + 0.5x1,799 M&I non-reserve + 0.2x5,121 Inferred) of group 47,940.6 koz."
     },
+    "eligible_pp_share": {
+     "v": 0.916077,
+     "doc": "rr2026",
+     "note": "DERIVED specifically for the v2 core ledger: eligible Australian P&P (28.419 - Pogo 2.385) / group P&P 28.419 = 91.6077%. This replaces the confidence-weighted all-category jurisdiction share for the reserve claim."
+    },
     "ineligible_nav_share": {
      "v": 0.09,
      "doc": "rr2026",
@@ -222,6 +227,11 @@
      "v": 0.801,
      "doc": "rrpage",
      "note": "EXACT. Red Lake (Ontario) confidence-weighted 3,830 koz (P&P 2,000 + 0.5x2,700 + 0.2x2,400) of group 19,270 koz."
+    },
+    "eligible_pp_share": {
+     "v": 0.833333,
+     "doc": "rr2026",
+     "note": "DERIVED specifically for the v2 core ledger: eligible Australian P&P (12.0 - Red Lake 2.0) / group P&P 12.0 = 83.3333%."
     },
     "ineligible_nav_share": {
      "v": 0.17,
@@ -1226,6 +1236,11 @@
      "doc": "rr2025tbl",
      "note": "CORRECTED from 1.0. Sugar Zone (Ontario) holds no reserve but does hold 789 koz M&I + 440 koz Inferred; confidence-weighted 482.5 koz of group 6,829.8 koz."
     },
+    "eligible_pp_share": {
+     "v": 1.0,
+     "doc": "rr2025tbl",
+     "note": "All group P&P is at Leonora, Mount Monger and Deflector in Australia. Sugar Zone is the only ineligible asset and carries no reserve, so the v2 core-ledger eligible P&P share is exactly 100%."
+    },
     "ineligible_nav_share": {
      "v": 0.07,
      "doc": "rr2025tbl"
@@ -2133,6 +2148,61 @@
      "v": 0.623,
      "doc": "mre_jul25",
      "note": "4.1 Mt at 4.7 g/t for 623 koz. The DFS prints 625 koz for the same category from the same estimate; 623 reconciles (1,546 + 623 = 2,169 against a stated 2,170) and 625 does not. 623 is also the lower figure."
+    },
+    "optionality_assets": {
+     "v": [
+      {
+       "name": "Youanmi DFS production-target optionality",
+       "resource_statement_doc": "mre_jul25",
+       "categories": {
+        "mi_non_reserve": {
+         "gross_moz": 0.048,
+         "ownership_share": 1.0,
+         "eligible_jurisdiction_share": 1.0,
+         "jurisdiction_code": "AU-WA",
+         "doc": "dfs_full",
+         "note": "DERIVED from DFS Table 2: 722 koz Indicated in the production target less 674 koz Probable Reserve = 48 koz Indicated outside reserve. This counts only the optionality with an explicit mine schedule, not the remaining 824 koz of company-level M&I non-reserve."
+        },
+        "inferred": {
+         "gross_moz": 0.178,
+         "ownership_share": 1.0,
+         "eligible_jurisdiction_share": 1.0,
+         "jurisdiction_code": "AU-WA",
+         "doc": "dfs_full",
+         "note": "DFS Table 2 Inferred component of the life-of-mine production target. The DFS cautionary statement says the viability does not hinge on it; the remaining 445 koz of company-level Inferred resource has no disclosed mine schedule and stays unqualified."
+        }
+       },
+       "metallurgy_recovery": {
+        "pass": true,
+        "recovery_pct": 0.908,
+        "doc": "dfs_full",
+        "note": "DFS Table 1 overall life-of-mine plant recovery; test work achieved greater than 94% recovery on partially oxidised flotation concentrate and 90.8% overall after Albion and flotation-tailings leach streams."
+       },
+       "processing_route": {
+        "pass": true,
+        "basis": "DFS-scheduled 1.0 Mtpa plant: crushing/grinding, flotation, ultrafine grind, Albion leach, intensive cyanidation and CIL",
+        "doc": "dfs_full"
+       },
+       "land_permitting": {
+        "pass": true,
+        "status": "100%-owned WA tenure; final major environmental approval received and construction underway",
+        "doc": "permit_jul26"
+       },
+       "capital_path": {
+        "pass": true,
+        "additional_future_capital_aud_m": 382.6,
+        "doc": "dfs_full",
+        "note": "CONSERVATIVE BOUND: charge the full disclosed DFS pre-production capital to the counted optionality, even though it also funds the 674 koz core reserve and some had already been spent by 30 June 2026. No portion is netted against the zero residual funding gap, so no capital attached to these ounces is omitted."
+       },
+       "encumbrances": {
+        "pass": true,
+        "treatment": "DFS includes a 3.5% royalty assumption, A$146m of life-of-mine royalty payments and royalties inside AISC; the full study discloses no metal stream",
+        "doc": "dfs_full"
+       }
+      }
+     ],
+     "doc": "dfs_full",
+     "note": "First v2 migration record. It deliberately counts only the non-reserve ounces scheduled in the DFS production target. The remainder stays visible in the company control totals and contributes zero until a sourceable development path exists."
     },
     "advt_shares_m": {
      "v": 2.0772,

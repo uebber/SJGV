@@ -1,16 +1,17 @@
-# Index Methodology — SJGV v1.0
+# Index Methodology — SJGV v2.0
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.0
+**Version:** 2.0
 **Date:** 18 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
 **Simulation AUM:** €1,000,000 (≈ A$1.64M)
 
-> **One formula, no scores.** A weight is claimed unhedged ounces divided by what
-> those ounces cost all-in. There is no second step, no composite, and no term
-> that does not change either how many ounces are claimed or what was paid for
-> them. §6 is the ledger and §7 is the weight; together they fit on a page.
+> **Two ledgers, one formula, no scores.** The core claim is attributable,
+> eligible, unhedged P&P. M&I non-reserve and Inferred sit in a separate
+> optionality inventory and enter the weight only asset by asset after economic
+> and source gates pass. Capital attached to every counted future ounce enters
+> funded EV. §6 is the ledger and §7 is the weight.
 
 
 ---
@@ -24,7 +25,7 @@
 Formally:
 
 ```
-maximise    ClaimedUnhedgedOunces / FundedEV
+maximise    (CoreClaim + QualifiedOptionality) / FundedEV
 subject to  P(permanent impairment)  ≈  0
             P(forced equity issuance in a 40% real drawdown)  ≈  0
 reported    β_gold ∈ [1.4, 1.8]
@@ -58,19 +59,21 @@ Consequences:
 
 Not in a score. **In which ounces get counted.**
 
-A gold mine is a strip of call options on gold: one option per ounce, strike
-equal to that ounce's all-in extraction cost, expiry at the year it appears in
-the mine plan. Proven and Probable reserves are the in-the-money part of that
-strip — ounces the company has committed to mine at a cost it has published.
-Measured and Indicated non-reserve material is the near-money part: drilled to a
-confidence that supports a mine plan, not yet economic enough to book. Inferred
-is the far out-of-the-money tail.
+A mine has option-like exposure because a higher gold price can lower economic
+cut-offs, enlarge an economically supportable resource shell and support reserve
+conversion where geological confidence and every Modifying Factor are already
+adequate. The analogy is not a valuation identity: corporate AISC is a period
+measure, not the strike price of every ounce, and price alone does not upgrade
+geological confidence.
 
-**Counting all three, at 1.0 / 0.5 / 0.2, is the convexity position.** It is the
-bet that sub-economic ounces come into the money as the price rises, which is
-the mechanism — the cut-off grade falling — by which a gold miner is convex at
-all. Nothing else in this document is needed to express it, and any attempt to
-express it a second time in a score restates the same number.
+That is why v2 separates the ledgers. P&P is the core claim. M&I non-reserve and
+Inferred are optionality candidates, not economically equivalent ounces. They
+receive the 0.5 / 0.2 confidence discounts only after the asset has a current
+statement, attributable eligible ownership, credible metallurgy and recovery,
+a processing/development route, land and permitting status, a disclosed capital
+path, and complete treatment of material streams and royalties. Inferred cannot
+become M&I or reserve without additional work; a higher price is not a drill
+hole.
 
 ### 0.3 The valuation frame, and its limits
 
@@ -90,8 +93,9 @@ The frame therefore sits **beneath** the gates, never alongside them.
 GATE 1   Sovereign immunity        →  absolute. No score, no partial credit, no offset.
 GATE 2   Survival                  →  binary.
 GATE 3   Tradability               →  binary.
-LEDGER   Claimed unhedged ounces   →  counted, never scored.
-WEIGHT   Ledger ÷ funded EV        →  and nothing else.
+CORE     Eligible unhedged P&P     →  the reserve claim.
+OPTION   Asset-gated M&I/Inferred  →  qualified inventory only.
+WEIGHT   (Core + option) ÷ funded EV → and nothing else.
 CAPS     Permanent-impairment caps →  §8.1.
 ```
 
@@ -408,52 +412,81 @@ when it completes.
 
 ## 6. The Ounce Ledger
 
-**This is the model.** Every weight in the index is a row of this ledger divided
-by that company's enterprise value. There is no second step.
+**These are the two ledgers.** They are reported separately and combined only at
+the final weighting line.
 
 ```
-  gross      P&P  +  M&I non-reserve  +  Inferred          as disclosed
-  × eligible_ounce_share                                   Gate 1
-  × confidence weight per category                         §6.1
-  − ounces already sold forward                            §6.3
-  = CLAIMED UNHEDGED OUNCES
+CORE CLAIM
+  attributable P&P × eligible_pp_share − sold-forward ounces
+
+QUALIFIED OPTIONALITY
+  Σ asset (attributable eligible M&I non-reserve × 0.5
+           + attributable eligible Inferred × 0.2)
+  only where every §6.2 gate passes
+
+WEIGHTING CLAIM = CORE CLAIM + QUALIFIED OPTIONALITY
 ```
 
 ### 6.1 Confidence weights
 
 | Category | Weight | What it is |
 |---|---|---|
-| **Proven & Probable** | **1.0** | The in-the-money strip. Committed to a mine plan at a published cost. |
-| **M&I non-reserve** | **0.5** | The near-money option. Drilled to a confidence that supports a mine plan, not yet economic enough to book. |
-| **Inferred** | **0.2** | The far out-of-the-money tail. |
+| **Proven & Probable** | **1.0** | Core unit of account: inside a mine plan after Modifying Factors. |
+| **M&I non-reserve** | **0.5** | Optionality inventory after the asset gates. Geological confidence can support mine planning, but economics and Modifying Factors remain. |
+| **Inferred** | **0.2** | Optionality inventory after the asset gates. It cannot support a reserve and normally requires more drilling before conversion. |
 
-These three numbers are **the only judgement remaining anywhere in the weight**,
-and they sit in the numerator where a judgement belongs: they decide how many
-ounces are claimed, not how a claim is scored. They are a JORC-category discount.
-Nothing about them is calibrated on this cohort, on any price history, or on any
-backtest — which is precisely why they survived the cut and the scoring layer did
-not.
+The category weights address geological confidence only. They do not make two
+ounces with different recovery, infrastructure, timing, royalties or capital
+requirements economically equivalent. Section 6.2 handles that limitation with
+binary source gates rather than another continuous score.
 
-**The mix they produce is the headline convexity statistic.** Currently the index
-claim is **57% unhedged reserves, 30% near-money M&I, 13% inferred tail.** Watch
-it over time: a book drifting toward reserves is a book losing its option
-inventory.
-
-**M&I non-reserve is required.** Every JORC and NI 43-101 annual statement
-discloses it, so a null is a sourcing gap, and admitting a name on P&P alone
-would put it in the cross-section counting only its in-the-money ounces against
-peers counting all three. **Inferred may be null** — not always broken out, only
-0.2-weighted — and its absence is reported and understates the name.
+M&I or Inferred absence no longer excludes a company. It leaves the optionality
+ledger empty while the independently sourced core claim remains eligible. A
+company is never forced into a false P&P-versus-full-resource comparison: only
+asset-qualified optionality competes with asset-qualified optionality.
 
 **Reconciliation.** P&P + M&I non-reserve + Inferred is checked against disclosed
-total Mineral Resources on every build, and a gap over 2% is reported. All twelve
-constituents currently reconcile.
+total Mineral Resources on every build, and a gap over 2% is reported. The group
+totals are a control total and disclosure; they do not enter the v2 weight unless
+they are decomposed into passing asset records.
 
-### 6.2 What is deliberately *not* in the ledger
+### 6.2 Optionality asset gates
 
-- **No in-situ A$/oz.** There is no way to set one that is not a judgement call.
-- **No imputed category split.** Inventing the M/I/Inferred breakdown from a cohort ratio, for names that publish only a total, was tested and rejected: calibrated on the only two observations available it understated M&I non-reserve ounces by 26–65% per name, invisibly, because the output looked like data. **A name without a disclosed split is rejected, not estimated.**
-- **No grade-tonnage response.** The count is what the company discloses at its own cut-off, which is a snapshot at one price. Making the ounce count a function of the gold price was the one genuinely unfinished piece of this methodology; the Phase 0 survey of 18 Aug 2026 established that **public disclosure does not support it** — zero of twelve constituents publish a resource at two or more cut-offs. §12.2 item 2 and `docs/grade-tonnage-survey.md`. The ledger is static in the gold price by necessity, not by choice, and it says so.
+Every asset is tested independently. A failure gives that asset zero optionality
+claim and is printed with the reason. It does not delete the company's core P&P.
+
+| Gate | Required sourceable record | Why it is binary |
+|---|---|---|
+| Current resource statement | Primary document dated no more than 18 months before the build | Prevents stale shells and mixed vintages from setting a current weight. |
+| Category-specific jurisdiction and ownership | For M&I and Inferred separately: gross Moz, ownership share, eligible-jurisdiction share, jurisdiction code and primary document | A company-wide blended share can misstate both attribution and Gate 1 eligibility. |
+| Metallurgy and recovery | Credible recovery percentage and primary support | Contained ounces with no demonstrated recovery are not comparable inventory. |
+| Processing route or development basis | Existing plant route or sourced study basis | An ounce without a route to product is not yet an economic claim. |
+| Land and permitting | Sourced status | Blocks optionality that cannot legally or physically be developed. |
+| Capital path | Sourced non-negative `additional_future_capital_aud_m` | The ounces and the capital required to unlock them enter together. Missing capital never defaults to zero. |
+| Encumbrances | Complete, sourced treatment of material streams and royalties | A stream or royalty omitted from the study economics makes the apparent claim incomparable. |
+
+The category calculation is explicit:
+
+```
+attributable eligible Moz = gross Moz × ownership share × eligible-jurisdiction share
+```
+
+`additional_future_capital_aud_m` is incremental to enterprise value and to any
+developer core funding gap already recorded under §3.1. A sourced zero is valid
+for optionality demonstrably accessible through existing funded infrastructure;
+an absent value fails the asset.
+
+**Transition rule.** The v1 company-level M&I and Inferred fields remain in the
+data layer as control totals. None is grandfathered. Until an issuer's inventory
+is migrated into complete asset records, it contributes zero to the v2
+optionality ledger. This is deliberately conservative and makes the sourcing
+backlog visible rather than smuggling old group totals through new gates.
+
+Still excluded:
+
+- **No in-situ A$/oz.** The ledger is a relative exposure signal, not a mineral valuation.
+- **No imputed category split.** A missing value remains missing.
+- **No assumed grade-tonnage response.** Public disclosure does not support a systematic curve; a higher gold price can change economic cut-offs but cannot manufacture geological confidence.
 
 ### 6.3 Hedges — subtracted, never multiplied
 
@@ -483,12 +516,10 @@ above its own reserve deck) subtract **nothing**. OBM holds 199,992 oz of bought
 puts and 33,128 oz of sold calls, and subtracts on the sold calls alone.
 
 **This is a subtraction of ounces, not a multiplier on a score.** Multiplying a
-name's whole claim by `(1 − sold_share)` would charge a **24-month forward book
-against a thirty-year reserve life**. Northern
-Star's 25.5% hedge cost it 25.5% of its whole claim; it has actually sold 0.79 Moz
-against a 42.8 Moz claim, which is 1.8%. The ledger makes the magnitude explicit
-and therefore arguable — which is the whole reason to build a ledger instead of a
-score.
+name's whole reserve base by `(1 − sold_share)` would charge a 24-month forward
+book against a multi-decade reserve life. The ledger instead subtracts the
+disclosed forward ounces from eligible P&P and leaves separately gated
+optionality untouched.
 
 **Not addressed, because nothing in the universe does it:** a producer that
 *writes* puts is selling insurance for premium income and taking on levered
@@ -500,9 +531,9 @@ extending before that name can be counted.
 ## 7. Weighting
 
 ```
-                ClaimedUnhedgedOunces_i
-  w_i    ∝     ─────────────────────────
-                    FundedEV_i
+                CoreClaim_i + QualifiedOptionality_i
+  w_i    ∝     ──────────────────────────────────────
+                              FundedEV_i
 ```
 
 That is the entire formula.
@@ -510,37 +541,36 @@ That is the entire formula.
 ### 7.1 Funded EV — what the ounces actually cost
 
 ```
-FundedEV = market capitalisation + net debt + residual funding gap
+FundedEV = market capitalisation + net debt
+           + residual core funding gap
+           + incremental capital for counted optionality
 ```
 
 **Enterprise value** is the standard part: debt is a prior claim on the same
 ounces, so buying an ounce through a levered balance sheet costs the equity
 holder more than the share price suggests.
 
-**The residual funding gap is the correction added 18 August 2026**, and it
-matters for one sleeve. EV prices a company as it stands today. For a
-pre-production name the §6 ledger is counting ounces the company **has not yet
-paid to unlock** — the gap has to be spent before a single one of them is mined.
-Leaving it out prices the claim on capital that has not been raised.
+The **residual core funding gap** remains the §3.1 developer correction. A
+developer whose gap is unsourced never reaches the denominator because D3
+rejects it first.
 
-Measured on the two developers Gate 2 currently rejects:
+The **incremental optionality capital** is new in v2 and applies to producers and
+developers alike. Each passing asset carries the remaining capital associated
+with the M&I and Inferred ounces being counted, net only of an explicitly
+documented overlap with the core gap. The capital is summed into funded EV at
+the same moment the asset's optionality enters the numerator.
 
-| | EV A$m | + gap | claim Moz | EV/oz | **all-in/oz** |
-|---|---|---|---|---|---|
-| AAR | 237 | 162 | 1.37 | A$173 | **A$291** |
-| AUC | 583 | 354 | 1.82 | A$320 | **A$515** |
-| RXL *(in the book)* | 558 | 0 | 1.23 | A$452 | **A$452** |
+This makes the failure direction safe:
 
-The discount roughly halves. Uncorrected, the headline metric would have ranked
-an unfunded developer as the cheapest claim in the universe on the strength of
-money it has not got. **RXL is fully funded, so today's book does not move** —
-which is why this was a safe moment to change it.
+- missing core funding gap → developer fails Gate 2;
+- missing optionality capital → asset contributes zero optionality;
+- sourced zero optionality capital → accepted only with the same primary
+  evidence as the rest of the capital path.
 
-Note what makes the correction safe rather than another silent default: **a
-developer whose gap is unsourced never reaches the denominator**, because §3.1
-D3 rejects it first. So absence cannot read as zero in the one sleeve where zero
-would flatter. For a producer the field is absent because there is no
-pre-production capital, and zero is right.
+There is therefore no producer exemption and no silent zero. Existing cash flow
+may ultimately fund the project, but that does not make the capital economically
+free; it is still part of what must be paid to turn the counted inventory into
+metal.
 
 **Market capitalisation is not a weight driver.** It enters only as the equity
 component of EV, and as an input to the reported capacity number. Cap weighting
@@ -556,19 +586,11 @@ company's ounces.
 
 ### 7.2 What this produces
 
-At the 18 August 2026 book: **A$684 of funded EV per claimed ounce, against
-roughly A$910 for the same twelve names cap-weighted.** That single number is the strategy
-working or not working, and it is computed from the same disclosed inputs as the
-weights, with no history in it and therefore no survivorship or look-ahead bias.
-
-**It reads A$684 and not A$644 because of a cap, not a market move.** Sourcing
-the §8.1 single-asset input on 18 August pinned Pantoro and Catalyst — the two
-cheapest claims in the universe at A$372/oz and A$530/oz — at 10% each, and
-against an unchanged gold price that moved the headline from A$643.51 to
-A$684.50. **Read the two numbers together:** A$644 is what the ounce ledger alone
-would buy, A$684 is what it buys after refusing to let one operational failure
-take out more than a tenth of the book. Neither is the "right" one; the
-difference *is* the cap, priced.
+The last stored snapshot is v1 and is not a v2 result. A v2 headline must not be
+published until the asset-level optionality register and its capital fields have
+been sourced and a fresh live build has run. Until then, the engine gives every
+unmigrated optionality asset zero and weights the independently valid core
+claims. Historical snapshots remain immutable and labelled as v1 evidence.
 
 ---
 
@@ -658,9 +680,10 @@ outside (0, 1] because one above 1.0 would disable the cap without saying so.
 knife-edge: nothing in the universe sits between 0.773 and 0.999. Vault at 0.772
 is the nearest miss and the only name a threshold of 0.75 would newly catch.
 
-**What it cost.** PNR 15.00% → 10.00% and CYL 12.52% → 10.00%, 7.52% one-way
-turnover, redistributed pro rata; RXL and GGP flag but are already below the cap.
-Measured against an identical gold price, **the index's price per claimed ounce
+**What it cost under the final v1 snapshot.** PNR 15.00% → 10.00% and CYL
+12.52% → 10.00%, 7.52% one-way turnover, redistributed pro rata; RXL and GGP
+flag but are already below the cap. Measured against an identical gold price,
+**the v1 index's price per claimed ounce
 rose from A$643.51 to A$684.50, +6.4%.** That is not a side-effect to bury: PNR
 at A$372/oz and CYL at A$530/oz are the two cheapest claims in the universe, and
 capping them necessarily makes the book dearer per ounce. **The committee is
@@ -713,9 +736,12 @@ Read that carefully, because it is not "these companies have no convexity":
 > debt`. That is linear in the deck, so every finite difference returns the same
 > delta. The ratio is 1.00 by construction, not by measurement.
 
-Real gold-miner convexity is the cut-off grade falling as the price rises, which
-**moves ounces from the M&I non-reserve tranche of the §6 ledger
-into P&P.** That is the measurement this ratio cannot make.
+Real gold-miner convexity includes the cut-off grade falling as price rises. That
+can enlarge the economically supportable resource shell and support conversion
+of suitable M&I material into reserves where the other Modifying Factors are
+adequate. It does not itself upgrade geological confidence, and it cannot move
+Inferred material into M&I without additional work. That economic response is
+the measurement this ratio cannot make.
 
 **And as of 18 August 2026 it cannot be made at all from public disclosure.**
 The Phase 0 survey (§12.2 item 2, `docs/grade-tonnage-survey.md`) found that
@@ -728,12 +754,11 @@ cut-offs it never discloses), 8% of the book is reported on net-smelter-return
 value shells rather than a gold-grade cut-off at all, and the cut-off is set by
 marginal cost while the data layer carries one average AISC per company.
 
-So the **ledger mix** — 57% reserves / 30% M&I non-reserve / 13% inferred — is
-not a placeholder for a better measure that is coming. It is the measure. Unlike
-this ratio it is made entirely of disclosed ounces rather than of a model's blind
-spot. **Report the mix; treat the 1.00 as a statement about the model; and do not
-let a future session reopen the gap by assuming a cut-off elasticity, which would
-manufacture the exact number the product is judged on.**
+So the v2 **qualified ledger mix** is the honest exposure diagnostic: core P&P
+versus M&I and Inferred that passed the asset gates. It is not proof of realised
+convexity and it is not a mineral valuation. **Report the mix; treat the 1.00 as
+a statement about the NAV model; and do not assume a cut-off elasticity that
+public disclosure cannot support.**
 
 ---
 
@@ -749,13 +774,18 @@ ounce terms the index only rises if the portfolio **outperforms gold**. A
 high-beta portfolio in a gold bull market rises enormously in EUR and modestly in
 ounces.
 
-### 10.2 Headline KPI: A$ of EV per claimed ounce
+### 10.2 Headline KPI: funded EV per weighting-claim ounce
 
-**A$640/oz against A$910/oz cap-weighted.**
+The KPI is the inverse of the portfolio's weighted ounces-per-funded-dollar:
 
-This replaces the asymmetry ratio as the headline. It is computed from the same
-disclosed inputs as the weights, carries no history, and therefore cannot be
-survivorship- or look-ahead-biased. It measures the thing the index is for.
+```
+1 / Σ w_i × (CoreClaim_i + QualifiedOptionality_i) / FundedEV_i
+```
+
+It is a weighted harmonic construction statistic, not the literal look-through
+purchase price of homogeneous ounces. The label must state that explicitly.
+No v2 number is published until the asset register is populated and a fresh
+build is stored; the A$/oz figures in the existing snapshots are v1 history.
 
 ### 10.3 Up-versus-down behaviour, and why it is demoted
 
@@ -922,15 +952,16 @@ removes a constituent immediately, with weight redistributed pro rata.
 
 ### 12.2 Open items
 
-The register was three lines long, which was the point. **All three closed on 18
-August 2026** — one by sourcing, one by verification, one by a survey that
-established the data does not exist.
+The original three items closed on 18 August 2026. Version 2 adds one deliberate
+data migration: company-level optionality is not grandfathered through the new
+asset gates.
 
 | # | Item | Outcome |
 |---|------|---------|
 | 1 | **Single-asset status, all 17.** | **CLOSED — sourced.** Replaced the unsourced `single_asset` boolean with a sourced `largest_asset_pp_share` and a declared 0.80 threshold (§8.1). Eight of seventeen flag, not the four §11 named; the cap binds on **PNR and CYL**, 7.52% one-way turnover, and it costs **+6.4% on A$ per claimed ounce**. Three regression names behaved: PNR and RXL returned 1.000, CMM returned 0.700 under the forward rule fixed before the number was computed. |
 | 2 | **Grade-tonnage curves.** | **CLOSED — not sourceable from public disclosure.** Phase 0 survey over ≈11 MB of primary text across all seventeen: **zero of twelve constituents** publish a resource at two or more cut-offs or a grade-tonnage table. One partial (RXL, a *chart* for its underground resource only) and one unknown (WGX's five NI 43-101 reports, issuer URLs dead). Full write-up and the three findings that would have blocked Phase 2 regardless: `docs/grade-tonnage-survey.md`. **The §6 ledger stays static in the gold price and §9.2's modelled 1.00 keeps saying what it says.** |
 | 3 | **Jurisdiction B1 / B3 verification.** | **CLOSED — verified.** B1 verified from statutory instruments for every exposed jurisdiction: WA 2.5% flat, VIC 2.75% flat, NSW **4.0% flat** (confirming a claim §2.3 was making ahead of its data), QLD a **price-linked 2.5–5.0% scale saturated at its 5% ceiling**, TAS profit-based capped at 5.35% and **no longer an exposure** (Henty sold May 2025). WA **B3 verified**, and it reframed the test: no statutory determination periods, 42.4% on-time against an 80% target. `jurisdictions.json` records the statutory instrument for each. Remaining unverified: B1 for SA, NT and NZ (nil exposure), and B2/B3/B4 outside WA. |
+| 4 | **Populate v2 optionality assets and capital paths.** | **OPEN — sourcing, not model design.** The schema and engine gates are implemented. RXL/Youanmi is the first completed record: only the 48 koz Indicated outside reserve and 178 koz Inferred in its DFS production target qualify, with the full A$382.6m pre-production capital charged as a conservative bound. Sixteen names remain unmigrated. Existing group totals stay as controls and contribute zero until complete; do not create placeholder pass flags. |
 
 Three things the closures leave behind, none of them a reopening:
 
@@ -942,6 +973,9 @@ Three things the closures leave behind, none of them a reopening:
 - **A survey to re-run, not an item to keep open.** Grade-tonnage coverage
   changes only if issuers change what they publish. Re-run the Phase 0 scan at
   the annual deep rebalance; do not keep a research item open against it.
+- **A migration to finish without grandfathering.** The optionality backlog is
+  allowed to make v2 reserve-heavy until the evidence exists. That conservatism
+  is the redesign working, not a reason to restore group-level shortcuts.
 
 **Not open, and not to be reopened as parameters:** the NAV-model discount rates
 and conservative deck (§9 is reporting-only, so there is nothing to adopt); the
@@ -968,29 +1002,26 @@ document is as short as it is:
 
 ## 13. Factor Inventory — everything that can move a weight
 
-**46 inputs, and no others.** Established by perturbation rather than by reading
-the code: every candidate input was moved and the resulting book compared. `Δw`
-is the largest change in any single final weight, at ±50% on a data field and
-±40% on a parameter. A factor that is *read* but cannot change a weight is listed
-in §13.5 and should never be described as part of the model.
+The inputs below are the complete v2 weight path. The `Δw` values published for
+v1 are not carried forward: optionality now moves discontinuously when an asset
+passes all gates, so a v2 sensitivity register requires a populated asset data
+set and a fresh live build. A factor that is read but cannot change a weight is
+listed in §13.5 and should never be described as part of the model.
 
-### 13.1 Numerator — the ounce ledger
+### 13.1 Numerator — the two ounce ledgers
 
-Everything here answers one question: **how many ounces of gold will this company
-be able to hand us, and how sure are we?**
-
-| Factor | What it represents | Why it pays into the goal | Δw |
-|---|---|---|---|
-| `pp_moz` | Proven & Probable reserves | The **in-the-money strip** — ounces inside a funded mine plan at a published cost. This is the floor under the claim: the part that converts to metal without needing the gold price to do anything. | **1.03pp** |
-| `mi_non_reserve_moz` | Measured & Indicated resource not yet booked as reserve | The **near-money option, and the largest single source of the index's convexity.** Drilled densely enough to support a mine plan, not yet economic at the company's own price deck. These are precisely the ounces a rising gold price converts into reserves — the mechanism §0.2 says the product exists to own. | **0.65pp** |
-| `inferred_moz` | Inferred resource | The **far out-of-the-money tail.** Geologically real, sparsely drilled, worth little unless the price moves a long way — which is the exact payoff shape the sovereign-debasement thesis is buying. | **0.43pp** |
-| `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce exposed to an operative or unbounded gold-control regime is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. | **0.12pp** |
-| `hedge_share_fwd24m` | Production already sold forward | A sold-forward ounce is **a short gold position inside a long gold product.** It converts at a fixed price and cannot participate in the move the index exists to capture, so it is subtracted from the claim rather than scored against it. | **0.06pp** |
-| `production_koz_yr` | Annual production rate | In the ledger it does one job: converting the disclosed hedge *percentage* into hedged *ounces*. (Also a Gate 2 input, where it does much more.) | via hedge |
-| `confidence_weights.proven_probable` = 1.0 | Reserve ounce = the unit of account | The numéraire of the ledger. Every other ounce is priced relative to this one, so it is definitional rather than tunable. | **0.74pp** |
-| `confidence_weights.measured_indicated_non_reserve` = 0.5 | A near-money ounce is worth half a reserve ounce | **The single most consequential dial in the methodology.** It sets the price the index pays for optionality: raise it and the book tilts toward explorers and undeveloped inventory, lower it and it tilts toward producing reserves. It is how much convexity the index buys, expressed as one number. | **0.50pp** |
-| `confidence_weights.inferred` = 0.2 | A far-tail ounce is worth a fifth of a reserve ounce | Deliberately harsh. Inferred material cannot legally support a mine plan, so a fifth is a discount that survives being wrong — the index still gets tail exposure without letting a thin drill pattern set a position. | **0.34pp** |
-| `confidence_weights.hedge_horizon_years` = 2.0 | Months of production a disclosed hedge book covers | **A unit conversion, not a tuning knob.** The disclosed field is a 24-month book; this turns a percentage into ounces. Change it only if the disclosure horizon changes. | **0.05pp** |
+| Factor | What it represents | Treatment |
+|---|---|---|
+| `pp_moz` | Group attributable P&P | Core starting quantity. |
+| `eligible_pp_share` | P&P-specific Gate 1 share | Multiplies core P&P. A blended all-resource share is allowed only when exactly 100%, where the result is invariant. |
+| `hedge_share_fwd24m` · `production_koz_yr` · `hedge_horizon_years` | Sold-forward ounces | Subtracted from eligible P&P. |
+| `optionality_assets[].categories.*` | Asset and category-specific gross Moz, ownership share and eligible-jurisdiction share | Multiplied to attributable eligible M&I and Inferred only after all asset gates pass. |
+| `optionality_assets[].metallurgy_recovery` | Credible recovery evidence | Binary asset gate. |
+| `optionality_assets[].processing_route` | Existing plant or development basis | Binary asset gate. |
+| `optionality_assets[].land_permitting` | Legal and physical development path | Binary asset gate. |
+| `optionality_assets[].encumbrances` | Complete treatment of material streams and royalties | Binary asset gate. |
+| `optionality.max_resource_statement_age_months` = 18 | Current-statement limit | Binary asset gate derived from the cited primary document date and build date. |
+| M&I weight = 0.5 · Inferred weight = 0.2 | Geological-confidence discounts | Applied only after the asset gates. |
 
 ### 13.2 Denominator — enterprise value
 
@@ -1003,6 +1034,8 @@ equity holder more than the share price suggests.
 | `price_aud` | Live market price | Half of what we pay. The whole strategy is the gap between the ounce ranking and the price ranking, so this is one of the two columns that gap is made of. | **1.89pp** |
 | `shares_out_m` | Shares on issue | The other half of market cap. **Dilution reduces ounces-per-euro directly**, so a stale share count silently overstates the claim — which is why there is no API fallback and it is sourced from filings. | **1.45pp** |
 | `net_debt_aud_m` | Debt less cash and bullion | A **prior claim on the same ounces.** Adding it gives what the whole ounce base costs rather than just the equity slice; net cash correspondingly reduces the price paid. | **15.00pp** |
+| `remaining_capex_aud_m` | Residual funding gap for the core developer project | Added after Gate 2; absence fails the developer. | pending v2 build |
+| `optionality_assets[].capital_path.additional_future_capital_aud_m` | Remaining capital associated with counted optionality, incremental to EV and any core gap | Added for producers and developers in the same pass that admits the asset's ounces; absence excludes the asset. | pending v2 build |
 
 ### 13.3 Gates — binary, and an exclusion reweights everyone through the normalisation
 
@@ -1085,4 +1118,4 @@ those words for the same reason.
 
 ---
 
-*SJGV v1.0 — 18 August 2026. The sole methodology in force.*
+*SJGV v2.0 — 18 August 2026. In force; first v2 live snapshot pending the §6.2 asset-data migration.*

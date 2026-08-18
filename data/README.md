@@ -40,8 +40,82 @@ filing without duplicating the citation on every line.
 }
 ```
 
-A field value is normally a number. **One is a boolean:**
-`approvals_land_secured`.
+A field value is normally a scalar. `optionality_assets` is the deliberate
+exception: a provenance-bearing list whose nested records feed §6.2.
+
+### `eligible_pp_share` — core-ledger jurisdiction attribution
+
+The core claim uses the share of P&P, not a confidence-weighted blend of every
+resource category. For a mixed-jurisdiction company this field is mandatory and
+must be derived from the same reserve statement as `pp_moz`. If
+`eligible_ounce_share` is exactly 1.0 the engine may derive 1.0 because the
+P&P-specific result is invariant. No other fallback is allowed.
+
+### `optionality_assets` — v2 asset records
+
+M&I and Inferred company totals remain control totals. They enter no weight until
+decomposed into asset records shaped as follows:
+
+```jsonc
+"optionality_assets": {
+  "v": [{
+    "name": "Project Alpha",
+    "resource_statement_doc": "rr2026",
+    "categories": {
+      "mi_non_reserve": {
+        "gross_moz": 1.2,
+        "ownership_share": 0.70,
+        "eligible_jurisdiction_share": 1.0,
+        "jurisdiction_code": "AU-WA",
+        "doc": "rr2026"
+      },
+      "inferred": {
+        "gross_moz": 0.4,
+        "ownership_share": 0.70,
+        "eligible_jurisdiction_share": 1.0,
+        "jurisdiction_code": "AU-WA",
+        "doc": "rr2026"
+      }
+    },
+    "metallurgy_recovery": {
+      "pass": true, "recovery_pct": 0.91, "doc": "study2026"
+    },
+    "processing_route": {
+      "pass": true, "basis": "existing plant", "doc": "study2026"
+    },
+    "land_permitting": {
+      "pass": true, "status": "operating tenure", "doc": "permits2026"
+    },
+    "capital_path": {
+      "pass": true,
+      "additional_future_capital_aud_m": 125.0,
+      "doc": "study2026"
+    },
+    "encumbrances": {
+      "pass": true,
+      "treatment": "all material royalties included in study economics",
+      "doc": "study2026"
+    }
+  }],
+  "doc": "rr2026",
+  "note": "Each nested doc key resolves in this company's documents map."
+}
+```
+
+Rules:
+
+1. The resource-statement document must be primary and no more than 18 months
+   old at the build date.
+2. Gross Moz is multiplied by ownership share and eligible-jurisdiction share
+   per category. Do not pre-blend assets or jurisdictions.
+3. Every gate object must say `pass: true` and cite a primary document. The
+   descriptive value (`recovery_pct`, `basis`, `status`, or `treatment`) is
+   mandatory; a bare pass flag is not evidence.
+4. `additional_future_capital_aud_m` is remaining capital attributable to the
+   counted optionality and incremental to EV and any developer core funding gap.
+   A sourced zero is permitted. An absent value excludes the asset.
+5. A failed or incomplete asset contributes zero optionality but does not delete
+   the company's independently sourced core P&P claim. The build prints why.
 
 ### `largest_asset_pp_share` — a quantity where a judgement used to be
 
@@ -79,9 +153,9 @@ sourcing a new name, because the arithmetic is trivial and the definition is not
 3. **Where two groupings are both defensible, record the more concentrated one.**
    Ambiguity tightens the cap; it does not let a name escape it.
 
-Record the site-level M&I non-reserve and Inferred split in the `note` while you
-are in the R&R table, even though nothing reads it yet — if the committee ever
-moves the test onto total claimed ounces, that must not need a second pass.
+Record the site-level M&I non-reserve and Inferred split as a complete
+`optionality_assets` record while you are in the R&R table. A note alone remains
+useful evidence but does not enter the v2 ledger.
 
 `type` matters:
 
@@ -117,14 +191,17 @@ Forbidden, explicitly:
 ### What happens instead
 
 A field that cannot be sourced or derived **stays absent**. It is never filled.
-The engine then does one of two things:
+The engine distinguishes three cases:
 
 - **Gate input** → `gate_input_invariant()` re-runs the gate at both ends of the
   range the cohort actually reports. Same verdict at both ends means the missing
   number cannot decide anything, and the name proceeds **with a warning**.
   Different verdicts mean the answer is unknown, and the name **fails**.
-- **Score input** → absence mutes the term. That understates the name, which is
-  the safe direction, and it is reported in every run.
+- **Core-ledger input** → absence rejects the company because its reserve claim
+  cannot be formed.
+- **Optionality-asset input** → absence excludes that asset's M&I and Inferred
+  inventory, reports the reason, and leaves the core reserve claim intact.
+  Missing capital can therefore never become zero on a counted asset.
 
 A warning instead of a failure is permitted only where the unresolved input
 cannot move any final weight by more than **0.2pp**. `tools/sensitivity.py`
@@ -216,21 +293,25 @@ have been.
 2. **Date every field.** Gold equities restate reserves annually and guidance
    quarterly. A number without an `as_of` is unusable.
 3. **`remaining_capex_aud_m` is mandatory for a developer, twice over.** It gates
-   §3.1 D3 *and* it is added to EV to price the claim all-in (§7.1), because the
-   ledger counts ounces the company has not yet paid to unlock. A developer
+   §3.1 D3 *and* it is added to EV to price the core claim all-in (§7.1), because
+   the reserve ledger counts ounces the company has not yet paid to unlock. A developer
    without it is rejected at the gate, which is what stops absence reading as
    zero in the denominator. Record it as a BOUND — remaining pre-production
    capital less available funding, floored at zero — and say so in the note.
-4. **Reserve price assumptions are mandatory sourcing** — but reporting-only
+4. **Optionality capital is mandatory per counted asset.** Source the remaining
+   capital path even for a producer. Record only the amount incremental to EV and
+   to `remaining_capex_aud_m`; state any overlap arithmetic in the note. A
+   sourced zero must explain why existing funded infrastructure is sufficient.
+5. **Reserve price assumptions are mandatory sourcing** — but reporting-only
    JORC Table 1 and NI 43-101 both require the price deck to be
    disclosed, and it says how under-booked a company's P&P tranche is, which is
    the most informative thing on the ledger table. It no longer moves a weight:
    Turning `spot / deck` into a convexity multiplier is a functional
    form with no derivation. Source it, print it, do not score it. Never impute it.
-5. **Never reconcile conflicting sources by averaging.** Pick the primary, or
+6. **Never reconcile conflicting sources by averaging.** Pick the primary, or
    omit the field. Two of the errors caught in the 17 August 2026 sourcing pass
    came from trade press conflating two companies.
-6. **Corporate actions are event-driven.** A pending scheme is recorded in
+7. **Corporate actions are event-driven.** A pending scheme is recorded in
    `pending_corporate_action`, not silently pre-applied to share count.
 
 ## Extraction methods that work
@@ -248,11 +329,26 @@ WebFetch cannot read PDFs — it returns the compressed object stream. Download
 and run `pdftotext` instead. Several company sites (Greatland, Genesis, Vault,
 LSE) return 403 to WebFetch but 200 to `curl` with a normal browser User-Agent.
 
-## Known gaps as at 2026-08-17, end of day
+## Known gaps as at 2026-08-18
 
-`tools/gaps.py` is the live register — **clean 13, partial 3, blocked 1** — and
-`tools/sensitivity.py` prices each gap in pp of final weight. This list is the
-narrative; those two are the record.
+**The v2 blocking data task is the asset-level optionality migration.** The
+company-level M&I and Inferred totals are preserved as reconciliation controls,
+but no asset is grandfathered through the new §6.2 gates. Until complete
+`optionality_assets` records are added, the build reports the inventory as
+unassessed and gives it zero optionality claim. Source the largest potential
+weight effects first and never insert placeholder pass flags or capital zeros.
+RXL/Youanmi is the first completed record: only the 48 koz Indicated outside
+reserve and 178 koz Inferred explicitly scheduled in its DFS production target
+qualify; the unscheduled remainder stays at zero, and the denominator is charged
+the full A$382.6m pre-production capital as a conservative bound. Sixteen names
+remain unmigrated.
+
+The register below is the final v1 data-quality record. Its A$/oz sensitivities
+and clean counts are historical; they are not v2 results.
+
+At v1 close, `tools/gaps.py` reported **clean 13, partial 3, blocked 1**, and
+`tools/sensitivity.py` priced each gap in pp of final weight. The tools must be
+extended for nested v2 asset records before those counts are quoted again.
 
 Resolved 17 Aug: all six missing M/I/Inferred splits, every reserve price deck
 but one, every share count, CMM's resource total, and the whole Gate 3 spread

@@ -83,10 +83,11 @@ def market_data(tickers: list[str], refresh: bool) -> dict:
     return md
 
 
-def run(constituents, prices, risk, gold_aud, meta, anchor) -> dict[str, float]:
+def run(constituents, prices, risk, gold_aud, meta, anchor,
+        as_of: str | None = None) -> dict[str, float]:
     """One full pipeline pass. Returns {ticker: final weight}."""
     rows, _ = B.compute_raw_weights(constituents, prices, risk, gold_aud, meta,
-                                    anchor_gold=anchor)
+                                    anchor_gold=anchor, as_of=as_of)
     if not rows:
         return {}
     B.apply_constraints(rows, meta)
@@ -184,8 +185,11 @@ def resolve(kind: str, lo: float, hi: float, c: dict) -> tuple[float | None, flo
 # field to feed. reserve_price_aud is kept in the list deliberately even though
 # it is now reporting-only: it was the worst open gap in this register at
 # 0.59pp, and it should be seen reading 0.000pp rather than quietly dropped.
-SCORE_FIELDS = ["reserve_price_aud", "hedge_share_fwd24m", "inferred_moz",
-                "mi_non_reserve_moz", "net_debt_aud_m"]
+# Company-level M&I and Inferred totals are now reconciliation/reporting fields.
+# They move no weight unless represented in an asset record that passes every
+# §6.2 source gate. Nested asset-gate sensitivity is reported by the build as
+# included/excluded inventory and is not simulated by inventing missing assets.
+SCORE_FIELDS = ["reserve_price_aud", "hedge_share_fwd24m", "net_debt_aud_m"]
 GATE_FIELDS = ["committed_capex_aud_m"]
 
 # §8.1 cap inputs — a third kind, added 18 Aug 2026 with
@@ -231,7 +235,8 @@ def main() -> int:
                 B._join(md["gold_history"], md.get("audusd_history") or []) if f > 0]
     anchor = B.gold_anchor(aud_gold, gold_aud, meta)["anchor_aud"]
 
-    base = run(copy.deepcopy(cons), md["prices"], risk, gold_aud, meta, anchor)
+    base = run(copy.deepcopy(cons), md["prices"], risk, gold_aud, meta, anchor,
+               as_of=market["_sourced"])
     ranges = build_ranges(cons)
     weighted = set(base)
 
@@ -244,7 +249,8 @@ def main() -> int:
     def scenario(mutate) -> tuple[float, str, bool]:
         c2 = copy.deepcopy(cons)
         mutate(c2)
-        return delta(base, run(c2, md["prices"], risk, gold_aud, meta, anchor))
+        return delta(base, run(c2, md["prices"], risk, gold_aud, meta, anchor,
+                               as_of=market["_sourced"]))
 
     # ── Score and cap inputs, per name ────────────────────────────────────
     results = []

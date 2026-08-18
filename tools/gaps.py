@@ -3,7 +3,7 @@
 Audit the data layer against what the engine actually needs.
 
 Answers one question: for each candidate, which fields are missing, does that
-block weighting or merely degrade a score, and what document would fix it.
+block the core claim or exclude optionality, and what document would fix it.
 
     python tools/gaps.py              # work list, grouped by severity
     python tools/gaps.py --by-field   # grouped by field instead of by company
@@ -47,12 +47,21 @@ DEVELOPER = frozenset({"developer"})
 FIELDS = {
     "gold_nav_share":      ("blocking",  "purity gate cannot be evaluated",
                             "quarterly/annual revenue by metal", None),
-    "eligible_ounce_share": ("blocking", "jurisdiction split of ounces unresolved",
+    "eligible_ounce_share": ("disclosure", "legacy all-resource jurisdiction "
+                                           "control absent",
                             "R&R statement, per-asset tables", None),
+    "eligible_pp_share":   ("blocking", "P&P-specific core jurisdiction share "
+                                         "unresolved for a mixed-jurisdiction name",
+                            "R&R statement, per-asset Ore Reserve table", None),
     "pp_moz":              ("blocking",  "no reserve base",
                             "R&R statement, Ore Reserve summary", None),
-    "mi_non_reserve_moz":  ("blocking",  "resource split required for a consistent cross-section",
+    "mi_non_reserve_moz":  ("disclosure", "company-level optionality control total absent",
                             "R&R statement, Mineral Resource summary (M/I/Inf table)", None),
+    "optionality_assets":  ("degrading", "no asset has been assessed through the "
+                                          "v2 optionality source gates; core P&P "
+                                          "can still weight",
+                            "current R&R statement plus study, metallurgy, permits, "
+                            "capital and encumbrance disclosures", None),
     # Was "runtime": sourced at build time from IBKR fundamentals alongside the
     # price, so an absence here did not block. That is no longer true. TWS API
     # 10.47 removed reqFundamentalData outright (verified 17 Aug 2026, server
@@ -86,8 +95,7 @@ FIELDS = {
                             "quarterly report, cash and debt", None),
     "ineligible_nav_share": ("degrading", "entity-level ineligible cap cannot bind",
                             "R&R statement, per-jurisdiction split", None),
-    "inferred_moz":        ("degrading", "the Inferred tranche of the §6 ledger reads "
-                                         "zero — the name is understated",
+    "inferred_moz":        ("disclosure", "company-level optionality control total absent",
                             "R&R statement, Mineral Resource summary", None),
 
     # ── Gate 2 inputs (§3). Absent from this table until 17 Aug 2026, which is
@@ -201,25 +209,44 @@ def load() -> tuple[dict, list[dict]]:
     return cfg, companies
 
 
-def audit(companies: list[dict]) -> list[dict]:
+def audit(companies: list[dict], cfg: dict) -> list[dict]:
     rows = []
+    sys.path.insert(0, str(ROOT))
+    import build_index as B
+    conf = (cfg["confidence_weights"]["proven_probable"],
+            cfg["confidence_weights"]["measured_indicated_non_reserve"],
+            cfg["confidence_weights"]["inferred"])
+    as_of = json.loads((DATA / "companies.json").read_text())["_sourced"]
     for c in companies:
         present = set(c.get("fields", {}))
         missing = []
         for name, (sev, why, where, sleeve) in FIELDS.items():
             if name in present:
                 continue
+            if (name == "eligible_pp_share"
+                    and c.get("fields", {}).get("eligible_ounce_share", {}).get("v") == 1.0):
+                continue  # exact-all-eligible fallback; P&P result is invariant
             if sleeve is not None and c["sleeve"] not in sleeve:
                 continue  # not applicable to this sleeve — silence, not a gap
-            # An absent M&I split used to downgrade to "imputed" when the
-            # resource total was known, because the cohort-split rule could fill
-            # it. That rule is deleted (config, _resource_split_imputation_
-            # deleted), so a missing split is now simply blocking: the near-money
-            # tranche of the §6 ledger is the option inventory, and a name
-            # counted on P&P alone would compete against peers counting all
-            # three. Never downgrade a gap on the strength of a rule that no
-            # longer runs.
             missing.append({"field": name, "severity": sev, "why": why, "where": where})
+
+        # A present optionality_assets field is not automatically clean. Run the
+        # same gate implementation as the engine and surface every excluded
+        # asset as a degrading gap. This prevents a placeholder asset record
+        # from making the audit look complete.
+        if "optionality_assets" in present:
+            flat = B._flatten(c)
+            result = B.optionality_ledger(
+                flat, conf, as_of,
+                cfg["optionality"]["max_resource_statement_age_months"])
+            for asset in result["excluded_assets"]:
+                missing.append({
+                    "field": f"optionality_assets[{asset['asset']}]",
+                    "severity": "degrading",
+                    "why": "; ".join(asset["reasons"]),
+                    "where": "primary resource, study, permit, capital and "
+                             "encumbrance documents",
+                })
 
         rows.append({
             "ticker": c["ticker"], "name": c["name"], "sleeve": c["sleeve"],
@@ -238,8 +265,8 @@ def main() -> int:
     ap.add_argument("--by-field", action="store_true", help="group by field, not company")
     args = ap.parse_args()
 
-    _, companies = load()
-    rows = audit(companies)
+    cfg, companies = load()
+    rows = audit(companies, cfg)
 
     if args.json:
         print(json.dumps(rows, indent=2))

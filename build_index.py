@@ -7,28 +7,31 @@ May-2026 weights (including RUP, delisted 16 Jun 2026 into Agnico Eagle).
 
 What changed structurally
 -------------------------
-Weights are computed from an ounce ledger:
+Weights are computed from two separate ounce ledgers:
 
-    w_i  ∝   ClaimedUnhedgedOunces_i  ÷  FundedEV_i
+    w_i  ∝   (CoreClaim_i + QualifiedOptionality_i)  ÷  FundedEV_i
 
-where the numerator is built by subtraction, never by scoring:
+where the core ledger is built by subtraction, never by scoring:
 
-    attributable ounces, by JORC category
-      × eligible_ounce_share      Gate 1 — ounces outside an eligible
-                                  jurisdiction are not owned in any sense
-                                  this product recognises
-      × confidence weight         P&P 1.0, M&I non-reserve 0.5, Inferred 0.2
-      − ounces sold forward       hedge_share_fwd24m × 24 months of production,
-                                  taken off the P&P tranche because that is
-                                  what a forward is delivered from
-      = the claim
+    attributable P&P ounces
+      × eligible_pp_share         Gate 1, applied specifically to reserves
+      − ounces sold forward       taken off P&P because that is what a forward
+                                  is delivered from
+      = the core claim
+
+M&I non-reserve and Inferred ounces sit in a separate optionality ledger. They
+enter the weighting claim only asset by asset, after a current resource
+statement and sourced checks for ownership/jurisdiction, metallurgy, processing
+route, land/permits, capital path and encumbrances. The 0.5 / 0.2 confidence
+weights apply only after those gates pass.
 
 and the denominator is what those ounces cost all-in:
 
-    FundedEV = market cap + net debt + residual funding gap
+    FundedEV = market cap + net debt + residual core funding gap
+               + incremental capital for counted optionality
 
-The gap matters only for pre-production names, where EV alone prices a company
-that has not yet paid to unlock the ounces the ledger is counting.
+The core gap still matters for pre-production names. Incremental capital tied
+to counted future ounces now matters for producers and developers alike.
 
 There is no scoring layer between that ledger and the
 weight: a five-channel convexity score, a purity multiplier, an inverse-σ_idio
@@ -38,9 +41,8 @@ monotone restatements of the ledger (c1 +0.87, c2b +0.55 and c3 +0.56 in log
 correlation with ounces/EV), one of them was algebraically identical to the
 numerator (c2b == eligible_cw_moz / pp_moz, so the resource inventory entered
 the weight SQUARED), and σ_idio at +0.77 with ounces/EV cancelled the very
-signal the numerator exists to express. Deleting all of it left the same twelve
-constituents, the same delta, and a book holding MORE ounces per dollar:
-A$642/oz of EV against A$682/oz. See docs/design-rationale.md §A.2.
+signal the numerator exists to express. The final v1 snapshot recorded the
+effect; v2 keeps the no-score rule while splitting reserves from optionality.
 
 The rule that replaced them: a term enters the weight only if it changes how
 many ounces are claimed, or what was paid for them. Nothing else is a weight.
@@ -303,6 +305,9 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "confidence_weights.hedge_horizon_years": (
         "engine", "§6.3 months of production a disclosed hedge book covers"),
 
+    "optionality.max_resource_statement_age_months": (
+        "engine", "§6.2 current-statement gate for asset optionality"),
+
     "gates.purity_floor_gold_nav_share": ("engine", "§5 hard floor"),
     "gates.max_ineligible_nav_share": ("engine", "§2.4 entity-level cap"),
     "gates.producer_max_spread_pct": ("engine", "§4 Gate 3"),
@@ -467,7 +472,8 @@ def unread_engine_params() -> list[str]:
 KNOWN_FIELDS = {
     "pp_moz", "mr_total_moz", "mi_non_reserve_moz", "inferred_moz",
     "reserve_price_aud", "resource_price_aud",
-    "eligible_ounce_share", "ineligible_nav_share", "gold_nav_share",
+    "eligible_ounce_share", "eligible_pp_share", "ineligible_nav_share",
+    "gold_nav_share", "optionality_assets",
     "aisc_aud_oz", "hedge_share_fwd24m", "net_debt_aud_m", "shares_out_m",
     # Gate 2 (§3) inputs
     "production_koz_yr", "undrawn_facilities_aud_m", "committed_capex_aud_m",
@@ -508,6 +514,60 @@ def _flatten(record: dict) -> dict:
         flat[name] = spec.get("v")
         flat["_field_docs"][name] = {"doc": spec.get("doc"), "note": spec.get("note")}
     return flat
+
+
+OPTIONALITY_CATEGORIES = ("mi_non_reserve", "inferred")
+OPTIONALITY_GATE_KEYS = (
+    "metallurgy_recovery", "processing_route", "land_permitting",
+    "capital_path", "encumbrances",
+)
+
+
+def _validate_optionality_schema(c: dict) -> None:
+    """Reject misspelled optionality fields before they can become zero ounces.
+
+    A gate that is absent may legitimately exclude an asset. A gate whose name
+    is misspelled is different: it looks like evidence to a reviewer while the
+    engine ignores it. That is a data-schema defect and stops the build.
+    """
+    assets = c.get("optionality_assets")
+    if assets is None:
+        return
+    if not isinstance(assets, list):
+        raise ValueError("optionality_assets must be a list")
+    allowed_asset = {"name", "resource_statement_doc", "categories",
+                     *OPTIONALITY_GATE_KEYS}
+    allowed_category = {"gross_moz", "ownership_share",
+                        "eligible_jurisdiction_share", "jurisdiction_code",
+                        "doc", "note"}
+    names: set[str] = set()
+    for asset in assets:
+        if not isinstance(asset, dict):
+            raise ValueError("each optionality asset must be an object")
+        stray = set(asset) - allowed_asset
+        if stray:
+            raise ValueError(f"optionality asset has unknown keys: {sorted(stray)}")
+        name = asset.get("name")
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError("each optionality asset requires a non-empty name")
+        if name in names:
+            raise ValueError(f"duplicate optionality asset name {name!r}")
+        names.add(name)
+        cats = asset.get("categories")
+        if cats is not None:
+            if not isinstance(cats, dict):
+                raise ValueError(f"{name}: categories must be an object")
+            stray_cats = set(cats) - set(OPTIONALITY_CATEGORIES)
+            if stray_cats:
+                raise ValueError(f"{name}: unknown optionality categories "
+                                 f"{sorted(stray_cats)}")
+            for cat, spec in cats.items():
+                if not isinstance(spec, dict):
+                    raise ValueError(f"{name}.{cat} must be an object")
+                stray_fields = set(spec) - allowed_category
+                if stray_fields:
+                    raise ValueError(f"{name}.{cat} has unknown keys "
+                                     f"{sorted(stray_fields)}")
 
 
 def reconcile_resource(c: dict) -> str | None:
@@ -570,6 +630,10 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
         if stray:
             unknown[record["ticker"]] = stray
         c = _flatten(record)
+        try:
+            _validate_optionality_schema(c)
+        except ValueError as exc:
+            raise ValueError(f"{c['ticker']}: {exc}") from exc
         mismatch = reconcile_resource(c)
         if mismatch:
             notes.append(f"{c['ticker']}: {mismatch}")
@@ -973,61 +1037,25 @@ def confidence_weights(cfg: dict) -> tuple[float, float, float]:
             cw["inferred"])
 
 
-def ounce_ledger(c: dict, conf: tuple[float, float, float],
-                 hedge_years: float) -> tuple[dict | None, str]:
-    """The whole model. Every ounce this company can deliver to us, by type.
-
-    Returns (ledger, reason). `ledger` is None when the claim cannot be counted,
-    and `reason` says which line was missing.
-
-        gross      P&P + M&I non-reserve + Inferred, as disclosed
-        eligible   × eligible_ounce_share — Gate 1. Ounces under a sovereign
-                   that fails Tier A are not counted at all, at any discount.
-                   This is what makes a company-level production threshold
-                   unnecessary (§2.4): Pogo simply is not an ounce we own,
-                   rather than triggering a cliff at some arbitrary 65% line.
-        claimed    each category × its confidence weight (§6)
-        hedged     less ounces already sold forward (§6.3)
-        net        what the weight is computed on
-
-    Three properties worth stating, because each one replaces a score:
-
-    1. **The categories are the convexity.** P&P is the in-the-money strip:
-       ounces the company has committed to mine at a cost it has published.
-       M&I non-reserve is the near-money option — drilled to a confidence that
-       supports a mine plan, not yet economic enough to book. Inferred is the
-       far out-of-the-money tail. Counting all three at 1.0 / 0.5 / 0.2 IS the
-       bet that the sub-economic inventory comes into the money on a gold move.
-       No separate convexity score is needed and none is computed; the old one
-       turned out to be this same ratio re-derived (c2b was exactly
-       net_ounces / pp_moz, so the inventory entered the weight squared).
-
-    2. **The hedge is a subtraction, not a multiplier.** A forward sale alienates
-       the ounces it covers and no others. Multiplying a whole claim by
-       (1 − sold_share), which charged a 24-month forward book against a
-       thirty-year reserve life: Northern Star's 25.5% hedge cost it 25.5% of
-       its whole claim instead of the 0.79 Moz it has actually sold. The ledger
-       makes the magnitude explicit and therefore arguable.
-
-    3. **M&I is required, Inferred is not.** M&I non-reserve is disclosed in
-       every JORC and NI 43-101 annual statement, so a null is a sourcing gap,
-       and letting a name through P&P-only would put it in the cross-section
-       counting only its in-the-money ounces against peers counting all three.
-       Inferred is not always broken out and is only 0.2-weighted, so its
-       absence is reported and treated as zero — which understates the name.
-    """
+def core_ledger(c: dict, hedge_years: float) -> tuple[dict | None, str]:
+    """§6.1 core claim: attributable, eligible, unhedged P&P ounces only."""
     pp = c.get("pp_moz")
     if pp is None:
         return None, "pp_moz missing"
-    mi = c.get("mi_non_reserve_moz")
-    if mi is None:
-        return None, ("mi_non_reserve_moz missing — the M&I non-reserve tranche is "
-                      "the near-money option inventory and every JORC statement "
-                      "discloses it; counting this name on P&P alone would put it "
-                      "in the cross-section against peers counting all three")
-    elig = c.get("eligible_ounce_share")
+
+    # A company-wide confidence-weighted jurisdiction share is not an acceptable
+    # proxy for the core ledger. It can be reused only when it is exactly 100%,
+    # because then the P&P-specific answer is invariant. Mixed-jurisdiction
+    # companies must source eligible_pp_share explicitly.
+    elig = c.get("eligible_pp_share")
+    if elig is None and c.get("eligible_ounce_share") == 1.0:
+        elig = 1.0
     if elig is None:
-        return None, "eligible_ounce_share missing (jurisdiction split unresolved)"
+        return None, ("eligible_pp_share missing — a mixed-jurisdiction group's "
+                      "confidence-weighted eligible_ounce_share cannot stand in "
+                      "for the P&P-specific core-claim share")
+    if not 0.0 <= elig <= 1.0:
+        return None, "eligible_pp_share must be in [0, 1]"
 
     hedge_share = c.get("hedge_share_fwd24m")
     if hedge_share is None:
@@ -1037,33 +1065,189 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
     if prod is None:
         return None, "production_koz_yr missing — the hedged tranche cannot be sized"
 
-    w_pp, w_mi, w_inf = conf
-    inf = c.get("inferred_moz")
-
     # Sold ounces come off P&P first: a forward contract is delivered from
-    # reserves, not from inferred material, so it consumes the most certain
-    # tranche. Capped at the eligible P&P tranche — a hedge book larger than the
-    # reserves behind it is a data error, not a negative claim.
+    # reserves, not optionality. Capped at the eligible P&P tranche.
     elig_pp = pp * elig
     hedged = min(hedge_share * (prod / 1000.0) * hedge_years, elig_pp)
-
-    net = ((elig_pp - hedged) * w_pp
-           + mi * elig * w_mi
-           + (inf or 0.0) * elig * w_inf)
+    net = elig_pp - hedged
     if net <= 0:
-        return None, "no net claimed ounces after Gate 1 and the hedge book"
+        return None, "no net core claim after Gate 1 and the hedge book"
 
     return {
-        "gross_moz": pp + mi + (inf or 0.0),
-        "pp_moz": pp, "mi_moz": mi, "inferred_moz": inf or 0.0,
-        "eligible_share": elig,
-        "elig_pp_moz": elig_pp,
-        "elig_mi_moz": mi * elig,
-        "elig_inferred_moz": (inf or 0.0) * elig,
+        "pp_moz": pp,
+        "eligible_pp_share": elig,
+        "eligible_pp_moz": elig_pp,
         "hedged_moz": hedged,
         "hedge_share_fwd": hedge_share,
-        "claimed_moz": net,
-        "inferred_absent": inf is None,
+        "core_claim_moz": net,
+    }, "ok"
+
+
+def _primary_doc(c: dict, key: object) -> tuple[dict | None, str | None]:
+    if not isinstance(key, str) or not key:
+        return None, "document reference missing"
+    doc = c.get("_docs", {}).get(key)
+    if not isinstance(doc, dict):
+        return None, f"document {key!r} not found in company documents"
+    if doc.get("type") != "primary":
+        return None, f"document {key!r} is not marked primary"
+    return doc, None
+
+
+def _fact_gate(c: dict, asset: dict, key: str) -> str | None:
+    fact = asset.get(key)
+    if not isinstance(fact, dict):
+        return f"{key} gate absent"
+    if fact.get("pass") is not True:
+        return f"{key} gate not passed"
+    _, err = _primary_doc(c, fact.get("doc"))
+    if err:
+        return f"{key}: {err}"
+    return None
+
+
+def optionality_ledger(c: dict, conf: tuple[float, float, float],
+                       as_of: str, max_age_months: float) -> dict:
+    """§6.2 asset-gated M&I non-reserve and Inferred inventory.
+
+    Failure excludes the asset's optionality, never the company's core P&P
+    claim. Every passing asset contributes both its discounted ounces and the
+    incremental capital still required to unlock those ounces.
+    """
+    assets = c.get("optionality_assets") or []
+    w_mi, w_inf = conf[1], conf[2]
+    counted_mi = counted_inf = capital = 0.0
+    passed, excluded = [], []
+
+    try:
+        build_date = datetime.fromisoformat(as_of).date()
+    except (TypeError, ValueError):
+        raise ValueError(f"invalid optionality as-of date {as_of!r}")
+
+    for asset in assets:
+        name = asset["name"]
+        reasons: list[str] = []
+
+        statement, err = _primary_doc(c, asset.get("resource_statement_doc"))
+        if err:
+            reasons.append(f"resource_statement: {err}")
+        else:
+            try:
+                statement_date = datetime.fromisoformat(statement.get("date", "")).date()
+                age_months = (build_date - statement_date).days / 30.4375
+                if age_months < 0:
+                    reasons.append("resource statement is dated after the build")
+                elif age_months > max_age_months:
+                    reasons.append(f"resource statement is {age_months:.1f} months old; "
+                                   f"limit {max_age_months:g}")
+            except (TypeError, ValueError):
+                reasons.append("resource statement date missing or invalid")
+
+        for key in OPTIONALITY_GATE_KEYS:
+            reason = _fact_gate(c, asset, key)
+            if reason:
+                reasons.append(reason)
+
+        metallurgy = asset.get("metallurgy_recovery") or {}
+        recovery = metallurgy.get("recovery_pct")
+        if not isinstance(recovery, (int, float)) or not 0 < recovery <= 1:
+            reasons.append("metallurgy_recovery.recovery_pct must be in (0, 1]")
+
+        for key, detail_key in (("processing_route", "basis"),
+                                ("land_permitting", "status"),
+                                ("encumbrances", "treatment")):
+            fact = asset.get(key) or {}
+            if not isinstance(fact.get(detail_key), str) or not fact[detail_key].strip():
+                reasons.append(f"{key}.{detail_key} missing")
+
+        cap_path = asset.get("capital_path") or {}
+        asset_capital = cap_path.get("additional_future_capital_aud_m")
+        if (not isinstance(asset_capital, (int, float))
+                or isinstance(asset_capital, bool) or asset_capital < 0):
+            reasons.append("capital_path.additional_future_capital_aud_m "
+                           "must be a sourced non-negative number")
+
+        category_ounces: dict[str, float] = {}
+        categories = asset.get("categories") or {}
+        if not categories:
+            reasons.append("no optionality categories supplied")
+        for category in OPTIONALITY_CATEGORIES:
+            spec = categories.get(category)
+            if spec is None:
+                category_ounces[category] = 0.0
+                continue
+            _, doc_err = _primary_doc(c, spec.get("doc"))
+            if doc_err:
+                reasons.append(f"{category}: {doc_err}")
+            gross = spec.get("gross_moz")
+            ownership = spec.get("ownership_share")
+            eligible = spec.get("eligible_jurisdiction_share")
+            jurisdiction = spec.get("jurisdiction_code")
+            if (not isinstance(gross, (int, float)) or isinstance(gross, bool)
+                    or gross < 0):
+                reasons.append(f"{category}.gross_moz must be non-negative")
+            if (not isinstance(ownership, (int, float)) or isinstance(ownership, bool)
+                    or not 0 <= ownership <= 1):
+                reasons.append(f"{category}.ownership_share must be in [0, 1]")
+            if (not isinstance(eligible, (int, float)) or isinstance(eligible, bool)
+                    or not 0 <= eligible <= 1):
+                reasons.append(f"{category}.eligible_jurisdiction_share must be in [0, 1]")
+            if not isinstance(jurisdiction, str) or not jurisdiction:
+                reasons.append(f"{category}.jurisdiction_code missing")
+            if not reasons or all(not r.startswith(f"{category}.")
+                                  and not r.startswith(f"{category}:") for r in reasons):
+                category_ounces[category] = float(gross * ownership * eligible)
+
+        if reasons:
+            excluded.append({"asset": name, "reasons": reasons})
+            continue
+
+        mi = category_ounces.get("mi_non_reserve", 0.0)
+        inf = category_ounces.get("inferred", 0.0)
+        counted_mi += mi
+        counted_inf += inf
+        capital += float(asset_capital)
+        passed.append({
+            "asset": name,
+            "mi_non_reserve_moz": mi,
+            "inferred_moz": inf,
+            "optionality_claim_moz": mi * w_mi + inf * w_inf,
+            "additional_future_capital_aud_m": float(asset_capital),
+        })
+
+    claim = counted_mi * w_mi + counted_inf * w_inf
+    disclosed_mi = c.get("mi_non_reserve_moz") or 0.0
+    disclosed_inf = c.get("inferred_moz") or 0.0
+    return {
+        "status": ("qualified" if passed else
+                   "unassessed" if not assets else "no_asset_passed"),
+        "counted_mi_non_reserve_moz": counted_mi,
+        "counted_inferred_moz": counted_inf,
+        "optionality_claim_moz": claim,
+        "additional_future_capital_aud_m": capital,
+        "company_disclosed_mi_non_reserve_moz": disclosed_mi,
+        "company_disclosed_inferred_moz": disclosed_inf,
+        "unqualified_mi_non_reserve_moz": max(0.0, disclosed_mi - counted_mi),
+        "unqualified_inferred_moz": max(0.0, disclosed_inf - counted_inf),
+        "passed_assets": passed,
+        "excluded_assets": excluded,
+    }
+
+
+def ounce_ledger(c: dict, conf: tuple[float, float, float], hedge_years: float,
+                 as_of: str, max_age_months: float) -> tuple[dict | None, str]:
+    """Combine, but never blur, the core and optionality ledgers."""
+    core, reason = core_ledger(c, hedge_years)
+    if core is None:
+        return None, reason
+    optionality = optionality_ledger(c, conf, as_of, max_age_months)
+    total = core["core_claim_moz"] + optionality["optionality_claim_moz"]
+    return {
+        "core": core,
+        "optionality": optionality,
+        "core_claim_moz": core["core_claim_moz"],
+        "optionality_claim_moz": optionality["optionality_claim_moz"],
+        "claimed_moz": total,
     }, "ok"
 
 
@@ -1391,8 +1575,9 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
                         anchor_gold: float | None = None,
                         spreads: dict | None = None,
                         navs: dict[str, dict] | None = None,
+                        as_of: str | None = None,
                         ) -> tuple[list[dict], list[dict]]:
-    """Apply the §7 formula — claimed unhedged ounces ÷ funded EV. Returns
+    """Apply §7 — (core claim + gated optionality) ÷ funded EV. Returns
     (weighted rows, rejected rows).
 
     There is nothing between the ledger and the weight. No score, no tilt, no
@@ -1404,12 +1589,17 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
     report. anchor_gold is what Gate 2's drawdown is applied to and defaults to
     spot only when no history was available to build the anchor from.
 
+    `as_of` dates the current-resource-statement gate. The live build passes the
+    data layer's sourcing date; callers should do the same for reproducibility.
+
     `navs` is the §9 NAV model output. It is carried onto the rows for reporting
     and is never read by the weight — see nav_model.py.
     """
     anchor_gold = anchor_gold if anchor_gold is not None else gold_aud
     conf = confidence_weights(meta)
     hedge_years = meta["confidence_weights"]["hedge_horizon_years"]
+    max_statement_age = meta["optionality"]["max_resource_statement_age_months"]
+    as_of = as_of or datetime.now(timezone.utc).date().isoformat()
     # Per-oz-of-annual-production, so the range transfers across the size range.
     capex_range = cohort_range(constituents, "committed_capex_aud_m",
                                "production_koz_yr")
@@ -1439,7 +1629,8 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             reject(f"ineligible NAV {inelig:.0%} above {max_inelig:.0%} cap (§2.4)")
             continue
 
-        ledger, why = ounce_ledger(c, conf, hedge_years)
+        ledger, why = ounce_ledger(c, conf, hedge_years, as_of,
+                                   max_statement_age)
         if ledger is None:
             reject(why)
             continue
@@ -1495,23 +1686,20 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             continue
 
         # ── The all-in price of the claim (§7) ───────────────────────────────
-        # EV is what the market charges for the company TODAY. For a
-        # pre-production name it is not what the ounces cost, because the ledger
-        # counts ounces the company has not yet paid to unlock: the residual
-        # funding gap has to be spent before a single one of them is mined.
-        #
-        # Measured 18 Aug 2026 on the two developers Gate 2 currently rejects:
-        # AAR reads A$173/oz on EV and A$291/oz all-in, AUC A$320 and A$515.
-        # The discount roughly halves. Left uncorrected, the headline metric
-        # would rank an unfunded developer as the cheapest claim in the universe
-        # on the strength of capital it has not raised.
+        # EV is what the market charges for the company today. The denominator
+        # also includes (a) the residual core funding gap for a developer and
+        # (b) incremental future capital attached to every optionality asset the
+        # ledger counts. The second component applies to producers and
+        # developers alike and is required even when its sourced value is zero.
         #
         # A developer whose gap is unsourced never reaches this line — §3.1 D3
-        # rejects it — so absence here cannot silently read as zero for the one
-        # sleeve where that would flatter. For a producer the field is absent
-        # because there is no pre-production capital, and zero is correct.
+        # rejects it. Optionality capital cannot be absent on a counted asset:
+        # the asset gate excludes it before the numerator and denominator are
+        # formed, so there is no path where an unknown silently becomes zero.
         funding_gap = c.get("remaining_capex_aud_m") or 0.0
-        funded_ev_aud_m = ev_aud_m + funding_gap
+        optionality_capital = ledger["optionality"][
+            "additional_future_capital_aud_m"]
+        funded_ev_aud_m = ev_aud_m + funding_gap + optionality_capital
 
         # Risk stats are diagnostics now, so their absence no longer excludes a
         # name. Under the old formula σ_idio was the weight denominator, which
@@ -1524,11 +1712,16 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
         rows.append({
             "ticker": sym, "name": c["name"], "sleeve": c["sleeve"],
             "claimed_moz": oz, "ledger": ledger, "purity": purity,
+            "core_claim_moz": ledger["core_claim_moz"],
+            "optionality_claim_moz": ledger["optionality_claim_moz"],
             "ev_aud_m": ev_aud_m, "mcap_aud_m": mcap_aud_m, "price_aud": px,
             "funding_gap_aud_m": funding_gap,
+            "optionality_capital_aud_m": optionality_capital,
             "funded_ev_aud_m": funded_ev_aud_m,
             "aud_per_oz": funded_ev_aud_m / oz,
             "aud_per_oz_ex_gap": ev_aud_m / oz,
+            "aud_per_oz_ex_optionality_capital": (
+                (ev_aud_m + funding_gap) / oz),
             "beta_gold": rstat.get("beta_gold"), "r2": rstat.get("r2"),
             "beta_contemporaneous": rstat.get("beta_contemporaneous"),
             "beta_estimator": rstat.get("estimator"),
@@ -1859,40 +2052,43 @@ def portfolio_stats(rows: list[dict], meta: dict) -> dict:
     regressed = wavg("beta_gold")
     lo, hi = meta["objective"]["beta_target"]
 
-    # The index's own price per ounce of claim: total EV bought per ounce
-    # claimed, weighted as the book actually holds them. This is the headline
-    # construction number — cap-weighting the same names reads A$910/oz.
+    # The index's weighted harmonic funded-EV-per-claim statistic. It is a
+    # construction KPI, not a literal look-through purchase price of homogeneous
+    # ounces; §10.2 names that distinction explicitly.
     oz_per_dollar = sum(r["weight"] * r["claimed_moz"] / r["funded_ev_aud_m"]
                         for r in rows)
 
-    # Which tranche the index's claim actually comes from. Each tranche is taken
-    # AFTER its confidence weight, so the three shares sum to 1 and describe the
-    # claim rather than the gross resource — the point of the mix is how much of
-    # what we own is already in the money.
-    w_pp, w_mi, w_inf = confidence_weights(meta)
+    # Which of the two ledgers the weighting claim comes from. Optionality is
+    # taken only after the asset gates and confidence weights; issuer-disclosed
+    # group resources that have not passed those gates remain visible below but
+    # do not enter this mix.
+    _, w_mi, w_inf = confidence_weights(meta)
     contrib = {
-        "reserves": sum(r["weight"] * (r["ledger"]["elig_pp_moz"]
-                                       - r["ledger"]["hedged_moz"]) * w_pp
+        "reserves": sum(r["weight"] * r["ledger"]["core_claim_moz"]
                         for r in rows),
-        "mi_non_reserve": sum(r["weight"] * r["ledger"]["elig_mi_moz"] * w_mi
-                              for r in rows),
-        "inferred": sum(r["weight"] * r["ledger"]["elig_inferred_moz"] * w_inf
-                        for r in rows),
+        "mi_non_reserve": sum(
+            r["weight"] * r["ledger"]["optionality"]
+            ["counted_mi_non_reserve_moz"] * w_mi for r in rows),
+        "inferred": sum(
+            r["weight"] * r["ledger"]["optionality"]
+            ["counted_inferred_moz"] * w_inf for r in rows),
     }
     claim_tot = sum(contrib.values()) or 1.0
     ledger_mix = {k: v / claim_tot for k, v in contrib.items()}
-    # Two separate shrinkages, reported separately because they mean different
-    # things. The first is ounces we do not own — wrong sovereign, or already
-    # sold. The second is ounces we own but discount for confidence, and those
-    # are still there: an Inferred ounce counted at 0.2 is the option, not a
-    # write-off. Netting them into one number would hide that.
-    gross_tot = sum(r["weight"] * r["ledger"]["gross_moz"] for r in rows) or 1.0
-    owned = sum(r["weight"] * (r["ledger"]["elig_pp_moz"] - r["ledger"]["hedged_moz"]
-                               + r["ledger"]["elig_mi_moz"]
-                               + r["ledger"]["elig_inferred_moz"]) for r in rows)
-    ledger_mix["not_ours_share_of_gross"] = 1.0 - owned / gross_tot
-    ledger_mix["confidence_discount_of_owned"] = (
-        1.0 - claim_tot / owned) if owned > 0 else None
+    gross_pp = sum(r["weight"] * r["ledger"]["core"]["pp_moz"]
+                   for r in rows) or 1.0
+    core_claim = contrib["reserves"]
+    ledger_mix["core_excluded_share_of_pp"] = 1.0 - core_claim / gross_pp
+
+    disclosed_optional_claim = sum(
+        r["weight"] * (
+            r["ledger"]["optionality"]["company_disclosed_mi_non_reserve_moz"] * w_mi
+            + r["ledger"]["optionality"]["company_disclosed_inferred_moz"] * w_inf)
+        for r in rows)
+    qualified_optional_claim = contrib["mi_non_reserve"] + contrib["inferred"]
+    ledger_mix["optionality_qualified_share_of_disclosed_claim"] = (
+        qualified_optional_claim / disclosed_optional_claim
+        if disclosed_optional_claim > 0 else None)
 
     return {
         "effective_n": effective_n(rows),
@@ -2013,18 +2209,21 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
           f"Developer sleeve {stats['developer_sleeve']*100:.1f}%")
     print(f"Index price per claimed ounce: A${stats['aud_per_claimed_oz']:,.0f}/oz "
           f"all-in.  ◆ = single-asset company.")
-    gaps = [r for r in rows if r.get("funding_gap_aud_m")]
-    print("  FUNDED EV = market cap + net debt + residual funding gap (§7) — what "
-          "the ounces cost all-in,")
-    if gaps:
-        print("  including capital still to be spent before any of them is mined:")
-        for r in sorted(gaps, key=lambda x: -x["funding_gap_aud_m"]):
-            print(f"    {r['ticker']} +A${r['funding_gap_aud_m']:,.0f}m — "
+    capital_rows = [r for r in rows if r.get("funding_gap_aud_m")
+                    or r.get("optionality_capital_aud_m")]
+    print("  FUNDED EV = market cap + net debt + residual core funding gap +")
+    print("  incremental capital attached to counted optionality (§7).")
+    if capital_rows:
+        for r in sorted(capital_rows,
+                        key=lambda x: -(x["funding_gap_aud_m"]
+                                        + x["optionality_capital_aud_m"])):
+            print(f"    {r['ticker']} core gap +A${r['funding_gap_aud_m']:,.0f}m; "
+                  f"optionality capital +A${r['optionality_capital_aud_m']:,.0f}m — "
                   f"A${r['aud_per_oz_ex_gap']:,.0f}/oz on EV alone, "
-                  f"A${r['aud_per_oz']:,.0f}/oz once the build is paid for")
+                  f"A${r['aud_per_oz']:,.0f}/oz all-in")
     else:
-        print("  including capital still to be spent. No constituent carries a gap "
-              "today, so it equals EV.")
+        print("  No current constituent carries either capital addition, so funded "
+              "EV equals EV on this build.")
 
     beta = stats["portfolio_beta_gold"]
     lo, hi = stats["beta_target"]
@@ -2047,47 +2246,47 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
 
 
 def print_ledger(rows: list[dict], stats: dict, gold_aud: float) -> None:
-    """§6 — the ounce ledger. This IS the model, so it prints in full.
-
-    Every weight in the book above is a row of this table divided by the EV
-    column of that one. There is no third table.
-    """
-    print("\nOUNCE LEDGER (§6) — what each company can actually deliver, by type")
-    print(f"  {'TICK':<6}{'P&P':>8}{'M&I nr':>8}{'INFER':>8}{'GROSS':>8}"
-          f"{'ELIG':>7}{'HEDGED':>8}{'CLAIM':>8}{'DECK':>7}")
-    print("  " + "─" * 70)
+    """§6 — print the core and optionality ledgers separately."""
+    print("\nCORE CLAIM LEDGER (§6.1) — eligible, unhedged P&P only")
+    print(f"  {'TICK':<6}{'P&P':>9}{'ELIG':>8}{'HEDGED':>9}{'CORE':>9}{'DECK':>8}")
+    print("  " + "─" * 49)
     for r in sorted(rows, key=lambda x: -x["weight"]):
-        L = r["ledger"]
+        L = r["ledger"]["core"]
         deck = r.get("reserve_price_aud")
         hedged = f"-{L['hedged_moz']:.2f}" if L["hedged_moz"] > 0.005 else "—"
-        print(f"  {r['ticker']:<6}{L['pp_moz']:>8.2f}{L['mi_moz']:>8.2f}"
-              f"{L['inferred_moz']:>8.2f}{L['gross_moz']:>8.2f}"
-              f"{L['eligible_share']*100:>6.0f}%{hedged:>8}"
-              f"{L['claimed_moz']:>8.2f}"
-              f"{(f'{deck:,.0f}' if deck else '—'):>7}")
+        print(f"  {r['ticker']:<6}{L['pp_moz']:>9.2f}"
+              f"{L['eligible_pp_share']*100:>7.1f}%{hedged:>9}"
+              f"{L['core_claim_moz']:>9.2f}"
+              f"{(f'{deck:,.0f}' if deck else '—'):>8}")
+
+    print("\nOPTIONALITY LEDGER (§6.2) — only assets passing every source gate")
+    print(f"  {'TICK':<6}{'M&I nr':>9}{'INFER':>9}{'OPT CLAIM':>11}"
+          f"{'CAPITAL':>11}{'PASS':>7}{'EXCL':>7}")
+    print("  " + "─" * 58)
+    for r in sorted(rows, key=lambda x: -x["weight"]):
+        O = r["ledger"]["optionality"]
+        print(f"  {r['ticker']:<6}{O['counted_mi_non_reserve_moz']:>9.2f}"
+              f"{O['counted_inferred_moz']:>9.2f}"
+              f"{O['optionality_claim_moz']:>11.2f}"
+              f"{O['additional_future_capital_aud_m']:>11,.0f}"
+              f"{len(O['passed_assets']):>7}{len(O['excluded_assets']):>7}")
+
     mix = stats["ledger_mix"]
-    print("  " + "─" * 70)
-    print(f"  CLAIM applies the §6 confidence weights: P&P 1.0, M&I non-reserve 0.5, "
-          f"Inferred 0.2.")
-    print(f"  The index's claim is {mix['reserves']:.0%} unhedged reserves, "
-          f"{mix['mi_non_reserve']:.0%} near-money M&I and")
-    print(f"  {mix['inferred']:.0%} inferred tail. That mix IS the convexity position "
-          f"and it is the number to")
-    print(f"  watch over time: M&I and inferred ounces are waste at a low gold price "
-          f"and ore at a high")
-    print(f"  one, and the index holds them at half and a fifth of a reserve ounce. "
-          f"A book drifting")
-    print(f"  toward reserves is a book losing its option inventory.")
-    print(f"  Of gross disclosed ounces, {mix['not_ours_share_of_gross']:.0%} are "
-          f"NOT OURS — wrong sovereign, or already sold")
-    print(f"  forward. A further {mix['confidence_discount_of_owned']:.0%} of what "
-          f"remains is discounted for confidence, which is")
-    print(f"  a haircut and not a write-off: an Inferred ounce counted at 0.2 is "
-          f"the option, still held.")
+    print("  " + "─" * 58)
+    print(f"  Weighting claim: {mix['reserves']:.0%} core reserves, "
+          f"{mix['mi_non_reserve']:.0%} qualified M&I and "
+          f"{mix['inferred']:.0%} qualified Inferred.")
+    qualified = mix["optionality_qualified_share_of_disclosed_claim"]
+    if qualified is not None:
+        print(f"  {qualified:.0%} of issuer-disclosed, confidence-weighted "
+              "optionality has passed the asset gates; the rest remains visible "
+              "but contributes zero.")
+    print(f"  {mix['core_excluded_share_of_pp']:.0%} of disclosed P&P is outside the "
+          "core claim because of jurisdiction or forward sales.")
     print(f"  DECK is the gold price the company booked its reserves at, against "
           f"spot A${gold_aud:,.0f}. A low")
-    print(f"  deck means ounces are under-booked and will convert on the next "
-          f"statement. Reported, not scored.")
+    print(f"  deck can support economic reserve growth where geological confidence "
+          f"and modifying factors are adequate. Reported, not scored.")
 
 
 def print_nav(rows: list[dict], navs: dict[str, dict], constituents: list[dict],
@@ -2362,7 +2561,8 @@ def main() -> int:
 
     rows, rejected = compute_raw_weights(constituents, md["prices"], risk, gold_aud,
                                          meta, anchor_gold=anchor["anchor_aud"],
-                                         spreads=md.get("spreads"), navs=navs)
+                                         spreads=md.get("spreads"), navs=navs,
+                                         as_of=market["_sourced"])
 
     if not rows:
         print("\nERROR: no constituent passed the gates with complete data.",
@@ -2501,14 +2701,18 @@ def main() -> int:
     }
     (HERE / "weights.json").write_text(json.dumps(out, indent=2, default=str))
     with (HERE / "weights.csv").open("w", newline="") as f:
-        cols = ["ticker", "name", "sleeve", "weight", "claimed_moz", "aud_per_oz",
+        cols = ["ticker", "name", "sleeve", "weight", "claimed_moz",
+                "core_claim_moz", "optionality_claim_moz", "aud_per_oz",
                 "aud_per_oz_ex_gap", "funded_ev_aud_m", "funding_gap_aud_m",
-                "pp_moz", "mi_moz", "inferred_moz", "eligible_share", "hedged_moz",
+                "optionality_capital_aud_m", "pp_moz", "eligible_pp_share",
+                "eligible_pp_moz", "hedged_moz", "counted_mi_non_reserve_moz",
+                "counted_inferred_moz",
                 "ev_aud_m", "price_aud", "beta_gold", "r2", "spread_pct",
                 "largest_asset_pp_share", "single_asset"]
         wr = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         wr.writeheader()
-        wr.writerows({**r, **r["ledger"]}
+        wr.writerows({**r, **r["ledger"]["core"],
+                      **r["ledger"]["optionality"]}
                      for r in sorted(rows, key=lambda x: -x["weight"]))
     print("\nWrote → weights.csv, weights.json")
 

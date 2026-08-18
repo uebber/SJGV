@@ -42,7 +42,7 @@ ROOT = Path(__file__).resolve().parent.parent
 GATE_FIELDS = {
     "aisc_aud_oz", "production_koz_yr", "committed_capex_aud_m",
     "undrawn_facilities_aud_m", "net_debt_aud_m", "gold_nav_share",
-    "eligible_ounce_share", "study_stage", "approvals_land_secured",
+    "eligible_ounce_share", "eligible_pp_share", "study_stage", "approvals_land_secured",
     "remaining_capex_aud_m",
 }
 
@@ -71,6 +71,26 @@ def main() -> int:
         docs = c.get("documents", {})
         for f, v in c.get("fields", {}).items():
             if not isinstance(v, dict) or (args.field and f != args.field):
+                continue
+            if f == "optionality_assets":
+                for asset in v.get("v") or []:
+                    refs = [("resource_statement", asset.get("resource_statement_doc"))]
+                    refs.extend((k, (asset.get(k) or {}).get("doc")) for k in (
+                        "metallurgy_recovery", "processing_route", "land_permitting",
+                        "capital_path", "encumbrances"))
+                    refs.extend((f"category.{k}", spec.get("doc"))
+                                for k, spec in (asset.get("categories") or {}).items())
+                    for component, doc_key in refs:
+                        t = docs.get(doc_key, {}).get("type", "none")
+                        tally[t] += 1
+                        if t != "primary":
+                            rows.append({
+                                "ticker": c["ticker"],
+                                "field": f"optionality.{asset.get('name', '?')}.{component}",
+                                "type": t, "weight": weights.get(c["ticker"]),
+                                "gate": True,
+                                "url": docs.get(doc_key, {}).get("url", ""),
+                            })
                 continue
             t = docs.get(v.get("doc"), {}).get("type", "none")
             tally[t] += 1
