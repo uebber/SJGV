@@ -1,0 +1,35 @@
+{
+  "snapshot": "2026-08-17-v2.1",
+  "tag": "v2.1",
+  "taken_utc": "2026-08-17T20:55:55.958550+00:00",
+  "build_generated_utc": "2026-08-17T20:53:25.141544+00:00",
+  "git_commit": "a7afa86d3379b36ba68b2438ab46cecaa7316df4-dirty",
+  "methodology": "SJQGM v2.1",
+  "data_sourced": "2026-08-17",
+  "gold_aud_oz": 6215.900612374182,
+  "euraud": 1.629945,
+  "gate2_anchor_aud": 4943.536436565433,
+  "n_constituents": 12,
+  "effective_n": 10.612142010689634,
+  "portfolio_beta_gold": 1.7205416728731755,
+  "weights": {
+    "NST": 0.086703,
+    "EVN": 0.036343,
+    "CMM": 0.060666,
+    "GGP": 0.073501,
+    "GMD": 0.078015,
+    "RMS": 0.074923,
+    "RRL": 0.080127,
+    "WGX": 0.109728,
+    "VAU": 0.076002,
+    "CYL": 0.123992,
+    "PNR": 0.15,
+    "RXL": 0.05
+  },
+  "artefacts": [
+    "data/companies.json",
+    "data/config.json",
+    "weights_v2.json",
+    "basket_v2.json"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "_schema": "Market reference data. The engine fetches live prices and FX from IBKR at build time; these values are fallbacks for --gold-aud / --euraud and the documented basis for any figure computed offline.",
+  "_sourced": "2026-08-17",
+
+  "gold": {
+    "xau_usd": {"v": 4376.07, "as_of": "2026-08-16",
+                "source": "https://tradingeconomics.com/commodity/gold",
+                "note": "Range 4,370-4,440 mid-August. Up 7.76% over the month, 31.15% year on year. Recent path: 4,183.85 (5 Aug), 4,270.62 (6 Aug), 4,305.29 (7 Aug), 4,363.70 (13 Aug)."},
+    "xau_aud": {"v": 6170.0, "as_of": "2026-08-16", "derived": true,
+                "note": "DERIVED: 4,376.07 / 0.7092. Used for Channel 2a reserve-price gaps and Channel 3 operating leverage."},
+    "history_2026": {
+      "ath_usd": 5589.0, "ath_date": "2026-01-28",
+      "note": "Record US$5,589/oz on 28 Jan 2026 on US-Iran tensions, record central bank buying (~60 t/month vs a pre-2022 average of 17 t) and record ETF inflows. Corrected to ~4,091 by mid-March, recovered to ~4,541 late March, ~4,678 on 12 May. Gold gained 64% in 2025, its best year since 1979. Central banks bought an estimated 289 t in Q2 2026; China added ~20 t in July, a 21st consecutive month."
+    },
+    "drawdown_note": "The Jan-to-Mar 2026 drawdown of roughly 27% peak to trough is a live illustration of the ounce arithmetic in methodology §0.1: a linearly levered portfolio bleeds ounces through exactly this kind of round trip. Only convexity accumulates."
+  },
+
+  "fx": {
+    "aud_usd": {"v": 0.7092, "as_of": "2026-08-16", "source": "https://finance.yahoo.com/quote/AUDUSD=X/",
+                "note": "7-day range 0.7055-0.7083; 30-day 0.6959-0.7083; 90-day 0.6882-0.7189. AUD firm since early August on RBA signalling."},
+    "eur_aud": {"v": 1.636, "as_of": "2026-08-17", "derived": true,
+                "note": "APPROXIMATE. AUD per EUR. Fetch live from IBKR at build time — this is a fallback only."}
+  },
+
+  "fund": {
+    "base_currency": "EUR",
+    "aum": 1000000,
+    "aum_aud_approx": 1636000,
+    "note": "Simulation AUM. At this size the capacity test (position <= 5 days of median ADVT at 20% participation) is INERT — a 3% weight is ~A$49,000, a few percent of one day's volume in the smallest name screened. Spread is the entire liquidity cost, which is why Gate 3 is spread-based rather than market-cap based.",
+    "capacity_estimate_aud": [50000000, 100000000],
+    "capacity_note": "Estimated methodology capacity before the small-cap tail begins to bind. Above roughly A$50-100m, names below ~A$1bn market cap drop progressively. The EUR1m simulation is therefore a PURER expression of the methodology than a scaled fund can run — results will not reflect capacity drag."
+  },
+
+  "asx_tick_schedule": {
+    "note": "Gate 3 §4.1. The ASX tick regime converts a spread limit into a SHARE PRICE floor, not a size floor.",
+    "bands": [
+      {"below": 0.10, "tick": 0.001},
+      {"from": 0.10, "below": 2.00, "tick": 0.005},
+      {"from": 2.00, "tick": 0.01}
+    ],
+    "implication": "A 1.0% producer spread limit implies a practical share-price floor near A$0.50, and A$1.00 for comfort. At A$0.10 one tick is 5.0% of price; at A$0.145 it is 3.4%; at A$0.55 it is 0.91%; at A$1.00 it is 0.50%.",
+    "binding_cases": [
+      {"ticker": "MEK", "price": 0.10, "min_spread_pct": 5.0, "outcome": "EXCLUDED — cannot quote inside 1.0% at any volume."},
+      {"ticker": "AAR", "price": 0.145, "min_spread_pct": 3.45, "outcome": "Inside the 4.0% developer limit, outside the 1.0% producer limit. Moot — AAR fails Gate 2 D2 and D3 on fundamentals."}
+    ]
+  },
+
+  "reserve_deck_cross_section": {
+    "note": "Channel 2a input. Reserve price assumptions against a spot of A$6,170/oz. The gap is disclosed, JORC-mandated, and invisible to any methodology reading only the headline reserve number.",
+    "as_of": "2026-08-17",
+    "decks_aud_oz": {
+      "CMM": 2400, "BC8": 2500, "BGL": 2750, "NST": 2900, "AUC": 3000,
+      "GGP": 3030, "RRL": 3500, "WGX": 3800, "RXL": 5200, "VAU": 5546
+    },
+    "unsourced": ["EVN", "RMS", "GMD", "CYL", "PNR", "OBM"],
+    "observation": "A 2.3x spread across the sourced cross-section. Capricorn books reserves at roughly 39% of spot; Vault books at roughly 90%. Same commodity, same country, same quarter — the difference is entirely accounting conservatism, and it is exactly the unbooked optionality Channel 2a is designed to harvest. Note GMD's figure (A$2,500-3,500) is a RESOURCE guideline, not a reserve deck, and is excluded from this table."
+  }
+}

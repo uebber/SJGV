@@ -1,0 +1,35 @@
+{
+  "snapshot": "2026-08-17-funded-ev",
+  "tag": "funded-ev",
+  "taken_utc": "2026-08-17T22:14:06.646595+00:00",
+  "build_generated_utc": "2026-08-17T22:13:46.120884+00:00",
+  "git_commit": "a7afa86d3379b36ba68b2438ab46cecaa7316df4-dirty",
+  "methodology": "SJQGM v2.1",
+  "data_sourced": "2026-08-17",
+  "gold_aud_oz": 6216.41670244287,
+  "euraud": 1.6297899999999998,
+  "gate2_anchor_aud": 4948.0361284710925,
+  "n_constituents": 12,
+  "effective_n": 10.620512870262974,
+  "portfolio_beta_gold": 1.7206704655310774,
+  "weights": {
+    "NST": 0.087083,
+    "EVN": 0.036366,
+    "CMM": 0.0612,
+    "GGP": 0.07365,
+    "GMD": 0.078476,
+    "RMS": 0.073681,
+    "RRL": 0.081072,
+    "WGX": 0.106602,
+    "VAU": 0.076626,
+    "CYL": 0.125245,
+    "PNR": 0.15,
+    "RXL": 0.05
+  },
+  "artefacts": [
+    "data/companies.json",
+    "data/config.json",
+    "weights_v2.json",
+    "basket_v2.json"
+  ]
+}

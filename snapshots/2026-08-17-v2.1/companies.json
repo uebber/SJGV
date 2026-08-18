@@ -1,0 +1,2397 @@
+{
+ "_schema": "See data/README.md. Every field points at a document in the same record's `documents` map. Unknown values are OMITTED, never guessed.",
+ "_sourced": "2026-08-17",
+ "_universe": "Gate 1 Tier A restricts to Australia. 17 candidates screened.",
+ "companies": [
+  {
+   "ticker": "NST",
+   "name": "Northern Star Resources",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA",
+    "Alaska(INELIGIBLE)"
+   ],
+   "documents": {
+    "rr2026": {
+     "title": "Annual Mineral Resources and Ore Reserves Update (as at 31 Mar 2026)",
+     "url": "https://www.nsrltd.com/media/jbef3a0r/resources-and-reserves-update-03-06-2026.pdf",
+     "date": "2026-06-03",
+     "type": "primary"
+    },
+    "dd2026": {
+     "title": "Investor Presentation, Diggers & Dealers 2026 — the LODGED deck. Reaffirms the 3 June 2026 R&R statement to 2 August 2026 and reproduces the full JORC tables, which match this record exactly",
+     "url": "https://www.nsrltd.com/media/zczettax/investor-presentation-diggers-and-dealers-03-08-2026.pdf",
+     "date": "2026-08-03",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/NST/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "nst_q4fy26": {
+     "title": "June 2026 quarterly — KCGM Mill Expansion in first-phase commissioning; FY26 growth capital A$1,117m operational + A$713m mill expansion + A$322m operational readiness + A$104m Hemi. Hemi FID targeted late FY27. FY27 Group guidance due 20 Aug 2026.",
+     "url": "https://www.nsrltd.com/media/4mslqry1/june-2026-quarterly-activities-report-29-07-2026.pdf",
+     "date": "2026-07-29",
+     "type": "primary"
+    },
+    "nst_q3fy26": {
+     "title": "Quarterly Activities Report March 2026 — carries the FY27 KCGM capex breakdown (mill expansion tail, tailings dam, thermal power plant) and NST's own definition of net cash",
+     "url": "https://www.nsrltd.com/media/qmuhwkjw/march-2026-quarterly-activities-report-22-04-2026.pdf",
+     "date": "2026-04-22",
+     "type": "primary"
+    },
+    "nst_hy26": {
+     "title": "Half Year Report to 31 Dec 2025 (Replacement) — audited balance sheet, Note 14 Borrowings, Note 13 Lease liabilities",
+     "url": "https://www.nsrltd.com/media/milhl0uw/half-year-report-ended-31-dec-2025-replacement.pdf",
+     "date": "2026-02-12",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 28.419,
+     "doc": "rr2026",
+     "note": "Proved 4.280 + Probable 24.139 Moz"
+    },
+    "mr_total_moz": {
+     "v": 88.9,
+     "doc": "rr2026"
+    },
+    "mi_non_reserve_moz": {
+     "v": 24.77,
+     "doc": "rr2026",
+     "note": "M&I 53.189 (M 5.629 + I 47.560) less P&P 28.419"
+    },
+    "inferred_moz": {
+     "v": 35.683,
+     "doc": "rr2026"
+    },
+    "reserve_price_aud": {
+     "v": 2900,
+     "doc": "rr2026",
+     "note": "AU assets. US assets at US$1,900/oz."
+    },
+    "resource_price_aud": {
+     "v": 3700,
+     "doc": "rr2026"
+    },
+    "eligible_ounce_share": {
+     "v": 0.91,
+     "doc": "rr2026",
+     "note": "EXACT. Pogo confidence-weighted 4,308.7 koz (P&P 2,385 + 0.5x1,799 M&I non-reserve + 0.2x5,121 Inferred) of group 47,940.6 koz."
+    },
+    "ineligible_nav_share": {
+     "v": 0.09,
+     "doc": "rr2026",
+     "note": "Pogo P&P 2,385 of 28,419 koz = 8.4%; confidence-weighted 9.0%."
+    },
+    "gold_nav_share": {
+     "v": 0.996,
+     "doc": "nst_q4fy26",
+     "note": "DERIVED: FY26 gold revenue A$7,602m / (A$7,602m + A$33m by-product credits) = 0.9957. Same revenue-proxy basis as before but from the primary table rather than a newsletter. By-product credits are NST's only non-gold revenue line and it holds no non-gold asset. Direction noted: this runs in the name's favour on a purity term, but the newsletter's 0.95 had no arithmetic behind it and understated a pure-gold producer."
+    },
+    "aisc_aud_oz": {
+     "v": 2698,
+     "doc": "nst_q4fy26",
+     "note": "FY26 FULL-YEAR ACTUAL, per ounce SOLD, Group. CORRECTED from 2651, which is the JUNE QUARTER ONLY figure a newsletter quoted and which the record itself labelled 'Jun-qtr FY26, not TTM' — a knowingly-wrong basis carried for speed. Reconciles: FY26 AISC A$4,163m / 1,543,405 oz sold = A$2,697.3/oz. By production centre: Kalgoorlie 2,579, Yandal 3,198, Pogo 2,259. Inside the A$2,600-2,800 guidance range. Gate 2 cost base rises A$47/oz."
+    },
+    "shares_out_m": {
+     "v": 1424.81,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; -0.4% vs the previously filed figure"
+    },
+    "production_koz_yr": {
+     "v": 1543,
+     "doc": "nst_q4fy26",
+     "note": "FY26 actual, ounces SOLD: Kalgoorlie 844,333 + Yandal 433,768 + Pogo 265,304 = 1,543,405 oz. Gold RECOVERED was 1,551,883 oz. Value unchanged; the citation moves from a newsletter to the lodged quarterly. FY27 guidance is deliberately withheld to 20 Aug 2026 — the previously recorded 'FY27 Visible Alpha consensus 1,630 koz' was a BROKER CONSENSUS, not an issuer figure, and has been removed."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 1750,
+     "doc": "nst_q4fy26",
+     "note": "Two equal tranches maturing March 2030 and March 2031, undrawn and available at quarter end, so the facility outlives the Gate 2 horizon. Value unchanged; citation moves from a newsletter to the lodged quarterly. NOT included: the A$50m and US$99.5m contingent-instrument facilities, which are drawn and are bank-guarantee lines rather than liquidity."
+    },
+    "committed_capex_aud_m": {
+     "v": 385,
+     "doc": "nst_q3fy26",
+     "note": "DERIVED, sum of the three FY27 KCGM items the issuer costs individually: Mill Expansion tail ~A$160m + tailings dam facilities A$100-120m at the ISSUER-PUBLISHED midpoint A$110m + thermal power plant and transmission infrastructure A$115m = A$385m. CORRECTED from 300, which was A$270m plus a A$30m judgement round-up standing in for the thermal power station on the stated basis that it was 'not separately costed'. IT IS SEPARATELY COSTED, at A$115m, in the same bullet list that supplied the other two figures. CITATION ALSO CORRECTED: the record cited the JUNE quarterly, which contains neither figure — both come from the MARCH quarterly, the last document to publish an FY27 KCGM capex breakdown. Scope unchanged: Hemi excluded (FID late FY27), Operational Growth Capital of A$1,140-1,200m/yr excluded as deferrable under the §7.4 screen. Gate 2 unaffected — the sensitivity run says NST passes at A$560m and fails only at A$2,280m. Two unquantified upward risks: the June quarterly adds uncosted 'renewable energy infrastructure' to remaining FY27 works, and FY26 Operational Readiness underspent guidance by ~A$10m which may roll forward. Re-test 20 Aug 2026."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.255,
+     "doc": "nst_q4fy26",
+     "note": "DERIVED: 787,500 hedged oz / (2 x 1,543,405 oz FY26 gold sold) = 0.2551. Every hedged ounce falls inside the 24 months to 30 Jun 2028 — Dec H26 280,000 + Jun H27 237,500 + Dec H27 180,000 + Jun H28 90,000 — and the book has no maturity beyond that. MATERIAL: the largest position in the index has been scoring an unpenalised zero on §6 purity. The denominator uses FY26 actual sold rather than FY27 guidance, which does not exist; the lower base gives the higher hedge share, which is the conservative direction for a penalty. The book is in RUN-OFF — no hedges added since Aug 2024, 1,118 koz at 31 Dec 2025 to 953 koz at 31 Mar to 788 koz at 30 Jun — at an average A$3,397/oz against a Q4 realised A$5,041/oz, so it is deeply out of the money."
+    },
+    "net_debt_aud_m": {
+     "v": -364,
+     "doc": "nst_q4fy26",
+     "note": "DERIVED on NST's OWN published definition: net debt = corporate bank debt + Notes - cash and bullion = A$0m + US$600m at 0.6887 (A$871.2m) - A$1,235m (A$1,018m cash + A$217m bullion) = -A$363.8m, i.e. net cash A$364m. FX from ECB 30-Jun-2026 reference rates. Capitalised transaction costs of ~A$10m are NOT deducted, which makes the Notes larger and net cash smaller; NST's own convention would report about -A$374m. DEFINITIONAL WARNING, LOAD-BEARING: this definition EXCLUDES secured asset financing and lease liabilities, which at 31 Dec 2025 were A$520.2m and A$390.9m. On a fully-loaded basis NST is in net DEBT of roughly +A$547m — THE SIGN FLIPS ON DEFINITION. The fully-loaded figure is not recorded because it would mix a Dec-2025 debt balance with a Jun-2026 cash balance. Materiality: market cap A$32.09bn, so the entire -364 to +547 spread is 2.8% of EV and cannot move a gate. Also noted: the June quarterly DROPPED the headline net cash metric carried in the December and March quarterlies — presentational, not a covenant event. SUPERSEDE ON 20 AUGUST 2026."
+    },
+    "advt_shares_m": {
+     "v": 6.0574,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "gaps": [
+    "hedge book",
+    "30-Jun-2026 net debt"
+   ]
+  },
+  {
+   "ticker": "EVN",
+   "name": "Evolution Mining",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "NSW",
+    "QLD",
+    "WA",
+    "Ontario(INELIGIBLE)"
+   ],
+   "documents": {
+    "rr2026": {
+     "title": "Annual Mineral Resources and Ore Reserves Statement (as at 31 Dec 2025)",
+     "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1669373/Annual_Mineral_Resources_and_Ore_Reserves_Statement.pdf",
+     "date": "2026-05-01",
+     "type": "primary"
+    },
+    "rrpage": {
+     "title": "Group Mineral Resources and Ore Reserve statements as at 31 Dec 2025 (inline tables)",
+     "url": "https://evolutionmining.com/our-operations/resources-reserves/",
+     "date": "2026-05-01",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/EVN/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "q4fy26": {
+     "title": "Quarterly Report June 2026 — 'FY26 Group guidance delivered, record cash flow, net cash, and fully unhedged'. FY26 actuals, growth-project status, liquidity and the hedge close-out.",
+     "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1684470/June_2026_Quarterly_Report.pdf",
+     "date": "2026-07-15",
+     "type": "primary"
+    },
+    "dd2026": {
+     "title": "Diggers & Dealers 2026 Presentation — carries the FY26 revenue split by metal (78% gold / 22% copper)",
+     "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1687172/Diggers_and_Dealers_2026_Presentation.pdf",
+     "date": "2026-08-03",
+     "type": "primary"
+    },
+    "evn_growth_asx": {
+     "title": "Growth projects approved to deliver higher returns across the portfolio — Northparkes E22 block cave A$545m (EVN 80% share), Northparkes Coarse Particle Flotation ~A$75m, Ernest Henry Bert A$160m",
+     "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1652982/Growth_Projects_Approved_to_Deliver_Higher_Returns.pdf",
+     "date": "2026-02-11",
+     "type": "primary"
+    },
+    "cowal_opc": {
+     "title": "Board approves project extending Cowal Operation to 2042 — Open Pit Continuation, total approved capital A$430m spread over seven years to FY31",
+     "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1591513/Board_approves_project_extending_Cowal_operation_to_2042.pdf",
+     "date": "2025-04-15",
+     "type": "primary"
+    },
+    "carnaby_asx": {
+     "title": "Evolution agrees to acquire Carnaby Resources — Scheme Implementation Deed, 0.0682 EVN per CNB, equity value ~A$213m, Carnaby holders to own ~0.9% of Evolution",
+     "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1685873/Evolution_agrees_to_acquire_Carnaby_Resources.pdf",
+     "date": "2026-07-27",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 12.0,
+     "doc": "rr2026",
+     "note": "Gold only; plus 1.3 Mt of contained copper reported separately. Re-pointed from the website page to the lodged PDF for identical numbers — the Ore Reserves total row reads Proved 81 Mt @ 0.56 g/t for 1.4 Moz, Probable 380 Mt @ 0.83 for 10 Moz, total 460 Mt @ 0.79 for 12 Moz."
+    },
+    "mr_total_moz": {
+     "v": 31.0,
+     "doc": "rr2026",
+     "note": "Gold only; plus 4.2 Mt of copper reported separately. Re-pointed to the lodged PDF: Measured 250 Mt @ 0.41 g/t for 3.3 Moz, Indicated 800 Mt @ 0.76 for 20 Moz, Inferred 230 Mt @ 1.10 for 8.1 Moz, total 1,300 Mt @ 0.75 for 31 Moz."
+    },
+    "eligible_ounce_share": {
+     "v": 0.801,
+     "doc": "rrpage",
+     "note": "EXACT. Red Lake (Ontario) confidence-weighted 3,830 koz (P&P 2,000 + 0.5x2,700 + 0.2x2,400) of group 19,270 koz."
+    },
+    "ineligible_nav_share": {
+     "v": 0.17,
+     "doc": "rrpage",
+     "note": "Red Lake P&P 2.0 of 12.0 Moz = 16.7%."
+    },
+    "gold_nav_share": {
+     "v": 0.78,
+     "doc": "dd2026",
+     "note": "FY26 revenue split by metal, from the issuer's own pie: 78% gold, 22% copper. Independently reconciled from the June quarterly's group sales table — gold 710 koz x A$6,023/oz = A$4,276.3m against copper 67 kt x A$18,051/t = A$1,209.4m, giving 0.7795 — so two primary documents agree to 0.05pp. CORRECTED from 0.76, a TTM proxy taken from an aggregator. THIS MOVES THE NAME AWAY FROM THE FLOOR: 3pp of headroom against the 0.75 purity floor, not 1pp. Silver is not in the pie; Cowal silver credits are about 1% of that mine's revenue. Not gold-equivalent — copper is stated separately in tonnes throughout."
+    },
+    "aisc_aud_oz": {
+     "v": 1717,
+     "doc": "q4fy26",
+     "note": "FY26 ACTUAL, replacing the 1700 guidance midpoint. Basis per the issuer's own endnote: 'AISC calculated for continuing operations excluding Mt Rawdon, which ceased mining operations in FY25. AISC includes C1 cash cost, plus royalties, sustaining capital, general corporate and administration expense, calculated per ounce sold. In line with World Gold Council guidelines.' So per ounce SOLD, continuing operations, WGC-aligned, AUD. Copper is netted as a by-product credit worth A$1,704/oz of group gold sold, so this is a gold AISC and not a gold-equivalent cost. The quarterly flags 4-5% inflation on FY27 AISC, worth A$150-160/oz."
+    },
+    "shares_out_m": {
+     "v": 2031.09,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.1% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -18.0,
+     "doc": "q4fy26",
+     "note": "DERIVED: gross debt at 31 Mar 2026 was cash A$1,371m less net cash A$42m = A$1,329m; the June quarter had no debt repayment and the revolver stayed undrawn, so gross debt at 30 Jun 2026 is unchanged at A$1,329m, against cash of A$1,347m, giving net cash of A$18m. BULLION: no — Evolution reports a plain closing group cash balance and the words bullion, gold-on-hand and metal-in-transit appear nowhere in either quarterly. QUALIFIED: Evolution did not state a 30 June net cash NUMBER, only 'Maintained net cash position with a cash balance of $1,347M', so this is arithmetic across two statements and ignores non-cash debt movements such as FX on any non-AUD tranche, capitalised interest and leases. THE SIGN DOES NOT FLIP — the issuer asserts a net cash position in a lodged document. Updated from -42.0, which was the 31 March position; the A$24m deterioration is the A$399m cash dividend exceeding the quarter's free cash flow. Audited figure lands 19 Aug 2026."
+    },
+    "mi_non_reserve_moz": {
+     "v": 11.3,
+     "doc": "rr2026",
+     "note": "DERIVED: M&I 23.3 Moz (Measured 3.3 + Indicated 20.0) less P&P 12.0 Moz. Value unchanged; re-pointed from the website page to the lodged PDF, where every recorded figure reproduces exactly and all four resource fields come from the same two tables in the same statement. Copper is tabulated entirely separately and is not mixed in. No newer statement exists — the 3 Aug 2026 deck reproduces the same tables and confirms no materially affecting new information."
+    },
+    "inferred_moz": {
+     "v": 8.1,
+     "doc": "rr2026",
+     "note": "230 Mt @ 1.10 g/t. Gold only. Re-pointed to the lodged PDF."
+    },
+    "production_koz_yr": {
+     "v": 693,
+     "doc": "q4fy26",
+     "note": "DERIVED: FY26 group gold produced 715 koz less Mt Rawdon 22 koz = 693 koz on a continuing-operations basis, both figures from the same table in the same statement. GOLD ONLY — copper (66 kt) is a separate table and no gold-equivalent figure is used. The continuing-operations basis is chosen for two reasons, both running against the name. First, basis consistency: the A$1,717/oz AISC is explicitly for continuing operations excluding Mt Rawdon, so pairing it with 715 koz would credit Mt Rawdon's 22 koz at continuing-operations costs when its own FY26 AISC was A$5,297/oz, inflating Gate 2 free cash flow. Second, forward validity: Mt Rawdon is gone — FY26 was 'its final full year of operation', with only 'a limited amount of remaining low-grade stockpiles in the September 2026 quarter'. CORRECTED from 745, which was the FY26 guidance midpoint; the actual landed near the bottom of the 710-780 range."
+    },
+    "committed_capex_aud_m": {
+     "v": 1210,
+     "doc": "evn_growth_asx",
+     "note": "DERIVED: sum of disclosed board-approved project capital with no apportionment — Northparkes E22 block cave A$545m (Evolution's 80% share; A$680m at 100%), Cowal Open Pit Continuation A$430m, Ernest Henry Bert A$160m and Northparkes Coarse Particle Flotation A$75m. VALUE UNCHANGED; this is a provenance upgrade from a miningweekly.com article to lodged documents, which matters because this input decides the name. The Cowal leg comes from the April 2025 board approval and is re-confirmed current in the June 2026 quarterly: 'Capital investment budget remains unchanged at $430 million with this investment spread over the seven year period to FY31.' Two statements are combined, which the same-statement rule normally forbids; it is unavoidable because the approvals are ten months apart, and each component is individually primary and individually current. THE PREVIOUS JUSTIFICATION WAS WRONG AND IS WITHDRAWN: it claimed 'Contractors are engaged (Redpath on Bert and E22, GR Engineering at Northparkes), so this is contracted, not planned.' The June 2026 quarterly says otherwise for both projects — 'the tender for the underground mining contract was conducted. Appointment of the contractor is planned for early in the September 2026 quarter' — and no contractor is named in any lodged document. The figure now rests on board approval plus works in execution, which is what is actually evidenced. EXCLUDED AS DEFERRABLE, each pre-FID or a study: the Northparkes Expansion Study A$14m, the Northparkes E44 study, the FY27 life-of-mine options 'requiring investment of $70-90 million, which was not included in the previous capital outlook', and the entire Greater Duchess/Carnaby programme, which is at PFS with the feasibility study and approvals both outstanding. STILL CONSERVATIVE, more than previously stated: Cowal has been drawing since FY25 and E22 first production is end-FY30, so a material but unquantified share of the A$1,210m is already spent and most of the remainder falls outside the two-year window."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 525.0,
+     "doc": "q4fy26",
+     "note": "THE LARGEST SINGLE CHANGE ON THIS TICKER. The field was previously treated as zero, a conservative bound rather than a sourced value. The issuer discloses: 'Total liquidity is $1,872 million, which includes an undrawn $525 million revolving credit facility that is available until 2028.' Unchanged across all four FY26 quarters and reconciling exactly to the disclosed total liquidity (1,347 + 525 = 1,872). CAVEAT THAT MUST BE CARRIED: the facility is 'available until 2028', and the Gate 2 horizon runs to August 2028, so if 2028 means FY28 the facility expires just inside the window. Favourable and also relevant: 'there are no debt repayments due until FY29', so no maturity falls inside the horizon."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "q4fy26",
+     "note": "Fully unhedged at 30 June 2026, with zero forward sales of either metal: 'Evolution's 120koz hedge commitment established in FY24 as part of the Plant Expansion Project at Mungari is complete, with the final 18koz delivered at $3,284/oz during the June quarter. Evolution is now fully unhedged with no gold or copper hedges.' The report's own headline carries it. This is also why Gate 2's unhedged construction costs EVN nothing."
+    },
+    "reserve_price_aud": {
+     "v": 3000,
+     "doc": "rr2026",
+     "note": "CLOSES THE NAMED GAP. Read from Table 1 'Metal price assumptions' on page 7 of the 1 May 2026 statement, gold row, Ore Reserves column, stated to underlie the December 2025 estimates: gold A$3,000/oz for reserves against A$3,300/oz for resources, and copper A$13,000/t and A$14,350/t respectively. 'All amounts are in Australian dollars unless otherwise noted', so no conversion is applied. Corroborated three times in the mine-level material information summaries: 'A gold price of A$3,000/oz has been used to generate revenue for the Ore Reserve estimate' (Cowal open pit), 'The cut-off analysis was undertaken using a gold price of A$3,000/oz', and 'Evolution uses an internal gold price assumption of A$3,000/oz'. An AUD:CAD rate of 0.95 is used for Red Lake. Channel 2a now scores for EVN."
+    },
+    "resource_price_aud": {
+     "v": 3300,
+     "doc": "rr2026",
+     "note": "Same Table 1, Mineral Resources column, gold row, AUD. Corroborated in the Cowal summary: 'a gold price of A$3,300/oz for both OP and UG evaluations.'"
+    },
+    "advt_shares_m": {
+     "v": 7.5011,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "pending_corporate_action": "Carnaby Resources scheme (copper, Greater Duchess, QLD). Binding SID signed 27 Jul 2026, unanimously recommended subject to no superior proposal and to the Independent Expert. SIGNED, NOT APPROVED, NOT IMPLEMENTED. Outstanding conditions: Carnaby shareholder approval; regulatory approvals including ACCC merger clearance; court approval; the Independent Expert concluding, and continuing to conclude, that the scheme is in the best interests of Carnaby shareholders; and other customary conditions. Indicative timetable: first court date mid September 2026, scheme meeting late October to early November, effective and implementation mid November 2026. Consideration 0.0682 EVN per CNB, implied A$0.77 per Carnaby share, equity value ~A$213m. THE PREVIOUS CLAIM THAT THIS BREACHES THE PURITY FLOOR IS WRONG BY ABOUT 2pp AND IS WITHDRAWN. 'Following implementation of the Scheme, Carnaby shareholders will own approximately 0.9% of Evolution' (1.0% including the Glencore issuance). Even attributing 100% of Carnaby's value to copper, (0.78 x 22,931) / (22,931 + 213) = 0.773, against a 0.75 floor. Greater Duchess is pre-production and at PFS with the feasibility study and permitting both outstanding and no FID, so it contributes nothing to committed capex and does not affect the revenue split until first ore, which is years away. Keep the flag; recompute on NAV when the §8 model exists.",
+   "gaps": [
+    "reserve price deck — NOT in search results, must be read from the 1 May 2026 PDF",
+    "hedge book"
+   ]
+  },
+  {
+   "ticker": "CMM",
+   "name": "Capricorn Metals",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/CMM/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "rr_fy26": {
+     "title": "FY26 Mineral Resource & Ore Reserve statement, effective 31 Mar 2026 — group MRE 348.9 Mt @ 0.8 g/t for 8.659 Moz (Indicated 7.082, Inferred 1.577); Ore Reserve 195.7 Mt @ 0.8 g/t for 5.241 Moz, all Probable",
+     "url": "https://capmetals.com.au/wp-content/uploads/2026/07/Capricorn-Gold-Reserves-Increase-to-5.2-Million-Ounces.pdf",
+     "date": "2026-07-27",
+     "type": "primary"
+    },
+    "q4fy26": {
+     "title": "Quarterly Activities Report and Appendix 5B, June 2026 quarter — FY26 group production 123,589 oz at AISC A$1,629/oz produced; net cash and bullion A$507.0m; zero borrowings; unused financing facilities Nil; FY27 guidance 137-147 koz at AISC A$1,900-2,100/oz with growth capital A$70-85m",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03116187-6A1336425",
+     "date": "2026-07-31",
+     "type": "primary"
+    },
+    "dd_pres_2026": {
+     "title": "Diggers and Dealers Presentation — the ASX-LODGED deck. 'Unhedged, debt free'; Appendix A reproduces the group MRE and ORE tables unchanged",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03117507-6A1337131",
+     "date": "2026-08-04",
+     "type": "primary"
+    },
+    "mggp_pfs_2026": {
+     "title": "Compelling Mt Gibson PFS Update — pre-production capital A$345m non-mining plus A$129m pre-production mining = A$474m, with no contingency allowance at +/-25% accuracy",
+     "url": "https://capmetals.com.au/wp-content/uploads/2026/07/Compelling-Mt-Gibson-PFS-Update.pdf",
+     "date": "2026-07-27",
+     "type": "primary"
+    },
+    "bigsprings_div": {
+     "title": "Divestment of the Big Springs Gold Project (Nevada) to Sentinel Metals for up to A$26.0m — the only non-Australian asset CMM held",
+     "url": "https://capmetals.com.au/wp-content/uploads/2026/07/0718ywx4lrpcyr.pdf",
+     "date": "2026-07-02",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 5.241,
+     "doc": "rr_fy26",
+     "note": "All Probable; no Proved category. KGP 1,572 koz + MGGP OP 3,305 koz + MGGP UG 365 koz."
+    },
+    "reserve_price_aud": {
+     "v": 2394,
+     "doc": "rr_fy26",
+     "note": "DERIVED, ounce-weighted across the decks the issuer discloses per pit. At A$2,200/oz: Enterprise 115 + Hornet 121 + Orion North 757 + Orion South 1,702 = 2,695 koz. At A$2,600/oz: KGP 1,572 + S2 182 + Sheldon 52 + Taurus 14 + Tobias 79 + Deep South 50 + Comanche 47 + Aries 48 + Drifter 17 + Highway 70 + Heap Leach Pad stockpile 50 + Orion Underground 365 = 2,546 koz. The two sum to 5,241 koz, footing exactly to the group Ore Reserve, and (2,695 x 2,200 + 2,546 x 2,600) / 5,241 = A$2,394/oz. THE PREVIOUS NOTE WAS FACTUALLY WRONG: it said 'Per-pit ounce split not disclosed, so the A$2,200-2,600 midpoint is retained', but the split IS disclosed, in the same document already cited — pages 15-16 carry a full per-deposit Ore Reserve table for all fifteen deposits and the price notes name which pits sit at which deck. So the value stops being a CONSTRUCTED MIDPOINT, which DERIVE OR FAIL forbids, and becomes a DERIVED ounce-weighted average, which it permits. The number moves 0.25%; the provenance is the point. Two secondary findings: the previous note listed only four pits at A$2,600 where the statement names nine, and the document is internally inconsistent by 115 koz (the narrative says the A$2,200 pits hold '2.58Moz' but the four pits it names foot to 2,695 koz, which is exactly 2,580 plus Enterprise). Per the table-wins rule, 2,695 is used. The full spread of defensible readings is A$2,391-2,403."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr_fy26",
+     "note": "Moved onto the SAME statement that supplies the ounce base, so numerator and denominator now share one table and one vintage: 100% of the 8.659 Moz group MRE and the 5.241 Moz group ORE sit in two wholly owned Western Australian projects, Karlawinda and Mt Gibson. No attributable-versus-100% ambiguity."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr_fy26",
+     "note": "DERIVED as 1 less the eligible ounce share. The one non-Australian asset was Big Springs in Nevada, inherited with the 2025 Warriedar acquisition and now under a binding sale agreement to Sentinel Metals for up to A$26.0m (A$8.5m cash, A$5.0m scrip, A$12.5m contingent), subject to conditions precedent including a Sentinel capital raising and shareholder approval, so completion is not yet confirmed. Big Springs ounces are NOT in the 8.659 Moz group MRE, so this changes nothing on the ounce basis; as an upper bound the consideration is 0.42% of a A$6.20bn market capitalisation."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q4fy26",
+     "note": "Two independent bases agree. Reserve and resource: 100% of the group ORE and MRE are reported as gold, with no gold-equivalent anywhere in the group statement. Revenue: silver is A$0.4m of A$214.8m in Q4 FY26, or 0.19%, a byproduct credit inside a gold circuit rather than a second NAV stream. WATCH ITEM: the Warriedar-derived Ricciardo deposit at Golden Range is a gold-ANTIMONY system that the company quotes only in gold-equivalent terms (1.96 Moz AuEq). It carries no Ore Reserve, no production and is excluded from the group MRE, so it does not enter this field today — but if the Golden Range Stage 2 study (preliminary Q2 FY27, PFS and FID targeted CY27) converts it, this falls below 1.0. Per the gold-equivalent rule, that 1.96 Moz must never be admitted to a gold field."
+    },
+    "aisc_aud_oz": {
+     "v": 1629,
+     "doc": "q4fy26",
+     "note": "FY26 FULL-YEAR ACTUAL, replacing the 9-month YTD figure of A$1,623 from an aggregator. BASIS: per ounce PRODUCED — the KGP operating table footnote reads 'Net Cash costs and AISC calculated on a per ounce production basis.' The distinction is not academic here: CMM sold 34,271 oz in Q4 against 30,437 oz produced, drawing bullion from 4,112 to 374 oz. KGP is the only operating asset so this is also the group figure. FY27 guidance is materially higher at A$1,900-2,100/oz, midpoint A$2,000, driven by a disclosed cause: 'The increase in AISC is partly driven by increasing the gold price in reserve optimisations from $2,200/oz to $2,600/oz, driving inclusion in the ORE of lower grade but strongly economic ore.'"
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "dd_pres_2026",
+     "note": "'Unhedged, debt free, with fully funded high-margin developments'. Replaces a conference write-up with the ASX-LODGED presentation itself. Two independent corroborations from a separate lodged document: the June quarterly contains no hedge or forward-sale disclosure and its Appendix 5B discloses no derivative obligations; and Q4 gold sold at an average realised A$6,267/oz, i.e. at spot, which is inconsistent with a material forward book. The only hedging reference anywhere is historical — the legacy KGP project facility and hedge book closed out in prior years."
+    },
+    "shares_out_m": {
+     "v": 456.79,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.0% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -507.0,
+     "doc": "q4fy26",
+     "note": "Net cash and bullion at 30 June 2026, on the SAME basis as the previous 31 March figure — the company brackets the March comparative in the same sentence, so the basis is confirmed consistent rather than assumed. Appendix 5B cross-check: cash A$504.811m plus 374 oz of gold at A$2.2m = A$507.011m, less nil borrowings. Bullion is small and disclosed (374 oz, against 4,112 oz at A$27.8m in Q3), so a cash-only basis would be -504.8. Zero debt is confirmed across the full year rather than merely asserted: no proceeds from or repayment of borrowings in either the quarter or the twelve months. The A$1.756m of finance costs paid is almost certainly lease interest; the FY26 statutory accounts are not yet lodged, so lease liabilities cannot be confirmed as excluded from 'debt free'."
+    },
+    "production_koz_yr": {
+     "v": 123.589,
+     "doc": "q4fy26",
+     "note": "FY26 actual. THE GROUP-VERSUS-SINGLE-MINE RISK DID NOT MATERIALISE: 123,589 oz is simultaneously the Karlawinda figure and the group figure, because Karlawinda is Capricorn's only operating mine — Mt Gibson is pre-development and the Warriedar assets and Big Springs are non-producing. The previous 124 koz from a conference write-up was accurate; this sharpens it to the lodged number on a primary document. FY27 guidance is 137,000-147,000 oz, midpoint 142 koz."
+    },
+    "mr_total_moz": {
+     "v": 8.659,
+     "doc": "rr_fy26",
+     "note": "KGP 2,990 koz + MGGP 5,669 koz. Supersedes the 6.6 Moz figure, which pre-dated this statement."
+    },
+    "inferred_moz": {
+     "v": 1.577,
+     "doc": "rr_fy26",
+     "note": "KGP 608 koz + MGGP 969 koz."
+    },
+    "mi_non_reserve_moz": {
+     "v": 1.841,
+     "doc": "rr_fy26",
+     "note": "Indicated 7.082 Moz less Probable reserves 5.241 Moz. No Measured category is reported, so M&I is Indicated only. Reserves are a subset of resources (table note 1)."
+    },
+    "resource_price_aud": {
+     "v": 2800,
+     "doc": "rr_fy26",
+     "note": "Open-pit Mineral Resources estimated at A$2,800/oz (table note 1)."
+    },
+    "committed_capex_aud_m": {
+     "v": 551.5,
+     "doc": "q4fy26",
+     "note": "DERIVED: Mt Gibson pre-production capital A$474m (A$345m plant and infrastructure plus A$129m for 15 months of pre-production mining, footed in the issuer's own table) plus FY27 KGP growth capital at the midpoint of the ISSUER-PUBLISHED A$70-85m range, A$77.5m. SCOPE DECISION TAKEN HERE FOR COHORT CONSISTENCY: the newly guided KGP growth capital is treated the same way as RRL's guided FY27 growth capital (which likewise includes pre-strip of new open pits) and NST's three separately guided FY27 KCGM items. THE PREVIOUS CAVEAT IS OUT OF DATE and is withdrawn: it read 'contingent on the federal environmental permit, so arguably not yet contracted', but the permit has been RECEIVED — 'Capricorn received the Approval Decision from the federal Minister's delegate, approving the expansion and operation of the MGGP under the EPBC Act' — and contracting has advanced, with the MACA mining services agreement executed in the quarter, MACA Interquip awarded the main plant construction scope, the A$129m estimate reflecting 'recently contracted open pit' rates and plant detailed design complete. Only the WA Part IV approval is outstanding. EXCLUDED: A$105m of 'Other LOM Project Capital' at Mt Gibson, which is post-production. NO CONTINGENCY IS INCLUDED IN THE A$474m — 'no contingency has been allowed in the estimate', at '+/- 25% accuracy with a 90% confidence level' — so an against-the-name bound on that leg alone would be A$593m. Gate 2 passes at every variant tested; it fails only on the compound of three conservative bounds at once (FY27 worst-end costs plus the full A$85m plus capex at +25%), which is not the methodology's test but is the honest statement of how much room this name has."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 0.0,
+     "doc": "q4fy26",
+     "note": "SOURCED ZERO, retiring an assumption. Appendix 5B item 7.5, 'Unused financing facilities available at quarter end', is Nil, and the whole of section 7 is empty — loan facilities, credit standby arrangements, bank guarantee and total financing facilities all nil, with item 7.6 (facilities entered into or PROPOSED after quarter end) blank. This does not help the name as a sourcing task normally would, because the true value is zero and Gate 2 headroom is unchanged. What it buys is that CMM no longer passes Gate 2 on an unsourced input here."
+    },
+    "advt_shares_m": {
+     "v": 2.1723,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "gaps": []
+  },
+  {
+   "ticker": "GGP",
+   "name": "Greatland Resources",
+   "exchange": "ASX/AIM",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "or_mar2026": {
+     "title": "March 2026 Group Ore Reserve Statement — reserves +62% to 5.0 Moz",
+     "url": "https://www.investegate.co.uk/announcement/rns/greatland-gold--ggp/march-2026-group-ore-reserve-statement-/9641171",
+     "date": "2026-03",
+     "type": "primary"
+    },
+    "q3fy26": {
+     "title": "March 2026 quarterly — 82,723 oz at AISC A$2,056/oz; puts at US$4,200 CY26",
+     "url": "https://www.investegate.co.uk/announcement/rns/greatland-gold--ggp/march-2026-quarterly-activities-report-/9540358",
+     "date": "2026-04-28",
+     "type": "primary"
+    },
+    "rrtables": {
+     "title": "Group Ore Reserve and Dec-2025 Mineral Resource tables (published as page images)",
+     "url": "https://www.greatland.com.au/assets/resources-reserves/",
+     "date": "2026-07",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/GGP/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "ggp_fy27": {
+     "title": "FY26 result and FY27 guidance (29 Jul 2026) — Havieron FID APPROVED June 2026 after State and Federal environmental approvals; A$1.065bn pre-production capital to first gold in FY29, then A$673m expansion. FY27 growth capital A$680-770m: Havieron A$365-435m plus Telfer A$315-335m. Liquidity A$1,764m.",
+     "url": "https://www.investegate.co.uk/announcement/rns/greatland-gold--ggp/june-2026-quarterly-activities-report-/9692219",
+     "date": "2026-07-29",
+     "type": "primary"
+    },
+    "ggp_pres_jun26": {
+     "title": "June 2026 Quarter Presentation — cash waterfall, put option table, and the FULL Mineral Resource and Ore Reserve tables in TEXT-EXTRACTABLE form, which removes the need to re-read the greatland.com.au page images. States 'All \"$\" values mentioned in this presentation are in Australian Dollars'.",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03115120-6A1335892",
+     "date": "2026-07-29",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 5.0,
+     "doc": "rrtables",
+     "note": "Proved 1.9 Mt @0.69 g/t (0.04 Moz) + Probable 155.3 Mt @1.00 g/t (4.99 Moz). Telfer 1.8 + Havieron 3.3."
+    },
+    "mr_total_moz": {
+     "v": 14.9,
+     "doc": "or_mar2026"
+    },
+    "reserve_price_aud": {
+     "v": 3030,
+     "doc": "or_mar2026",
+     "note": "DERIVED reserve-ounce-weighted: Telfer A$4,000 (1.8 Moz), Havieron A$2,500 (3.3 Moz)."
+    },
+    "resource_price_aud": {
+     "v": 3336,
+     "doc": "ggp_pres_jun26",
+     "note": "DERIVED, resource-ounce-weighted across the two decks the issuer discloses: (Telfer 7.9 Moz x A$4,200 + Havieron 7.0 Moz x A$2,360) / 14.9 Moz = A$3,336/oz. CORRECTED from 4200, which applied only to Telfer while Havieron is 7.0 Moz of the 14.9 Moz group resource. The MRE footnote reads 'Cutoffs for the Telfer MRE are applied based on a NSR using metal prices of A$4,200/oz Au and A$6.50/lb [Cu]. Cutoffs for the Havieron MRE was based on a NSR using metal prices of A$2,360/oz Au and A$5.20/lb Cu.' This is the same ounce-weighted convention already used for this name's reserve deck (Telfer A$4,000 and Havieron A$2,500 blended to A$3,030), so the two fields are now internally consistent. Nothing in the engine currently reads this field."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "or_mar2026"
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "or_mar2026"
+    },
+    "gold_nav_share": {
+     "v": 0.9,
+     "doc": "ggp_fy27",
+     "note": "DERIVED: FY26 gold net revenue A$2,034m / total net revenue A$2,271m = 0.896. Cross-check on a gold-plus-copper-only denominator gives 0.903. Refreshes the previous 0.91 from a single stale quarter to the FY26 full year in the same primary document as every other field; copper is 9.6% of net revenue, so the previous '~9%' was slightly light. DISCREPANCY REPORTED, NOT SMOOTHED: the gold and copper rows sum to A$2,253m against a stated total of A$2,271m, leaving A$18m (0.8%) unattributed. The gap is present in every quarterly column, so it is a real third revenue line, most likely silver, rather than rounding; using the issuer's larger disclosed total is the conservative choice and both denominators round to 0.90. FORWARD RISK, not adjusted because any adjustment would be judgement: Havieron carries 128 kt of copper against 3.3 Moz of gold and its reserve cut-off assumes A$4.60/lb copper, so copper's share of NAV is plausibly above its current 9.6% share of Telfer-dominated revenue."
+    },
+    "aisc_aud_oz": {
+     "v": 2179,
+     "doc": "ggp_fy27",
+     "note": "FY26 FULL YEAR, per ounce of gold PRODUCED, net of copper by-product credits of A$217.5m. The issuer's note: 'AISC is stated per ounce of gold produced, net of by-products (copper) credits. AISC excludes inventory movements which relate to utilisation of stockpiles acquired as part of the Telfer acquisition'. CORRECTED from 2056, which is exactly the March-quarter cell of the same table row — correct for its period, two quarters stale. Quarterly progression: Sep 2,155, Dec 2,196, Mar 2,056, Jun 2,312, FY26 2,179. MATERIAL FORWARD FINDING: FY27 AISC guidance is A$2,900-3,330/oz, midpoint A$3,115, or +43% on the FY26 actual, driven by lower grade, lower copper credits and higher sustaining capital. Both the previous and the current value understate forward cost."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "ggp_fy27",
+     "note": "Zero SOLD production, which is all P1 counts. The book is 150,000 oz of BOUGHT put options, which per §6.2 earn no credit and score the same as no position at all — options can only ever reduce purity, never raise it above unhedged. VERIFIED THREE WAYS after the previous note was found to contain a currency error. (1) Bought rather than sold: the issuer's own 'full upside exposure to the gold price, while achieving downside price protection' is only possible with a bought put; the A$500m facilities were executed with 'no mandatory hedging requirement'; and decisively the PREMIUM IS A CASH OUTFLOW, since the March quarterly's cash-waterfall note reads 'Corporate and finance includes corporate overheads, finance costs / interest, and premiums paid for gold put options' and that bar is negative — a forward sale carries no premium. (2) CURRENCY CORRECTED: the strikes are AUD, not USD as previously recorded. The table header reads 'Weighted Average Strike Price (A$/oz)'. Sanity check: FY26 realised gold was A$6,223/oz, so an A$4,200 strike is deep out of the money — cheap insurance, exactly as described; US$4,200 would be about A$6,400, near the money, contradicting 'partial downside protection'. (3) The CY26 puts have NOT all expired: 75,000 oz at A$4,200 remain across the Sep-26 and Dec-26 tranches. The book has SHRUNK rather than rolled, from 187,502 oz at A$4,560 on 31 March to 150,000 oz at A$4,650 on 30 June, as the 37,502 oz June tranche expired unexercised and worthless against a realised A$6,468/oz. The CY27 tranches at A$5,000 and A$5,200 were already in place, nothing new was written, and the programme runs off after 30 June 2027 with no extension announced."
+    },
+    "shares_out_m": {
+     "v": 674.67,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.3% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -1289.0,
+     "doc": "ggp_fy27",
+     "note": "Closing cash A$1,289m at 30 June 2026, debt free. CURRENCY: Australian dollars — the presentation states 'All \"$\" values mentioned in this presentation are in Australian Dollars' and no sterling figure appears in either document. BULLION: this is a cash balance only, with no bullion, gold-in-circuit or metal-in-transit add-back disclosed, and it excludes A$20m of late-June sales received after quarter end, so it is if anything conservative. The issuer itself calls it net cash. The only drawn instrument is A$9m of a A$25m contingent instrument facility used to issue bank and performance guarantees, which is not drawable cash debt."
+    },
+    "mi_non_reserve_moz": {
+     "v": 3.16,
+     "doc": "rrtables",
+     "note": "M&I 8.16 Moz (Measured 2.7 Mt @0.66 = 0.06 + Indicated 8.1) less P&P 5.0."
+    },
+    "inferred_moz": {
+     "v": 6.8,
+     "doc": "rrtables",
+     "note": "314 Mt @ 0.67 g/t."
+    },
+    "production_koz_yr": {
+     "v": 329.0,
+     "doc": "ggp_fy27",
+     "note": "FY26 ACTUAL gold produced, 328,987 oz (sales were 326,859 oz). CORRECTED from 310, WHICH WAS THE TOP OF THE FY26 GUIDANCE RANGE recorded as though it were the outcome — the previous note even said 'FY26 beat guidance of 260-310 koz'. This was not an error in the secondary source, which reported the actual correctly; it was a misreading at the data-entry step, and it understated the name by 19 koz. FY27 guidance is 260-300 koz, midpoint 280."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 475.0,
+     "doc": "ggp_fy27",
+     "note": "CORRECTED from 500. A$500m is the TOTAL facility package; only A$475m is undrawn drawable cash — Revolving Credit Facility A at A$250m on a five-year tenor plus Facility B at A$225m on a seven-year tenor, both fully undrawn at 30 June 2026. The remaining A$25m contingent instrument facility is both drawn to A$9m and restricted to issuing bank and performance guarantees. The issuer's own arithmetic settles it: 'Available liquidity refers to $1,289m net cash reported at 30 June 2026 plus the $475m in undrawn revolving Credit Facilities' = A$1,764m. The previous pair (-1290, 500) would have implied A$1,790m and overstated liquidity by A$26m. Again the secondary source was right and the entry was wrong. EARMARKING CORRECTED: the previous note said the facility was earmarked for Havieron; the executed documents say 'working capital and general corporate purposes including Havieron development', so it is general-purpose. Lenders ANZ, ING, HSBC, NAB and Westpac, with no mandatory hedging requirement."
+    },
+    "committed_capex_aud_m": {
+     "v": 1390,
+     "doc": "ggp_fy27",
+     "note": "DERIVED: Havieron pre-production capital to first gold A$1,065m plus FY27 Telfer growth capital at the midpoint of the ISSUER-PUBLISHED A$315-335m range, A$325m. BOTH LEGS VERIFIED VERBATIM and no new guidance supersedes them. The A$1,065m is board-approved (FID June 2026 after State Part IV and Federal EPBC approvals), AUD-denominated, 'to first gold' on a June 2025 cost base, and excludes the separate A$673m of post-first-gold expansion capital. NO DOUBLE COUNT: the separately guided FY27 Havieron growth capital of A$365-435m is a first-year subset of the A$1,065m and is not added. FY28 IS STILL NOT GUIDED — the 29 July document contains exactly one guidance table and it is FY27 only — so the withdrawn A$1,400m (which doubled the FY27 Telfer guide) remains correctly withdrawn and no extrapolation is performed. TWO OFFSETTING BIASES, now quantified: this UNDERSTATES by one unguided year of Telfer growth capital (FY26 actual A$231.5m, FY27 guided A$325m), and OVERSTATES Havieron, because the full A$1,065m is charged inside a two-year window although the build runs about two and a half years to first gold in FY29, leaving roughly A$200m outside it. Similar magnitude, opposite direction; neither is adjusted. Exploration and resource development of A$70-80m remains excluded as deferrable."
+    },
+    "advt_shares_m": {
+     "v": 1.882,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "Substantial Inferred material sits inside the West Dome open pit reserve shell but is currently treated as waste — unpriced Channel 2b optionality above the stated conversion inventory."
+   ],
+   "gaps": []
+  },
+  {
+   "ticker": "GMD",
+   "name": "Genesis Minerals",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/GMD/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "q4fy26": {
+     "title": "Quarterly Report June 2026 — FY26 actuals, Group Finance (bank debt A$200m, net cash A$320.1m), FY27 outlook and Appendix B hedge book",
+     "url": "https://GMD.live.irmau.com/pdf/812a7b98-23b1-4f60-8485-c7149d89c3e0/Platform/ListPage/Quarterly-Activities-Report-June-2026.pdf",
+     "date": "2026-07-28",
+     "type": "primary"
+    },
+    "rr_may2026": {
+     "title": "Resource and Reserve update — Resources 18.9 Moz including 4.4 Moz Reserves, effective 31 December 2025. 407 pages including full JORC Table 1s. Ore Reserves struck at A$2,800/oz across every deposit.",
+     "url": "https://GMD.live.irmau.com/pdf/111379dd-974c-4bc2-bacd-29a5d70429db/Platform/ListPage/Resources-total-189Moz-including-44Moz-in-Reserves.pdf",
+     "date": "2026-05-05",
+     "type": "primary"
+    },
+    "gng_epc": {
+     "title": "EPC Contract, Tower Hill Gold Project — GR Engineering Services (ASX:GNG) counterparty release. Executed EPC contract, sum A$229 million.",
+     "url": "https://GMD.live.irmau.com/pdf/d4117b30-54d7-4918-ae3f-909dd0e46ae3/Platform/ListPage/GNG-EPC-Contract-Tower-Hill-Project.pdf",
+     "date": "2026-05-21",
+     "type": "primary"
+    },
+    "vau_sid_jul26": {
+     "title": "Genesis and Vault agree to merge — includes the full Scheme Implementation Deed, Schedule 1 conditions precedent and the indicative timetable",
+     "url": "https://GMD.live.irmau.com/pdf/ab0bb287-d1d1-4494-a7ea-197cbe1868f8/Platform/ListPage/Genesis-Vault-agree-to-merge-creating-a-new-gold-major.pdf",
+     "date": "2026-07-14",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 4.4,
+     "doc": "rr_may2026",
+     "note": "CORRECTED from 4.2 — A STALE VINTAGE, not the headline-versus-table problem the previous note diagnosed. Proved is nil; the reserve is 100% Probable, 73 Mt @ 1.9 g/t. Table 7 by project foots to it: Leonora 2,900 + Laverton 1,400 + Bardoc 97 = 4,397 koz. The 4.2 Moz came from the issuer's website, which serves a 2026 RESOURCE table alongside a 2025 RESERVE table; its reserve total is verbatim the prior estimate the lodged statement itself describes as 'the updated Ore Reserve Estimate reported by Genesis on 26th May 2025 of 68Mt @ 1.9g/t for 4.2Moz'. Four independent tells: the website shows Tower Hill at 1,000 koz where the 2026 statement records an increase to 1.1 Moz; it omits Bruno-Lewis, which the 2026 statement lifts 65% to 280 koz; it still lists Ulysses Open Pit, whose reserve the 2026 statement REMOVES; and it shows Proved 200 koz where the 2026 statement reports nil. Reserve/resource 23%."
+    },
+    "mr_total_moz": {
+     "v": 18.9,
+     "doc": "rr_may2026",
+     "note": "Value unchanged. Re-pointed because the previous citation was wrong on both counts: it was dated '2026-04' at a website URL, whereas the statement was lodged 5 MAY 2026 with an effective date of 31 DECEMBER 2025. 14.5 Moz is not yet in reserves — the largest stated conversion target in the universe."
+    },
+    "resource_price_aud": {
+     "v": 3000,
+     "doc": "rr_may2026",
+     "note": "Midpoint of the ISSUER-PUBLISHED range: 'Mineral Resources are reported at various gold price guidelines between A$2500 and A$3500/oz Au', printed under Table 20 of the lodged statement. Value unchanged; the point is that the range is Genesis's own, so the midpoint is a permitted derivation rather than an analyst construction."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr_may2026",
+     "note": "All Genesis ounces are Western Australian — Leonora, Laverton and Bardoc. Re-pointed from the website page to the lodged statement."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr_may2026",
+     "note": "Single jurisdiction, single commodity."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q4fy26",
+     "note": "DERIVED: FY26 gold sales 289,328 oz x A$6,009/oz = A$1,738.5m against total sales revenue of A$1,738.7m. No by-product revenue line anywhere in the quarterly. Sole jurisdiction WA — Leonora, Laverton and Bardoc."
+    },
+    "aisc_aud_oz": {
+     "v": 2670,
+     "doc": "q4fy26",
+     "note": "FY26 FULL YEAR — the June quarter alone was A$2,797/oz. Value unchanged, now primary. Basis is per ounce SOLD, EXCLUDING third-party ore-purchase ounces: A$670.0m / A$2,670 = 250,936 oz against recovered gold of 285,402 oz, the gap being Brightstar and Kumarina ore-purchase ounces, which footnote 2 states are 'included in recovered gold but excluded from A$/oz calculations'. FY27 guidance is A$2,750-3,050 (midpoint A$2,900) and is not adopted — but at A$2,900 the Gate 2 stress margin turns negative and ending liquidity falls to roughly break-even, which is a live sensitivity."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0079,
+     "doc": "q4fy26",
+     "note": "DERIVED: 4,500 oz of zero cost collars / (2 x 285,402 oz) = 0.0079. THE PREVIOUS 0.0 WAS VERY SLIGHTLY WRONG, and since zero is the favourable value under §6 the correction runs against the name. Appendix B is the complete book at 30 Jun 2026: a single line, 4,500 oz of zero cost collars maturing in the Sep-26 quarter, put strike A$3,500 and call strike A$4,235, all inside the forward-24-month window. The sold-call leg caps upside, which is the same treatment applied to OBM's 33,128 sold calls and distinguished from GGP's bought-puts-only book. Genesis has ZERO FORWARD SALES, so on a flat-forwards definition 0.0 would be right; the two readings differ by 0.79pp."
+    },
+    "shares_out_m": {
+     "v": 1173.31,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.5% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -320.1,
+     "doc": "q4fy26",
+     "note": "REPLACES A FORBIDDEN ESTIMATE. The previous -155.0 was noted as 'ESTIMATE — A$600m at 31 Mar less ~A$445m Magnetic cash component', a judgement subtraction across two documents. The actual 30 Jun 2026 position, post-Magnetic-scheme, is bank debt A$200.0m less cash and equivalents A$520.1m = net cash A$320.1m, stated directly by the company. CASH INCLUDES BULLION: 'cash of A$488.9m, bullion of A$12.5m and liquid investments of A$18.7m, totalling A$520.1m' — the same basis used for PNR and CYL. Two caveats, neither netted: Genesis separately reports A$85m of asset finance liabilities, and treating those as debt would give -235.1, but no other name in this layer nets lease or asset finance; and two known future outflows sit outside the definition, ~A$32m of Magnetic stamp duty and a FY26 PAYG catch-up of A$110-140m in the December 2026 quarter."
+    },
+    "mi_non_reserve_moz": {
+     "v": 9.045,
+     "doc": "rr_may2026",
+     "note": "DERIVED: M&I 13.445 Moz (Measured 0.045 + Indicated 13.4) less P&P 4.4 Moz. Every input from Tables 1 and 2 of the same lodged statement; 190 Mt @ 2.2 g/t = 13.44 Moz reconciles. Two changes against the previous 8.845, partly offsetting: Indicated is 13.4 Moz in the lodged table rather than the 13,000 koz two-significant-figure rounding carried on the website, and P&P is 4.4 rather than 4.2. Implied M&I share of resource rises from 69.0% to 71.1%, so the GMD row in the README imputation calibration table is 2.1pp low."
+    },
+    "inferred_moz": {
+     "v": 5.5,
+     "doc": "rr_may2026",
+     "note": "96 Mt @ 1.8 g/t = 5.56 Moz. Value unchanged; re-pointed from the website page to the lodged statement."
+    },
+    "production_koz_yr": {
+     "v": 285,
+     "doc": "q4fy26",
+     "note": "FY26 ACTUAL recovered gold, 285,402 oz. Value unchanged, now primary. FY27 guidance is 270,000-300,000 oz stand-alone, whose midpoint is also 285, so the value is the same on either basis."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 100,
+     "doc": "q4fy26",
+     "note": "DERIVED: senior corporate financing facility A$300m less A$200m drawn. CORRECTS A MISREAD THAT DOUBLE-COUNTED A$200m — the previous 300 was the SIZE of the facility, not the undrawn balance. Genesis upsized it from A$225m to A$300m and drew A$200m in the same quarter to part-fund the Magnetic cash consideration, and that same A$200m is the bank debt in net_debt_aud_m, so the previous pair counted it once as available headroom and never against. TENOR FLAG: the facility matures March 2028, INSIDE the Gate 2 two-year horizon, so on the OBM precedent the strictly conservative value is 0. It decides nothing — GMD survives on cash alone."
+    },
+    "committed_capex_aud_m": {
+     "v": 229,
+     "doc": "gng_epc",
+     "note": "EXECUTED CONTRACT SUM for the 3.5-4.0 Mtpa Tower Hill mill: 'GR Engineering Services Limited ... has executed an engineering, procurement and construction (EPC) contract with Genesis Minerals (Leonora) Pty Ltd ... The contract sum is $229 million.' Corroborated by Genesis's own 23 Feb 2026 release estimating A$225m. Tower Hill is on track for first ore in FY28, so the whole contract sits inside the window. CORRECTED from 140: that figure is real and is Genesis's own, but it is the FY27 CASH-FLOW SLICE of this contract, not the commitment — 'Growth capital A$380-420m (includes A$140m for new Tower Hill mill; obviated post completion of Vault merger)'. The contracted-versus-deferrable split behind the previous value was the analyst's, not the company's. SOURCING ERROR ALSO CORRECTED: it cited a fool.com.au article dated 3 July 2026, but the lodged 3 July Business Update contains no FY27 guidance at all and says 'Full quarterly report including AISC set for release on Tuesday 28th July'. EXCLUDED: the A$40m owner's cost allowance (not contracted; the issuer's total anticipated capital cost is A$250-280m), FY27 exploration A$80-90m as deferrable, and the balance of the FY27 growth capital as deferrable development. NOT ADDED: A$24m of long-lead mill items reported as ordered, because it is not stated whether they sit inside or outside the A$229m. Runs A$89m against the name."
+    },
+    "reserve_price_aud": {
+     "v": 2800,
+     "doc": "rr_may2026",
+     "note": "FILLS A MISSING FIELD — Channel 2a scored nothing for GMD. 'Ore Reserves are estimated conservatively using an assumed gold price of A$2,800/oz compared with the current spot price of ~A$6,400/oz'. Uniform across every deposit rather than a blend: the notes under Table 7 and Table 21 both read 'Ore Reserves are based on a gold price of A$2,800/ounce', and the per-deposit JORC Table 1 material assumptions for Gwalia, Ulysses, Admiral, Hub, Tower Hill, Jupiter, Bruno-Lewis and Beasley Creek each state A$2,800/oz. One of the lowest decks in the universe."
+    },
+    "advt_shares_m": {
+     "v": 5.8314,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "pending_corporate_action": "Vault Minerals scheme, SID signed 14 Jul 2026, completion targeted November 2026. NOT pre-applied. ACCC STATUS AS AT 17 AUG 2026: the transaction does not appear on the ACCC acquisitions register at all — the register was paged across 10 Jul to 15 Aug 2026 and shows no Genesis/Vault matter, and under the mandatory regime in force since 1 Jan 2026 an entry is created within one business day of notification, so THE ACCC HAS NOT BEEN NOTIFIED, 34 days after signing. Phase 1 runs 30 business days from effective notification, so even on immediate notification a determination lands around early October and any Phase 2 referral pushes past the November target. SID mechanics: ACCC approval is Schedule 1 condition 2, requiring a determination under s51ABZE(1)(a) CCA, a deemed determination under s51ABZI(2), a Tribunal determination under s100N(1)(a) or an ACCC waiver, before the Second Court Date. End Date 14 Jan 2027, automatically extending to 14 Apr 2027 if the ACCC condition is unmet while engagement continues — the parties built in a three-month ACCC buffer. Reimbursement fee A$55.5m either way. Consideration 0.7629 new Genesis shares plus A$0.475 cash per Vault share. Pro forma combined ~600-700 koz/yr, 34 Moz resources, 9 Moz reserves. Separately, the A$140m Tower Hill mill is 'obviated post completion of Vault merger' in Genesis's own FY27 guidance line — but that applies to the MILL only (the open pit is already in production) and cancelling would engage an executed A$229m EPC contract, so any saving is net of an undisclosed termination cost.",
+   "gaps": [
+    "reserve price deck (distinct from the resource guideline)",
+    "verified post-scheme share count and net debt"
+   ]
+  },
+  {
+   "ticker": "RMS",
+   "name": "Ramelius Resources",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "rr2025": {
+     "title": "Resources & Reserves Statement 2025 (as at 30 June 2025) — the FULL lodged 45-page announcement including Ore Reserve Commentary and JORC 2012 Table 1. Replaces a bsk-pdf-manager URL that now 301s to HTML.",
+     "url": "https://RMS.irmau.com/pdf/d1755cf6-5997-4757-87aa-90763e5c9a5d/Platform/ListPage/2025-Resources-and-Reserves-Statement.pdf",
+     "date": "2025-10-01",
+     "type": "primary"
+    },
+    "q3fy26": {
+     "title": "March 2026 Quarterly Report and AISC Guidance Update — live URL replacing a bsk-pdf-manager path that now 301s to HTML",
+     "url": "https://RMS.irmau.com/pdf/33747419-d296-40f7-a21a-77d5a166bd41/Platform/ListPage/March-2026-Quarterly-Report-and-AISC-Guidance-Update.pdf",
+     "date": "2026-04-29",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/RMS/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "q4fy26": {
+     "title": "June 2026 Quarterly Activities Report — FY26 full-year actuals, Gold Price Protection note, cash and gold table",
+     "url": "https://RMS.irmau.com/pdf/618b5ee2-7b99-4c33-8bc8-b6b0ff958383/Platform/ListPage/June-2026-Quarterly-Report.pdf",
+     "date": "2026-07-29",
+     "type": "primary"
+    },
+    "nn_pfs_oct25": {
+     "title": "Never Never PFS — Maiden 1.6 Moz Ore Reserve, and Mt Magnet-Dalgaranga Integration Study (51pp). Carries the GROUP ORE RESERVE UPDATE to 4.2 Moz (Table 14) and JORC Table 1 Section 4. This is the PARENT of the tables-only extract previously cited as rrstmt.",
+     "url": "https://RMS.irmau.com/pdf/bd6a8608-f406-4a1f-b8b5-aa634504953f/Platform/ListPage/Never-Never-PFS-Maiden-Ore-Reserve-and-DalMMG-Integration.pdf",
+     "date": "2025-10-28",
+     "type": "primary"
+    },
+    "rr_dfs_oct25": {
+     "title": "Rebecca-Roe Gold Project Definitive Feasibility Study (58pp) — maiden Bombora (Roe) underground Ore Reserve, CONDITIONAL FID, capital costs",
+     "url": "https://RMS.irmau.com/pdf/9ad07764-c165-4ce4-8fff-b8a9de3ea280/Platform/ListPage/Rebecca-Roe-DFS.pdf",
+     "date": "2025-10-28",
+     "type": "primary"
+    },
+    "hy_fy26": {
+     "title": "Appendix 4D and December 2025 Half Yearly Financial Report (reviewed) — Note 17 Commitments carries gold delivery commitments ONLY; Ramelius publishes no capital commitments note at the interim",
+     "url": "https://RMS.irmau.com/pdf/61b76c11-9ec1-45d2-ba70-48c63b44d143/Platform/ListPage/Appendix-4D-and-December-2025-Half-Yearly-Financial-Report.pdf",
+     "date": "2026-02-20",
+     "type": "primary"
+    },
+    "ar2025": {
+     "title": "2025 Annual Report — Note 25 Commitments, the 'capital expenditure contracted but not provided for' line on an FY25 basis (A$3,016k)",
+     "url": "https://RMS.irmau.com/pdf/ea47beaa-bcec-4fa0-8381-6bb3ec2c5dce/Platform/ListPage/2025-Annual-Report.pdf",
+     "date": "2025-10-24",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 4.2,
+     "doc": "nn_pfs_oct25",
+     "note": "Proved 180 koz + Probable 4,100 koz. Group Ore Reserve 4.2 Moz, effective 30 June 2025. Re-pointed from a 35-page tables-only EXTRACT to the full lodged parent announcement — the extract is pages 33-67 of this document, and what it drops is precisely the JORC Table 1 carrying the A$3,500/oz revenue factor. Note the extract's cover date of 28 Oct 2025 is the LODGEMENT date; the effective date is 30 June 2025. Includes the maiden 1.6 Moz Dalgaranga/Never Never reserve declared in this announcement."
+    },
+    "mr_total_moz": {
+     "v": 12.0,
+     "doc": "rr2025"
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr2025"
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr2025"
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q3fy26"
+    },
+    "aisc_aud_oz": {
+     "v": 1983,
+     "doc": "q4fy26",
+     "note": "FY26 FULL-YEAR ACTUAL, PER OUNCE SOLD. Basis confirmed by arithmetic rather than assumed: A$377.4m / 190,261 oz sold = A$1,983.6, against 192,182 oz produced it would be A$1,964; the same test holds on the quarter. Replaces 1987, which was 9-month FY26 YTD — only A$4/oz different, so unlike production this was not a materially wrong vintage, but it removes the part-year basis. The company's adjusted A$1,840/oz 'excluding the A$143/oz accounting adjustment on early declaration of commercial production at Never Never' is NOT used: the reported figure is the higher and against-the-name reading, and the adjustment is a growth-to-sustaining reclassification rather than a cost that did not occur."
+    },
+    "shares_out_m": {
+     "v": 1889.11,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; -1.6% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -649.6,
+     "doc": "q4fy26",
+     "note": "Cash A$608.4m plus bullion A$41.2m = net cash and gold A$649.6m at 30 June 2026, zero debt. SAME BASIS as the previous -606.5, which is the 31 Mar 2026 cell of the identical table, so this is like-for-like. Bullion is 7,114 oz at the 30 June spot of A$5,792/oz; cash-only would be -608.4. EXCLUDED deliberately: A$100.8m of listed investments, mainly A$98.9m of Benz Mining, which the company reports separately as 'Net cash, gold and investments A$750.4m'. TWO POST-BALANCE-DATE ITEMS RECORDED RATHER THAN NETTED, since netting either would mix dates: A$131m of Spartan stamp duty 'has been paid in the September 2026 Quarter', already gone at today's date and against the name; and the Edna May sale completing in the Sep-26 quarter for A$210m cash plus A$90m of FRS shares, with A$45-55m of income tax payable in December 2026."
+    },
+    "mi_non_reserve_moz": {
+     "v": 4.64,
+     "doc": "nn_pfs_oct25",
+     "note": "M&I 8.84 Moz (Measured 0.64 + Indicated 8.20) less P&P 4.20. Re-pointed from the tables-only extract to the full lodged parent announcement. Value unchanged."
+    },
+    "inferred_moz": {
+     "v": 3.2,
+     "doc": "nn_pfs_oct25",
+     "note": "62 Mt @ 1.6 g/t. Re-pointed from the tables-only extract to the full lodged parent announcement. Value unchanged."
+    },
+    "production_koz_yr": {
+     "v": 192.182,
+     "doc": "q4fy26",
+     "note": "FY26 ACTUAL, 192,182 oz. REPLACES 195, which was the midpoint of FY26 GUIDANCE (185-205 koz) taken from the March quarterly and recorded as though it were an outcome — the sixth instance in this cohort of a forward or part-period figure standing in for a full-year actual, and the actual came in 1.4% BELOW it, so the correction runs AGAINST the name. FY27 guidance does not exist: 'FY27 Guidance and outlook to FY30 will be issued later in the September 2026 Quarter.' Includes no Edna May contribution — in care and maintenance since the March 2025 quarter and sold to Forrestania Resources on 29 June 2026, completing in the Sep-26 quarter — so the divestment does not stale this figure."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 500,
+     "doc": "q3fy26",
+     "note": "Credit facility, undrawn."
+    },
+    "reserve_price_aud": {
+     "v": 3500,
+     "doc": "rr2025",
+     "note": "CLOSES A GAP THE RECORD WRONGLY CALLED A NON-DISCLOSURE. The previous note read 'not disclosed in available sources'; the deck is disclosed plainly in three separate lodged announcements, and the repo was holding a 35-page tables-only extract with no material-assumptions section and not a single '$' character in it. Ore Reserve Commentary p12: 'A maximum A$3,500/oz gold price has been used to estimate Ore Reserves', with JORC Table 1 Section 4 Revenue factors reading 'All reserves are generated at A$3,500/oz or less'. NO BLENDING REQUIRED — all three components of the 4.2 Moz disclose the SAME revenue factor, so an ounce-weighted average is degenerate: the 2.4 Moz base (rr2025), the maiden 1.6 Moz Never Never/Dalgaranga reserve (nn_pfs_oct25, verbatim identical wording) and the maiden 0.26 Moz Bombora/Roe reserve (rr_dfs_oct25, 'Gold price of A$3,500/oz was used for financial model'). TWO PRICES NOT TO CONFUSE WITH THIS ONE: A$3,250/oz is the cut-off grade and pit-shell generation price at Rebecca-Roe, and A$4,500/oz is the DFS/PFS financial-model base case for NPV — neither is the reserve-constraining revenue factor. 'A maximum ... or less' means A$3,500 is a cap and some deposits are constrained lower, so recording 3,500 is the against-the-name reading: it minimises the Channel 2a spread to spot. Effective 30 June 2025 for all three; FY26 statement due ~Oct 2026."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0591,
+     "doc": "q4fy26",
+     "note": "DERIVED: 22,500 oz sold-call leg of zero premium collars / (2 x 190,261 oz FY26 gold sold) = 0.0591. FIRST HEDGE VALUE FOR RMS — absence had been scoring the favourable zero. Per §6.2 only production SOLD or written away counts. ZERO FLAT FORWARDS: the book was closed out in the March 2026 quarter ('FY27 gold forward contracts were closed out and June 2026 Quarter forward contracts were pre-delivered. No further forward contracts are currently being considered') and Q4 gold sales were all spot. What remains is 22,500 oz of FY27 zero premium collars, floor A$4,200/oz and ceiling A$5,906/oz; only the SOLD-CALL leg is counted, exactly as for GMD's 4,500 oz of collars and OBM's 33,128 sold calls. THE 40,000 oz OF FY28 PUT OPTIONS ARE BOUGHT AND ARE EXCLUDED ENTIRELY, earning nothing per §6.2 — the premium test confirms it three ways: 'a premium of A$12.4 million was paid for these put options', the H1 FY26 cash flow carries 'Purchase of derivative financial instruments (12,390)' as an OUTFLOW, and the Rebecca-Roe DFS books it as project spend. By contrast the collars have 'nil cash outflow', the signature of a premium-neutral bought-put/sold-call pair. TIMING: the collars sit wholly in FY27, inside the forward-24-month window. DENOMINATOR: FY26 gold SOLD, following the NST precedent — FY27 guidance does not exist and the lower base gives the higher hedge share, the conservative direction for a penalty; oz produced would give 0.0585. Book is stable, not growing: identical disclosure at 31 Dec 2025, 31 Mar and 30 Jun 2026. The ceiling sits only ~2% above the 30 Jun 2026 spot of A$5,792/oz, so this sold call is close to the money rather than a token cap."
+    },
+    "advt_shares_m": {
+     "v": 8.0752,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "Reports FY26 result pre-market Friday 21 Aug 2026 — confirmed in writing 17 Aug. Refresh committed_capex_aud_m from the annual report's Commitments note (line: capital expenditure contracted but not provided for, within one year — Note 25 in FY25) as at 30 June 2026.",
+    "Rebecca-Roe FID is CONDITIONAL and remains so. The 25 Jun 2026 EPA decision streamlined the pathway ('not required to be formally assessed', Part V works approval underway) but did NOT clear the condition: the 29 Jul 2026 quarterly, lodged after it, still reads 'subject to environmental permitting for Roe'. A$340m of Rebecca-Roe growth capital stays excluded as pre-FID until the permit is in hand."
+   ],
+   "gaps": [
+    "committed_capex_aud_m — ABSENT, and every route to a number today is a forbidden construction. The audited 'capital expenditure contracted but not provided for' note does not exist for FY26 yet (the FY25 figure of A$3,016k pre-dates the entire growth programme, and Ramelius publishes no capital commitments note at the interim). No FY27 capital guidance exists; the only FY27 figure given is exploration at A$90-110m, which is deferrable. Rebecca-Roe is pre-FID. Mt Magnet IS board-approved and unconditional at A$223m for the 5 Mtpa plant plus A$76m Never Never pre-production development and A$82m site infrastructure, but that is a GROSS programme total struck in October 2025 against which A$163.3m of group growth capital has since been spent across a mix of projects — converting gross-approved into remaining-committed requires apportioning that spend by judgement. A$223m alone is also a LOWER bound, which runs FOR the name and so does not qualify as a permitted bound either. Contracted but unpriced: a new ball mill and long-lead equipment ordered, a Stage 1 engineering contractor appointed; the Stage 2 EPC contract is 'targeted to be awarded in the September 2026 Quarter', i.e. not yet let. Gate 2 is invariant across the A$41-870m cohort range, so this cannot change the verdict. DUE 21 AUGUST 2026.",
+    "resource_price_aud — not disclosed. JORC Table 1 Section 3 gives reporting cut-off grades only ('typically 0.5 - 2.0 g/t') and never states a gold price constraining the Mineral Resource. The A$3,250/oz references are pit-shell and cut-off generation prices at specific Rebecca-Roe deposits, not a group deck. Nothing in the engine reads this field."
+   ]
+  },
+  {
+   "ticker": "RRL",
+   "name": "Regis Resources",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA",
+    "NSW"
+   ],
+   "documents": {
+    "rr_apr2026": {
+     "title": "Updated Mineral Resources and Ore Reserves (as at 31 Dec 2025) — MR 8.3 Moz, OR 2.0 Moz",
+     "url": "https://announcements.asx.com.au/asxpdf/20260422/pdf/06yqgtx0558b8h.pdf",
+     "date": "2026-04-22",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/RRL/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "q4fy26": {
+     "title": "ASX Quarterly Report to 30 June 2026 — FY26 guidance-versus-actual table, group financial table, and BOTH the group Mineral Resource and Ore Reserve tables plus the McPhillamys Ore Reserve table on consecutive pages under a single Competent Person compliance statement",
+     "url": "https://app.sharelinktechnologies.com/announcement/asx/0b3f92cd8cea5dc91cceee359814708e",
+     "date": "2026-07-24",
+     "type": "primary"
+    },
+    "fy27guid": {
+     "title": "Stronger Production Outlook Lifts FY27 Guidance — FY27 360-400 koz at AISC A$2,990-3,390, growth capital A$250-270m, exploration A$80-90m, McPhillamys A$30-35m. Also carries 'Correction to 30 June 2026 Cash and Bullion'.",
+     "url": "https://app.sharelinktechnologies.com/announcement/asx/311dc6a948006fe6451204444b0be421",
+     "date": "2026-07-17",
+     "type": "primary"
+    },
+    "mcp_pfs_asx": {
+     "title": "New McPhillamys PFS Supports Reinstatement of Ore Reserve — the LODGED announcement. Reserve converted from the 31 Dec 2025 McPhillamys Mineral Resource; A$2,290/oz optimisation price; Integrated Waste Landform sited entirely outside the s10 declared area",
+     "url": "https://app.sharelinktechnologies.com/announcement/asx/ddbea4abb3c9a85d8a5a18a03ebc1ca5",
+     "date": "2026-06-19",
+     "type": "primary"
+    },
+    "diggers2026": {
+     "title": "Diggers and Dealers Presentation 2026 — 'Unhedged, Dividend Paying Producer'; the issuer's own consolidation of Total Reserves at 3.9 Moz",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03117928-6A1337321",
+     "date": "2026-08-05",
+     "type": "primary"
+    },
+    "ar_fy25": {
+     "title": "Appendix 4E and Annual Report 2025 — Note 17 Revolving Credit Facility, Note 6 Cash",
+     "url": "https://app.sharelinktechnologies.com/announcement/asx/4d308ed60b9c9cd6c1f859c0d7f897ce",
+     "date": "2025-08-22",
+     "type": "primary"
+    },
+    "rcf_feb2025": {
+     "title": "Regis Establishes a $300 Million Revolving Credit Facility — Appendix 1 key terms; CBA, HSBC, Macquarie, Natixis, RBC and Westpac; three-year tenor",
+     "url": "https://app.sharelinktechnologies.com/announcement/asx/ccacfee670606102591b941315a5d046",
+     "date": "2025-02-03",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 3.855,
+     "doc": "q4fy26",
+     "note": "DERIVED: Regis Total Ore Reserve 1,965 koz (Proved 351 + Probable 1,614) + McPhillamys 1,890 koz (100% Probable) = 3,855 koz. VALUE UNCHANGED BUT THE VINTAGE-MIXING CONCERN IS RESOLVED AND THE SOURCE MOVES FROM A NEWS ARTICLE TO THE LODGED QUARTERLY. Three reasons the addition is sound. (1) Both tables — group reserves as at 31 Dec 2025 and McPhillamys as at 31 May 2026 — are printed on consecutive pages of ONE lodged document under a single Competent Person compliance footnote. (2) THE ISSUER ITSELF PERFORMS THE ADDITION: the 5 Aug 2026 deck states 'Total Reserves 3.9Moz', footnoted as 'Combined Duketon, Tropicana and McPhillamys Reserves'. (3) The two dates are not different resource vintages — the McPhillamys reserve was converted from the 31 Dec 2025 McPhillamys Mineral Resource, McPhillamys is not in production so there is zero depletion, and 31 May is the PFS sign-off date. Probable is 1,614 koz, not the 1,613 previously recorded. Reserve/resource 46.6%."
+    },
+    "mr_total_moz": {
+     "v": 8.28,
+     "doc": "rr_apr2026",
+     "note": "Measured 790 + Indicated 5,780 + Inferred 1,700 koz."
+    },
+    "reserve_price_aud": {
+     "v": 2769,
+     "doc": "q4fy26",
+     "note": "DERIVED, reserve-ounce-weighted across the three decks the issuer publishes: (Duketon 1,389 koz x A$3,500 + Tropicana 576 koz x A$2,576 + McPhillamys 1,890 koz x A$2,290) / 3,855 koz = A$2,769/oz. CORRECTED from 3500, which is now unrepresentative of 64% of the reserve base. A$3,500 was right when the reserve was 1,965 koz of Duketon and Tropicana ounces; adding McPhillamys took it to 3,855 koz, and McPhillamys was optimised at a different price — 'A gold price of A$2,290/oz has been used in the optimisation of the Ore Reserve and the calculation of reporting cut-off grades'. Tropicana is US$1,700/oz = A$2,576, set by AngloGold as manager. The ounce-weighted convention is the one already used for GGP (Telfer A$4,000 and Havieron A$2,500 blended to A$3,030); every input is issuer-published with disclosed ounce weights, so this is a derivation rather than an analyst construction. DIRECTION: it runs IN THE NAME'S FAVOUR, because a lower deck widens the Channel 2a gap — which is why it is recorded deliberately rather than left to default."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr_apr2026",
+     "note": "WA + NSW both Gate 1 eligible."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr_apr2026"
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q4fy26",
+     "note": "DERIVED: FY26 gold sales 373,879 oz x A$6,283/oz = A$2,349.1m, which is 100% of reported FY26 group revenue of A$2,349.1m — ounces times realised price reconciles exactly, leaving no by-product revenue line. Silver is treated as a COST CREDIT, not revenue. Duketon, Tropicana (30%) and McPhillamys are all gold-only."
+    },
+    "aisc_aud_oz": {
+     "v": 2945,
+     "doc": "q4fy26",
+     "note": "FY26 FULL-YEAR ACTUAL group AISC, per ounce PRODUCED: A$1,116.5m / 379,050 oz = A$2,945/oz (per ounce sold it would be A$2,986). CORRECTED from 2850, which was H1 FY26 only, as its own note conceded. Includes A$140/oz of non-cash stockpile charges. Guidance was A$2,610-2,990. RUNS AGAINST THE NAME — the June quarter came in at A$3,244/oz on higher diesel and stockpile drawdown."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "diggers2026",
+     "note": "No gold hedges. Corroborated three ways, all primary: the 5 Aug 2026 deck header 'Unhedged, Dividend Paying Producer'; the FY25 annual report ('Debt-free and unhedged for the first time since entering production', with a note recording the book was fully closed out in FY24); and the 31 Dec 2025 reviewed accounts, which carry no derivative asset, liability or hedge disclosure of any kind. This is the favourable value for §6 purity and it is now primary-sourced."
+    },
+    "shares_out_m": {
+     "v": 757.39,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.1% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -1184.0,
+     "doc": "fy27guid",
+     "note": "Cash PLUS bullion at 30 Jun 2026 against ZERO borrowings. Bullion is 7,631 oz at A$5,861/oz = A$44.7m, so a cash-only basis would be about -1,139. Debt is genuinely nil — the 31 Dec 2025 balance sheet carries no borrowings line. Excludes AASB 16 leases (A$110.3m at 31 Dec 2025). THIS IS THE CORRECTED FIGURE: Regis first published A$1.210bn for 30 Jun 2026 on 6 July and corrected it down to A$1.184bn on 17 July after 4,391 oz were found to have been wrongly counted as poured bullion, so any secondary dated 6-16 July carries the superseded number. Unaudited; the audited figure lodges 21 Aug 2026."
+    },
+    "mi_non_reserve_moz": {
+     "v": 2.715,
+     "doc": "q4fy26",
+     "note": "DERIVED: M&I 6,570 koz (Measured 790 + Indicated 5,780) less P&P 3,855 koz. Value unchanged, and the inherited concern does NOT exist: the 31 Dec 2025 group Mineral Resource of 8,280 koz ALREADY INCLUDES McPhillamys, which appears in the table at 2,070 koz Indicated plus 190 koz Inferred. So subtracting a McPhillamys-inclusive reserve from a McPhillamys-inclusive M&I is arithmetically correct, and reserves remain a proper subset ('Mineral Resources are reported inclusive of Ore Reserves'). Implied McPhillamys conversion is 91% of contained Indicated ounces — high, but it is a single shallow bulk-tonnage conical open pit, previously reserved under the July 2024 DFS, with no Inferred material included. M&I + Inferred = 8,270 against a reported 8,280; the tables are rounded to 10 koz."
+    },
+    "inferred_moz": {
+     "v": 1.7,
+     "doc": "rr_apr2026"
+    },
+    "production_koz_yr": {
+     "v": 379,
+     "doc": "q4fy26",
+     "note": "FY26 ACTUAL. Guidance was 350-380 koz; 379,050 oz produced and 373,879 oz sold. Value unchanged; citation moves from kalkine to the lodged quarterly."
+    },
+    "committed_capex_aud_m": {
+     "v": 260.0,
+     "doc": "fy27guid",
+     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY27 group growth capital range A$250-270m. Value unchanged; citation upgraded from fool.com.au to the lodged announcement, and every element of the previous note is verbatim confirmed. Composition: Duketon A$235-245m (Rosemont Stage 3 underground plus pre-strip of new open pits) and Tropicana A$15-25m (Regis 30% share of Havana underground pre-production). The issuer defines growth capital as 'open pit and underground pre-production mining costs, other growth-related project, property, plant and equipment costs and acquisitions'. EXCLUSIONS NOW BETTER SUPPORTED: exploration A$80-90m is deferrable; McPhillamys A$30-35m is excluded both because FID is targeted H1 CY2028 and because that spend is not capitalised at all — 'there was $9M of expenditure associated with McPhillamys, which continues to be expensed through the Profit and Loss account.' Sanity check: FY26 growth capital guidance was A$240-255m against an actual A$248.1m. Caveat: this is board-approved budget guidance, not a signed EPC contract; Regis has no fixed-price construction contract outstanding."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 300.0,
+     "doc": "ar_fy25",
+     "note": "DERIVED: facility limit A$300m less amount drawn A$0. FILLS A GAP PREVIOUSLY TREATED AS ZERO. Every link sourced: the A$300m revolving credit facility was established 3 Feb 2025 on a stated three-year tenor, so it is on foot at 30 Jun 2026; the FY25 borrowings note records nothing drawn at 30 Jun 2025; the 31 Dec 2025 reviewed accounts show no borrowings and a cash-flow line 'Commitment fees paid on undrawn facility (1,279)', proving it was live and undrawn at the half; and the June 2026 quarterly's 'sector-leading debt-free balance sheet' means nothing was drawn at year end. CONFIDENCE IS QUALIFIED: no single document states the limit AS AT 30 Jun 2026 — it is a FY25 fact carried forward on a sourced tenor. Covenants (interest cover, net leverage, minimum reserves, minimum A$50m cash and bullion) are nowhere near binding at A$1,184m and nil debt. Settles 21 Aug 2026."
+    },
+    "advt_shares_m": {
+     "v": 4.5874,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "McPhillamys s10 judicial review heard 10-12 Dec 2025; judgment RESERVED and still outstanding at 17 Aug 2026, roughly eight months on. The complete 1,653-item lodgement archive to 12 Aug 2026 contains no judgment announcement, and one would be price-sensitive and immediately disclosable. NO LONGER A BINARY ON THE 1.89 Moz: the 19 Jun 2026 PFS reinstated the reserve on an Integrated Waste Landform — filtered tailings co-disposed in the mine waste dump — 'located entirely within land owned by Regis and does not encroach on the Section 10 declared area', with pit design, mine sequencing and processing plant 'materially consistent with the July 2024 Definitive Feasibility Study'. The reserve stands whichever way the court rules; a win is upside, not a precondition. Residual risk is timing and permitting. FID targeted H1 CY2028, so nothing is committed capital before then."
+   ],
+   "gaps": [
+    "post-terminated-merger share count confirmation"
+   ]
+  },
+  {
+   "ticker": "WGX",
+   "name": "Westgold Resources",
+   "exchange": "ASX/TSX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "rr2025": {
+     "title": "2025 Mineral Resource Estimate and Ore Reserves (as at 30 Jun 2025) — MR 16.3 Moz (M&I 9.2, Inferred 7.1), OR 3.5 Moz at max A$3,800/oz",
+     "url": "https://www.westgold.com.au/pdf/b012b7f6-f8ec-46c7-aa2c-99ccc7288015/2025-Mineral-Resource-Estimate-and-Ore-Reserves.pdf",
+     "date": "2025-09-02",
+     "type": "primary"
+    },
+    "q3fy26": {
+     "title": "March 2026 quarterly — 93,145 oz, AISC own-ore A$2,931/oz, cash+bullion+investments A$856m, fully unhedged, realised A$7,080/oz",
+     "url": "https://cdn-ceo-ca.s3.amazonaws.com/1kv2elh-6A1322521_WGX.pdf",
+     "date": "2026-04",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/WGX/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 3.5,
+     "doc": "rr2025"
+    },
+    "mr_total_moz": {
+     "v": 16.3,
+     "doc": "rr2025"
+    },
+    "mi_non_reserve_moz": {
+     "v": 5.7,
+     "doc": "rr2025",
+     "note": "M&I 9.2 less P&P 3.5."
+    },
+    "inferred_moz": {
+     "v": 7.1,
+     "doc": "rr2025"
+    },
+    "reserve_price_aud": {
+     "v": 3800,
+     "doc": "rr2025",
+     "note": "Maximum price used to establish reserves and cut-off grades."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr2025"
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr2025"
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q3fy26"
+    },
+    "aisc_aud_oz": {
+     "v": 2931,
+     "doc": "q3fy26",
+     "note": "Own-ore basis. Including purchased ore: A$3,338/oz."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "q3fy26",
+     "note": "Fully unhedged, confirmed."
+    },
+    "shares_out_m": {
+     "v": 948.82,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.4% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -856.0,
+     "doc": "q3fy26"
+    },
+    "production_koz_yr": {
+     "v": 365,
+     "doc": "q3fy26",
+     "note": "FY26 guidance 345-385 koz, midpoint."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 600,
+     "doc": "q3fy26",
+     "note": "Unsecured credit facility established."
+    },
+    "committed_capex_aud_m": {
+     "v": 145,
+     "doc": "q3fy26",
+     "note": "Approved Higginsville mill expansion, 1.6 to 2.6 Mtpa."
+    },
+    "advt_shares_m": {
+     "v": 3.4937,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "Most complete data record in the universe: full resource split, explicit reserve deck, confirmed unhedged. Use as the QA benchmark for the others.",
+    "FY26 statement pending alongside August full-year results."
+   ],
+   "gaps": []
+  },
+  {
+   "ticker": "VAU",
+   "name": "Vault Minerals",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA",
+    "Ontario(idled, INELIGIBLE)"
+   ],
+   "documents": {
+    "rr2025": {
+     "title": "2025 Resource and Reserve Statement (as at 30 Jun 2025)",
+     "url": "https://www.listcorp.com/asx/vau/vault-minerals-limited/news/2025-resource-and-reserve-statement-3243134.html",
+     "date": "2025-09-15",
+     "type": "primary"
+    },
+    "rr2025tbl": {
+     "title": "2025 Resource and Reserve Statement, full tables (as at 30 Jun 2025)",
+     "url": "https://www.listcorp.com/asx/vau/vault-minerals-limited/news/2025-resource-and-reserve-statement-3243134.html",
+     "date": "2025-09-15",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/VAU/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "q4fy26": {
+     "title": "June 2026 Quarterly Activities Report — FY26 actuals, FY27 guidance Table 3 (consolidated Growth Capital A$173m), Group Finance and Gold Hedging sections",
+     "url": "https://announcements.asx.com.au/asxpdf/20260729/pdf/0724t121gxc3l0.pdf",
+     "date": "2026-07-29",
+     "type": "primary"
+    },
+    "ar_fy25": {
+     "title": "Appendix 4E and FY25 Annual Financial Statements — Note 4(a) Revenue by metal, Note 19 Financial Liability (Red 5 syndicated facility repaid and TERMINATED 8 July 2024)",
+     "url": "https://announcements.asx.com.au/asxpdf/20250821/pdf/06n3sqt617w081.pdf",
+     "date": "2025-08-21",
+     "type": "primary"
+    },
+    "hedge_jun26": {
+     "title": "All gold hedges extinguished with no dilution — early settlement of the remaining 10,233 oz Q1 FY27 position on 26 June 2026",
+     "url": "https://announcements.asx.com.au/asxpdf/20260626/pdf/0711k7ksrn25xy.pdf",
+     "date": "2026-06-26",
+     "type": "primary"
+    },
+    "sid_gmd": {
+     "title": "Genesis and Vault agree to merge — includes the full Scheme Implementation Deed, Schedule 1 conditions precedent and the indicative timetable",
+     "url": "https://announcements.asx.com.au/asxpdf/20260714/pdf/071p7pynkm2vzn.pdf",
+     "date": "2026-07-14",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 3.608,
+     "doc": "rr2025tbl",
+     "note": "Leonora 2,787 + Mount Monger 629 + Deflector 192 koz. Sugar Zone carries no reserve."
+    },
+    "mr_total_moz": {
+     "v": 12.232,
+     "doc": "rr2025tbl",
+     "note": "Leonora 6,172 + Mount Monger 3,829 + Sugar Zone 1,229 + Deflector 1,002 koz."
+    },
+    "reserve_price_aud": {
+     "v": 4500,
+     "doc": "rr2025tbl",
+     "note": "CORRECTED from 5546. The 30 Jun 2025 ORE adopts A$4,500/oz (30 Jun 2024: A$3,500/oz) at a 0.3 g/t cut-off. The A$5,546 figure previously recorded was spot at 10 Sep 2025 quoted as pricing CONTEXT for hedged vs unhedged ounces, not the reserve deck."
+    },
+    "eligible_ounce_share": {
+     "v": 0.929,
+     "doc": "rr2025tbl",
+     "note": "CORRECTED from 1.0. Sugar Zone (Ontario) holds no reserve but does hold 789 koz M&I + 440 koz Inferred; confidence-weighted 482.5 koz of group 6,829.8 koz."
+    },
+    "ineligible_nav_share": {
+     "v": 0.07,
+     "doc": "rr2025tbl"
+    },
+    "gold_nav_share": {
+     "v": 0.992,
+     "doc": "ar_fy25",
+     "note": "DERIVED from the AUDITED FY25 revenue note: gold sales A$1,420,180k / total revenue A$1,432,098k = 0.9917, the residual A$11,918k being 'Other metal sales', defined by footnote as silver and copper. CORRECTED from 0.92, which came from kalkine and cannot be reproduced from any primary document — it appears to have been conflated with 1 minus the ineligible NAV share of 0.07, which is a different concept. Independent FY26 cross-check corroborates: gold revenue 334,901 oz x A$5,557/oz = A$1,861.0m against by-product credits of A$19.3m gives 0.990. The audited FY25 figure is preferred because by-product credits are net of treatment and refining charges and so are not a clean gross revenue line, and because Deflector's narrative reports gold-EQUIVALENT sales, which risks double-counting copper. Vintage is FY25, one year stale, but the asset mix is unchanged — Sugar Zone is still not in production. Gate-invariant: the purity floor is 0.75."
+    },
+    "aisc_aud_oz": {
+     "v": 2924,
+     "doc": "q4fy26",
+     "note": "FY26 FULL-YEAR ACTUAL, per ounce SOLD — the operation tables foot to a line labelled 'Gold sales for AISC purposes' (334,901 oz group). Value unchanged; citation moves from kalkine to the lodged quarterly. Marginally above the top of the A$2,650-2,850 guided range. FY27 guidance is A$3,150-3,350, midpoint A$3,250 — A$326/oz worse, and it is the period that matches the A$173m committed capex; see the period-convention note in SOURCES.md."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "q4fy26",
+     "note": "DERIVED: 0 hedged oz / (2 x annual production) = 0.0. CORRECTED from 0.03, which cited the resource statement rather than a hedge-book source. Vault is entirely unhedged from 26 June 2026: 'On 26 June 2026, Vault completed the early settlement of its remaining gold hedge position covering 10,233 ounces scheduled for delivery in Q1 FY27 at an average contracted price of A$2,797 per ounce. The settlement cost $31.2 million', and the standalone 26 June announcement states 'The termination of the Q1 FY27 gold hedges leaves Vault entirely unhedged'. No copper or silver hedging either. Note this cuts both ways: zero hedging maximises gold leverage in the score but removes all downside protection in a Gate 2 stress."
+    },
+    "shares_out_m": {
+     "v": 1034.57,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; -0.1% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -841.6,
+     "doc": "q4fy26",
+     "note": "Cash and bullion A$841.6m at 30 Jun 2026, debt free. CORRECTED from -537.0, which cited the September 2025 resource statement — not a balance-sheet document, eleven months stale, and close to the 31 Dec 2025 cash balance of A$530.0m, so probably a mis-sourced HY26-vintage figure. BASIS: includes A$9.6m of bullion and EXCLUDES A$47.5m of gold in circuit and concentrate on hand at net realisable value; a cash-only reading would be -832.0. Vault is genuinely debt free — the Red 5 syndicated project finance facility was repaid AND terminated on 8 July 2024. CAVEAT: 'debt free' excludes AASB 16 lease liabilities, which were A$74.1m at 31 Dec 2025; the 30 Jun 2026 lease balance is not disclosed, so a lease-inclusive figure would mix vintages and is not constructed here."
+    },
+    "mi_non_reserve_moz": {
+     "v": 4.99,
+     "doc": "rr2025tbl",
+     "note": "M&I 8,598 koz less P&P 3,608 koz."
+    },
+    "inferred_moz": {
+     "v": 3.634,
+     "doc": "rr2025tbl"
+    },
+    "production_koz_yr": {
+     "v": 337,
+     "doc": "q4fy26",
+     "note": "FY26 ACTUAL produced, 336,540 oz (sales were 334,901 oz). Value unchanged; citation moves from kalkine to the lodged quarterly. Within the 332,000-360,000 oz guided range. Site split reconciles exactly: Leonora 179,666 + Mount Monger 79,225 + Deflector 77,649 = 336,540. FY27 guidance is 355,000-375,000 oz, midpoint 365 koz."
+    },
+    "committed_capex_aud_m": {
+     "v": 173,
+     "doc": "q4fy26",
+     "note": "CORRECTED from 53 — VAULT DOES PUBLISH A CONSOLIDATED FY27 GROWTH CAPITAL FIGURE and it is A$173m, in Table 3 of the lodged June 2026 quarterly. The site columns foot exactly: Leonora 62 + Deflector 10 + Mount Monger 5 + Sugar Zone 96 = 173. The previous A$53m was reconstructed from a trade-press summary by excluding Deflector A$48m and Mount Monger A$25m as 'largely captured in AISC' — that was the analyst's characterisation and the company states the opposite: 'Consistent with previous guidance, AISC excludes capital expenditure for mine development, services and mining fleet'. The A$48m the earlier pass excluded is not even a Deflector programme; it is the GROUP FY26 growth capital spend for the June quarter. ONLY the Growth Capital line is taken, because it is the issuer's own label and maps to the field definition. Four other outside-AISC capital lines are excluded with reasons: exploration A$25m is deferrable by policy; the A$45m underground mining fleet is expressly NOT committed ('the potential acquisition of mining fleet of approximately $45 million'); deferred stripping A$49m is a mining cost, not a build; and the A$46m open-pit owner-operator fleet transition likewise. On a total-capital-outside-AISC convention the figure would be A$364m; the honest span is 173-364 and both ends are covered by A$841.6m of net cash. Sugar Zone A$96m is not pre-FID — underground development commenced 1 July 2026 and key approvals were received in July 2026."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 0.0,
+     "doc": "ar_fy25",
+     "note": "BOUND, running against the name, and now EVIDENCED rather than assumed. Vault discloses no committed credit facility of any kind. Its only ever facility was the A$175.0m Red 5 syndicated project loan (BNP Paribas, HSBC Sydney, Macquarie, entered May 2021), which was fully drawn, repaid in full on 8 July 2024 and TERMINATED — the FY25 highlights list 'Repayment and termination of the Red 5 project finance facility', and Note 19 shows a nil carrying value at 30 Jun 2025. No replacement appears in the FY25 accounts, the HY26 interim report or the June 2026 quarterly. Sourcing this does not help the name; it converts an implicit assumption into an evidenced zero."
+    },
+    "advt_shares_m": {
+     "v": 6.3452,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "pending_corporate_action": "Genesis Minerals scheme, SID signed 14 Jul 2026, completion targeted November 2026. Event-driven removal on implementation. NOT pre-applied. The earlier Regis merger-of-equals was TERMINATED 14 Jul 2026 (A$50.7m break fee paid to Regis). ACCC STATUS AS AT 17 AUG 2026 — THE CLOCK HAS NOT STARTED. A party search of the ACCC acquisitions register returns exactly one Vault matter, MN-65020 'Regis Resources - Vault Minerals', effective notification 22 Jun 2026, Phase 1, status 'Assessment ceased' — the dead Regis deal. There is NO entry for Genesis Minerals / Vault Minerals, and the only Genesis matter is WA-85014 'Genesis Minerals - Magnetic Resources', a notification waiver from 3 Mar 2026, completed. Since the register creates an entry within one business day of notification, the Genesis/Vault acquisition had not been notified 34 days after the SID was signed. Phase 1 runs 30 business days from effective notification, so the earliest plausible determination is early October 2026 and a Phase 2 referral would push well past November. SID mechanics: ACCC approval is Schedule 1 condition 2, required before the Delivery Time on the Second Court Date, with the parties jointly responsible. End Date 14 Jan 2027, automatically extending to 14 Apr 2027 if the ACCC condition is unmet while engagement continues. Reimbursement fee A$55.5m either way. Approval needs 75% of votes cast and a majority by number. Nothing has been lodged since the 29 Jul quarterly except three substantial-holding notices, the last on 12 Aug 2026 — no scheme booklet, no independent expert's report, no First Court orders. THE SCHEME IS NOT UNCONDITIONAL AND IS NOT CLOSE TO IT; no event-driven index action is triggered and the November target looks optimistic.",
+   "gaps": [
+    "FY26 balance sheet"
+   ]
+  },
+  {
+   "ticker": "BGL",
+   "name": "Bellevue Gold",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "rr_fy26": {
+     "title": "FY26 guidance and annual Resource & Reserve statement — reserves on an A$2,750/oz basis, resources at 2.5 g/t cut-off",
+     "url": "https://bellevuegold.com.au/resources-and-reserves/",
+     "date": "2025-08-01",
+     "type": "primary"
+    },
+    "q4fy26": {
+     "title": "June 2026 quarterly — FY26 record 143,539 oz at AISC A$2,827/oz; hedges cut 83.4koz to 68.7koz; cash+gold A$206m",
+     "url": "https://announcements.asx.com.au/asxpdf/20260728/pdf/0723jfgnhznrpv.pdf",
+     "date": "2026-07-28",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/BGL/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "bgl_fy27": {
+     "title": "FY27 guidance (28 Jul 2026) — non-sustaining capital A$90-100m, exploration A$25-30m, AISC A$2,800-3,100/oz. Paste plant A$35-40m under construction. 1.0->1.6 Mtpa mill expansion PAUSED, removing A$75m.",
+     "url": "https://announcements.asx.com.au/asxpdf/20260728/pdf/0723jfgnhznrpv.pdf",
+     "date": "2026-07-28",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 1.29,
+     "doc": "rr_fy26",
+     "note": "All Probable: 8.57 Mt @ 4.7 g/t. Corrected from 1.34."
+    },
+    "mr_total_moz": {
+     "v": 3.1,
+     "doc": "rr_fy26",
+     "note": "10.9 Mt at 9.0 g/t — highest grade in the universe."
+    },
+    "reserve_price_aud": {
+     "v": 2750,
+     "doc": "rr_fy26",
+     "note": "Cut-off grade basis. Up from A$1,750/oz in 2022."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr_fy26"
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr_fy26"
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q4fy26"
+    },
+    "aisc_aud_oz": {
+     "v": 2827,
+     "doc": "q4fy26",
+     "note": "FY26 full year."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.24,
+     "doc": "q4fy26",
+     "note": "68.7 koz outstanding against ~143 koz/yr. No mandatory delivery until end-FY27."
+    },
+    "shares_out_m": {
+     "v": 1490.66,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; -1.9% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -106.0,
+     "doc": "q4fy26",
+     "note": "A$206m cash+gold less A$100m bank debt."
+    },
+    "mi_non_reserve_moz": {
+     "v": 0.71,
+     "doc": "rr_fy26",
+     "note": "Indicated 2.0 Moz (no Measured reported) less P&P 1.29."
+    },
+    "inferred_moz": {
+     "v": 1.1,
+     "doc": "rr_fy26",
+     "note": "4.4 Mt @ 7.9 g/t."
+    },
+    "production_koz_yr": {
+     "v": 144,
+     "doc": "q4fy26",
+     "note": "FY26 record 143,539 oz."
+    },
+    "committed_capex_aud_m": {
+     "v": 95,
+     "doc": "bgl_fy27",
+     "note": "Midpoint of guided FY27 non-sustaining capital A$90-100m. Exploration A$25-30m excluded as deferrable (PNR precedent). The contracted core is the paste plant at A$35-40m, under construction. The 1.0->1.6 Mtpa mill expansion is PAUSED and excluded — management states ~190 koz/yr needs no further plant capital. One year only; FY28 non-sustaining is unguided."
+    },
+    "advt_shares_m": {
+     "v": 6.4336,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "LOM production target is 27.6% Inferred material — unusually high reliance on unconverted resource inside the stated plan. Raises execution risk against the Channel 2b credit."
+   ],
+   "gaps": [
+    "reserve statement is dated 1 Mar 2025 — over a year stale"
+   ]
+  },
+  {
+   "ticker": "OBM",
+   "name": "Ora Banda Mining",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "rr2025": {
+     "title": "FY25 Annual Mineral Resource and Ore Reserve Statement — effective 1 July 2025. MR 26.8 Mt @ 2.4 g/t for 2.11 Moz; OR 3.0 Mt @ 2.4 g/t for 236 koz. SUPERSEDED by rr_fy26. Retained because the URL is the one the record previously mis-cited as the 2026 statement.",
+     "url": "https://orabandamining.com.au/wp-content/uploads/2026/03/2946066-Resource-Reserve-Statement.pdf",
+     "date": "2025-09-12",
+     "type": "primary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/OBM/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "rr_fy26": {
+     "title": "OBM Annual Mineral Resource and Ore Reserve Statement — effective 1 April 2026. MR 56.5 Mt @ 2.0 g/t for 3.69 Moz; OR 8.4 Mt @ 2.3 g/t for 610 koz. Table 5 gives the full 20-deposit breakdown.",
+     "url": "https://wcsecure.weblink.com.au/clients/orabandamining/headline.aspx?headlineid=61333715",
+     "date": "2026-07-14",
+     "type": "primary"
+    },
+    "q4fy26_asx": {
+     "title": "June 2026 Quarterly Activities Report — FY26 141 koz at AISC A$3,496/oz, cash A$267.7m, A$200m undrawn RCF to 30 June 2029, FY27 guidance 125-140 koz at A$3,400-3,600/oz",
+     "url": "https://wcsecure.weblink.com.au/clients/orabandamining/headline.aspx?headlineid=61334044",
+     "date": "2026-07-16",
+     "type": "primary"
+    },
+    "pres_dd2026": {
+     "title": "Diggers and Dealers Presentation — Updated FY27 Capital Guidance table by project with approval status, full put/call option book, Debt: Nil",
+     "url": "https://wcsecure.weblink.com.au/clients/orabandamining/headline.aspx?headlineid=61336971",
+     "date": "2026-08-03",
+     "type": "primary"
+    },
+    "drive300": {
+     "title": "DRIVE to 300 aspiration and Key Project Approvals — Board approval of the A$375m 3.0 Mtpa processing plant (A$233m EPC + A$142m supporting infrastructure and contingency) and the A$90m Waihi Underground mine",
+     "url": "https://wcsecure.weblink.com.au/clients/orabandamining/headline.aspx?headlineid=61325808",
+     "date": "2026-05-18",
+     "type": "primary"
+    },
+    "epc2026": {
+     "title": "Davyhurst Mill Expansion — EPC contract signed with GR Engineering Services; contract sum A$233 million",
+     "url": "https://wcsecure.weblink.com.au/clients/orabandamining/headline.aspx?headlineid=61329452",
+     "date": "2026-06-15",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 0.61,
+     "doc": "rr_fy26",
+     "note": "Table 2, effective 1 Apr 2026: Proved 49 + Probable 560 = 609, rounded to 610 by the issuer. Net of 80 koz depletion. Includes 48 koz of low-grade in-situ and surface stockpiles; Table 5 resources are stated exclusive of surface stockpiles, so the 3.69 Moz does not fully contain the 610 koz — a 17 koz discrepancy, immaterial but recorded rather than smoothed."
+    },
+    "mr_total_moz": {
+     "v": 3.69,
+     "doc": "rr_fy26",
+     "note": "56.5 Mt at 2.0 g/t. Round Dam 1,330 koz, Riverina AREA TOTAL 828 koz (the previously recorded 689 koz was Riverina underground only), Waihi 482 koz, Sand King 363 koz. Those four are 3,003 koz of the 3,690; the remaining 687 koz sits in fifteen smaller deposits. Gold only, no gold-equivalent."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr_fy26",
+     "note": "All 20 deposits in Table 5 sit within the Davyhurst Gold Project, WA."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr_fy26",
+     "note": "Single jurisdiction, single commodity."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q4fy26_asx",
+     "note": "DERIVED: FY26 Revenue from Operations A$886.5m is 100% gold. The only non-gold line is By Product Credits of A$3.329m, netted against operating costs rather than booked as revenue, 0.38% of revenue. Single-asset gold producer."
+    },
+    "aisc_aud_oz": {
+     "v": 3496,
+     "doc": "q4fy26_asx",
+     "note": "FY26 actual, A$/oz sold, inclusive of attributed third-party-processed ounces. Reconciles: A$491,650k / 140,641 oz. HIGHEST AISC IN THE UNIVERSE. Overrun characterisation corrected: the company reports it as '4% above upper end of guidance', implying a revised top end near A$3,360/oz. The previously recorded '~21% overrun' was measured against ORIGINAL guidance of A$2,800-2,900, which was revised upward during FY26."
+    },
+    "shares_out_m": {
+     "v": 1934.0,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.7% vs the previously filed figure"
+    },
+    "net_debt_aud_m": {
+     "v": -267.7,
+     "doc": "q4fy26_asx",
+     "note": "Cash A$267.7m at 30 June 2026, zero debt (confirmed 'Debt A$ million Nil' in the 31 July capital structure table). NOT NETTED, because the figures would be constructed: cash excludes AASB 16 lease liabilities (A$8.3m of principal and interest paid in the June quarter alone) and excludes A$49.9m of deferred put-option premiums payable on expiry."
+    },
+    "reserve_price_aud": {
+     "v": 2500,
+     "doc": "rr_fy26",
+     "note": "Underground cut-off basis: 'The cut-off grades were based on a gold price of A$2,500/oz' for Riverina, Sand King and Waihi underground — 326 koz, 53% of the 610 koz reserve. OPEN AMBIGUITY, recorded rather than resolved: the same statement uses four different constraint prices (Waihi open pit A$2,400, Round Dam open pit A$3,600 covering 223 koz or 37%, low-grade and stockpiles A$3,400-5,000) AND states for every mine without exception that the economics were run at a single A$3,600/oz financial-evaluation price. If the field means the price the estimate was CONSTRAINED at, A$2,500 is right for the underground; if it means the price the reserve was JUSTIFIED at, A$3,600 is the statement-wide answer and runs against the name. No ounce-weighted average is derivable because the 31 koz low-grade in-situ split between the A$3,400 and A$5,000 assumptions is not disclosed. Immaterial while OBM fails Gate 2."
+    },
+    "production_koz_yr": {
+     "v": 141,
+     "doc": "q4fy26_asx",
+     "note": "FY26 actual; gold sold was 140,641 oz. FY27 guidance is 125-140 koz at A$3,400-3,600/oz. The vintage choice does not decide Gate 2 here: at the recorded capex the name fails on either basis."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 200,
+     "doc": "q4fy26_asx",
+     "note": "A$200m corporate revolving facility, undrawn, upsized from A$50m during the quarter. Three-year tenor to 30 June 2029, so it outlives the Gate 2 two-year horizon and counting it is sound. Total liquidity A$468m."
+    },
+    "committed_capex_aud_m": {
+     "v": 455,
+     "doc": "pres_dd2026",
+     "note": "DERIVED from the issuer's own 'Updated FY27 Capital Guidance' table, summing only contracted or Board-approved lines inside the two-year horizon: new 3 Mtpa mill FY27 A$240m + FY28 A$135m = A$375m, plus 'Approved: Waihi Underground' FY27 A$40m + FY28 A$40m = A$80m. The FY27/FY28 phasing is the issuer's, not an apportionment. CORRECTED FROM 233, WHICH WAS THE GR ENGINEERING EPC CONTRACT SUM — a line item inside the A$375m the Board approved on 18 May 2026, not the committed build. EXCLUDED with reasons: exploration A$75m/yr deferrable; 'infrastructure growth and upgrades' ~A$180m is 'pending final Board approvals' per the same deck; Round Dam open pit A$160m is 'Pending FID'; Waihi FY29 A$5m is outside the horizon. The no-apportionment reading of the board totals (375 + 90 = A$465m) gives the same verdict. THIS INPUT DECIDES GATE 2 FOR THIS NAME — see SOURCES.md."
+    },
+    "mi_non_reserve_moz": {
+     "v": 1.215,
+     "doc": "rr_fy26",
+     "note": "DERIVED: (Measured 99 koz + Indicated 1,726 koz) less Ore Reserve 610 koz = 1,215 koz. Table 1 and Table 2 of the same statement, same effective date. Reserve/resource 16.5%, just inside the plausibility floor — expected for a name that has just added 1.58 Moz of largely Inferred Round Dam ounces. Table 5 foots exactly to Table 1 on all twelve cells."
+    },
+    "inferred_moz": {
+     "v": 1.87,
+     "doc": "rr_fy26",
+     "note": "Inferred column of Table 1. Category tonnes foot exactly (1,200 + 25,200 + 30,100 = 56,500). The residual mr_total - M&I gives 1,865 koz, 5 koz below the reported figure; the reported category value is used, not the residual. Inferred is 51% of the resource, of which Round Dam alone is 924 koz."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.117,
+     "doc": "pres_dd2026",
+     "note": "DERIVED: 33,128 sold call options / (2 x 141,000 oz) = 0.1175. Ora Banda has NO forward gold sales — the entire book is options. Only the sold calls cap upside: 'an obligation to deliver these ounces at $8,400 should the AUD gold price exceed that price'. The 199,992 oz of PURCHASED puts (A$5,013-6,000 floors, Jul-26 to Jun-28) are protective and preserve upside entirely; counting them would give 0.709 and would be wrong for a factor whose penalty is (1 - sold_share). Per §6.2 bought positions are excluded from the count entirely and earn no offsetting credit either. The calls run Nov-2027 to Jun-2028, wholly inside the forward-24-month window. Strike A$8,400 is ~36% above spot."
+    },
+    "advt_shares_m": {
+     "v": 7.278,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "NEW to the universe — never screened by v1.0 despite a market cap larger than Bellevue's.",
+    "A$233m EPC contract signed with GR Engineering for a 3 Mtpa Davyhurst plant. COMMITTED capex — material to Gate 2 and to the committed-vs-deferrable negative convexity screen.",
+    "FY26 AISC overran guidance by ~21%. Gate 2 must be run properly on this name."
+   ],
+   "gaps": [
+    "M&I/Inferred split — SOURCED 2026-08-17 from the 1 Apr 2026 statement",
+    "hedge book — SOURCED 2026-08-17 (options only, no forward sales)",
+    "reserve_price_aud basis — four constraint prices in one statement plus a statement-wide A$3,600/oz financial-evaluation price. Decide the field's meaning before OBM is ever re-admitted.",
+    "resource_price_aud — no single figure published: A$2,400/oz shells for five open pits, an optimised A$5,000/oz shell for Round Dam (36% of the resource), a 2023 pit DESIGN shell for Waihi with no price stated, and diluted cut-off grades with no price for all four underground resources."
+   ]
+  },
+  {
+   "ticker": "CYL",
+   "name": "Catalyst Metals",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA",
+    "VIC"
+   ],
+   "documents": {
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/CYL/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "henty_divest": {
+     "title": "Henty Gold Mine (Tasmania) DIVESTED to Kaiser Reef, completed 16 May 2025 — A$31.6m total (A$15m cash + A$16.6m in KAU scrip, 118.6m shares = 19.99% of Kaiser), plus 50 oz/month deferred capped at 3,000 oz and a 0.5% NSR over the Darwin Target Zone",
+     "url": "https://www.miningweekly.com/article/kaiser-completes-henty-deal-2025-05-16",
+     "date": "2025-05-16",
+     "type": "secondary"
+    },
+    "rr_page": {
+     "title": "Catalyst Resources and Reserves page — assets are Plutonic, Plutonic East, Trident, Trident West, K2, Marymia (all WA) and Bendigo/Boyd's Dam/Iris Zone (VIC). No Tasmanian asset appears.",
+     "url": "https://catalystmetals.com.au/resources-and-reserves/",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "rr_fy25": {
+     "title": "FY25 Annual Report — ASX Additional Information: 'Annual update of Mineral Resource and Ore Reserves ... as at 30 June 2025'. Deposit-level Total MR, Total OR, Attributable OR and Attributable MR tables, plus Note 4 Revenue.",
+     "url": "https://api.investi.com.au/api/announcements/cyl/eafe57df-51c.pdf",
+     "date": "2025-10-14",
+     "type": "primary"
+    },
+    "rr_sep2025": {
+     "title": "Plutonic Belt Reserves double — 1.5 Moz reserve, per-deposit Ore Reserve tables and full JORC Table 1 material assumptions (reserve price deck)",
+     "url": "https://api.investi.com.au/api/announcements/cyl/b8a0f4a0-a4e.pdf",
+     "date": "2025-09-10",
+     "type": "primary"
+    },
+    "q4_fy26": {
+     "title": "Quarterly Activities Report June 2026 — FY26 production/AISC tables, cash and bullion, capital split, FY27 guidance deferral to late September 2026",
+     "url": "https://api.investi.com.au/api/announcements/cyl/7287ce45-8f1.pdf",
+     "date": "2026-07-31",
+     "type": "primary"
+    },
+    "rcf_aug2026": {
+     "title": "Catalyst increases its corporate credit facility to A$200m — Westpac, NAB, SocGen plus HSBC; tenor extended three to four years; wholly undrawn",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03121119-6A1338562",
+     "date": "2026-08-14",
+     "type": "primary"
+    },
+    "hedge_jul2026": {
+     "title": "Catalyst secures gold price protection regime — 30,000 oz forward sold at A$6,075/oz, 2,000 oz/month over 15 months from August 2026",
+     "url": "https://api.investi.com.au/api/announcements/cyl/c11a9cb3-593.pdf",
+     "date": "2026-07-09",
+     "type": "primary"
+    },
+    "hy_dec2025": {
+     "title": "Appendix 4D and Half Year Accounts, half-year ended 31 December 2025 — Note 17 Commitments, capital expenditure contracted but not provided for",
+     "url": "https://api.investi.com.au/api/announcements/cyl/42ddb497-2a7.pdf",
+     "date": "2026-02-27",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 1.542,
+     "doc": "rr_fy25",
+     "note": "All Probable; Proved nil across every deposit. 100% basis. The Attributable Ore Reserve table in the same statement gives 1,541 koz, so the attributable-vs-100% question is immaterial for reserves. Deposit rows sum to 1,541 against a printed 1,542. NOT depleted for FY26 production of 104 koz."
+    },
+    "mr_total_moz": {
+     "v": 4.24,
+     "doc": "rr_fy25",
+     "note": "CORRECTED from 3.6, which was 18% low. 41.5 Mt at 3.2 g/t for 4,240 koz. The 3.6 traced to the 3,453 koz row on the issuer's resources-and-reserves web page — the stale pre-September-2025 deposit table sitting alongside a current attributable summary. That page is the mixed-vintage trap and is retired as a CYL source. Attributable equivalent 4,152 koz."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "rr_fy25",
+     "note": "DERIVED from the AUDITED FY25 revenue note: sale of gold A$360,991k / total revenue A$361,412k = 0.9988. Silver is 0.12% of revenue, a by-product credit. All revenue Australian. The 19.99% Kaiser Reef stake is a non-operating listed equity holding, not revenue."
+    },
+    "aisc_aud_oz": {
+     "v": 2738,
+     "doc": "q4_fy26",
+     "note": "FY26 FULL YEAR, A$/oz sold. CORRECTED from 2666, which is the June-2026 quarter alone on ounces produced. The year was A$2,738/oz sold and A$2,747/oz produced; the June quarter was A$2,666 produced / A$2,734 sold. 2,738 pairs correctly with production_koz_yr and is the figure the company compares to its own guidance. Runs against the name. The Aug-2026 deck prints 'FY26 2,734', which is the June-quarter sold figure mislabelled as the year."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.145,
+     "doc": "hedge_jul2026",
+     "note": "DERIVED: 30,000 oz / (2 x 103,761 oz FY26 production) = 0.1446. Both inputs sourced. All 30,000 oz are delivered inside the forward-24-month window (Aug 2026 - Oct 2027), so no apportionment. This is Catalyst's first hedge ever — the FY25 accounts state 'it has not entered into any hedging contracts'."
+    },
+    "net_debt_aud_m": {
+     "v": -331.0,
+     "doc": "q4_fy26",
+     "note": "Cash and bullion A$331m at 30 June 2026, debt free. CORRECTED from -323.0, which was the cover-panel figure of the 9 July 2026 hedging release and is superseded by the 30 June actual. Corroborated independently by the 14 Aug 2026 RCF announcement."
+    },
+    "production_koz_yr": {
+     "v": 103.8,
+     "doc": "q4_fy26",
+     "note": "FY26 actual, 103,761 oz. FY27 guidance does not exist: the quarterly says 'In late September 2026, Catalyst will provide FY27 production and AISC guidance' and disclaims the Sept-2025 ten-year plan's FY27 130-150 koz in the same paragraph. The previously recorded 'FY27 guidance 100-115 koz' was not supported by any Catalyst document and has been removed."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 100,
+     "doc": "q4_fy26",
+     "note": "A$100m corporate revolving facility, undrawn and confirmed at 30 June 2026. CONSERVATIVE FLOOR HELD DELIBERATELY: on 14 Aug 2026 Catalyst announced the RCF is increased to A$200m with HSBC joining the syndicate and the tenor extended to four years, but that announcement's own body says 'At financial close, the RCF will be increased to A$200m' and 'contains covenants typical for such a facility, including conditions precedent and third-party consents'. An unconditional A$100m is preferred to a conditional A$200m for a survival gate. Gate 2 is invariant across [100, 200] against A$331m net cash."
+    },
+    "shares_out_m": {
+     "v": 263.67,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap"
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr_page",
+     "note": "100%. Both jurisdictions are Gate 1 Tier B eligible: WA, and VIC as assessed 2026-08-17 (ELIGIBLE, ON WATCH). DENOMINATOR CORRECTED: Victorian ounces are 163 koz of a 4,240 koz group resource = 3.8%, not the 4.7% previously recorded against a stale 3,453 koz denominator. WA is 96.2% of resources and 100% of reserves. Conclusion unaffected."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr_page",
+     "note": "No ineligible-jurisdiction operating exposure. Catalyst does hold 19.99% of Kaiser Reef, which now owns Henty in Tasmania — but Tasmania was assessed 2026-08-17 as ELIGIBLE BUT PENALISED ON B1, so the holding is not ineligible NAV. It is a non-operating equity stake and is not counted in the ounce base either way."
+    },
+    "committed_capex_aud_m": {
+     "v": 22.0,
+     "doc": "hy_dec2025",
+     "note": "A$21.969m of 'capital expenditure contracted but not provided for in the financial statements, within one year', Note 17 of the REVIEWED half-year accounts at 31 Dec 2025 — literally contracted, which is the §3 definition. REPLACES 31, which was the headline of a September 2024 announcement ('1Moz Reserve allows Catalyst to double production for A$31m'), a two-year-old development-plan estimate rather than a commitment and substantially already spent. NOTE THE DIRECTION: this moves in the name's favour, so it is recorded that Gate 2 is invariant across [22, 31] against A$331m net cash and A$100m undrawn. EXCLUDED: the PP2 mill expansion at A$50-75m is pre-FID ('A decision has not yet been made'); exploration A$82m FY26 actual is deferrable; the FY27 plant back-end upgrade carries no disclosed figure. Supersede at the FY26 annual report, which will carry the 30 Jun 2026 commitments note."
+    },
+    "mi_non_reserve_moz": {
+     "v": 1.933,
+     "doc": "rr_fy25",
+     "note": "DERIVED: Measured nil + Indicated 3,475 koz = M&I 3,475; less Proved nil + Probable 1,542 koz = 1,933 koz. Single vintage — both tables are in the FY25 Annual Report's R&R statement as at 30 June 2025. Reconciled across all 18 deposit rows. ISSUER SELF-CONTRADICTION, recorded because it is a live trap: the 10 Sep 2025 announcement's group table prints Indicated 3,647 koz for the SAME estimate, because its 'Plutonic Belt Open Pit' row reads Indicated 634 + Inferred 219 but Total 679 (634+219=853). Confirmed in the document by visual read, not a text-extraction artefact, and it propagates into the Aug 2026 investor deck. Taking the summary table off either would overstate M&I non-reserve ounces by 9%."
+    },
+    "inferred_moz": {
+     "v": 0.769,
+     "doc": "rr_fy25",
+     "note": "Inferred column of the Group Total row. Deposit rows sum to 679 + 90 = 769 exactly. M&I 3,475 + Inferred 769 = 4,244 against a printed 4,240 — 0.1% rounding, reported not smoothed."
+    },
+    "reserve_price_aud": {
+     "v": 3500,
+     "doc": "rr_sep2025",
+     "note": "Footnote 2 under all five per-deposit Ore Reserve tables, and confirmed in JORC Table 1 Section 4 'Revenue factors' for each deposit: 'Ore Reserves are based on a gold price of $3,500/ounce'. Explicitly AUD. Same vintage as the FY25 statement — the 10 Sep 2025 release IS the 1,542 koz reserve the Annual Report tabulates. The lower A$2,700-3,200/oz figures in the same document are stope-optimiser and pit-shell inputs, not the reserve revenue factor."
+    },
+    "advt_shares_m": {
+     "v": 1.2861,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "gaps": [
+    "reserve price deck — SOURCED 2026-08-17 (A$3,500/oz)",
+    "M&I/Inferred split — SOURCED 2026-08-17 from the FY25 R&R statement",
+    "resource_price_aud — no single group figure is published. Per-deposit JORC Table 1s give Hermes A$3,800/oz and Cinnamon/Mareast/Marwest A$3,200/oz, while Plutonic Underground (2,169 koz Indicated, 51% of group M&I) is not price-constrained at all: reported within a 50m halo of manually designed Ore Reserve shapes at a 1.5 g/t cut-off. Any single number would be analyst-constructed.",
+    "FY26 (30 June 2026) R&R vintage — due late September 2026 with FY27 guidance. A blended FY25-statement-plus-Jun-2026-Trident-MRE position is derivable (mi_non_reserve 2.039 / inferred 0.949 / mr_total 4.526) and matches the Aug 2026 deck, but is NOT used because the reserve leg would then be a year older than the resource leg.",
+    "FY27 production and AISC guidance — explicitly deferred to late Sept 2026"
+   ]
+  },
+  {
+   "ticker": "PNR",
+   "name": "Pantoro Gold",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/PNR/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "dd_pres_aug26": {
+     "title": "Diggers & Dealers Presentation — page 28 carries the full Pantoro Global Mineral Resource M/I/Inferred table and the Ore Reserve P&P table, restating the 22 September 2025 Annual Mineral Resource & Ore Reserve Statement",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03117974-6A1337346",
+     "date": "2026-08-04",
+     "type": "primary"
+    },
+    "ar_fy25": {
+     "title": "Pantoro Gold 2025 Annual Report (FY ended 30 June 2025) — pp.10-14 carry the same 22 September 2025 MR&OR tables plus a Norseman deposit-level breakdown, and the expired CBA collar disclosure",
+     "url": "https://announcements.asx.com.au/asxpdf/20250925/pdf/06pp21rtzrcz6m.pdf",
+     "date": "2025-09-25",
+     "type": "primary"
+    },
+    "fy27_guidance": {
+     "title": "FY2026 Result and FY2027 Guidance — 90,000-105,000 oz at AISC A$2,800-3,400/oz; major project and growth capital A$101m; exploration A$45m guided separately; cash and gold A$223.4m, debt free",
+     "url": "https://announcements.asx.com.au/asxpdf/20260709/pdf/071k8zzbxhcfk8.pdf",
+     "date": "2026-07-09",
+     "type": "primary"
+    },
+    "q4fy26_pres": {
+     "title": "Quarterly Results Presentation — June 2026 quarter",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03115888-6A1336277",
+     "date": "2026-07-30",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 0.859,
+     "doc": "dd_pres_aug26",
+     "note": "Lodged Ore Reserve table: Proved 179 + Probable 680 = 859 koz. THE VINTAGE AMBIGUITY IS NOW RESOLVED, not merely flagged. All three circulating figures are real: 859 koz is the current reserve (22 Sep 2025 statement, Norseman only, after the Halls Creek divestment); 895 koz is Norseman-only on the SUPERSEDED 26 Sep 2024 statement; 949 koz is that 2024 statement's group total including Halls Creek, which is where the ~958 koz secondary citations come from. Reserve/resource 18.7%, low but internally consistent within one statement; the issuer flags positive conversion expected in the Sept 2026 update."
+    },
+    "mr_total_moz": {
+     "v": 4.601,
+     "doc": "dd_pres_aug26",
+     "note": "43,194 kt at 3.3 g/t for 4,601 koz. Tonnes x grade gives 4,583 koz, consistent with the grade rounded to one decimal. The superseded 26 Sep 2024 statement reported 4,870 koz group / 4,708 koz Norseman-only, which is where secondary '4.7-4.8 Moz' citations originate."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "dd_pres_aug26",
+     "note": "The Mineral Resource table's Total line is identical to its Norseman Gold Project line — Norseman is the only entry. 100%-owned, Western Australia."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "dd_pres_aug26",
+     "note": "No ounces outside WA in the lodged table."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "fy27_guidance",
+     "note": "Single asset, gold only, no by-product credits disclosed. Halls Creek was divested in November 2024 and its entire resource and reserve inventory removed from the 22 September 2025 statement."
+    },
+    "aisc_aud_oz": {
+     "v": 3100,
+     "doc": "fy27_guidance",
+     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY2027 range A$2,800-3,400/oz. The June 2026 quarter actual was A$4,107/oz and no FY2026 full-year AISC has been published."
+    },
+    "net_debt_aud_m": {
+     "v": -223.4,
+     "doc": "fy27_guidance",
+     "note": "Cash and gold A$223.4m at 30 June 2026, debt free. Basis is cash PLUS gold and bullion on hand, not cash alone — the same basis the company used a year earlier. The company has said it will pause its buyback until cash and gold returns to A$250m."
+    },
+    "production_koz_yr": {
+     "v": 97.5,
+     "doc": "fy27_guidance",
+     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY2027 range 90-105 koz. Guidance is H2-weighted (H1 40-45%, H2 55-60%). Gate context: FY2026 delivered 77,408 oz against 86-92 koz guidance, a ~12% miss."
+    },
+    "committed_capex_aud_m": {
+     "v": 101,
+     "doc": "fy27_guidance",
+     "note": "FY2027 'major project and growth capital expenditure of $101 million reflecting the substantial investment in new underground mines and pre-stripping costs for Stage 3 at Gladstone open pit'. Exploration of A$45m is guided separately in the same announcement and is excluded as deferrable. DEFINITION CAVEAT: this is guided FY27 spend rather than a contracted sum, though the underlying projects are board-approved — the Board has approved re-commencement of open pit mining at Green Lantern, and Gladstone Stage 3 and Daisy South were board-approved in the June quarter. No pre-FID project is counted. Do not confuse with the ~A$67m on the Diggers slide, which is FY2026 ACTUAL spend."
+    },
+    "shares_out_m": {
+     "v": 389.72,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap"
+    },
+    "mi_non_reserve_moz": {
+     "v": 1.413,
+     "doc": "dd_pres_aug26",
+     "note": "DERIVED: (Measured 374 koz + Indicated 1,898 koz = 2,272 koz M&I) less (Proved 179 + Probable 680 = 859 koz) = 1,413 koz. Both tables are on the same page of the lodged presentation, which states 'Refer to ASX announcement dated 22 September 2025 for full details' — one statement, no vintage mixing — and are corroborated digit-for-digit by the FY2025 Annual Report pp.10-11. The statement footnote confirms 'Measured and Indicated Mineral Resources are inclusive of those Mineral Resources modified to produce the Ore Reserves', so the subtraction is valid. Measured IS reported here, so M&I is not Indicated-only."
+    },
+    "inferred_moz": {
+     "v": 2.327,
+     "doc": "dd_pres_aug26",
+     "note": "Inferred column, 19,155 kt at 3.8 g/t. M&I 2,272 + Inferred 2,327 = 4,599 against a reported 4,601 — 0.04% rounding, disclosed by the statement's own note and not smoothed."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "dd_pres_aug26",
+     "note": "Unhedged: 'Supported by an unhedged, debt-free position'. Audit trail — the FY2025 Annual Report discloses a small CBA zero-cost collar (sold puts 2,000 oz/month at A$3,500, bought calls 1,000 oz/month at A$4,200) whose final settlement date was 5 January 2026, i.e. fully expired before the forward window opens, and states 'The Company has no other forward sales contracts.' Nothing hedged sits in the forward 24 months, so PNR carries full spot exposure into the drawdown gate."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 0.0,
+     "doc": "ar_fy25",
+     "note": "BOUND, running AGAINST the name. Both Nebari facilities (US$27.1m term, US$12.5m convertible) were repaid and extinguished on 12 May 2025, and no replacement, revolving or standby facility is disclosed in the FY2025 Annual Report, the June 2026 quarterly presentation or the 9 July 2026 guidance. This is an absence-of-disclosure bound rather than a sourced nil; if the true value is non-zero the name is better off than modelled, never worse."
+    },
+    "advt_shares_m": {
+     "v": 3.0097,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "FY26 missed guidance by ~12% on labour shortages, contractor underperformance and underground issues at OK and Scotia. Share price down ~50% over twelve months. The most likely producer to FAIL Gate 2 — run the survival test properly before admitting."
+   ],
+   "gaps": [
+    "M&I/Inferred split — SOURCED 2026-08-17 from the lodged 22 Sep 2025 tables",
+    "hedge book — SOURCED 2026-08-17 (unhedged; the CBA collar expired 5 Jan 2026)",
+    "reserve_price_aud — UNRESOLVED. Disclosed only in JORC Table 1 of the annual statement, and the 22 Sep 2025 statement could not be obtained through any channel. Every document that restates the tables omits the revenue factor. The prior-vintage 26 Sep 2024 statement says 'Ore Reserve estimates were generated using a gold price assumption of $2,600 per ounce' — NOT carried forward, wrong vintage and it predates a ~A$2,000/oz move in spot. Due in the September 2026 quarter with the updated statement.",
+    "resource_price_aud — same document, same failure.",
+    "TRAP: pantoro.com.au/resources-reserves is a FULL YEAR STALE. Its image tables are the 26 Sep 2024 vintage (MR 4,708 koz, OR 895 koz) and reading the split off them yields 1.511 / 2.302 Moz, both wrong by a year."
+   ]
+  },
+  {
+   "ticker": "BC8",
+   "name": "Black Cat Syndicate",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "near_producer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/BC8/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "q4fy26_asx": {
+     "title": "Activities Report for the Quarter Ended 30 June 2026 — Appendix 1 JORC 2012 gold resource table with the M/I/Inferred split, Appendix 3 JORC 2012 gold reserve table, Appendix 4 tenement schedule, and the cash, debt and hedging notes. Restates the AISC non-disclosure.",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03115742-6A1336213",
+     "date": "2026-07-30",
+     "type": "primary"
+    },
+    "dd_aug26": {
+     "title": "Diggers and Dealers Mining Forum Presentation, August 2026 — the most recent BC8 lodgement as at 17 August 2026. Repeats the R&R tables and contains NO AISC and NO FY27 guidance.",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03117146-6A1336973",
+     "date": "2026-08-03",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 0.33,
+     "doc": "q4fy26_asx",
+     "note": "GROUP Ore Reserve from Appendix 3: Kal East 3,725 kt @ 2.0 g/t for 243 koz all Probable, plus Paulsens 631 kt @ 4.3 g/t for 87 koz (Proven 14 + Probable 74) = 4,356 kt @ 2.4 g/t for 330 koz. CORRECTED FROM 0.243, which was Kal East alone. Paulsens IS separately disclosed, contrary to the previous note. Coyote genuinely carries no declared reserve — it is on care and maintenance and its next study step is an updated SCOPING study in FY27, which is pre-PFS and cannot support one. Reserve/resource improves from 9.6% to 13.1%: still below the ~15% plausibility floor, but the floor is now EXPLAINED rather than a warning, since Coyote is 645 koz or 25.6% of the group resource with zero reserve behind it. Ex-Coyote the ratio is 17.6%. Two caveats: 34 koz of mining depletion is not taken into account in the table, and the underlying estimates are old (Kal East June 2022, Paulsens July 2023) and unchanged since 30 June 2024."
+    },
+    "mr_total_moz": {
+     "v": 2.524,
+     "doc": "q4fy26_asx",
+     "note": "Appendix 1 TOTAL RESOURCES row: 29,149 kt at 2.7 g/t for 2,524 koz. Sub-totals reconcile — Kal East 1,372 + Coyote 645 + Paulsens 506 = 2,523, 1 koz rounding. Excludes 53 koz of gold contained in the Appendix 2 polymetallic Mt Clement resource, which the note expressly says is not reported within the gold resources table. Kal East is now 1,372 koz, not the 1,294 koz previously recorded, following the 29 June 2026 Trojan and Imperial resource increase."
+    },
+    "reserve_price_aud": {
+     "v": 2500,
+     "doc": "q4fy26_asx",
+     "note": "BOUND: max(Kal East A$2,300/oz, Paulsens A$2,500/oz). There is no single group reserve deck — Kal East, which is 74% of reserve ounces, is struck at the LOWER A$2,300/oz. A$2,500 is labelled a bound because Channel 2a scores gold over the deck, so the higher deck yields the smaller gap and therefore the smaller convexity credit, which runs against the name. The ounce-weighted average of A$2,353/oz is NOT used because it is a blend constructed here rather than a price the issuer published. Reserves are struck on a 2.5% state royalty and a 0.2% refining charge."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "q4fy26_asx",
+     "note": "Appendix 4 lists every tenement and all are Western Australian: M08/L08/E08 in the Ashburton-Pilbara for Paulsens and Mt Clement, M80/L80/E80/P80 on the WA side of the Tanami for Coyote, M25-M28 around Kalgoorlie and Bulong for Kal East, and E47 in the Murchison. All 100% owned except E27/0558 Balagundi at 75%, which hosts no reported resource."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "q4fy26_asx",
+     "note": "Single-jurisdiction WA issuer on the Appendix 4 tenement schedule."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "q4fy26_asx",
+     "note": "100% of FY26 revenue of A$434.1m is gold: gold sales A$391.5m plus bullion movement A$8.5m plus Lakewood gold-ore toll treatment A$34.0m, with no non-gold revenue line. Recorded as a revenue share standing in for a NAV share: Black Cat also holds Mt Clement, described as 'one of Australia's largest and highest-grade undeveloped antimony deposits', but it is Inferred-only with no reserve, no study beyond metallurgical test work and no disclosed value, so no sourced deduction exists. A strictly conservative NAV reading would be marginally below 1.0 and cannot approach the 0.75 floor."
+    },
+    "production_koz_yr": {
+     "v": 66.3,
+     "doc": "q4fy26_asx",
+     "note": "FY26 ACTUAL production from Black Cat's own ore: 66,296 oz. DELIBERATELY NOT the 90,833 oz headline, which the company footnotes as 'Including 3rd party production of 24,537oz' from toll treating at Lakewood under an ore purchase arrangement that CONCLUDED in the March 2026 quarter, with nil third-party ore milled in the June quarter. Using 90.8 koz would credit a survival gate with ounces the company no longer has access to. Both figures previously in the data layer were wrong in different directions: 50 koz was a calendar-2026 target from an aggregator, and the 91 koz in the transcript note is the inclusive headline. No annualisation of the Q4 20,830 oz has been performed."
+    },
+    "shares_out_m": {
+     "v": 728.93,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap"
+    },
+    "mi_non_reserve_moz": {
+     "v": 0.996,
+     "doc": "q4fy26_asx",
+     "note": "DERIVED: (Measured 57 koz + Indicated 1,269 koz) less total Ore Reserves 330 koz = 996 koz. Both inputs from Appendices 1 and 3 of the same lodged document. Appendix 1 note 5 confirms 'Resources are reported inclusive of any Reserves', and both reserves sit inside their own M&I — Kal East 243 koz against 686 koz M&I, Paulsens 87 koz against 333 koz."
+    },
+    "inferred_moz": {
+     "v": 1.199,
+     "doc": "q4fy26_asx",
+     "note": "Inferred column total, 15,898 kt at 2.3 g/t for 1,199 koz. Reconciliation: M&I 1,326 + Inferred 1,199 = 2,525 against a stated total of 2,524 — a 1 koz rounding discrepancy, reported not smoothed."
+    },
+    "net_debt_aud_m": {
+     "v": -73.7,
+     "doc": "q4fy26_asx",
+     "note": "DERIVED: borrowings nil less cash on hand A$73.7m. 'The Company remains debt and hedge free.' CONSERVATIVE READING TAKEN DELIBERATELY: the company's own headline liquidity of A$105.3m additionally includes A$29.0m of gold bullion and A$2.6m of listed investments, neither of which is a cash equivalent. Note the cross-sectional inconsistency this creates — CYL, RRL, CMM and PNR are all recorded on a cash-plus-bullion basis, which for BC8 would give -102.7. Immaterial while BC8 is blocked on AISC; revisit if it is ever admitted."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 30.0,
+     "doc": "q4fy26_asx",
+     "note": "'The Company entered a $30M asset financing facility with Commonwealth Bank of Australia. The facility remains undrawn.' Confirmed in the Diggers presentation. Qualification the gate does not model: it is an asset financing facility, so drawdown is likely conditional on financing specific equipment rather than being free general liquidity."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "q4fy26_asx",
+     "note": "'Hedging activities — The Company has no hedging.' Triple-confirmed in the same document by the realised-price table annotation '100% unhedged' and in the Diggers presentation. Recorded from a lodged document rather than inferred from the absence of a hedge note, because 0.0 is the maximally favourable value for this field."
+    },
+    "advt_shares_m": {
+     "v": 2.9871,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "flags": [
+    "Near-producer per §5.1: developer duration and gamma, producer cash flow, funding risk behind it. Ramping Kal East to 100% own ore; Coyote restart is the key catalyst.",
+    "Annual guidance to be provided from 1 Jul 2026."
+   ],
+   "gaps": [
+    "AISC — CONFIRMED STILL UNPUBLISHED at 2026-08-17. See the blocking note.",
+    "committed_capex_aud_m — no contracted or board-approved forward figure exists. The Lakewood 1.2 to 1.5 Mtpa expansion has long-lead items ordered but no dollar amount, and its timing is expressly conditional on ramp-up. Coyote and Mt Clement are pre-FID. The growth strategy is under active review and being pared back. FY26 actual capital of A$198.9m is historical spend and annualising the quarterly figures is forbidden. Due with the FY26 annual result.",
+    "M&I/Inferred split — SOURCED 2026-08-17 from the lodged quarterly",
+    "group reserve total — RESOLVED 2026-08-17 at 330 koz",
+    "net debt — SOURCED 2026-08-17, on a cash-only basis; see the field note on cross-sectional consistency with the cash-plus-bullion names.",
+    "hedge book — SOURCED 2026-08-17 (no hedging)"
+   ],
+   "blocking": "aisc_aud_oz CANNOT BE SET — this is a DISCLOSURE gap, not a sourcing failure. Black Cat has not published an AISC. It withheld the figure in the December 2025 quarterly on the stated grounds that it was not representative of the ongoing business while third-party ore was still being treated, and deferred AISC and production guidance to the FY26 annual result / FY27 guidance. The June 2026 quarter was the first full quarter of 100% Black Cat ore, so the figure should appear imminently with the FY26 annual report. DO NOT IMPUTE IT. Operating costs of A$179m over 91,000 oz imply ~A$1,970/oz, but that is a cash cost excluding sustaining capital, royalties and corporate overhead — feeding it to a SURVIVAL gate would make the test easier on a number the company itself declined to stand behind, which is the precise failure mode Gate 2 is built to refuse."
+  },
+  {
+   "ticker": "RXL",
+   "name": "Rox Resources",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "developer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/RXL/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "dfs_full": {
+     "title": "Youanmi Gold Project Definitive Feasibility Study — the full 104-page lodged announcement, not the presentation deck. Probable Ore Reserve 4.4 Mt @ 4.8 g/t for 674 koz; AISC A$1,978/oz; pre-production capital A$382.6m; JORC Table 1 reserve deck A$3,200/oz; financial base case A$5,200/oz",
+     "url": "https://api.investi.com.au/api/announcements/rxl/801f83eb-71e.pdf",
+     "date": "2025-11-13",
+     "type": "primary"
+    },
+    "mre_jul25": {
+     "title": "Underground Resources Increased to 2.1Moz — the July 2025 Youanmi Mineral Resource Estimate, the source statement for the category split",
+     "url": "https://api.investi.com.au/api/announcements/rxl/a8c5d591-3e6.pdf",
+     "date": "2025-07-21",
+     "type": "primary"
+    },
+    "q4fy26_qtr": {
+     "title": "June 2026 Quarterly Activities Report and Appendix 5B — cash A$152.666m at 30 June 2026; A$350m Syndicated Facility Agreement executed and undrawn with conditions precedent outstanding",
+     "url": "https://api.investi.com.au/api/announcements/rxl/7eac4268-dab.pdf",
+     "date": "2026-07-22",
+     "type": "primary"
+    },
+    "permit_jul26": {
+     "title": "Youanmi fully permitted as construction accelerates — Works Approval granted for the processing plant, TSF, wastewater treatment and power station; Interquip EPC construction commenced",
+     "url": "https://api.investi.com.au/api/announcements/rxl/68aa970b-e32.pdf",
+     "date": "2026-07-13",
+     "type": "primary"
+    },
+    "funded_mar26": {
+     "title": "Youanmi fully funded to production — A$350m debt commitment (A$300m senior secured term loan, A$20m cost overrun, A$30m bank guarantee) from SocGen, SMBC, HSBC and Westpac; no mandatory hedging requirements",
+     "url": "https://api.investi.com.au/api/announcements/rxl/a967867c-762.pdf",
+     "date": "2026-03-09",
+     "type": "primary"
+    },
+    "sfa_apr26": {
+     "title": "Youanmi Project Financing Completed — Syndicated Facility Agreement for A$350m executed and signed",
+     "url": "https://api.investi.com.au/api/announcements/rxl/7dac5a76-527.pdf",
+     "date": "2026-04-07",
+     "type": "primary"
+    },
+    "puts_dec25": {
+     "title": "Accretive Gold Puts for Youanmi — 40,400 oz of BOUGHT put options at an A$5,700/oz strike, FY2028 monthly maturities, A$9.7m premium",
+     "url": "https://api.investi.com.au/api/announcements/rxl/9ab43369-14f.pdf",
+     "date": "2025-12-22",
+     "type": "primary"
+    },
+    "fid_mar26": {
+     "title": "Final Investment Decision approved for Youanmi — Board FID 17 March 2026 following MDCP construction approval",
+     "url": "https://api.investi.com.au/api/announcements/rxl/be9c6328-77a.pdf",
+     "date": "2026-03-17",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 0.674,
+     "doc": "dfs_full",
+     "note": "DFS Table 5, effective 30 October 2025. Proved nil; the whole reserve is Probable. Reserve/resource 31.1%, reserve/M&I 43.6%, both plausible for a DFS-stage developer. Supersedes the 546 koz reserve in the FY25 annual report, which was the July 2024 PFS reserve on the January 2024 MRE."
+    },
+    "mr_total_moz": {
+     "v": 2.17,
+     "doc": "mre_jul25",
+     "note": "12.1 Mt at 5.6 g/t for 2,170 koz. Citation upgraded from a listcorp mirror of the DFS deck to the lodged MRE announcement. Still current at 17 Aug 2026 — both the 3 Aug Diggers presentation and the 17 Aug operations update repeat it. A Commonwealth MRE update and Youanmi Deeps conversion drilling are flagged for H2 CY2026, so this is likely superseded upward within two quarters."
+    },
+    "reserve_price_aud": {
+     "v": 3200,
+     "doc": "dfs_full",
+     "note": "CORRECTED FROM 5200. A$3,200/oz is the price the Ore Reserve was constrained at, stated four separate times in the DFS including in JORC Table 1 where disclosure is mandatory: 'A single commodity price for gold of AUD $3,200/oz has been used for the estimation of Ore Reserves' and 'The gold price for determining the Ore Reserve cut-off is A$3,200/oz.' A$5,200/oz is the DFS FINANCIAL EVALUATION base case used for NPV, IRR and payback — 'The analysis has been conducted using a selected gold price of A$5,200/oz, which is an 16% discount to...' — and is not a reserve deck. This is exactly the conflation tools/extract.py was written to defend against (the Vault A$5,546-versus-4,500 precedent). VERIFIED INDEPENDENTLY BY THE ORCHESTRATOR against the lodged PDF because the correction flatters the name: it moves Channel 2a from 6,170/5,200 = 1.19 to 6,170/3,200 = 1.93. Historical corroboration: the superseded July 2024 reserve was struck at A$2,600/oz, so Rox consistently books reserves at a deep discount to spot."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "dfs_full",
+     "note": "Youanmi is the only asset, 100% owned on M57/165-167 in Western Australia."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "dfs_full",
+     "note": "Single jurisdiction, single commodity."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "dfs_full",
+     "note": "Gold is the sole revenue line in the DFS financial model; no by-product or co-product credit."
+    },
+    "aisc_aud_oz": {
+     "v": 1978,
+     "doc": "dfs_full",
+     "note": "DFS Table 31, LOM average at the A$5,200/oz base case: C1 A$1,590/oz (mining 904, processing 593, G&A 93) plus royalties 179 plus sustaining capital 209. A$2,009/oz at the A$6,100/oz spot case, royalty-driven. Pre-production, so no actual AISC exists and none will until FY2028."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "puts_dec25",
+     "note": "Zero forward sales. What Rox holds is 40,400 oz of PURCHASED put options at an A$5,700/oz strike with monthly FY2028 maturities, ~50% of forecast FY2028 production, for a A$9.7m upfront premium — a bought floor with no cap, which per §6.2 earns NO credit — it scores the same as no position at all. The value is 0.0 because nothing is SOLD, not because the puts are rewarded. Three independent confirmations that no forwards exist: the premium is booked as a cash OUTFLOW at Appendix 5B item 2.5, which a forward sale would not carry; the debt facility terms list 'No mandatory hedging requirements'; and the strike sits A$500/oz ABOVE the DFS deck. The puts sit in FY2028 and RXL produces nothing until mid-2027, so forward-24-month sold production is zero regardless."
+    },
+    "net_debt_aud_m": {
+     "v": -152.7,
+     "doc": "q4fy26_qtr",
+     "note": "DERIVED: borrowings nil less cash A$152.666m. Appendix 5B item 4.6; cash reconciles as bank balances A$112.342m plus call deposits A$40.324m. Borrowings are nil on items 3.5 and 7.4. Excludes the office lease liability. Cash fell A$47.7m in the June quarter as construction ramped, so this figure ages fast — the September 2026 quarterly will also be the first to show drawn debt."
+    },
+    "production_koz_yr": {
+     "v": 117,
+     "doc": "dfs_full",
+     "note": "DFS Table 1 steady state. LOM 817 koz over 6.8 years post-commissioning, peaking at 176 koz/yr in year 6. First gold mid-CY2027, so RXL produces nothing in FY2027."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 350.0,
+     "doc": "sfa_apr26",
+     "note": "A$350m Syndicated Facility Agreement executed and signed 7 April 2026: A$300m senior secured project term loan, A$20m cost overrun facility, A$30m bank guarantee facility. Two caveats the record previously lacked — only A$320m is cash-drawable, since the bank guarantee facility backs bonds rather than capex; and Appendix 5B item 7.5 reports NIL unused facilities at 30 June 2026 because conditions precedent to first drawdown were outstanding. Immaterial to this name's gate: the engine reads this field only on the producer path."
+    },
+    "study_stage": {
+     "v": "DFS",
+     "doc": "dfs_full",
+     "note": "Completed November 2025, cited to the 104-page lodged study rather than a mirror of the deck. Materially beyond DFS in fact: Board FID 17 March 2026, EPC contract executed, construction underway."
+    },
+    "approvals_land_secured": {
+     "v": true,
+     "doc": "permit_jul26",
+     "note": "'Rox has received the last major environmental approval for the Youanmi Gold Mine following granting of the Works Approval for the processing plant, tailings storage facility, wastewater treatment facility, power station and associated infrastructure. With this milestone achieved, Rox is now fully permitted to execute its mine plan.' Corroborated by the June 2026 quarterly and by the March 2026 MDCP amendment approval. Tenure 100% owned (M57/165-167). Re-sourced from a kalkine.com.au article to the lodged announcement."
+    },
+    "remaining_capex_aud_m": {
+     "v": 0.0,
+     "doc": "q4fy26_qtr",
+     "note": "BOUND: max(0, remaining pre-production capital less available funding). Remaining pre-production capital is taken at the full DFS Table 30 figure of A$382.6m, i.e. assuming NOTHING has been spent, which is the conservative end. Available funding is cash A$152.666m plus A$320m of cash-drawable debt (the A$30m bank guarantee facility is excluded as not cash) = A$472.7m, a A$90.1m surplus. THE PREVIOUS NOTE'S ARITHMETIC WAS WRONG AND IS REPLACED: it summed 'A$200m placement + A$18m SPP + A$350m debt + A$152.7m cash', double-counting the December 2025 equity, which is already inside the 30 June cash balance — overstating funding by A$218m. SENSITIVITY, because the gate is not unconditional: Appendix 5B items 7.4 and 7.5 report NIL facilities at 30 June 2026 pending financial close. Disregarding the executed A$350m entirely gives A$229.9m, which is 32.3% of a A$710.7m market cap and would FAIL the 30% D3 limit by 2.3pp — but that also assumes zero capital spent, which is false, since FY26 Appendix 5B shows A$47.089m of PP&E plus A$15.788m of assets under construction. Netting only that gives A$167.0m = 23.5%, which passes with no debt credit at all. D3 passes on every treatment except the single most punitive and internally inconsistent one."
+    },
+    "shares_out_m": {
+     "v": 1393.57,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap"
+    },
+    "mi_non_reserve_moz": {
+     "v": 0.872,
+     "doc": "mre_jul25",
+     "note": "DERIVED: M&I 1,546 koz less P&P 674 koz = 872 koz. Youanmi has NO Measured category — the MRE states 'The mineral resource was classified as Indicated and Inferred' — so M&I = Indicated. TRAP AVOIDED: the DFS note that '7.9 Mt of 12.1 Mt is Indicated' is TONNES; the Indicated grade is 6.0 g/t, not the 5.6 g/t overall, so multiplying 7.9 Mt by 5.6 g/t would have given ~1,423 koz and understated M&I non-reserve by 8%. CONFLICT RESOLVED: the DFS Table 4 total row misprints Indicated as 1,561 koz, which fails three internal checks — its own sub-rows sum to 1,547, the stated total less Inferred gives 1,545, and 1,561 + 625 = 2,186 overshoots the stated 2,170 by 16 koz. The July 2025 MRE prints 1,546 in both its tables and the FY25 annual report reprints it. The 1,561 is the superseded January 2024 Indicated total carried into the wrong row. 1,546 also runs against the name."
+    },
+    "inferred_moz": {
+     "v": 0.623,
+     "doc": "mre_jul25",
+     "note": "4.1 Mt at 4.7 g/t for 623 koz. The DFS prints 625 koz for the same category from the same estimate; 623 reconciles (1,546 + 623 = 2,169 against a stated 2,170) and 625 does not. 623 is also the lower figure."
+    },
+    "advt_shares_m": {
+     "v": 2.0772,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "developer_gate": {
+    "D1_study_stage": "PASS — DFS completed Nov 2025 (requirement is PFS minimum).",
+    "D2_approvals_and_land": "PASS — final regulatory approval received; plant construction and underground development commenced.",
+    "D3_bounded_dilution": "PASS — funding gap zero. A$200m equity + A$18m SPP raised, A$350m debt documented, A$152.7m cash at 30 Jun 2026.",
+    "verdict": "THE ONLY DEVELOPER PASSING ALL THREE TESTS."
+   },
+   "flags": [
+    "RECLASSIFIED from near_producer to developer. First gold targeted mid-2027.",
+    "Interceptor and Commonwealth resource updates due H2 2026."
+   ],
+   "gaps": [
+    "share count — CLOSED. The issuer's 31 Jul 2026 capital structure table gives 1,393m and the 30 Jun 2026 Appendix 5B gives 1,390.2m, both corroborating the ASX API's 1,393,568,440. 29.7m performance rights outstanding.",
+    "M&I/Inferred split — SOURCED 2026-08-17 from the July 2025 MRE",
+    "resource_price_aud — NOT recorded. The only price disclosed in the resource estimate is A$3,450/oz, and it constrains ONLY the open-pit portion, 70 koz or 3.2% of the 2,170 koz resource. The underground resource, 96.8% of the total, is reported at a fixed 2.5 g/t cut-off with no gold price stated. Recording A$3,450 as a group figure would misrepresent the estimate.",
+    "committed_capex_aud_m — not recorded because the engine reads it only on the producer path. Cleanly sourceable if ever needed: A$382.6m pre-production (DFS Table 30), board-approved at FID and contracted (Interquip EPC, Glencore Albion circuit, EVOL gas, Pacific Energy)."
+   ]
+  },
+  {
+   "ticker": "AAR",
+   "name": "Astral Resources",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "developer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/AAR/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "rr_aug2026": {
+     "title": "Theia Deeps Continues to Expand — carries 'CONSOLIDATED MINERAL RESOURCE & ORE RESERVE ESTIMATES': Table 1 Group Ore Reserves and Table 2 Group Mineral Resources, both stated as at the date of the report",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03121628-6A1338769",
+     "date": "2026-08-17",
+     "type": "primary"
+    },
+    "q_jun2026": {
+     "title": "Quarterly Activities & Cashflow Report, quarter ended 30 June 2026, including Appendix 5B — the identical consolidated R&R tables plus the DFS, approvals and MMS JV narrative",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03114249-6A1335467",
+     "date": "2026-07-27",
+     "type": "primary"
+    },
+    "dd2026_asx": {
+     "title": "Diggers and Dealers Conference Presentation, August 2026 — the ASX-LODGED deck behind the uk.investing.com transcript. Slide 7 corporate overview, slide 10 funding quantum, slide 11 DFS status, slide 12 development schedule, slide 24 Appendix 1 PFS financials",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03117709-6A1337225",
+     "date": "2026-08-04",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 1.082,
+     "doc": "rr_aug2026",
+     "note": "Table 1 Group Ore Reserves: Mandilla 34.3 Mt @ 0.9 g/t for 1,000,000 oz plus Feysville 2.3 Mt @ 1.2 g/t for 88,000 oz. Probable only; no Proved column exists. 'Ore Reserves are a subset of Mineral Resources.' Re-pointed from a marketindex URL that now returns HTTP 403 behind Cloudflare."
+    },
+    "mr_total_moz": {
+     "v": 2.072,
+     "doc": "rr_aug2026",
+     "note": "Table 2 total row, 61.6 Mt at 1.0 g/t for 2,072 koz. Components: Mandilla 1,736 + Feysville 196 + Spargoville 139 = 2,071 koz, 1 koz rounding."
+    },
+    "resource_price_aud": {
+     "v": 4500,
+     "doc": "rr_aug2026",
+     "note": "Mandilla pit-shell constraint, covering 1,736 of 2,072 koz = 84% of the group resource. Three prices apply in the same footnote — Mandilla A$4,500, Spargoville A$3,500, Feysville A$2,500. The ounce-weighted average of A$4,241 is NOT used, because it is an average constructed here rather than a number Astral published."
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "rr_aug2026",
+     "note": "All 2,072 koz sit in the Widgiemooltha greenstone belt and Kalgoorlie district, Western Australia — a single jurisdiction."
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "rr_aug2026",
+     "note": "No ineligible-jurisdiction exposure."
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "dd2026_asx",
+     "note": "Appendix 1 of the lodged deck shows Gold Revenue as the sole revenue line in the PFS financial model, with no by-product or co-product credit. Mandilla, Feysville and Spargoville are gold-only, and no gold-equivalent reporting appears in any document. Re-pointed from a proactiveinvestors article."
+    },
+    "aisc_aud_oz": {
+     "v": 2085,
+     "doc": "dd2026_asx",
+     "note": "PFS LOM estimate, Appendix 1 of the lodged deck: 'All-in Sustaining Cost (AISC) $2,949 $58.05 $2,085'. Astral is pre-production, so this is a study figure and not an actual. Re-pointed from proactiveinvestors — a Gate input moving from secondary to primary."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "q_jun2026",
+     "note": "Pre-revenue, no debt and no offtake, so no hedge book exists. RECORDED AS AN ABSENCE OF EVIDENCE RATHER THAN A DISCLOSURE: the string 'hedg' appears zero times across the June 2026 quarterly, the lodged Diggers deck and the 17 Aug 2026 R&R announcement. 0.0 is the favourable value for this field, so the weakness of the citation is worth carrying. Expect a positive disclosure at project financing / FID, guided to Q1-Q2 2027."
+    },
+    "net_debt_aud_m": {
+     "v": -65.115,
+     "doc": "q_jun2026",
+     "note": "Appendix 5B item 4.6, cash A$65,115k, less nil borrowings. Zero debt confirmed three ways in the same filing: item 3.5 proceeds from borrowings nil, item 3.6 repayment nil, and section 7 financing facilities entirely blank. Corroborated by the lodged deck: market capitalisation A$234.1M less cash A$65.1M gives an enterprise value of A$169.0M exactly. Replaces a value taken from a conference transcript."
+    },
+    "production_koz_yr": {
+     "v": 95,
+     "doc": "dd2026_asx",
+     "note": "PFS Stage 1, pre-production: '+95kozpa production profile — 1.1g/t average for 12yrs'. Appendix 1 gives LOM payable metal of 1,414 koz over 18.5 years of processing. Re-pointed from proactiveinvestors — a Gate input moving from secondary to primary."
+    },
+    "study_stage": {
+     "v": "PFS",
+     "doc": "dd2026_asx",
+     "note": "PFS completed 25 June 2025. The DFS is targeted for completion in Q1 2027 with a Final Investment Decision expected immediately thereafter. Re-pointed from proactiveinvestors to the lodged deck."
+    },
+    "approvals_land_secured": {
+     "v": false,
+     "doc": "q_jun2026",
+     "note": "'The Mandilla DFS is forecast for completion during the March Quarter 2027, with the projected timing reliant on receiving the necessary consents under the Mineral Rights Agreement and the completion of native title heritage surveys.' The same document records that site layouts are only on track to be finalised in the September quarter, 'paving the way for the Native Vegetation Clearing Permit, Mine Development & Closure Plan and the Works Approval to be submitted thereafter' — so the three principal Mandilla approvals have not yet been lodged. Partial offsets, all disclosed and none sufficient: an LUA executed with the Marlinyu Ghoorlie native title claim group; Think Big tenement M26/846 granted with its NVCP and MDCP submitted; and the Mandilla Homestead freehold settled around 10 August 2026. A BINARY GATE NOW RESTS ON FILINGS RATHER THAN ON A CONFERENCE TRANSCRIPT."
+    },
+    "remaining_capex_aud_m": {
+     "v": 162.0,
+     "doc": "dd2026_asx",
+     "note": "DERIVED: pre-production capital A$180.4m plus pre-production costs A$46.7m = A$227.1m, less cash A$65.1m at 30 June 2026 = A$162.0m. The A$227.1m is confirmed additively by Appendix 1 of the same deck, where A$180m + A$47m + A$80m sustaining = A$307m LOM capital, so the two pre-production lines are separate components and not double-counted. CORRECTED FROM 112.0: THE A$50m MMS JV CREDIT IS UNSOURCED AND MISCHARACTERISED AND HAS BEEN REMOVED. What the lodged quarterly actually describes is that 'MMS will fund 100% of the development costs for Think Big, which will be recovered from initial project cash flows. Following cost recovery, profits will be shared, with MMS to receive between 30% and 50%.' MMS funds Think Big's own development costs — not Mandilla's capex — recovers them first, and Think Big is ~32,000 oz. It also remains only a Letter of Intent, 'subject to finalising commercial terms', nine months after the 20 October 2025 LOI. Removing an unsourced credit that ran in the name's favour moves D3 from 41% to 60.0% of a A$270.2m market cap against a 30% limit — the verdict was already FAIL, but the margin is roughly double what was recorded."
+    },
+    "shares_out_m": {
+     "v": 1801.05,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap"
+    },
+    "mi_non_reserve_moz": {
+     "v": 0.292,
+     "doc": "rr_aug2026",
+     "note": "DERIVED: (Measured 57,000 oz + Indicated 1,317,000 oz) less Probable 1,082,000 oz = 292,000 oz. M&I is 1.374 Moz. Identical tables appear in the June 2026 quarterly, so the figures are corroborated across two lodged documents. VINTAGE CAVEAT: the Mineral Resource is the April 2026 update and the Ore Reserve is the maiden reserve from the 25 June 2025 PFS. Astral presents both as its consolidated position 'as at the date of this report', which is the standard R&R construction, but if the DFS re-strikes the reserve on the larger April 2026 MRE then reserve ounces will rise and this figure will fall. Reserve/resource is 52.2% and reserve/M&I 78.7% — high, but consistent for a developer whose A$3,000/oz reserve pit design sits inside a A$4,500/oz resource shell, and both come from the same statement."
+    },
+    "inferred_moz": {
+     "v": 0.698,
+     "doc": "rr_aug2026",
+     "note": "Inferred column of the Table 2 total row, 22.2 Mt for 698,000 oz. Reconciles exactly: M&I 1,374 + Inferred 698 = 2,072 koz. RECORDED NOT SMOOTHED: the Inferred total GRADE cell reads 1.2 g/t but 22.2 Mt for 698,000 oz implies 0.98 g/t. The component rows are self-consistent, so the ounces are right and the grade cell is a typographical error carried identically through both the 27 July quarterly and the 17 August announcement. No recorded value depends on it."
+    },
+    "reserve_price_aud": {
+     "v": 3000,
+     "doc": "rr_aug2026",
+     "note": "Table 1 footnote: 'Ore Reserves are estimated using a gold price of AUD $3,000 per ounce.' The reserve deck sits materially below the A$4,500/oz Mandilla resource deck and far below spot, so this is a conservatively struck reserve."
+    },
+    "undrawn_facilities_aud_m": {
+     "v": 0.0,
+     "doc": "q_jun2026",
+     "note": "Appendix 5B item 8.5, 'Unused finance facilities available at quarter end', is nil, and section 7 is blank throughout. The lodged deck shows a debt process running to Q1 2027 — a package being negotiated, not held."
+    },
+    "advt_shares_m": {
+     "v": 6.6145,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "developer_gate": {
+    "D1_study_stage": "PASS — PFS complete (June 2025). DFS now guided to Mar-qtr 2027.",
+    "D2_approvals_and_land": "FAIL — DFS delayed by split tenure rights and consent requirements tied to the underlying tenement owner. D2 requires land access secured, not just permits.",
+    "D3_bounded_dilution": "FAIL — ~A$227m capex against A$65m cash + A$50m MMS JV commitment = ~A$112m gap. Against a market cap of ~A$261-333m that is 34-43%, above the 30% limit.",
+    "verdict": "EXCLUDED. Fails D2 and D3."
+   },
+   "correction": "An earlier secondary source (Stockhead, 'Aussie gold developers look ripe for the picking') described Astral as fully funded to first gold in the Jun-qtr 2027 via a A$193m equity raising and US$120m bond, with all approvals received. That description does not match Astral's own disclosure and appears to conflate Astral with Rox Resources (A$200m placement + A$18m SPP + A$350m debt, all approvals, first gold mid-2027). The Astral figures here come from the company's Diggers & Dealers presentation.",
+   "gaps": [
+    "share count — CLOSED. The issuer's own lodged deck states 1,801M shares against a A$234.1M market capitalisation at A$0.13, which reproduces exactly, and the ASX API independently gives 1,801,045,606. The 1.45bn figure was stale, pre-dating the Maximus scrip acquisition and the A$65m placement.",
+    "M&I/Inferred split — SOURCED 2026-08-17 from the consolidated group tables",
+    "reserve price deck — SOURCED 2026-08-17 (A$3,000/oz)",
+    "DFS capital estimate — the A$227.1m is the June 2025 PFS figure re-presented on 4 Aug 2026. The quarterly says DFS 'capital and operating costs have been received and are under internal review' but discloses no number. Due Q1 2027.",
+    "hedge_share_fwd24m — the recorded 0.0 has no positive citation: the string 'hedg' appears zero times across all three lodged documents. Consistent with a pre-revenue company with no debt and no offtake, but it is an absence of evidence rather than a disclosure.",
+    "CHANNEL NOTE: astralresources.com.au returns HTTP 429, but this is NOT a rate limit and will not clear with backoff — the body is a Vercel Security Checkpoint bot challenge. It needs a headless browser."
+   ]
+  },
+  {
+   "ticker": "AUC",
+   "name": "Ausgold",
+   "exchange": "ASX",
+   "currency": "AUD",
+   "sleeve": "developer",
+   "jurisdictions": [
+    "WA"
+   ],
+   "documents": {
+    "dfs_dec2025": {
+     "title": "Updated DFS — MR 68.6 Mt at 1.11 g/t for 2.44 Moz (91% M&I); OR 37.4 Mt at 1.11 g/t for 1.33 Moz (83% Proved); LOM 1.22 Moz over 10.3 yr; ~143 koz/yr first four years; NPV5 A$1.028bn and pre-production capital A$354m at A$4,300/oz",
+     "url": "https://www.listcorp.com/asx/auc/ausgold-limited/news/updated-definitive-feasibility-study-3293478.html",
+     "date": "2025-12-16",
+     "type": "primary"
+    },
+    "aug2026": {
+     "title": "FID targeted end-2026, first gold mid-2028; early works agreements with Lycopodium and CrossBoundary Energy; all additional WA EPA information submitted; one landholder compensation negotiation outstanding",
+     "url": "https://kalkine.com.au/news/general-news/ausgold-asxauc-pushes-katanning-gold-project-toward-late-2026-investment-decision-as-approvals-and-early-works-advance",
+     "date": "2026-08",
+     "type": "secondary"
+    },
+    "asx_api": {
+     "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
+     "url": "https://asx.api.markitdigital.com/asx-research/1.0/companies/AUC/key-statistics",
+     "date": "2026-08-17",
+     "type": "primary"
+    }
+   },
+   "fields": {
+    "pp_moz": {
+     "v": 1.33,
+     "doc": "dfs_dec2025"
+    },
+    "mr_total_moz": {
+     "v": 2.44,
+     "doc": "dfs_dec2025"
+    },
+    "mi_non_reserve_moz": {
+     "v": 0.89,
+     "doc": "dfs_dec2025",
+     "note": "DERIVED: M&I = 2.44 x 91% = 2.220; less P&P 1.33."
+    },
+    "inferred_moz": {
+     "v": 0.22,
+     "doc": "dfs_dec2025",
+     "note": "DERIVED: 2.44 x 9%."
+    },
+    "reserve_price_aud": {
+     "v": 3000,
+     "doc": "dfs_dec2025",
+     "note": "The June 2025 DFS constrained reserves at A$3,000/oz. Resource pit shells use A$4,500/oz. Confirm the Dec 2025 update retained the A$3,000 reserve deck."
+    },
+    "resource_price_aud": {
+     "v": 4500,
+     "doc": "dfs_dec2025"
+    },
+    "eligible_ounce_share": {
+     "v": 1.0,
+     "doc": "dfs_dec2025"
+    },
+    "ineligible_nav_share": {
+     "v": 0.0,
+     "doc": "dfs_dec2025"
+    },
+    "gold_nav_share": {
+     "v": 1.0,
+     "doc": "dfs_dec2025"
+    },
+    "aisc_aud_oz": {
+     "v": 2265,
+     "doc": "dfs_dec2025",
+     "note": "LOM. First four years A$2,180/oz."
+    },
+    "hedge_share_fwd24m": {
+     "v": 0.0,
+     "doc": "dfs_dec2025"
+    },
+    "production_koz_yr": {
+     "v": 143,
+     "doc": "dfs_dec2025",
+     "note": "DFS first four years, pre-production."
+    },
+    "study_stage": {
+     "v": "DFS",
+     "doc": "dfs_dec2025",
+     "note": "Updated DFS, December 2025."
+    },
+    "approvals_land_secured": {
+     "v": false,
+     "doc": "aug2026",
+     "note": "WA EPA information submitted but approvals incomplete; one landholder compensation negotiation outstanding."
+    },
+    "remaining_capex_aud_m": {
+     "v": 354.0,
+     "doc": "dfs_dec2025",
+     "note": "Full pre-production capital — no committed project financing. Cash position unsourced, so this is the upper bound."
+    },
+    "shares_out_m": {
+     "v": 549.69,
+     "doc": "asx_api",
+     "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap"
+    },
+    "advt_shares_m": {
+     "v": 0.5342,
+     "doc": "asx_api",
+     "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
+    }
+   },
+   "developer_gate": {
+    "D1_study_stage": "PASS — updated DFS, December 2025.",
+    "D2_approvals_and_land": "MARGINAL — WA EPA information submitted, approvals not yet complete. One landholder compensation negotiation outstanding, covering a small area scheduled late in the mine plan. Less severe than initially characterised.",
+    "D3_bounded_dilution": "FAIL — A$354m pre-production capital against a market cap of roughly A$450-590m and no committed project finance. Gap materially above 30% of market cap on any reading.",
+    "verdict": "EXCLUDED on D3. Re-test after FID and project financing, targeted end-2026."
+   },
+   "gaps": [
+    "share count — sources conflict badly (ADVFN 2.296bn appears to be a stale pre-consolidation figure; quoted caps of A$381-591m imply roughly 450-650m shares)",
+    "cash position"
+   ]
+  }
+ ],
+ "excluded": [
+  {
+   "ticker": "MEK",
+   "name": "Meeka Metals",
+   "gate": "Gate 3 Tradability",
+   "reason": "At A$0.10 the 0.5c ASX tick is a 5.0% structural minimum spread — cannot quote inside the 1.0% producer limit at any volume. Excluded on tick structure, not quality."
+  },
+  {
+   "ticker": "AZY",
+   "name": "Antipa Minerals",
+   "gate": "Gate 2 D1 and D3",
+   "reason": "Minyari Dome is scoping-study stage only (130 koz/yr, A$306m capex, AISC A$1,721). D1 requires PFS minimum. Also fails D3: A$36.5m cash against A$306m capex on a ~A$365m market cap."
+  },
+  {
+   "ticker": "BTR",
+   "name": "Brightstar Resources",
+   "gate": "Insufficient data",
+   "reason": "4 Moz resources, Laverton mill due mid-2027, ~A$350m cap (down 37% YTD). Study stage and funding gap not sourced. Not excluded on merit."
+  },
+  {
+   "ticker": "OGC",
+   "name": "OceanaGold",
+   "gate": "Gate 1 eligible ounce share",
+   "reason": "Haile (US, ~315 koz 2026) and Didipio (Philippines, 80%) dominate; Macraes and Waihi (NZ) are a minority. New Zealand passes Tier A on 3 of 4 tests but offers no eligible listed pure-play."
+  },
+  {
+   "ticker": "RUP",
+   "name": "Rupert Resources",
+   "gate": "Delisted",
+   "reason": "Agnico Eagle arrangement closed 16 Jun 2026, TSX delisting on close. Finland also fails Tier A on 3 of 4."
+  },
+  {
+   "ticker": "NEM",
+   "name": "Newmont",
+   "gate": "Gate 1 eligible ounce share",
+   "reason": "Australian assets a minority of a global portfolio."
+  },
+  {
+   "ticker": "AEM",
+   "name": "Agnico Eagle",
+   "gate": "Gate 1 Tier A",
+   "reason": "Canada marginal on solvency (general government gross >100% of GDP) and carries a Foreign Exchange Control Act 1939-51 requisition precedent."
+  },
+  {
+   "ticker": "PRU/RSG/WAF/EMR",
+   "name": "Perseus / Resolute / West African / Emerald",
+   "gate": "Gate 1 Tier A",
+   "reason": "West Africa, Cambodia. No production in a Tier A jurisdiction."
+  }
+ ]
+}
