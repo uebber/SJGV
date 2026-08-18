@@ -1,7 +1,7 @@
-# Index Methodology — SJGV v1.0
+# Index Methodology — SJGV v1.1
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.0
+**Version:** 1.1
 **Date:** 18 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
@@ -12,14 +12,20 @@
 > that does not change either how many ounces are claimed or what was paid for
 > them. §6 is the ledger and §7 is the weight; together they fit on a page.
 
+**Amendment record.** A gate definition may not change without a line here.
+
+| # | Date | Change |
+|---|------|--------|
+| 1 | 18 Aug 2026 | **§2.1 A4 redefined; version 1.0 → 1.1.** v1.0 gated A4 on requisition history *and* on statutory powers suspended rather than repealed. Australia fails that test on both limbs and the v1.0 table recorded it as a PASS regardless. A4 is now a present-tense test of gold controls **in operation**; dormant powers and historical use are disclosed per country and carried as residual risk (§11.1). What the change gives up is stated in §2.1, not buried. **No weight changes** — `data/sovereign.json` is a record, and no engine code reads it. Canada's A2 and the s51(xxxi) characterisation question are reopened as §12.2 items 4 and 5. |
+
 
 ---
 
 ## 0. Objective
 
 > **Own the largest possible claim on future unhedged gold ounces, per euro
-> invested, in jurisdictions with no record of taking them and no live power to
-> — and survive the drawdown in between.**
+> invested, in jurisdictions running no gold-control regime and holding the
+> weakest motive to start one — and survive the drawdown in between.**
 
 Formally:
 
@@ -113,7 +119,7 @@ Applied to the country of *asset location*, not of listing or incorporation.
 | A1 | **Monetary sovereignty** | Own currency; freely floating; not a global reserve currency; not a member of a currency union | Pass/Fail |
 | A2 | **Sovereign solvency** | General government net debt/GDP; interest/revenue; net international investment position | Net debt ≤ 60% of GDP **and** interest ≤ 10% of revenue |
 | A3 | **Gold as strategic export** | Gold's share of national goods exports | **Disclosed, not gated** — see note |
-| A4 | **Requisition history & dormant powers** | Gold confiscation, monopsony purchase mandates, or forced domestic sale in the modern era; **including statutory powers currently suspended rather than repealed** | Zero, and no live dormant power |
+| A4 | **Gold controls in operation** | Confiscation, compulsory delivery, administered monopsony or gold-export prohibition **in force at the review date**, verified against primary law | None in operation. Dormant powers and historical use are **disclosed, not gated** — see note |
 
 **Rationale for A1.** A country whose currency devalues freely has no need to
 repress gold — the FX does the adjustment continuously and without policy
@@ -130,18 +136,72 @@ expropriation risk. **A3 is binary, and no
 code ever read it.** It is now disclosed per jurisdiction and reasoned about, not
 converted to a number that does nothing.
 
+**Rationale for A4, and what v1.0 got wrong.** v1.0 gated on two things: no
+requisition in the modern era, and no statutory power suspended rather than
+repealed. **Australia fails both.** Part IV of the Banking Act 1959 (Cth) —
+compulsory delivery of privately held gold to the Reserve Bank, an export ban, a
+purchase monopsony — *was in operation* until 30 January 1976, when it ceased by
+Proclamation under s 40(3), gazetted 1976 No S17. It has never been repealed, and
+Parliament has not left it to rot: ss 41, 42, 45 and 46 have been amended since,
+most recently by No 4, 2016. The v1.0 table nonetheless recorded Australia as a
+PASS. That was not a data gap waiting on counsel. It was the test failing, and the
+PASS was the tell.
+
+Applied evenly, the v1.0 rule excludes almost every rule-of-law state, because
+almost all of them kept their wartime bullion machinery on the statute book. A
+rule that vetoes the entire asset class — including the only jurisdiction with a
+material industry — is not a gate. It is a decision not to run the product,
+disguised as a test.
+
+What a statute-book search *can* establish is present tense: **is a gold-control
+regime operating in this jurisdiction now?** That is binary, verifiable from
+primary law, and it is a real exclusion — any state currently running bullion or
+exchange controls is out. What it cannot establish is whether a state will
+legislate one tomorrow. **The motive test is A1 and A2.** A reserve issuer
+managing devaluation, or an insolvent one, has a reason to reach for the metal; a
+solvent state whose currency devalues on its own does not. A4 tests the
+machinery. Machinery that is not running is a disclosed residual risk, not a veto.
+
+Two consequences, stated rather than buried:
+
+1. **As at August 2026, A4 excludes none of the five recorded countries.** The
+   v1.0 A4 excluded four of five — but only by a test Australia also failed. All
+   of Gate 1's exclusionary force now sits in A1 and A2, which is where it was
+   doing the work all along.
+2. **This test would not have caught a dormant EO 6102.** EO 6102 was a public
+   executive instrument and surrender was paid at a published statutory price; it
+   fails A4 only while it is operating. That weakness is accepted deliberately,
+   because any formulation strong enough to catch a dormant EO 6102 also catches
+   Banking Act Part IV — which is to say it catches Australia, and there is
+   nothing left to hold.
+
+Dormant powers are recorded per country in `data/sovereign.json` under
+`dormant_powers`. Only Australia's has been compiled to primary-law standard;
+the others are recorded, not verified, and say so. The Australian register —
+every provision, its activation route, and whether any compensation reaches it —
+is summarised in §11.1, and it is worse than a single reassuring sentence about
+s 44 would suggest.
+
 ### 2.2 Tier A outcome as at August 2026
 
 | Country | A1 | A2 | A3 | A4 | Verdict |
 |---------|----|----|----|----|---------|
-| **Australia** | Pass — AUD free-floating, non-reserve, commodity currency | Pass — net debt ~19–20% of GDP, gross ~51% | **Strong — gold is the #2 export at ~A$68bn, having overtaken coal** | Query — Banking Act 1959 Pt IV *suspended* by proclamation Jan 1976, repeal status unconfirmed | **PASS** |
-| New Zealand | Pass | Pass | Weak — immaterial to exports | Pass | **Pass** (no eligible listed vehicle) |
-| Canada | Pass | Marginal — general government gross >100% | Moderate | Query — Foreign Exchange Control Act 1939–51 | **Marginal — fail pending review** |
-| Finland | **Fail — euro membership** | **Fail — gross ~80% and rising** | Weak | Pass | **FAIL (1 of 4)** |
-| United States | **Fail — reserve issuer** | **Fail — net 100% → ~120%; gross 126% → 142% by 2031** | **Weak** | **Fail — EO 6102 (1933), Gold Reserve Act (1934), WPB Order L-208 (1942)** | **FAIL (0 of 4)** |
+| **Australia** | Pass — AUD free-floating, non-reserve, commodity currency | Pass — net debt ~19–20% of GDP, gross ~51% | **Strong — gold is the #2 export at ~A$68bn, having overtaken coal** | Pass — none in operation. Banking Act 1959 Pt IV ceased 30 Jan 1976 (s 40(3), gaz 1976 No S17); unrepealed and disclosed at §11.1 | **PASS** |
+| New Zealand | Pass | Pass | Weak — immaterial to exports | Pass — none in operation | **Pass** (no eligible listed vehicle) |
+| Canada | Pass | **Fail as recorded — see §12.2 item 4** | Moderate | Pass — none in operation; 1939–51 Foreign Exchange Control Board regime disclosed | **FAIL — A2** |
+| Finland | **Fail — euro membership** | **Fail — gross ~80% and rising** | Weak | Pass — none in operation | **FAIL — A1 and A2** |
+| United States | **Fail — reserve issuer** | **Fail — net 100% → ~120%; gross 126% → 142% by 2031** | **Weak** | Pass — none in operation; 1933–42 interventions disclosed, and see §2.1 consequence 2 | **FAIL — A1 and A2** |
 
 Norway, Sweden and Switzerland pass cleanly and host no gold mining of scale.
 **Australia is the only Tier A pass with a material industry.**
+
+Read the A4 column honestly: **it now excludes nobody.** Canada, Finland and the
+United States are excluded on solvency and monetary sovereignty. Canada's
+exclusion in particular rests on A2 alone, and the A2 evidence recorded for
+Canada is general government *gross* debt against a threshold written on *net*
+debt — a mismatch that was harmless while Canada also failed A4 and is not
+harmless now. It is reopened as §12.2 item 4 rather than resolved here, because
+sourcing it could change the eligible universe and that is a committee decision.
 
 ### 2.3 Tier B (sub-national, disclosed)
 
@@ -882,11 +942,13 @@ Investors must understand four things:
 
 ### 11.1 Accepted risks — parked by committee decision
 
-Not resolved; accepted unquantified. Both are disclosure items.
+Not resolved; accepted unquantified. Both are disclosure items. The first is no
+longer a *query* — it is now read, and it is worse than v1.0 recorded.
 
 | Item | Nature of the residual risk |
 |------|------------------------------|
-| **Banking Act 1959 (Cth) Part IV** | Gold requisition powers suspended by proclamation in January 1976; repeal status unconfirmed. If the power remains on the statute book in suspended form, it is reactivable by proclamation — a Tier A A4 exposure the index does not currently price. |
+| **Banking Act 1959 (Cth) Part IV — Gold** | Read against compilation C2026C00104 (Compilation No. 69, to 31 March 2026). Part IV ceased to be in operation on **30 January 1976** by Proclamation under s 40(3), gazetted 1976 No S17 — so it is not merely dormant, it *ran*, until living memory. It has not been repealed, and ss 41, 42, 45 and 46 have been amended since suspension, most recently by No 4, 2016. **Revival is a same-day executive act:** s 40(2) lets the Governor-General, satisfied it is expedient for the protection of the currency or the public credit, declare by Proclamation that the Part comes into operation. **The register:** s 41 export ban; s 42 compulsory delivery to the Reserve Bank; s 43 vesting; s 44 payment; s 45 sale and purchase only to or from the Reserve Bank — an administered monopsony; s 46 prohibition on working gold; s 48 discretionary Reserve Bank exemptions. **Two things make the compensation story thinner than it first reads.** s 44 pays only for gold *"delivered in pursuance of section 42"* — ss 41, 45 and 46 carry no compensation provision anywhere in Part IV. And s 40(2) permits **partial** activation, "such of the provisions of this Part as are specified in the Proclamation", so an export ban plus a monopsony plus a manufacturing prohibition can be switched on with s 44 left off entirely. Where s 44 does apply, the price is administered by the Reserve Bank, with an action for compensation against it as the only route to a different number. Unpriced. |
+| **Does s51(xxxi) reach the control limbs of Part IV?** | Part IV is Commonwealth law, so the just-terms guarantee reaches it — a stronger floor than s 44, and the point the first attempt at this record missed. But Australian law distinguishes *acquisition* of property from mere deprivation or regulation. Compulsory delivery and vesting (ss 42–43) is plainly an acquisition; *Newcrest Mining v Commonwealth* (1997) 190 CLR 513 is live precedent that sterilising mining tenements can be one too. An export ban, a monopsony or a ban on working gold may instead be characterised as regulation, attracting no just-terms obligation at all. **The compensation floor is firm for the delivery limb and genuinely contestable for the control limbs.** This is the question for Australian counsel — §12.2 item 5. |
 | **s51(xxxi) does not bind the States** | The constitutional just-terms guarantee reaches the Commonwealth. Mining tenure is granted under the WA Mining Act 1978, and state parliaments are not subject to it. In a ~100% Australian, predominantly Western Australian portfolio, this single question carries most of the residual jurisdictional risk in the product. |
 
 ---
@@ -914,13 +976,16 @@ removes a constituent immediately, with weight redistributed pro rata.
 
 The register was three lines long, which was the point. **All three closed on 18
 August 2026** — one by sourcing, one by verification, one by a survey that
-established the data does not exist.
+established the data does not exist. **Two opened the same day**, on the back of
+the A4 amendment: items 4 and 5.
 
 | # | Item | Outcome |
 |---|------|---------|
 | 1 | **Single-asset status, all 17.** | **CLOSED — sourced.** Replaced the unsourced `single_asset` boolean with a sourced `largest_asset_pp_share` and a declared 0.80 threshold (§8.1). Eight of seventeen flag, not the four §11 named; the cap binds on **PNR and CYL**, 7.52% one-way turnover, and it costs **+6.4% on A$ per claimed ounce**. Three regression names behaved: PNR and RXL returned 1.000, CMM returned 0.700 under the forward rule fixed before the number was computed. |
 | 2 | **Grade-tonnage curves.** | **CLOSED — not sourceable from public disclosure.** Phase 0 survey over ≈11 MB of primary text across all seventeen: **zero of twelve constituents** publish a resource at two or more cut-offs or a grade-tonnage table. One partial (RXL, a *chart* for its underground resource only) and one unknown (WGX's five NI 43-101 reports, issuer URLs dead). Full write-up and the three findings that would have blocked Phase 2 regardless: `docs/grade-tonnage-survey.md`. **The §6 ledger stays static in the gold price and §9.2's modelled 1.00 keeps saying what it says.** |
 | 3 | **Jurisdiction B1 / B3 verification.** | **CLOSED — verified.** B1 verified from statutory instruments for every exposed jurisdiction: WA 2.5% flat, VIC 2.75% flat, NSW **4.0% flat** (confirming a claim §2.3 was making ahead of its data), QLD a **price-linked 2.5–5.0% scale saturated at its 5% ceiling**, TAS profit-based capped at 5.35% and **no longer an exposure** (Henty sold May 2025). WA **B3 verified**, and it reframed the test: no statutory determination periods, 42.4% on-time against an 80% target. `jurisdictions.json` records the statutory instrument for each. Remaining unverified: B1 for SA, NT and NZ (nil exposure), and B2/B3/B4 outside WA. |
+| 4 | **Canada's A2, now load-bearing alone.** | **OPEN — opened 18 Aug 2026 by the A4 amendment.** A2 is written on **net** debt ≤ 60% and interest/revenue ≤ 10%. The evidence recorded for Canada is general government **gross** debt >100%, and the note concedes net is materially lower owing to public pension assets. Neither specified metric is sourced. Under v1.0 Canada also failed A4, so the mismatch was not load-bearing; it now carries Canada's exclusion by itself, and Agnico Eagle's at entity level. **Source Canadian general government net debt/GDP and interest/revenue from the IMF Fiscal Monitor, then apply A2 as written.** Deliberately not resolved inside the A4 amendment: the answer could move the eligible universe, and a documentation fix is the wrong vehicle for that. |
+| 5 | **Does s51(xxxi) reach the control limbs of Banking Act Part IV?** | **OPEN — opened 18 Aug 2026 by the A4 amendment.** Australian counsel, and the one question in this file a search engine genuinely cannot answer. s 44 compensates only gold delivered under s 42, and s 40(2) permits partial activation, so the export ban (s 41), the monopsony (s 45) and the prohibition on working gold (s 46) can operate with no statutory compensation. Whether the just-terms guarantee reaches them turns on the acquisition-versus-regulation distinction. **This does not gate** — A4 is present-tense and Part IV is not in operation — but it sizes the residual risk in §11.1, which is currently unpriced. |
 
 Three things the closures leave behind, none of them a reopening:
 
@@ -974,7 +1039,7 @@ be able to hand us, and how sure are we?**
 | `pp_moz` | Proven & Probable reserves | The **in-the-money strip** — ounces inside a funded mine plan at a published cost. This is the floor under the claim: the part that converts to metal without needing the gold price to do anything. | **1.03pp** |
 | `mi_non_reserve_moz` | Measured & Indicated resource not yet booked as reserve | The **near-money option, and the largest single source of the index's convexity.** Drilled densely enough to support a mine plan, not yet economic at the company's own price deck. These are precisely the ounces a rising gold price converts into reserves — the mechanism §0.2 says the product exists to own. | **0.65pp** |
 | `inferred_moz` | Inferred resource | The **far out-of-the-money tail.** Geologically real, sparsely drilled, worth little unless the price moves a long way — which is the exact payoff shape the sovereign-debasement thesis is buying. | **0.43pp** |
-| `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce a state can requisition is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. | **0.12pp** |
+| `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce sitting under a gold-control regime, or under a state with the motive to start one, is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. | **0.12pp** |
 | `hedge_share_fwd24m` | Production already sold forward | A sold-forward ounce is **a short gold position inside a long gold product.** It converts at a fixed price and cannot participate in the move the index exists to capture, so it is subtracted from the claim rather than scored against it. | **0.06pp** |
 | `production_koz_yr` | Annual production rate | In the ledger it does one job: converting the disclosed hedge *percentage* into hedged *ounces*. (Also a Gate 2 input, where it does much more.) | via hedge |
 | `confidence_weights.proven_probable` = 1.0 | Reserve ounce = the unit of account | The numéraire of the ledger. Every other ounce is priced relative to this one, so it is definitional rather than tunable. | **0.74pp** |
@@ -1075,4 +1140,4 @@ those words for the same reason.
 
 ---
 
-*SJGV v1.0 — 18 August 2026. The sole methodology in force.*
+*SJGV v1.1 — 18 August 2026. The sole methodology in force.*

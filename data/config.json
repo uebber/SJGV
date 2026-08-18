@@ -1,7 +1,7 @@
 {
  "_schema": "Methodology parameters. These are committee decisions, not observations — index-methodology.md is the source of truth and every entry cites its section. Observations live in the other files in this directory. There is no scoring layer, and every survivor is either a gate threshold, an ounce-category discount, or an impairment cap. Not one is a scoring coefficient. The test a parameter must now pass to exist: does it change how many ounces are claimed, or what was paid for them?",
- "methodology": "SJGV v1.0",
- "adopted": "2026-08-17",
+ "methodology": "SJGV v1.1",
+ "adopted": "2026-08-18",
  "objective": {
   "beta_target": [
    1.4,
@@ -22,7 +22,7 @@
  },
  "estimation_policy": {
   "rule": "DERIVE OR FAIL. No field value may be invented.",
-  "adopted": "2026-08-17",
+  "adopted": "2026-08-18",
   "permitted_provenance": {
    "sourced": "read from a document, which the field cites by key",
    "derived": "computed from other SOURCED fields by an arithmetic identity or an explicitly stated formula — e.g. inferred = mr_total - M&I, net_debt = debt - cash, or the midpoint of a range the issuer itself published. The inputs must all be sourced and the formula recorded in the note.",
