@@ -1,0 +1,302 @@
+{
+  "_schema": "Fetch registry. One entry per candidate; each document states which data/companies.json field(s) it is expected to resolve. Drives `python tools/fetch.py --registry`.",
+  "_updated": "2026-08-17",
+  "_note": "URLs marked verified:true returned usable content in the 17 Aug 2026 pass. Unverified entries are best guesses at the issuer's R&R page and will need the site-root fallback if they 404.",
+  "targets": [
+    {
+      "ticker": "CMM",
+      "priority": "blocking",
+      "needs": [
+        "mr_total_moz",
+        "mi_non_reserve_moz",
+        "inferred_moz"
+      ],
+      "documents": [
+        {
+          "for": "R&R Aug 2026",
+          "url": "https://capmetals.com.au/investors/announcements/",
+          "verified": false,
+          "note": "Site headline still shows the pre-Diggers 6.6 Moz MR against the new 5.24 Moz reserve. Need the August 2026 statement that lifted reserves 33%."
+        },
+        {
+          "for": "R&R page",
+          "url": "https://capmetals.com.au/",
+          "verified": true
+        }
+      ]
+    },
+    {
+      "ticker": "CYL",
+      "priority": "blocking",
+      "needs": [
+        "shares_out_m",
+        "eligible_ounce_share",
+        "mi_non_reserve_moz",
+        "inferred_moz",
+        "reserve_price_aud",
+        "ineligible_nav_share"
+      ],
+      "documents": [
+        {
+          "for": "R&R + Plutonic/Henty split",
+          "url": "https://catalystmetals.com.au/resources-and-reserves/",
+          "verified": false
+        },
+        {
+          "for": "site root fallback",
+          "url": "https://catalystmetals.com.au/",
+          "verified": false
+        }
+      ],
+      "note": "eligible_ounce_share ALSO blocked on a non-data question: Tasmania has never been assessed under Gate 1 Tier B. Fetching cannot resolve that — it needs the Tasmanian royalty regime read from statute. See data/jurisdictions.json AU-TAS."
+    },
+    {
+      "ticker": "PNR",
+      "priority": "blocking",
+      "needs": [
+        "shares_out_m",
+        "mi_non_reserve_moz",
+        "inferred_moz",
+        "reserve_price_aud",
+        "hedge_share_fwd24m"
+      ],
+      "documents": [
+        {
+          "for": "R&R",
+          "url": "https://pantoro.com.au/resources-and-reserves/",
+          "verified": false
+        },
+        {
+          "for": "site root fallback",
+          "url": "https://pantoro.com.au/",
+          "verified": false
+        }
+      ],
+      "note": "Updated R&R statement and five-year plan due in the Sep 2026 quarter — may be worth waiting rather than sourcing the stale one."
+    },
+    {
+      "ticker": "BC8",
+      "priority": "blocking",
+      "needs": [
+        "shares_out_m",
+        "aisc_aud_oz",
+        "net_debt_aud_m",
+        "mi_non_reserve_moz",
+        "inferred_moz",
+        "hedge_share_fwd24m"
+      ],
+      "documents": [
+        {
+          "for": "R&R",
+          "url": "https://bc8.com.au/resources-and-reserves/",
+          "verified": false,
+          "note": "Returned 404 to WebFetch in the first pass; retry via the fetcher, then fall back to the site root."
+        },
+        {
+          "for": "site root fallback",
+          "url": "https://bc8.com.au/",
+          "verified": true
+        }
+      ],
+      "note": "Group reserve total also unresolved — only Kal East's 243 koz was located. Paulsens and Coyote reserves not separately disclosed in what was found."
+    },
+    {
+      "ticker": "RXL",
+      "priority": "blocking",
+      "needs": [
+        "shares_out_m",
+        "mi_non_reserve_moz",
+        "inferred_moz"
+      ],
+      "documents": [
+        {
+          "for": "site root",
+          "url": "https://roxresources.com.au/",
+          "verified": false
+        },
+        {
+          "for": "DFS presentation",
+          "url": "https://www.listcorp.com/asx/rxl/rox-resources/news/youanmi-dfs-presentation-3275317.html",
+          "verified": false
+        }
+      ],
+      "note": "Share count moved materially on the A$200m placement + A$18m SPP. Needs the post-placement figure, not the DFS-vintage one. Only developer passing Gate 2 — worth resolving."
+    },
+    {
+      "ticker": "AAR",
+      "priority": "low",
+      "needs": [
+        "shares_out_m",
+        "mi_non_reserve_moz",
+        "inferred_moz",
+        "reserve_price_aud"
+      ],
+      "documents": [
+        {
+          "for": "MRE Apr 2026",
+          "url": "https://data-api.marketindex.com.au/api/v1/announcements/XASX:AAR:6A1321217/pdf/inline/mineral-resource-increased-to-207-million-ounces",
+          "verified": false
+        }
+      ],
+      "note": "Moot for weighting — fails Gate 2 D2 (tenure consent) and D3 (funding gap 34-43% of market cap). Sources conflict on share count: ADVFN 1.80bn vs Australian Stock Report 1.45bn."
+    },
+    {
+      "ticker": "AUC",
+      "priority": "low",
+      "needs": [
+        "shares_out_m",
+        "net_debt_aud_m"
+      ],
+      "documents": [
+        {
+          "for": "updated DFS",
+          "url": "https://www.listcorp.com/asx/auc/ausgold-limited/news/updated-definitive-feasibility-study-3293478.html",
+          "verified": false
+        },
+        {
+          "for": "site root",
+          "url": "https://ausgoldlimited.com/",
+          "verified": true
+        }
+      ],
+      "note": "Moot for weighting — fails D3. Share count badly conflicted: ADVFN 2.296bn looks like a stale pre-consolidation figure against quoted caps implying 450-650m."
+    },
+    {
+      "ticker": "OBM",
+      "priority": "degrading",
+      "needs": [
+        "mi_non_reserve_moz",
+        "inferred_moz",
+        "shares_out_m",
+        "hedge_share_fwd24m"
+      ],
+      "documents": [
+        {
+          "for": "R&R FY26 (as at 1 Apr 2026)",
+          "url": "https://orabandamining.com.au/investors/asx-announcements/",
+          "verified": false,
+          "note": "The March-2026 URL below serves the FY25 statement (2.11 Moz MR / 236 koz OR as at 1 Jul 2025), not the July 2026 release. Find the correct FY26 document."
+        },
+        {
+          "for": "R&R FY25 (wrong vintage, decks usable)",
+          "url": "https://orabandamining.com.au/wp-content/uploads/2026/03/2946066-Resource-Reserve-Statement.pdf",
+          "verified": true
+        }
+      ],
+      "note": "The ONLY weighted name still carrying an imputed split. Highest-value degrading gap."
+    },
+    {
+      "ticker": "EVN",
+      "priority": "degrading",
+      "needs": [
+        "reserve_price_aud",
+        "hedge_share_fwd24m"
+      ],
+      "documents": [
+        {
+          "for": "R&R inline tables",
+          "url": "https://evolutionmining.com/our-operations/resources-reserves/",
+          "verified": true
+        },
+        {
+          "for": "R&R statement PDF",
+          "url": "https://evolutionmining.com/wp-content/uploads/annual_mineral_resources_and_ore_reserves_statement_15.pdf",
+          "verified": false
+        }
+      ]
+    },
+    {
+      "ticker": "GMD",
+      "priority": "degrading",
+      "needs": [
+        "reserve_price_aud"
+      ],
+      "documents": [
+        {
+          "for": "R&R inline tables",
+          "url": "https://genesisminerals.com.au/our-assets/resources-reserves/",
+          "verified": true
+        }
+      ],
+      "note": "Page discloses the RESOURCE guideline (A$2,500-3,500/oz) but not a separate reserve deck. May need the underlying ASX release."
+    },
+    {
+      "ticker": "RMS",
+      "priority": "degrading",
+      "needs": [
+        "reserve_price_aud",
+        "hedge_share_fwd24m"
+      ],
+      "documents": [
+        {
+          "for": "R&R statement",
+          "url": "https://www.rameliusresources.com.au/wp-content/uploads/documents/Group-Mineral-Resources-and-Ore-Reserve-Statement.pdf",
+          "verified": true,
+          "note": "3-page summary carries the tables but no price deck. The full annual report or the underlying ASX release should have it."
+        },
+        {
+          "for": "2025 Annual Report",
+          "url": "https://www.rameliusresources.com.au/wp-content/uploads/bsk-pdf-manager/2025/10/2025-Annual-Report-1.pdf",
+          "verified": false
+        }
+      ]
+    },
+    {
+      "ticker": "NST",
+      "priority": "degrading",
+      "needs": [
+        "hedge_share_fwd24m",
+        "net_debt_aud_m"
+      ],
+      "documents": [
+        {
+          "for": "R&R Jun 2026",
+          "url": "https://www.nsrltd.com/media/jbef3a0r/resources-and-reserves-update-03-06-2026.pdf",
+          "verified": true
+        },
+        {
+          "for": "FY26 results (20 Aug 2026)",
+          "url": "https://www.nsrltd.com/investor-centre/asx-announcements/",
+          "verified": false
+        }
+      ]
+    },
+    {
+      "ticker": "GGP",
+      "priority": "clean",
+      "needs": [],
+      "documents": [
+        {
+          "for": "R&R page (tables are IMAGES)",
+          "url": "https://www.greatland.com.au/assets/resources-reserves/",
+          "verified": true
+        }
+      ],
+      "note": "Both group tables are published as PNGs. The fetcher flags them and emits the image URLs; they require a visual read. Already resolved."
+    }
+  ],
+  "not_a_fetching_problem": [
+    {
+      "item": "AU-TAS Gate 1 Tier B assessment",
+      "blocks": "CYL eligible_ounce_share",
+      "why": "Tasmania's royalty structure, escalator and tenure regime must be read from statute. No issuer document resolves it."
+    },
+    {
+      "item": "AU-QLD / AU-NT / AU-NSW / AU-SA B1 royalty structures",
+      "blocks": "Tier B convexity scoring across the eligible set",
+      "why": "Queensland runs price-linked sliding scales on some minerals; the NT is profit-based. Both need the statutory instrument, not a company filing."
+    },
+    {
+      "item": "Gate 2 survival test",
+      "blocks": "every name — the gate is not implemented in the engine",
+      "why": "Not a data gap. Ora Banda currently scores the highest convexity in the universe on a thin reserve base and a 21% FY26 cost overrun precisely because nothing screens it."
+    }
+  ],
+  "_share_counts": {
+    "status": "RESOLVED IN CODE, not by fetching",
+    "was": "The single largest blocking gap — 6 of 17 candidates (AAR, AUC, BC8, CYL, PNR, RXL).",
+    "why_fetching_failed": "Share counts are not on R&R pages or site roots, which is where the registry pointed. Issuer sites publish Appendix 2A INCREMENTAL issuances that read like totals, and third-party aggregators disagree badly: Ausgold quoted at 2.296bn shares by one against market caps implying 450-650m; Astral at 1.80bn vs 1.45bn. The ASX company-data API (asx.com.au/asx/1/company/{code}) is retired and now returns uri-not-found.",
+    "fix": "build_index_v2.py now pulls shares outstanding from IBKR fundamentals in the same session as the price, falling back to data/companies.json. This also makes EV internally consistent: market cap becomes price x shares from one feed at one instant rather than a live price against a stale share count.",
+    "residual": "Verify the IBKR figure against one filing per name before a live rebalance."
+  }
+}

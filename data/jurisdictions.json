@@ -1,0 +1,288 @@
+{
+  "_schema": "Gate 1 Tier B — sub-national. Methodology §2.3. B1 fiscal convexity, B2 fiscal variance, B3 tenure security, B4 intervention events, B5 export/refining path.",
+  "_sourced": "2026-08-18",
+  "_status": "B1 VERIFIED FOR EVERY JURISDICTION THE INDEX IS EXPOSED TO — WA, NSW, QLD, VIC and TAS. Open: SA, NT and NZ, all three carrying NIL index exposure, and B2/B3/B4 on most entries. B3 is verified for WA, which is substantially the whole book, and the answer changed the question — see AU-WA.B3. Register reference: methodology §12.2 item 3. (This field previously pointed at '§13.2', which is 'Denominator — enterprise value' and has nothing to do with jurisdictions.)",
+  "_scoring_vocabulary_note": "REWRITTEN 2026-08-18. This file carries no scoring language: a top-level `b1_scoring_principle` ending 'penalised in proportion to the escalator's slope', a `B2.score` string, a Queensland note reading 'before B1 can be scored', and verdicts of 'ELIGIBLE BUT PENALISED ON B1'. §2.3 treats B1, B2, B3 and B5 as DISCLOSED rather than scored, on the ground that any scoring rule for them was never implementable and no data supported it. B4 is the only one of the five that is a gate. Nothing reads this file, which is precisely why the dead vocabulary would have survived indefinitely: it changes no weight, so no test fails when it is wrong. Every 'score' and 'penalty' is now a disclosure.",
+  "b1_disclosure_principle": "A flat ad valorem royalty is convexity-NEUTRAL — a proportional haircut on delta, the same share of every marginal ounce at every price. A profit-based or price-linked sliding-scale royalty is the state holding a CALL SPREAD written at your expense: as gold rises, the state's share rises faster than revenue. That is negative convexity embedded in tenure. IT IS DISCLOSED, NOT SCORED. No weight reads it and none should: the escalator's slope is not an ounce count and it is not a price paid, so §12.3's rule excludes it from the weight. Two things the disclosure must say that a score would have hidden. (1) A CAPPED escalator that has already reached its cap is, going forward, structurally identical to a flat ad valorem regime — Queensland's gold rate is a 2.5%-to-5.0% sliding scale that has been pinned at 5.00% since gold passed A$890/oz, so its marginal convexity today is exactly zero and what remains is simply a rate at double WA's. (2) The residual risk in a capped regime is not convexity, it is that the cap and the reference prices are numbers in a regulation the state can amend.",
+  "jurisdictions": [
+    {
+      "code": "AU-WA",
+      "name": "Western Australia",
+      "country": "AU",
+      "B1": {
+        "structure": "flat_ad_valorem",
+        "rate": 0.025,
+        "convexity": "neutral",
+        "verified": true,
+        "source": "Mining Regulations 1981 (WA) — gold concentrate/doré at 2.5% of royalty value. Confirmed independently on two issuer documents that state the rate as a modifying factor in their own Ore Reserve economics: Black Cat Syndicate ('The Ore Reserves are based upon a State Royalty of 2.5% and a refining charge of 0.2%', June 2026 quarterly Appendix 3) and the Paulsens Ore Reserve modifying factors on the same company's website.",
+        "url": "https://bc8.com.au/resources-and-reserves/",
+        "note": "The lowest verified rate in the eligible set and the only convexity-neutral one at a rate below 2.75%. Compare NSW 4.0% flat, VIC 2.75% flat, QLD 5.00% (a sliding scale at its ceiling), TAS 1.9% floor plus a profit component capped at 5.35%."
+      },
+      "B2": {
+        "changes_10yr": 1,
+        "verified": true,
+        "assessment": "LOW VARIANCE — one attempted change, blocked",
+        "note": "The McGowan government's September 2017 budget proposed lifting the gold royalty from 2.5% to 3.75%; it was blocked in the Legislative Council in late 2017. Attempted, not enacted. Contrast Victoria, which ENACTED a move from 0% to 2.75% on 1 January 2020. `assessment` replaces a `score` key: this is a disclosure, and the word was doing no work a sentence could not."
+      },
+      "B3": {
+        "verified": true,
+        "verified_date": "2026-08-18",
+        "statutory_maximum_determination_periods": "ESSENTIALLY NONE, AND THAT IS THE FINDING. The regulator's own timeframes page carries a column headed 'Is it statutory, regulatory or target?' and every row on the mining approval journey answers TARGET, with two exceptions, both under Part IV of the Environmental Protection Act 1986 rather than the Mining Act 1978: the EPA must give written notice within 28 days of referral of whether it will assess a proposal, and its assessment report 'may be given to the Minister not later than 6 weeks after the EPA completes its assessment'. The second clock starts only when an assessment of unbounded duration ends — the page describes the assessment itself as 'Variable'. So the two hard statutory limits in the WA mining approvals chain bracket a process with no statutory limit in the middle. §2.3 B3 asks for statutory maximum determination periods; for Western Australia the honest answer is that there are none for the approvals that matter, and tenure security rests on published administrative targets and the regulator's performance against them.",
+        "published_targets": {
+          "programme_of_work": "80% within 15 business days",
+          "mining_development_and_closure_proposal": "80% within 30 business days",
+          "native_vegetation_clearing_permit": "80% within 60 business days",
+          "works_approval_and_licence": "80% within 60 business days",
+          "water_licence_rights_in_water_and_irrigation_act_1914": "65 / 75 / 95 business days by low / medium / high risk",
+          "epbc_act": "80% within 60 business days",
+          "aboriginal_heritage_act_1972": "no timeframe published — 'subject to application', referred to the Department of Planning, Lands and Heritage",
+          "biodiversity_conservation_act_2016": "N/A — no timelines"
+        },
+        "published_on_time_compliance": {
+          "period": "FY2023-24, the most recent annual analysis published as at 18 Aug 2026",
+          "programme_of_work": "53% within target (down from 77.1% in FY2022-23); 16 business days average agency processing, 26 business days end to end",
+          "mining_proposal": "42.4% within target; 46 business days average agency processing against 123 days END TO END",
+          "native_vegetation_clearing_permit": "67.5% within target; 65.4 days average",
+          "volumes": "2,868 mining environmental approval applications received, 2,651 finalised"
+        },
+        "source": "Report — Assessment Timeframes for Mining Environmental Applications, 2023-24 Analysis (the regulator's own annual publication), read together with the department's Timeframes page, last updated 7 August 2026.",
+        "url": "https://www.wa.gov.au/system/files/2025-03/assessment-timeframes-mining-environmental-applications_0.pdf",
+        "url_secondary": "https://www.wa.gov.au/organisation/department-of-mines-petroleum-and-exploration/timeframes",
+        "url_quarterly": "https://www.wa.gov.au/government/publications/dmpe-approvals-performance-reporting-mining-and-petroleum-september-quarter-2025",
+        "note": "FOUR QUALIFIERS, and they cut both ways. (1) THE DEPARTMENT HAS BEEN RENAMED TWICE. DMIRS became DEMIRS in 2023 and DEMIRS became the Department of Mines, Petroleum and Exploration (DMPE) in March 2025. This file said 'DMIRS' until today, which is two renames stale; a nil result under that name would not have been evidence that the data is unpublished, and in fact it is published quarterly and annually. (2) THE MEASURED WINDOW EXCLUDES MOST OF THE ELAPSED TIME. 'When events occur outside of the direct control of DEMIRS, the clock is stopped'. A Mining Proposal takes 46 business days of agency time and 123 days end to end — the on-time rate is measured against the smaller number. (3) MUCH OF THE GAP IS PROPONENT-SIDE, NOT REGULATOR-SIDE: 'Information Requested from Proponent' affected 85.20% of finalised Mining Proposals, averaging 69.4 business days. That is a real qualifier against reading 42.4% as regulatory hostility. (4) IT IS NEVERTHELESS THE WRONG DIRECTION. The department's own objective is 80% and Mining Proposals ran at 42.4%, PoWs fell from 77.1% to 53% in one year, and the department attributes it to 'resourcing constraints, staff turnover and training'. Tenure security in WA is not at risk from revocation (B4 = 0 events); the exposure B3 actually finds is SCHEDULE — a development timetable that depends on an administrative target the regulator misses roughly six times in ten, with no statutory backstop. For a book that is substantially all Western Australian and holds 30% of its claim in M&I non-reserve ounces waiting on conversion, that is a disclosure item, not a footnote."
+      },
+      "B4": {
+        "events_10yr": 0,
+        "verified": false,
+        "note": "No retroactive revocations of advanced gold projects identified, though no systematic search has been run — the same qualifier VIC and TAS carry. Mining Amendment Bill 2025 and State Development Bill 2025 are deregulatory in direction. NOTE THE ONE PENDING ITEM: the Lake Miranda s10 ATSIHP application of August 2024 is still undecided, so WA is not free of the mechanism that produced the McPhillamys declaration in NSW. B4 is the only Tier B test that is a GATE."
+      },
+      "B5": {
+        "verified": true,
+        "verified_date": "2026-08-18",
+        "structure": "state_owned_refining_monopsony",
+        "chokepoint": true,
+        "note": "STRUCTURED AND FLAGGED, having previously been a bare note with no verified field at all — recorded rather than verified, which is how it stayed unexamined. Australian gold is overwhelmingly refined at the Perth Mint, owned by Gold Corporation, a Western Australian STATE-OWNED entity established under the Gold Corporation Act 1987 (WA). In a repression scenario that is a state-controlled node sitting between the mine and a free market, in the one jurisdiction the entire portfolio sits in. It is the only Tier B finding in this file that touches the physical chain rather than the fiscal one, and it is arguably more interesting than any royalty rate: a royalty takes a share of the upside, a refining monopsony can decide whether metal reaches a market at all. Two things keep it a disclosure rather than a gate. It is a REFINING chokepoint, not an export ban — doré can in principle be shipped to a refiner offshore, at a cost and a delay. And it is unquantified: no attempt has been made to size the switching cost, and none should be attempted without a source. Raise it with the committee alongside the §11.1 accepted risks, which is where the other two unquantified sovereign items sit."
+      },
+      "verdict": "ELIGIBLE. Lowest verified royalty rate in the set and the only convexity-neutral structure at 2.5%; lowest fiscal variance; zero intervention events. The two things a reader should carry away are not fiscal: WA has no statutory determination periods for mining approvals and its regulator misses its own administrative target on Mining Proposals (B3), and its gold leaves the country through a state-owned refinery (B5).",
+      "index_exposure": "Dominant. Substantially the entire portfolio."
+    },
+    {
+      "code": "AU-NSW",
+      "name": "New South Wales",
+      "country": "AU",
+      "B1": {
+        "structure": "flat_ad_valorem",
+        "rate": 0.04,
+        "convexity": "neutral",
+        "verified": true,
+        "verified_date": "2026-08-18",
+        "source": "Mining Act 1992 (NSW) and Mining Regulation 2016 (NSW). Gold does not appear in Schedule 6 of the Regulation, which lists the minerals charged a flat rate per tonne; every mineral outside Schedule 6 is charged ad valorem at 4% of the value of the mineral recovered. Revenue NSW names gold explicitly in its published 4% list, and NSW Resources states it directly: 'Ad valorem royalty is applicable to minerals with a high value to volume ratio such as gold and silver. Royalty is calculated as 4 per cent of the value of production less allowable deductions.'",
+        "url": "https://www.revenue.nsw.gov.au/taxes-duties-levies-royalties/royalties/minerals-other-than-coal",
+        "url_secondary": "https://www.resources.nsw.gov.au/mining-and-exploration/compliance-and-reporting/paying-royalties",
+        "note": "§2.3's prose asserted 'flat ad valorem' before the data supported it — this file carried rate null, convexity 'presumed neutral', verified false while the methodology stated the conclusion. CONFIRMED, not corrected: the structure is flat and no price-linked element applies to gold. The rate is 4.0%, 1.6x Western Australia. The base is 'ex-mine value' — the value of the mineral once mined and brought to the surface — with deductions confined to the direct costs of upgrading and bringing material to market after the first stockpile, so the base is narrower than a gross-revenue base and the two rates are not perfectly comparable. Gold is a publicly owned mineral in NSW, so the whole royalty accrues to the state; for privately owned minerals seven-eighths is returned to the owner. Contrast NSW's flat 4% with Queensland's escalator: the state that took the intervention event has the more predictable fiscal claim."
+      },
+      "B2": {
+        "verified": false,
+        "note": "REQUIRED: trailing 10-year standard deviation of effective take, and a count of legislated changes. The 4% ad valorem rate for non-coal minerals is long-standing and no change is known within the window, but that is an absence of search, not a search that came back empty. Note that NSW HAS moved coal royalties inside the window (8.8%/9.8%/10.8% by extraction method under a Ministerial Determination), which shows both the willingness and the legislative path; it says nothing directly about gold."
+      },
+      "B3": {
+        "verified": false,
+        "note": "REQUIRED: statutory determination periods and published on-time compliance under the Mining Act 1992. WA's B3 is now verified and the answer there was 'targets, not statutes'; do not assume NSW is the same without reading it."
+      },
+      "B4": {
+        "events_10yr": 1,
+        "note": "McPhillamys s10 ATSIHP declaration, August 2024 — the only completed s10 intervention against an advanced gold project in Australia. Federal Court judicial review heard December 2025; judgment RESERVED and STILL UNDECIDED as at 18 Aug 2026. Regis has since reinstated a 1.89 Moz Ore Reserve on a new PFS routing the waste landform entirely onto Regis-owned land outside the declared area, and that reserve is now 49.0% of Regis' group reserve base and its single largest asset (§8.1, companies.json RRL.largest_asset_pp_share). The Lake Miranda (WA) s10 application from Aug 2024 also remains pending. B4 IS A GATE, and NSW passes it on a count of events rather than on the absence of the mechanism."
+      },
+      "B5": {
+        "note": "NSW doré is refined on the mainland; the Perth Mint chokepoint recorded under AU-WA applies. No NSW-specific export restriction identified."
+      },
+      "verdict": "ELIGIBLE, ON WATCH — convexity-neutral on B1 at a verified flat 4%, but carrying the set's only completed s10 intervention, still unresolved twenty months on.",
+      "index_exposure": "Regis (McPhillamys, its single largest asset at 49.0% of group reserves), Evolution (Cowal, Northparkes, Marsden)."
+    },
+    {
+      "code": "AU-VIC",
+      "name": "Victoria",
+      "country": "AU",
+      "B1": {
+        "structure": "flat_ad_valorem",
+        "rate": 0.0275,
+        "convexity": "neutral",
+        "verified": true,
+        "source": "Mineral Resources (Sustainable Development) Act 1990 (Vic) s12(1), rate set by the Mineral Resources (Sustainable Development) (Mineral Industries) Regulations 2019 at 2.75% of net market value for all minerals other than lignite. Explicitly a royalty on VALUE, not profit — mining operation costs are not deductible; only costs directly connected with sale, transfer or disposal (insurance, freight, marketing) come off. The first 2,500 oz produced under a mining licence each financial year is exempt.",
+        "url": "https://resources.vic.gov.au/legislation-and-regulations/legislation/fees-and-charges/Royalty-Information-Sheet-gold.pdf",
+        "note": "Convexity-NEUTRAL, the same structural category as WA, at 2.75% against WA's 2.5%. A flat ad valorem take is a proportional haircut on delta and does not escalate with the gold price. Note the site blocks automated fetching (403 to both the project fetcher and a browser UA), so the rate is corroborated from the regulation text and law-firm analysis rather than from a cached primary artifact — weaker provenance than the TAS, NSW or QLD entries."
+      },
+      "B2": {
+        "changes_10yr": 1,
+        "verified": true,
+        "assessment": "ELEVATED — the only ENACTED change in the assessed set",
+        "note": "Gold was exempt from Victorian royalties until 1 January 2020. The 2019-20 State Budget removed the exemption and imposed the 2.75% rate, expected to raise ~A$56m over four years, over industry objection. This is materially worse than WA on B2 and it is the reason for the ON WATCH verdict: WA's 2017 increase was ATTEMPTED and blocked, whereas Victoria's was ENACTED. A jurisdiction that has actually moved a gold royalty from zero inside the last decade has demonstrated both the willingness and the legislative path to do it again. That is the creeping fiscal expropriation this index exists to avoid, and it is a trendline, not an event."
+      },
+      "B3": {
+        "verified": false,
+        "note": "REQUIRED: statutory determination periods and on-time compliance under the MRSD Act 1990. WA's equivalent gap is now closed and its answer was that the periods are administrative targets rather than statutory maxima; Victoria may or may not be the same and has not been read."
+      },
+      "B4": {
+        "events_10yr": 0,
+        "verified": false,
+        "note": "No retroactive revocation of an advanced Victorian gold project identified, though no systematic search was run. Flagged for B4 watch rather than assessed: Regulation 7 lets the MINISTER DETERMINE net market value where a reported sale price is not considered a genuine arm's-length commercial transaction. That is an anti-avoidance valuation power rather than an expropriation mechanism, but it is discretion over the royalty base and should be disclosed as such."
+      },
+      "B5": {
+        "note": "Victorian doré is refined on the mainland; the Perth Mint chokepoint recorded under AU-WA applies. No Victoria-specific export restriction identified."
+      },
+      "verdict": "ELIGIBLE, ON WATCH — convexity-neutral on B1, which is what governs, but carrying the only enacted gold-royalty introduction in the assessed set (0% to 2.75%, 1 Jan 2020). Eligible on structure, watched on trendline. Unblocks Catalyst Metals' Bendigo/Four Eagles ounces.",
+      "index_exposure": "Catalyst Metals (Bendigo, Four Eagles) — 163 koz of a 4,240 koz group resource and ZERO of its 1,542 koz reserve, so no Victorian ounce reaches the §6 ledger's P&P tranche. Small, and smaller than it looks."
+    },
+    {
+      "code": "AU-QLD",
+      "name": "Queensland",
+      "country": "AU",
+      "B1": {
+        "structure": "price_linked_sliding_scale",
+        "rate_floor": 0.025,
+        "rate_cap": 0.05,
+        "rate_current": 0.05,
+        "reference_price_1_aud_oz": 600,
+        "reference_price_2_aud_oz": 890,
+        "convexity": "NEGATIVE BY STRUCTURE, ZERO AT THE MARGIN — the escalator is saturated",
+        "verified": true,
+        "verified_date": "2026-08-18",
+        "source": "Mineral Resources (Royalty) Regulation 2025 (Qld), Schedule 1 part 1 s2, in force 1 September 2025 — which REPEALED AND REPLACED the Mineral Resources Regulation 2013 this file previously named. Gold is a 'prescribed mineral' alongside cobalt, copper, lead, nickel, silver and zinc. Three bands: at or below reference price 1 the rate is 2.5% of value; between reference price 1 and reference price 2 a 'prescribed percentage' is calculated by formula from PD (average market price less reference price 1) and RFD (reference price 2 less reference price 1), rounded down to the nearest 0.02%; at or above reference price 2 the rate is 5% of value. For gold, reference price 1 is A$600 per troy ounce and reference price 2 is A$890 per troy ounce. The Queensland Revenue Office states the same thing in its own words: base and precious metals including gold carry a 'variable rate between 2.50% and 5.00% (varying in 0.02% increments) of value, depending on average metal prices'. The average market price for gold is the London Bullion Market pm fix, converted at the hedge settlement rate for each day of the return period.",
+        "url": "https://qro.qld.gov.au/royalty/calculate-mineral/rates/",
+        "url_secondary": "https://classic.austlii.edu.au/au/legis/qld/num_reg/mrr2025400/sch1.html",
+        "url_ruling": "https://qro.qld.gov.au/resource/mra002/",
+        "note": "THE BLOCKING QUESTION IS ANSWERED, AND THE ANSWER IS NOT THE ONE THE QUESTION EXPECTED. Queensland does run gold on a price-linked sliding scale — exactly the call-spread mechanism B1 exists to find — but the escalator is CAPPED at 5% and has been SATURATED for two decades. Reference price 2 is A$890/oz; spot on the 18 Aug 2026 build is A$6,216/oz, seven times it. Public Ruling MRA002.3's own worked gold example applies '5% for gold' for the December 2020 quarter, when gold was around US$1,800-1,920/oz. So: the marginal convexity of the Queensland gold royalty at any price this index cares about is EXACTLY ZERO. Above A$890/oz the regime is a flat 5% ad valorem and behaves identically to WA's flat 2.5% — at double the rate. All of the negative convexity was realised between A$600 and A$890/oz, long before the index existed. Two consequences worth stating plainly. First, a scoring rule that 'penalised in proportion to the escalator's slope' — a rule no code ever implemented — would have penalised Queensland for a slope of zero, and would have been WRONG in the direction it was most confident about. That is a good argument for treating it as disclosure rather than a score. Second, the risk that remains is not convexity: it is that A$890 and 5% are numbers in a regulation, the regulation was remade as recently as 1 September 2025, and Queensland has form on resource royalties (the 2022 coal tiers). A cap is only as good as the statute holding it. Also note there is NO processing discount for gold or silver, unlike the other prescribed minerals."
+      },
+      "B2": {
+        "verified": false,
+        "note": "REQUIRED: trailing 10-year standard deviation of effective take and a count of legislated changes. Two known events bracket the window and neither has been assessed: the 2022 introduction of new coal royalty tiers (20%/30%/40% above price thresholds), which is a different commodity but the same legislature and the same mechanism; and the remaking of the whole royalty regulation on 1 September 2025. Whether the 2025 remake changed any gold parameter has NOT been established — the rates and reference prices above are read from the current instrument, not diffed against the 2013 one."
+      },
+      "B3": {
+        "verified": false,
+        "note": "REQUIRED: statutory determination periods and published on-time compliance under the Mineral Resources Act 1989 (Qld)."
+      },
+      "B4": {
+        "events_10yr": 0,
+        "verified": false,
+        "note": "No systematic search run."
+      },
+      "B5": {
+        "note": "Queensland doré is refined on the mainland; the Perth Mint chokepoint recorded under AU-WA applies. Ernest Henry produces a copper-gold concentrate rather than doré, which routes through a smelter chain instead — not assessed."
+      },
+      "verdict": "ELIGIBLE. B1 verified and no longer blocking: a price-linked sliding scale, which is the structure §2.3 flags, but pinned at its 5.00% ceiling since gold passed A$890/oz, so marginal convexity is zero and what is left is a flat rate at twice Western Australia's. Disclosed, not penalised.",
+      "index_exposure": "Evolution (Ernest Henry, Mt Rawdon). Evolution is 4.0% of the index and Queensland is a minority of its reserve base — Ernest Henry 1.1 Moz and Mt Rawdon under 0.01 Moz of a 9.78 Moz eligible group reserve, so roughly 11% of EVN's ounces and under 0.5% of the book."
+    },
+    {
+      "code": "AU-NT",
+      "name": "Northern Territory",
+      "country": "AU",
+      "B1": {
+        "structure": "profit_based",
+        "convexity": "NEGATIVE",
+        "verified": false,
+        "note": "The NT applies a profit-based royalty rather than ad valorem, under the Mineral Royalty Act 1982 (NT). STRUCTURALLY THE WORST IN THE SET on B1: as the gold price rises, profit rises faster than revenue, so a profit-based take captures a rising share — the call-spread mechanism a flat ad valorem regime avoids, and unlike Tasmania's there is no verified cap. Rate and base require verification from the Act. NOT VERIFIED, and not prioritised, because index exposure is nil."
+      },
+      "B2": {"verified": false},
+      "B3": {"verified": false},
+      "B4": {"events_10yr": 0, "verified": false},
+      "verdict": "ELIGIBLE. B1 is negative on structure and that is DISCLOSED, not penalised — §2.3 treats B1 as disclosed rather than scored and there is no penalty left to apply. The previous verdict here read 'ELIGIBLE BUT PENALISED ON B1', which described a mechanism no code implemented and no data supported.",
+      "index_exposure": "None. Northern Star divested the Central Tanami JV (-1.3 Moz). Black Cat's Coyote sits on the WA side of the Tanami and carries no Ore Reserve."
+    },
+    {
+      "code": "AU-SA",
+      "name": "South Australia",
+      "country": "AU",
+      "B1": {
+        "structure": "ad_valorem",
+        "rate": null,
+        "convexity": "presumed neutral",
+        "verified": false,
+        "note": "REQUIRED: verify rate and whether the refined/ore differential creates an effective escalator. 'presumed neutral' is an assumption and is labelled as one — the Queensland result is the cautionary case, where the presumption would have been wrong on structure and right on effect. Not prioritised: index exposure is nil."
+      },
+      "B2": {"verified": false},
+      "B3": {"verified": false},
+      "B4": {"events_10yr": 0, "verified": false},
+      "verdict": "ELIGIBLE PENDING B1 VERIFICATION. No exposure, so unverified costs nothing today.",
+      "index_exposure": "None."
+    },
+    {
+      "code": "AU-TAS",
+      "name": "Tasmania",
+      "country": "AU",
+      "B1": {
+        "structure": "profit_based_with_ad_valorem_floor",
+        "rate_floor": 0.019,
+        "rate_cap": 0.0535,
+        "convexity": "NEGATIVE — but CAPPED",
+        "verified": true,
+        "source": "Royalty is payable under s102 Mineral Resources Development Act 1995 (Tas) in accordance with Part 3 of the Mineral Resources Regulations 2026. Gold is NOT among the minerals in Schedule 1 (which covers construction materials, industrial minerals, petroleum and coal seam gas), so it falls to the two-tiered regime in Regulation 8: 1.9% of net sales PLUS a profit component, with maximum royalty payable of 5.35% of net sales. A rebate of up to 20% is available for production of a metal within the State.",
+        "url": "https://www.mrt.tas.gov.au/exploration/fees,_rents_and_royalties/small_tiles/royalties",
+        "url_secondary": "https://www.mrt.tas.gov.au/__data/assets/pdf_file/0018/632007/APPROVED-Fees-under-the-Mineral-Resources-Regulations-2026-1-July-2026.pdf",
+        "note": "Profit-based, so negative on the b1_disclosure_principle: as gold rises, profit rises faster than revenue and the State's share rises with it. Same structural category as the NT. Two features distinguish it. (1) The escalator is BOUNDED — 1.9% floor to a hard 5.35% cap, a 2.8x slope that stops rather than compounding indefinitely, which makes it strictly better than an uncapped profit regime. (2) Prior-year losses are NOT carried forward, so the profit component re-engages immediately after a downturn rather than being sheltered by accumulated losses. That is adverse precisely in a recovery off a gold trough — the leg of the cycle this index is built to capture. The 20% in-State metal-production rebate is unlikely to apply to a doré producer shipping to a mainland refiner. Compare Queensland, verified the same day: also a bounded escalator, but one already at its ceiling, so Queensland's convexity is spent and Tasmania's is live between 1.9% and 5.35%."
+      },
+      "B2": {
+        "changes_10yr": 0,
+        "verified": true,
+        "assessment": "LOW VARIANCE",
+        "note": "Rates are unchanged between the approved schedules of 1 July 2020 and 1 July 2026: 1.9% of net sales plus profit, capped at 5.35%, in both. The Mineral Resources Regulations were remade from 2016 to 2026 and the profit-royalty formula moved from Regulation 7 to Regulation 8, with no change to the rates. Political pressure to raise mineral royalties (the Eslake review, ~A$42m/yr) was rejected by both the Liberal government and Labor opposition — attempted but not enacted, the same pattern as WA in 2017."
+      },
+      "B3": {
+        "verified": false,
+        "note": "REQUIRED: statutory determination periods and on-time compliance under the MRDA 1995. Unverified, and no longer comparable to WA — WA's B3 is now verified and its answer (administrative targets, no statutory maxima, 42.4% on-time on Mining Proposals) is a real finding rather than an open box. Not prioritised: index exposure is nil."
+      },
+      "B4": {
+        "events_10yr": null,
+        "verified": false,
+        "note": "REQUIRED: no systematic search for retroactive revocations of advanced Tasmanian gold projects has been run. Henty operated continuously from 1996 under successive owners, which is weak positive evidence and not a substitute for the search."
+      },
+      "B5": {
+        "note": "Tasmanian doré is refined on the mainland, so the Perth Mint chokepoint recorded under AU-WA applies here too. No additional Tasmania-specific export restriction identified."
+      },
+      "verdict": "ELIGIBLE. B1 is negative on structure — a profit component above a 1.9% floor — and that is DISCLOSED, not penalised; the escalator is capped at 5.35%, which makes it materially better than an uncapped profit regime. An earlier verdict read 'ELIGIBLE BUT PENALISED ON B1'; §2.3 applies no such penalty.",
+      "index_exposure": "NONE, CORRECTED 2026-08-18. This entry read 'Catalyst Metals (Henty). Minor against its WA Plutonic Belt base' and that has been wrong since May 2025: Catalyst SOLD the Henty Gold Mine to Kaiser Reef, completing 16 May 2025, for A$31.6m plus a deferred 50 oz/month capped at 3,000 oz and a 0.5% NSR over the Darwin Target Zone. Catalyst's own resources-and-reserves page lists no Tasmanian asset and its FY25 statement puts 100% of its 1,542 koz Ore Reserve at Plutonic and Marymia in WA. Tasmania therefore joins SA, NT and NZ as a verified-but-unexposed jurisdiction. The verification work stands and was worth doing — it just is not load-bearing, and methodology §2.3's parenthetical 'and now matters (Catalyst's Henty mine)' was stale when written."
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand (national)",
+      "country": "NZ",
+      "B1": {"structure": null, "verified": false},
+      "B2": {"verified": false},
+      "B3": {"verified": false},
+      "B4": {
+        "events_10yr": 0,
+        "note": "Fast-track Approvals Act 2024 fully operational; Dec 2025 and Mar 2026 amendments expanded scope. Policy direction has hardened pro-mining."
+      },
+      "verdict": "ELIGIBLE — but no eligible listed vehicle. See sovereign.json NZ.",
+      "index_exposure": "None."
+    }
+  ],
+  "ineligible_reference": [
+    {
+      "code": "US-AK",
+      "name": "Alaska",
+      "reason": "United States fails Tier A 0 of 4. Pogo (Northern Star) ounces excluded — 2,385 koz of P&P, 8.4% of NST's group reserve.",
+      "note": "Pebble EPA veto reaffirmed 17 Jul 2025."
+    },
+    {
+      "code": "US-NV",
+      "name": "Nevada",
+      "reason": "United States fails Tier A 0 of 4.",
+      "note": "Ranked #1 on the Fraser 2025 Investment Attractiveness Index — an illustration of why Fraser scores measure peacetime regulatory quality, not sovereign monetary risk. Fraser is not used for gating. Capricorn's Big Springs, its only non-Australian asset, is under a binding sale agreement to Sentinel Metals and holds no ounces in the group MRE."
+    },
+    {
+      "code": "CA-ON",
+      "name": "Ontario",
+      "reason": "Canada fails Tier A on A2 and A4. Red Lake (Evolution, 2.0 Moz P&P) and Sugar Zone (Vault, 389 koz P&P) ounces excluded."
+    },
+    {
+      "code": "CA-BC",
+      "name": "British Columbia",
+      "reason": "Canada fails Tier A. Dropped 7 ranks in Fraser 2025 on land-claims concerns."
+    },
+    {
+      "code": "FI",
+      "name": "Finland",
+      "reason": "Fails Tier A 3 of 4 — euro membership, gross debt ~80%, immaterial gold exports. Mined Minerals Tax raised 0.6% to 2.5% effective 1 Jan 2026."
+    }
+  ]
+}
