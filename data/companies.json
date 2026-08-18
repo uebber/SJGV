@@ -84,6 +84,21 @@
      "doc": "rr2026",
      "note": "EXACT. Pogo confidence-weighted 4,308.7 koz (P&P 2,385 + 0.5x1,799 M&I non-reserve + 0.2x5,121 Inferred) of group 47,940.6 koz."
     },
+    "eligible_pp_share": {
+     "v": 0.916077,
+     "doc": "rr2026",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Pogo (Alaska) holds 2.385 Moz of the group's 28.419 Moz of Proven & Probable, so 91.6077% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
+    },
+    "eligible_mi_share": {
+     "v": 0.927372,
+     "doc": "rr2026",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Pogo (Alaska) holds 1.799 Moz of the group's 24.770 Moz of M&I non-reserve, so 92.7372% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
+    },
+    "eligible_inferred_share": {
+     "v": 0.856486,
+     "doc": "rr2026",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Pogo (Alaska) holds 5.121 Moz of the group's 35.683 Moz of Inferred, so 85.6486% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
+    },
     "ineligible_nav_share": {
      "v": 0.09,
      "doc": "rr2026",
@@ -222,6 +237,21 @@
      "v": 0.801,
      "doc": "rrpage",
      "note": "EXACT. Red Lake (Ontario) confidence-weighted 3,830 koz (P&P 2,000 + 0.5x2,700 + 0.2x2,400) of group 19,270 koz."
+    },
+    "eligible_pp_share": {
+     "v": 0.833333,
+     "doc": "rrpage",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Red Lake (Ontario) holds 2.000 Moz of the group's 12.000 Moz of Proven & Probable, so 83.3333% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
+    },
+    "eligible_mi_share": {
+     "v": 0.761062,
+     "doc": "rrpage",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Red Lake (Ontario) holds 2.700 Moz of the group's 11.300 Moz of M&I non-reserve, so 76.1062% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
+    },
+    "eligible_inferred_share": {
+     "v": 0.703704,
+     "doc": "rrpage",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Red Lake (Ontario) holds 2.400 Moz of the group's 8.100 Moz of Inferred, so 70.3704% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
     },
     "ineligible_nav_share": {
      "v": 0.17,
@@ -1225,6 +1255,21 @@
      "v": 0.929,
      "doc": "rr2025tbl",
      "note": "CORRECTED from 1.0. Sugar Zone (Ontario) holds no reserve but does hold 789 koz M&I + 440 koz Inferred; confidence-weighted 482.5 koz of group 6,829.8 koz."
+    },
+    "eligible_pp_share": {
+     "v": 1.0,
+     "doc": "rr2025tbl",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Sugar Zone (Ontario) holds 0.000 Moz of the group's 3.608 Moz of Proven & Probable, so 100.0000% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
+    },
+    "eligible_mi_share": {
+     "v": 0.841884,
+     "doc": "rr2025tbl",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Sugar Zone (Ontario) holds 0.789 Moz of the group's 4.990 Moz of M&I non-reserve, so 84.1884% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
+    },
+    "eligible_inferred_share": {
+     "v": 0.878921,
+     "doc": "rr2025tbl",
+     "note": "DERIVED from the same disclosure as eligible_ounce_share, which already states the split: Sugar Zone (Ontario) holds 0.440 Moz of the group's 3.634 Moz of Inferred, so 87.8921% is Gate 1 eligible. Category-specific because the stored blend is confidence-weighted — it is exact on the total claim and wrong on the tranche split, and the split is the published ledger mix."
     },
     "ineligible_nav_share": {
      "v": 0.07,

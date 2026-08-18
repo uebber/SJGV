@@ -118,7 +118,7 @@ import math
 import os
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import nav_model
@@ -146,6 +146,9 @@ GOLD_HISTORY_DURATION = "5 Y"
 HISTORY_DURATION_DEFAULT = "2 Y"
 SPREAD_DURATION_DEFAULT = "3 M"
 TRADING_DAYS = 252
+# Mean Gregorian month. Only ever used to express a document age in months for a
+# threshold measured in months; nothing compounds on it.
+DAYS_PER_MONTH = 30.4375
 
 MARKET_DATA_TYPE_LABELS = {1: "live", 2: "frozen", 3: "delayed", 4: "delayed-frozen"}
 
@@ -312,6 +315,9 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "gates.capacity_max_days_advt": ("engine", "§4.3 capacity, REPORTED not enforced"),
     "gates.capacity_max_participation": (
         "engine", "§4.3 capacity, REPORTED not enforced"),
+    "gates.max_resource_statement_age_months": (
+        "engine", "§6.4 — the bar statement_currency() applies to the document "
+                  "behind every counted tranche"),
 
     "gate2.gold_drawdown": ("engine", "§3 stress"),
     "gate2.anchor": ("engine", "trailing_average | spot"),
@@ -464,10 +470,27 @@ def unread_engine_params() -> list[str]:
 # isn't here would silently return None. Validated at load (see load_data) so a
 # misspelling fails loudly instead of degrading a score to zero — the exact
 # failure mode that let a renamed reserve_price field silently read as absent.
+#
+# ELIGIBLE_CATEGORY_FIELDS maps each ledger tranche to its own Gate 1 share.
+# Absent, the blended eligible_ounce_share stands in — see eligible_shares() and
+# ounce_ledger property 4. The mapping is keyed by the ounce field so that
+# statement_currency() can iterate the same three tranches.
+ELIGIBLE_CATEGORY_FIELDS = {
+    "pp_moz": "eligible_pp_share",
+    "mi_non_reserve_moz": "eligible_mi_share",
+    "inferred_moz": "eligible_inferred_share",
+}
+
+# How far the confidence-weighted blend of the category shares may sit from the
+# stored eligible_ounce_share before it is reported. 0.5% clears the 2dp rounding
+# in the two stored blends (0.15% and 0.07%) and nothing else.
+ELIGIBILITY_RECONCILE_TOLERANCE = 0.005
+
 KNOWN_FIELDS = {
     "pp_moz", "mr_total_moz", "mi_non_reserve_moz", "inferred_moz",
     "reserve_price_aud", "resource_price_aud",
-    "eligible_ounce_share", "ineligible_nav_share", "gold_nav_share",
+    "eligible_ounce_share", *ELIGIBLE_CATEGORY_FIELDS.values(),
+    "ineligible_nav_share", "gold_nav_share",
     "aisc_aud_oz", "hedge_share_fwd24m", "net_debt_aud_m", "shares_out_m",
     # Gate 2 (§3) inputs
     "production_koz_yr", "undrawn_facilities_aud_m", "committed_capex_aud_m",
@@ -540,6 +563,43 @@ def reconcile_resource(c: dict) -> str | None:
             f"({gap:+.1%}) — check the category vintages")
 
 
+def reconcile_eligibility(c: dict) -> str | None:
+    """Do the per-category Gate 1 shares reproduce the blended one?
+
+    eligible_ounce_share is defined as ineligible confidence-weighted ounces over
+    group confidence-weighted ounces, so it is an identity: the confidence-
+    weighted blend of the three category shares MUST equal it. That makes the two
+    representations a check on each other, in the same spirit as
+    reconcile_resource — one derived number verifying another rather than filling
+    it in.
+
+    Reported, never corrected. Where they disagree the category shares win,
+    because they are read off exact per-category ounce counts while the blend is
+    stored rounded; the two names that disagree today do so by 0.15% and 0.07%
+    for exactly that reason. A gap materially larger than rounding means one of
+    the four numbers was read off the wrong row.
+    """
+    blend = c.get("eligible_ounce_share")
+    pp, mi = c.get("pp_moz"), c.get("mi_non_reserve_moz")
+    inf = c.get("inferred_moz") or 0.0
+    if blend is None or pp is None or mi is None:
+        return None
+    shares = [c.get(f) for f in ELIGIBLE_CATEGORY_FIELDS.values()]
+    if any(s is None for s in shares):
+        return None
+    s_pp, s_mi, s_inf = shares
+    cw_total = pp + 0.5 * mi + 0.2 * inf
+    if cw_total <= 0:
+        return None
+    implied = (pp * s_pp + 0.5 * mi * s_mi + 0.2 * inf * s_inf) / cw_total
+    gap = implied - blend
+    if abs(gap) <= ELIGIBILITY_RECONCILE_TOLERANCE:
+        return None
+    return (f"category Gate 1 shares imply a blended {implied:.4f} vs the stored "
+            f"eligible_ounce_share {blend:.4f} ({gap:+.2%}) — one of the "
+            f"per-category ineligible ounce counts does not match the group figure")
+
+
 def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
     """Read the data layer. Returns (config, companies, excluded, market, notes).
 
@@ -570,9 +630,10 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
         if stray:
             unknown[record["ticker"]] = stray
         c = _flatten(record)
-        mismatch = reconcile_resource(c)
-        if mismatch:
-            notes.append(f"{c['ticker']}: {mismatch}")
+        for check in (reconcile_resource, reconcile_eligibility):
+            mismatch = check(c)
+            if mismatch:
+                notes.append(f"{c['ticker']}: {mismatch}")
         companies.append(c)
 
     if unknown:
@@ -973,6 +1034,19 @@ def confidence_weights(cfg: dict) -> tuple[float, float, float]:
             cw["inferred"])
 
 
+def eligible_shares(c: dict) -> tuple[float, float, float]:
+    """§2.4 Gate 1 share per resource category: (P&P, M&I non-reserve, Inferred).
+
+    Falls back to the blended eligible_ounce_share per category, which is exact
+    for the ~100%-eligible majority and, for a mixed-jurisdiction name, is exact
+    on the TOTAL and wrong on the split. See ounce_ledger property 4.
+    """
+    blend = c["eligible_ounce_share"]
+    return tuple(  # type: ignore[return-value]
+        blend if c.get(field) is None else c[field]
+        for field in ELIGIBLE_CATEGORY_FIELDS.values())
+
+
 def ounce_ledger(c: dict, conf: tuple[float, float, float],
                  hedge_years: float) -> tuple[dict | None, str]:
     """The whole model. Every ounce this company can deliver to us, by type.
@@ -981,7 +1055,7 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
     and `reason` says which line was missing.
 
         gross      P&P + M&I non-reserve + Inferred, as disclosed
-        eligible   × eligible_ounce_share — Gate 1. Ounces under a sovereign
+        eligible   × the Gate 1 share FOR THAT CATEGORY. Ounces under a sovereign
                    that fails Tier A are not counted at all, at any discount.
                    This is what makes a company-level production threshold
                    unnecessary (§2.4): Pogo simply is not an ounce we own,
@@ -990,7 +1064,7 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
         hedged     less ounces already sold forward (§6.3)
         net        what the weight is computed on
 
-    Three properties worth stating, because each one replaces a score:
+    Four properties worth stating, because each one replaces a score:
 
     1. **The categories are the convexity.** P&P is the in-the-money strip:
        ounces the company has committed to mine at a cost it has published.
@@ -1015,6 +1089,19 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
        counting only its in-the-money ounces against peers counting all three.
        Inferred is not always broken out and is only 0.2-weighted, so its
        absence is reported and treated as zero — which understates the name.
+
+    4. **Gate 1 is applied per category, not as a blend.** eligible_ounce_share
+       is a CONFIDENCE-WEIGHTED share: ineligible confidence-weighted ounces over
+       group confidence-weighted ounces. Multiplying all three tranches by it
+       therefore reproduces the right TOTAL claim and the wrong SPLIT — an
+       ineligible asset that is reserve-light and Inferred-heavy, as Pogo and Red
+       Lake both are, moves claim out of the reserve tranche and into the tail.
+       That mattered once the ledger mix became the published convexity number:
+       the blend read 57.3/29.6/13.1 where the category shares read
+       57.9/29.5/12.7, overstating the inferred tail by 0.5pp. Where the
+       per-category shares are sourced they are authoritative and the blend
+       becomes a reconciliation control (see reconcile_eligibility); where they
+       are not, the blend is the fallback and is exact whenever it is 1.0.
     """
     pp = c.get("pp_moz")
     if pp is None:
@@ -1028,6 +1115,7 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
     elig = c.get("eligible_ounce_share")
     if elig is None:
         return None, "eligible_ounce_share missing (jurisdiction split unresolved)"
+    elig_pp_s, elig_mi_s, elig_inf_s = eligible_shares(c)
 
     hedge_share = c.get("hedge_share_fwd24m")
     if hedge_share is None:
@@ -1044,12 +1132,12 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
     # reserves, not from inferred material, so it consumes the most certain
     # tranche. Capped at the eligible P&P tranche — a hedge book larger than the
     # reserves behind it is a data error, not a negative claim.
-    elig_pp = pp * elig
+    elig_pp = pp * elig_pp_s
     hedged = min(hedge_share * (prod / 1000.0) * hedge_years, elig_pp)
 
     net = ((elig_pp - hedged) * w_pp
-           + mi * elig * w_mi
-           + (inf or 0.0) * elig * w_inf)
+           + mi * elig_mi_s * w_mi
+           + (inf or 0.0) * elig_inf_s * w_inf)
     if net <= 0:
         return None, "no net claimed ounces after Gate 1 and the hedge book"
 
@@ -1057,14 +1145,98 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
         "gross_moz": pp + mi + (inf or 0.0),
         "pp_moz": pp, "mi_moz": mi, "inferred_moz": inf or 0.0,
         "eligible_share": elig,
+        "eligible_pp_share": elig_pp_s,
+        "eligible_mi_share": elig_mi_s,
+        "eligible_inferred_share": elig_inf_s,
+        "eligible_by_category": any(
+            c.get(k) is not None for k in ELIGIBLE_CATEGORY_FIELDS.values()),
         "elig_pp_moz": elig_pp,
-        "elig_mi_moz": mi * elig,
-        "elig_inferred_moz": (inf or 0.0) * elig,
+        "elig_mi_moz": mi * elig_mi_s,
+        "elig_inferred_moz": (inf or 0.0) * elig_inf_s,
         "hedged_moz": hedged,
         "hedge_share_fwd": hedge_share,
         "claimed_moz": net,
         "inferred_absent": inf is None,
     }, "ok"
+
+
+def _date_bounds(text: object) -> tuple[date, date] | None:
+    """The earliest and latest day a recorded document date can mean.
+
+    YYYY-MM-DD is a single day. YYYY-MM is a real thing in this data layer —
+    two Greatland releases are dated only to the month, because that is all the
+    source states — and it is a RANGE, not an invitation to pick the 1st. The
+    caller tests both ends, exactly as gate_input_invariant does for an absent
+    number. Anything else returns None and the caller fails the name.
+    """
+    if not isinstance(text, str):
+        return None
+    try:
+        return (date.fromisoformat(text), date.fromisoformat(text))
+    except ValueError:
+        pass
+    if re.fullmatch(r"\d{4}-\d{2}", text):
+        first = date.fromisoformat(f"{text}-01")
+        nxt = date(first.year + first.month // 12, first.month % 12 + 1, 1)
+        return (first, nxt - timedelta(days=1))
+    return None
+
+
+def statement_currency(c: dict, as_of: date,
+                       max_age_months: float) -> tuple[bool, float | None, str]:
+    """§6.4. Is the resource statement behind the counted ounces current?
+
+    Returns (pass, age_months_of_the_oldest_counted_tranche, reason).
+
+    A reserve and resource statement is an annual obligation, so a ledger input
+    older than one reporting cycle plus six months of issuer timing is not a
+    current claim — it is the last claim, carried forward. This is not a quality
+    score and cannot be offset: an ounce whose statement has gone stale is not a
+    cheaper ounce, it is an unverified one.
+
+    The bar is applied to the document behind EVERY tranche the ledger counts,
+    not to one nominated statement, because the tranches are separately sourced —
+    Regis reads P&P off a July quarterly and Inferred off an April resource
+    release, and it is the older of the two that dates the claim.
+
+    Absence fails. A month-only date is tested at both ends of the month and
+    passes only if the verdict is invariant across it, which is the same rule
+    config.estimation_policy.on_absence already applies to a missing number:
+    invariant means the missing precision cannot decide the answer.
+    """
+    oldest_age, oldest_field, unknown = None, None, []
+    for field in ELIGIBLE_CATEGORY_FIELDS:
+        if c.get(field) is None:          # Inferred may legitimately be absent
+            continue
+        doc_key = (c.get("_field_docs", {}).get(field) or {}).get("doc")
+        bounds = _date_bounds((c.get("_docs", {}).get(doc_key) or {}).get("date"))
+        if bounds is None:
+            unknown.append(f"{field} ({doc_key or 'no document'})")
+            continue
+        # Oldest end first: it is the one that can fail.
+        ages = sorted(((as_of - d).days / DAYS_PER_MONTH for d in bounds),
+                      reverse=True)
+        if ages[0] > max_age_months >= ages[1]:
+            return False, ages[0], (
+                f"resource statement for {field} is dated {doc_key!r} to the month "
+                f"only and straddles the {max_age_months:g}-month bar "
+                f"({ages[1]:.1f}–{ages[0]:.1f} months) — the verdict is unknown, "
+                f"not favourable")
+        if ages[1] < 0:
+            return False, ages[1], (
+                f"resource statement for {field} is dated after the build")
+        if oldest_age is None or ages[0] > oldest_age:
+            oldest_age, oldest_field = ages[0], field
+    if unknown:
+        return False, None, ("no usable date on the resource statement behind "
+                             + ", ".join(unknown))
+    if oldest_age is None:
+        return False, None, "no resource statement backs any counted tranche"
+    if oldest_age > max_age_months:
+        return False, oldest_age, (
+            f"resource statement behind {oldest_field} is {oldest_age:.1f} months "
+            f"old against a {max_age_months:g}-month bar (§6.4)")
+    return True, oldest_age, "current"
 
 
 def gate_input_invariant(c: dict, field: str, lo: float, hi: float,
@@ -1391,6 +1563,7 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
                         anchor_gold: float | None = None,
                         spreads: dict | None = None,
                         navs: dict[str, dict] | None = None,
+                        as_of: str | None = None,
                         ) -> tuple[list[dict], list[dict]]:
     """Apply the §7 formula — claimed unhedged ounces ÷ funded EV. Returns
     (weighted rows, rejected rows).
@@ -1406,10 +1579,18 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
 
     `navs` is the §9 NAV model output. It is carried onto the rows for reporting
     and is never read by the weight — see nav_model.py.
+
+    `as_of` dates the §6.4 statement-currency gate. Callers pass the data layer's
+    sourcing date so the same data always produces the same book.
     """
     anchor_gold = anchor_gold if anchor_gold is not None else gold_aud
     conf = confidence_weights(meta)
     hedge_years = meta["confidence_weights"]["hedge_horizon_years"]
+    max_statement_age = meta["gates"]["max_resource_statement_age_months"]
+    # §6.4 measures document age against the date the data layer was sourced, not
+    # against the wall clock, so a build is reproducible: replaying today's data
+    # in six months must reject what it rejected today.
+    as_of = date.fromisoformat(as_of) if as_of else datetime.now(timezone.utc).date()
     # Per-oz-of-annual-production, so the range transfers across the size range.
     capex_range = cohort_range(constituents, "committed_capex_aud_m",
                                "production_koz_yr")
@@ -1437,6 +1618,16 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
         inelig = c.get("ineligible_nav_share")
         if inelig is not None and inelig > max_inelig:
             reject(f"ineligible NAV {inelig:.0%} above {max_inelig:.0%} cap (§2.4)")
+            continue
+
+        # §6.4 — the claim must be current before it can be counted. Ahead of
+        # the ledger, because a stale statement is not a smaller claim to be
+        # discounted, it is a claim that has not been restated. Not numbered as a
+        # fourth gate: Gates 1–3 each name a way of losing the money, and this
+        # names a way of not knowing what you own.
+        current, age_months, why = statement_currency(c, as_of, max_statement_age)
+        if not current:
+            reject(f"STALE (§6.4) — {why}")
             continue
 
         ledger, why = ounce_ledger(c, conf, hedge_years)
@@ -1524,6 +1715,7 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
         rows.append({
             "ticker": sym, "name": c["name"], "sleeve": c["sleeve"],
             "claimed_moz": oz, "ledger": ledger, "purity": purity,
+            "statement_age_months": age_months,
             "ev_aud_m": ev_aud_m, "mcap_aud_m": mcap_aud_m, "price_aud": px,
             "funding_gap_aud_m": funding_gap,
             "funded_ev_aud_m": funded_ev_aud_m,
@@ -1909,6 +2101,10 @@ def portfolio_stats(rows: list[dict], meta: dict) -> dict:
         "wavg_deck_sensitivity": wavg("deck_sensitivity"),
         "aud_per_claimed_oz": (1.0 / oz_per_dollar) if oz_per_dollar > 0 else None,
         "ledger_mix": ledger_mix,
+        "max_statement_age_months": meta["gates"]["max_resource_statement_age_months"],
+        "oldest_statement_months": max(
+            (r["statement_age_months"] for r in rows
+             if r.get("statement_age_months") is not None), default=None),
         "developer_sleeve": sum(r["weight"] for r in rows
                                 if r["sleeve"] == "developer") / tot,
         "top_weight": max(w.values()) if w else 0.0,
@@ -2054,19 +2250,34 @@ def print_ledger(rows: list[dict], stats: dict, gold_aud: float) -> None:
     """
     print("\nOUNCE LEDGER (§6) — what each company can actually deliver, by type")
     print(f"  {'TICK':<6}{'P&P':>8}{'M&I nr':>8}{'INFER':>8}{'GROSS':>8}"
-          f"{'ELIG':>7}{'HEDGED':>8}{'CLAIM':>8}{'DECK':>7}")
-    print("  " + "─" * 70)
+          f"{'ELIG':>7}{'HEDGED':>8}{'CLAIM':>8}{'DECK':>7}{'AGE':>7}")
+    print("  " + "─" * 77)
+    split = []
     for r in sorted(rows, key=lambda x: -x["weight"]):
         L = r["ledger"]
         deck = r.get("reserve_price_aud")
         hedged = f"-{L['hedged_moz']:.2f}" if L["hedged_moz"] > 0.005 else "—"
+        age = r.get("statement_age_months")
+        if L["eligible_by_category"]:
+            split.append(f"{r['ticker']} {L['eligible_pp_share']:.1%}/"
+                         f"{L['eligible_mi_share']:.1%}/"
+                         f"{L['eligible_inferred_share']:.1%}")
         print(f"  {r['ticker']:<6}{L['pp_moz']:>8.2f}{L['mi_moz']:>8.2f}"
               f"{L['inferred_moz']:>8.2f}{L['gross_moz']:>8.2f}"
-              f"{L['eligible_share']*100:>6.0f}%{hedged:>8}"
+              f"{L['eligible_pp_share']*100:>6.0f}%{hedged:>8}"
               f"{L['claimed_moz']:>8.2f}"
-              f"{(f'{deck:,.0f}' if deck else '—'):>7}")
+              f"{(f'{deck:,.0f}' if deck else '—'):>7}"
+              f"{(f'{age:.0f}mo' if age is not None else '—'):>7}")
     mix = stats["ledger_mix"]
-    print("  " + "─" * 70)
+    print("  " + "─" * 77)
+    if split:
+        print(f"  ELIG is the Gate 1 share of the P&P tranche. Each tranche carries "
+              f"its own share, because")
+        print(f"  the blended figure is confidence-weighted — right on the total, "
+              f"wrong on the split (§2.4).")
+        print(f"  P&P/M&I/Inferred: {'  '.join(split)}")
+    print(f"  AGE is the oldest document behind a counted tranche, against the "
+          f"§6.4 {stats['max_statement_age_months']:g}-month bar.")
     print(f"  CLAIM applies the §6 confidence weights: P&P 1.0, M&I non-reserve 0.5, "
           f"Inferred 0.2.")
     print(f"  The index's claim is {mix['reserves']:.0%} unhedged reserves, "
@@ -2362,7 +2573,8 @@ def main() -> int:
 
     rows, rejected = compute_raw_weights(constituents, md["prices"], risk, gold_aud,
                                          meta, anchor_gold=anchor["anchor_aud"],
-                                         spreads=md.get("spreads"), navs=navs)
+                                         spreads=md.get("spreads"), navs=navs,
+                                         as_of=market["_sourced"])
 
     if not rows:
         print("\nERROR: no constituent passed the gates with complete data.",

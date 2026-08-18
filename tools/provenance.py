@@ -42,7 +42,8 @@ ROOT = Path(__file__).resolve().parent.parent
 GATE_FIELDS = {
     "aisc_aud_oz", "production_koz_yr", "committed_capex_aud_m",
     "undrawn_facilities_aud_m", "net_debt_aud_m", "gold_nav_share",
-    "eligible_ounce_share", "study_stage", "approvals_land_secured",
+    "eligible_ounce_share", "eligible_pp_share", "eligible_mi_share",
+    "eligible_inferred_share", "study_stage", "approvals_land_secured",
     "remaining_capex_aud_m",
 }
 

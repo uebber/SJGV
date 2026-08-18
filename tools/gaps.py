@@ -49,6 +49,20 @@ FIELDS = {
                             "quarterly/annual revenue by metal", None),
     "eligible_ounce_share": ("blocking", "jurisdiction split of ounces unresolved",
                             "R&R statement, per-asset tables", None),
+    # Only a gap for a name that is not wholly eligible: where the blend is 1.0
+    # every category share is 1.0 too, so nothing is unresolved. Degrading rather
+    # than blocking because the blend is exact on the TOTAL claim and wrong only
+    # on the tranche split — which is the published ledger mix, so it still costs
+    # something. See build_index.eligible_shares and reconcile_eligibility.
+    "eligible_pp_share":   ("degrading", "the P&P tranche runs on the confidence-"
+                                         "weighted blend, so the ledger mix is misstated",
+                            "R&R statement, per-asset Ore Reserve table", None),
+    "eligible_mi_share":   ("degrading", "the M&I non-reserve tranche runs on the "
+                                         "confidence-weighted blend",
+                            "R&R statement, per-asset Mineral Resource table", None),
+    "eligible_inferred_share": ("degrading", "the Inferred tranche runs on the "
+                                             "confidence-weighted blend",
+                            "R&R statement, per-asset Mineral Resource table", None),
     "pp_moz":              ("blocking",  "no reserve base",
                             "R&R statement, Ore Reserve summary", None),
     "mi_non_reserve_moz":  ("blocking",  "resource split required for a consistent cross-section",
@@ -201,6 +215,15 @@ def load() -> tuple[dict, list[dict]]:
     return cfg, companies
 
 
+CATEGORY_ELIGIBILITY = frozenset({"eligible_pp_share", "eligible_mi_share",
+                                  "eligible_inferred_share"})
+
+
+def _blend(c: dict) -> float | None:
+    spec = c.get("fields", {}).get("eligible_ounce_share")
+    return spec.get("v") if isinstance(spec, dict) else None
+
+
 def audit(companies: list[dict]) -> list[dict]:
     rows = []
     for c in companies:
@@ -211,6 +234,13 @@ def audit(companies: list[dict]) -> list[dict]:
                 continue
             if sleeve is not None and c["sleeve"] not in sleeve:
                 continue  # not applicable to this sleeve — silence, not a gap
+            # Same principle for the per-category Gate 1 shares: a name whose
+            # blended share is 1.0 has every category share at 1.0 by identity,
+            # so there is nothing to source. Reporting it would put three rows
+            # against each of the fourteen wholly-eligible names and bury the
+            # three that are real.
+            if name in CATEGORY_ELIGIBILITY and _blend(c) == 1.0:
+                continue
             # An absent M&I split used to downgrade to "imputed" when the
             # resource total was known, because the cohort-split rule could fill
             # it. That rule is deleted (config, _resource_split_imputation_

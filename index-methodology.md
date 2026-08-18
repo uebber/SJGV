@@ -96,6 +96,7 @@ The frame therefore sits **beneath** the gates, never alongside them.
 GATE 1   Sovereign immunity        →  absolute. No score, no partial credit, no offset.
 GATE 2   Survival                  →  binary.
 GATE 3   Tradability               →  binary.
+CURRENCY Statement not >18mo old   →  binary, §6.4. A precondition on counting.
 LEDGER   Claimed unhedged ounces   →  counted, never scored.
 WEIGHT   Ledger ÷ funded EV        →  and nothing else.
 CAPS     Permanent-impairment caps →  §8.1.
@@ -297,6 +298,34 @@ the ledger penalises it by 9% of gross ounces, which is the economically correct
 figure, because what the index buys is the option strip rather than this year's
 output.
 
+**The share is applied per resource category, not as one blend.** Three names
+carry ineligible ounces, and for each the data layer records a share per
+category as well as the group figure:
+
+| | P&P | M&I non-reserve | Inferred | Blended |
+|---|---|---|---|---|
+| Northern Star — Pogo (Alaska) | 91.6% | 92.7% | 85.6% | 91.0% |
+| Vault — Sugar Zone (Ontario) | 100.0% | 84.2% | 87.9% | 92.9% |
+| Evolution — Red Lake (Ontario) | 83.3% | 76.1% | 70.4% | 80.1% |
+
+The blended figure is itself confidence-weighted — ineligible confidence-weighted
+ounces over group confidence-weighted ounces — so multiplying all three tranches
+by it is not merely an approximation. It reproduces the **right total claim and
+the wrong split**: an ineligible asset that is reserve-light and Inferred-heavy,
+as Pogo and Red Lake both are, silently moves claim out of the reserve tranche
+and into the tail. That was tolerable while the ledger mix was a curiosity and
+became a defect once §10.4 published it as the convexity position — the blend
+read 57.3 / 29.6 / 13.1 where the category shares read 57.9 / 29.5 / 12.7,
+overstating the inferred tail by 0.5pp *in the direction that flatters the
+product*.
+
+Since the blend is an identity over the category shares, the two are a check on
+each other: `build_index.reconcile_eligibility` recomputes the blend from the
+three shares and reports any disagreement beyond rounding, in the same way
+`reconcile_resource` checks the category split against disclosed total resources.
+Neither corrects anything. Where the category shares are absent the blend is the
+fallback, and it is exact for the fourteen names whose share is 1.0.
+
 ### 2.5 The jurisdictional hook (disclosure item)
 
 Proportional treatment of ineligible ounces is economically right but
@@ -485,7 +514,7 @@ backtest — which is precisely why they survived the cut and the scoring layer 
 not.
 
 **The mix they produce is the headline convexity statistic.** Currently the index
-claim is **57% unhedged reserves, 30% near-money M&I, 13% inferred tail.** Watch
+claim is **58% unhedged reserves, 29% near-money M&I, 13% inferred tail.** Watch
 it over time: a book drifting toward reserves is a book losing its option
 inventory.
 
@@ -544,6 +573,47 @@ score.
 *writes* puts is selling insurance for premium income and taking on levered
 downside. If a candidate ever discloses a written-put position, §6.3 needs
 extending before that name can be counted.
+
+### 6.4 Currency of the statement — an 18-month bar
+
+A reserve and resource statement is an **annual** obligation. A ledger input
+older than one full reporting cycle plus six months of issuer timing is not a
+current claim; it is the last claim, carried forward. So:
+
+> **No counted tranche may rest on a resource statement more than 18 months old
+> at the data layer's sourcing date. A name that breaches it is rejected.**
+
+Three properties, each deliberate:
+
+1. **It is a gate, not a discount.** An ounce whose statement has gone stale is
+   not a cheaper ounce, it is an unverified one, and there is no coefficient that
+   expresses that honestly. Like Gates 1–3 it cannot be offset by cheapness.
+2. **It is applied to the document behind *every* counted tranche.** Not to one
+   nominated statement — the tranches are separately sourced, and Regis reads P&P
+   off a July quarterly and Inferred off an April resource release. The older of
+   the two dates the claim. A tranche the ledger does not count (an absent
+   Inferred) does not date it.
+3. **A month-only date is tested, not rounded.** Two Greatland releases are dated
+   only to the month, because that is all the source states. Picking a day would
+   be inventing an input. Instead both ends of the month are tested and the name
+   passes only if the verdict is invariant across them — the same rule
+   `config.estimation_policy.on_absence` already applies to a missing number.
+   A statement that straddles the bar fails: the answer is unknown, not
+   favourable.
+
+**It binds on nobody today, and that is the argument for adopting it now.** The
+oldest ledger document in the book is Rox's July 2025 MRE at 12.9 months; the
+median constituent sits at 3.6. Swept downward, the bar first removes a
+constituent at **12 months** (Rox), then Vault and Westgold at 11 and Catalyst at
+10 — so 18 sits a full six months clear of the nearest name. A rule adopted while it costs nothing is a rule
+adopted on its merits rather than to justify an exclusion someone already wanted.
+The name to watch is Rox: its Interceptor and Commonwealth resource updates are
+flagged for H2 2026, and without them it crosses the bar in January 2027 and is
+rejected outright.
+
+Adopted 18 August 2026 from SJGV PR#2, which applied it to non-reserve ounces
+only. Extended here to the whole ledger, because a statement eighteen months
+stale is no more current for a reserve ounce than for an inferred one.
 
 ---
 
@@ -778,7 +848,7 @@ cut-offs it never discloses), 8% of the book is reported on net-smelter-return
 value shells rather than a gold-grade cut-off at all, and the cut-off is set by
 marginal cost while the data layer carries one average AISC per company.
 
-So the **ledger mix** — 57% reserves / 30% M&I non-reserve / 13% inferred — is
+So the **ledger mix** — 58% reserves / 29% M&I non-reserve / 13% inferred — is
 not a placeholder for a better measure that is coming. It is the measure. Unlike
 this ratio it is made entirely of disclosed ounces rather than of a model's blind
 spot. **Report the mix; treat the 1.00 as a statement about the model; and do not
@@ -1023,7 +1093,7 @@ document is as short as it is:
 
 ## 13. Factor Inventory — everything that can move a weight
 
-**46 inputs, and no others.** Established by perturbation rather than by reading
+**51 inputs, and no others.** Established by perturbation rather than by reading
 the code: every candidate input was moved and the resulting book compared. `Δw`
 is the largest change in any single final weight, at ±50% on a data field and
 ±40% on a parameter. A factor that is *read* but cannot change a weight is listed
@@ -1039,7 +1109,8 @@ be able to hand us, and how sure are we?**
 | `pp_moz` | Proven & Probable reserves | The **in-the-money strip** — ounces inside a funded mine plan at a published cost. This is the floor under the claim: the part that converts to metal without needing the gold price to do anything. | **1.03pp** |
 | `mi_non_reserve_moz` | Measured & Indicated resource not yet booked as reserve | The **near-money option, and the largest single source of the index's convexity.** Drilled densely enough to support a mine plan, not yet economic at the company's own price deck. These are precisely the ounces a rising gold price converts into reserves — the mechanism §0.2 says the product exists to own. | **0.65pp** |
 | `inferred_moz` | Inferred resource | The **far out-of-the-money tail.** Geologically real, sparsely drilled, worth little unless the price moves a long way — which is the exact payoff shape the sovereign-debasement thesis is buying. | **0.43pp** |
-| `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce sitting under a gold-control regime, or under a state with the motive to start one, is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. | **0.12pp** |
+| `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce sitting under a gold-control regime, or under a state with the motive to start one, is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. Now the *fallback*, exact for the fourteen names at 1.0 and for the total claim of the three that are not. | **0.12pp** |
+| `eligible_pp_share` · `eligible_mi_share` · `eligible_inferred_share` | The same Gate 1 share, per resource category | The blended figure is confidence-weighted, so applying it to each tranche gets the **total right and the split wrong** (§2.4). Sourced for the three mixed-jurisdiction names from the per-asset counts their group figure was already derived from, so nothing new was fetched. *Adopting* them moved no weight by more than 0.01pp; what moved was the **published ledger mix**, from 57.3/29.6/13.1 to 57.9/29.5/12.7. | **2.27pp** / 1.08pp / 0.53pp |
 | `hedge_share_fwd24m` | Production already sold forward | A sold-forward ounce is **a short gold position inside a long gold product.** It converts at a fixed price and cannot participate in the move the index exists to capture, so it is subtracted from the claim rather than scored against it. | **0.06pp** |
 | `production_koz_yr` | Annual production rate | In the ledger it does one job: converting the disclosed hedge *percentage* into hedged *ounces*. (Also a Gate 2 input, where it does much more.) | via hedge |
 | `confidence_weights.proven_probable` = 1.0 | Reserve ounce = the unit of account | The numéraire of the ledger. Every other ounce is priced relative to this one, so it is definitional rather than tunable. | **0.74pp** |
@@ -1086,6 +1157,7 @@ ours, is durable, and is reachable.
 | **spread history** · `gates.producer_max_spread_pct` = 1.0 · `developer_max_spread_pct` = 4.0 | Median RTH time-weighted quoted spread | **A claim that cannot be exited is not a position.** Spread rather than market cap, because cap is a proxy and spread is the thing itself. Developers get a wider limit because they are bought once and held to first pour. | **5.00pp** |
 | `gates.spread_window` = 3M | Measurement window | Long enough that one disorderly session cannot decide a gate. | live |
 | `gates.spread_measure` | Assertion, not a threshold | Halts the run if config claims to measure something the code does not. The gate ran on post-close quotes once and would have dropped 8 of 14 names on an artefact. | assertion |
+| **resource statement dates** · `gates.max_resource_statement_age_months` = 18 | Currency of the claim (§6.4) | **A stale statement is not a cheaper ounce, it is an unverified one.** One annual reporting cycle plus six months of issuer timing, applied to the document behind every counted tranche. Adopted while it binds on nobody — the oldest is Rox at 12.9 months — which is the only honest time to adopt a gate. Asymmetric under perturbation: loosening it to 25 months changes nothing, tightening it to 10.8 ejects two names. | **12.16pp** *(at ×0.6; 0.00pp at ×1.4)* |
 
 ### 13.4 Caps and classification
 
