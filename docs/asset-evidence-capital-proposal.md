@@ -2,7 +2,7 @@
 
 **Status:** **accepted as the design of record; not yet implemented.** Second revision — closes the four blockers raised on the first, against the sourced inventory in `docs/execution-capital-inventory.md`. Design only: no engine, data, gate, parameter or weight has changed, so **the defect described in §1 and §2 is still live in the build.**  
 **Decision taken:** implement the capital-field split for every constituent in one production change; defer the asset-evidence overlay.  
-**Progress:** Step 1 (sourcing inventory) is complete — `docs/execution-capital-inventory.md`. Step 2 (schema and engine change) is open, and blocks on EVN disclosure; see §12.2 of `index-methodology.md`.
+**Progress:** Step 1 (sourcing inventory) is complete — `docs/execution-capital-inventory.md`. Step 2 (schema and engine change) is open. **CORRECTED 20 Aug 2026: it blocks on WGX, not EVN.** This status line contradicted §2.4 of this same document for a day; §2.4 was right. EVN's gross total is an admissible `UPPER_BOUND` under §3.5. Production decisions, including the CMM and GGP classifications this document got wrong, are in `docs/capital-gate2-production-decision.md`.
 
 ## 1. Revised decision
 
@@ -128,9 +128,9 @@ with effective N unchanged at 11.2. GGP is the largest single move at −0.76pp.
 
 | | Exec capital A$m | State | Note |
 |---|---:|---|---|
-| GGP | 1,065 | `POINT` | Havieron to first gold; June 2025 cost base |
+| GGP | 1,065 | `POINT` | Havieron to first gold on a **June 2025 cost base**, reaffirmed without escalation in the 29 July FY26 operating report. Held unchanged with the cost-base date recorded and no assumed spend-down; re-source at the audited result. A later filing may hold or raise it, and absence of an update may not lower it. |
 | EVN | 1,210 | `UPPER_BOUND` | Gross-as-remaining; spend-to-date undisclosed |
-| CMM | 474 | `POINT` | No contingency, ±25% accuracy |
+| CMM | **593** | `UPPER_BOUND` | **CORRECTED 20 Aug 2026.** A$474m was classified `POINT` here while §3.5 of this same document says an estimate with no contingency is a `LOWER_BOUND` — which may not enter the denominator at all. The issuer's own ±25% band gives A$593m, an admissible upper bound that invents no escalation. Costs CMM about 0.3pp. |
 | RMS | 381 | `UPPER_BOUND` | Exact on the FY26 Commitments note, 21 Aug 2026 |
 | NST | 385 | `POINT` | Three FY27 KCGM items; FY27 guidance 20 Aug 2026 |
 | RXL | 320 | `POINT` | A$382.6m rolled forward by A$62.877m of FY26 spend |

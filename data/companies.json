@@ -1121,38 +1121,51 @@
      "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03122059-6A1338914",
      "date": "2026-08-18",
      "type": "primary"
+    },
+    "rr2026": {
+     "title": "2026 Mineral Resource Estimate and Ore Reserves (as at 30 Jun 2026), lodged 20 Aug 2026 — group MRE 194 Mt @ 2.30 g/t for 14.356 Moz; M&I 8.994 Moz (62.6% of inventory); Inferred 5.362 Moz; Ore Reserves 57 Mt @ 2.22 g/t for 4.068 Moz at a maximum gold price of A$4,800/oz",
+     "url": "https://company-announcements.afr.com/asx/wgx/4d1d9bf5-9c19-11f1-a8a8-8a2df0d88e09.pdf",
+     "asx_announcement": "03123164",
+     "date": "2026-08-20",
+     "type": "primary",
+     "verified": "Read page by page from the lodged PDF, not from the mirror URL. Every figure below foots to a numbered table: Tables 1-2 for Resources, Tables 4-5 for Ore Reserves, Figure 1 and the Figure 5 inventory walk for the group total."
     }
    },
    "fields": {
     "pp_moz": {
-     "v": 3.5,
-     "doc": "rr2025"
+     "v": 4.068,
+     "doc": "rr2026",
+     "note": "DERIVED from Tables 4 and 5, footing exactly: operating Murchison 1,882 koz + operating Southern Goldfields (Beta Hunt) 1,634 koz + non-operating Murchison 373 koz + non-operating Southern Goldfields 179 koz = 4,068 koz. Consistent with the headline table's rounded 4.1 Moz and its Murchison 2.3 / Southern Goldfields 1.8 split. SUPERSEDES the 30 Jun 2025 group figure of 3.5 Moz AND the 18 Aug 2026 Fletcher-only indication together. The Fletcher-only delta was never entered and is now withdrawn rather than confirmed: it implied P&P 4.645 Moz because it assumed nothing else in the group moved, and the complete statement lands 0.577 Moz lower after depletion and the divestment of Peak Hill, Reedy's, Comet, Chalice and Mount Henry. Reserve ounces are up 41% and grade up 15% year on year on a like-for-like basis."
     },
     "mr_total_moz": {
-     "v": 16.3,
-     "doc": "rr2025"
+     "v": 14.356,
+     "doc": "rr2026",
+     "note": "DERIVED from Tables 1 and 2: operating Murchison 5,375 + operating Southern Goldfields 5,443 + non-operating Murchison 2,733 + non-operating Southern Goldfields 805 = 14,356 koz. Independently confirmed twice in the same document: Figure 1 prints FY26 14,356 (Murchison 8,108 + Southern Goldfields 6,248), and the Figure 5 inventory walk reconciles FY25 16,256 less 2,967 divested less 360 depletion less 4 stockpile plus 1,431 resource development = 14,356. Mineral Resources are reported INCLUSIVE of Ore Reserves, which is this ledger's convention."
     },
     "mi_non_reserve_moz": {
-     "v": 5.7,
-     "doc": "rr2025",
-     "note": "M&I 9.2 less P&P 3.5."
+     "v": 4.926,
+     "doc": "rr2026",
+     "note": "DERIVED: group Measured and Indicated 8,994 koz (Tables 1 and 2: 3,388 + 3,265 + 1,791 + 550) less group P&P 4,068 koz = 4,926 koz. The M&I total is confirmed independently by the issuer's own statement that Measured and Indicated reached '62.6% of total Resource inventory' — 8,994 / 14,356 = 62.65%. Table 4/5 states 'Ore Reserves are a subset of Measured and Indicated Mineral Resources only', so the subtraction is exact rather than approximate."
     },
     "inferred_moz": {
-     "v": 7.1,
-     "doc": "rr2025"
+     "v": 5.362,
+     "doc": "rr2026",
+     "note": "DERIVED from Tables 1 and 2: 1,987 + 2,178 + 942 + 255 = 5,362 koz. Cross-checks as 14,356 less M&I 8,994."
     },
     "reserve_price_aud": {
-     "v": 3800,
-     "doc": "rr2025",
-     "note": "Maximum price used to establish reserves and cut-off grades."
+     "v": 4800,
+     "doc": "rr2026",
+     "note": "Maximum gold price used to establish Ore Reserves and determine cut-off grades, stated verbatim: 'A maximum gold price of $4,800/oz has been used to establish Ore Reserves and determine appropriate cut-off grades.' Up from A$3,800 in FY25 — a 26% lift in the booking deck, which is itself the mechanism by which reserves grew 41%. Against spot A$6,347 the deck is 76% of spot, moving WGX from the conservative half of the cross-section toward the top."
     },
     "eligible_ounce_share": {
      "v": 1.0,
-     "doc": "rr2025"
+     "doc": "rr2026",
+     "note": "All gold Mineral Resources and Ore Reserves in the 30 June 2026 group statement sit in Western Australia — the Murchison and Southern Goldfields operations."
     },
     "ineligible_nav_share": {
      "v": 0.0,
-     "doc": "rr2025"
+     "doc": "rr2026",
+     "note": "The 30 June 2026 group statement contains only Western Australian gold assets."
     },
     "gold_nav_share": {
      "v": 1.0,
@@ -1199,15 +1212,16 @@
      "note": "volumeAverage — the ASX's 90-session average daily volume in shares. Window measured, not documented: the value times 90 is an exact integer on every ticker tested."
     },
     "largest_asset_pp_share": {
-     "v": 0.687,
-     "doc": "rr2025_mirror",
-     "note": "DERIVED from Tables 4 and 5 (Ore Reserves at 30 June 2025, operating mines and non-operating projects). Murchison 2,393 koz (operating 1,992 + non-operating 401) and Southern Goldfields 1,090 koz (operating 402 + non-operating 688), group 3,483 against the issuer's headline 3.5 Moz. Largest 2,393/3,483 = 68.7%. THE MOST CONCENTRATED DEFENSIBLE READING IS RECORDED: Murchison is taken whole even though the announcement itself describes it as served by TWO processing hubs, Bluebird and Tuckabianna, which under §8.1's one-plant rule would split it further and lower the share. Southern Goldfields is a single hub, Higginsville. Both readings sit below the threshold. Largest single mine is Big Bell UG at 720 koz (20.7%). All Western Australian."
+     "v": 0.554,
+     "doc": "rr2026",
+     "note": "THE MOST CONCENTRATED DEFENSIBLE READING, per §8.1. From Tables 4 and 5: Murchison Ore Reserves 2,255 koz (operating 1,882 + non-operating 373) against a group 4,068 koz = 55.4%. Southern Goldfields is 1,813 koz. Murchison is taken WHOLE even though the statement says the operations 'incorporate the Bluebird, Tuckabianna and Fortnum processing hubs' — three plants, which under §8.1's one-plant asset unit would split it further and lower the share. Southern Goldfields is the single Higginsville hub plus Beta Hunt. Every reading sits below the 0.80 threshold, so no cap changes. Was 0.687 on the FY25 statement; the fall is Beta Hunt reserves growing faster than the Murchison book."
     }
    },
    "flags": [
-    "GROUP RESERVE AND RESOURCE STATEMENT IS PENDING AND THE LEDGER IS KNOWN TO BE PARTLY SUPERSEDED. On 18 Aug 2026 Westgold declared a MAIDEN FLETCHER ORE RESERVE of 13.474 Mt at 2.6 g/t for 1,145 koz Probable, and restated the Fletcher MRE. Fletcher, June 2025 to June 2026, above a 1.2 g/t cut-off: Indicated 295 -> 1,553 koz, Inferred 2,030 -> 1,472 koz, total 2,325 -> 3,025 koz. Resources are reported INCLUSIVE of the ounces converted to reserve, which matches this ledger's convention, so Fletcher M&I non-reserve is 1,553 - 1,145 = 408 koz. THE LEDGER IS NOT PATCHED FROM THIS. The record's pp_moz/mi_non_reserve_moz/inferred_moz are GROUP figures as at 30 Jun 2025 (rr2025); splicing a single deposit into them would require assuming nothing else in the group moved over a year in which Westgold mined 387 koz, which is an apportionment estimation_policy forbids. Supersede all three from the FY26 group statement, due alongside the August 2026 full-year results. INDICATIVE ONLY, not to be entered: on a Fletcher-only delta the group would read P&P 4.645, M&I non-reserve 5.813, Inferred 6.542 Moz, lifting the claim from 7.77 to 8.86 Moz (+14%) on the largest weight in the book.",
+    "FY26 GROUP RESOURCE AND RESERVE LEDGER CLOSED 20 AUGUST 2026, from the lodged statement read page by page. This supersedes the FY25 group figures and the 18 Aug Fletcher-only indication TOGETHER, and it lands BELOW that indication: claimed ounces move 7.770 -> 7.603 Moz (-2.14%), where a Fletcher-only splice would have implied 8.86 Moz (+14%). The gap is depletion and the divestment of five non-core assets, and it is the case for the rule that forbade the splice.",
     "Most complete data record in the universe: full resource split, explicit reserve deck, confirmed unhedged. Use as the QA benchmark for the others. THIS CLAIM IS WITHDRAWN as of 19 Aug 2026 — it was true of the resource split and false of everything else. Six fields ran off a March 2026 quarterly dated to the month only while the cohort ran off June quarterlies, and net_debt_aud_m carried an empty note.",
-    "FY26 full-year results, FY27 guidance and the FY26 dividend are due in August 2026 ('FY26 Dividend / FY27 Guidance in August 2026', 4 Aug presentation). That single document closes the AISC basis, the treasury split and the group reserve statement at once."
+    "STILL OUTSTANDING after the 20 Aug statement: the FY26 financial result, FY27 guidance and the dividend. The resource ledger is closed; the AISC basis, the cash/bullion/investments split behind the A$939m treasury figure, and the Higginsville and Murchison capital scopes are not. WGX remains the book's largest weight and the name with the most unresolved inputs.",
+    "NON-GOLD WATCH ITEM: Table 3 of the FY26 statement carries a Beta Hunt NICKEL Mineral Resource of 1,248 kt at 2.8% Ni for 35 kt of contained nickel. It is reported separately from the gold tables and no gold-equivalent figure is used anywhere, so nothing enters the gold ledger. gold_nav_share stays 1.0 on a TTM revenue basis. Re-test if nickel is ever brought into production."
    ],
    "gaps": [
     "aisc_aud_oz — the recorded A$2,931/oz is the MARCH 2026 quarter on an OWN-ORE basis. The 4 Aug 2026 presentation gives FY26 full-year AISC of A$2,841/oz but does not state whether that is group or own-ore, and Westgold reports both. NOT UPDATED: the change would lower the cost base by A$90/oz and make Gate 2 easier, which is the one direction that must not move on an unstated basis. Close from the FY26 annual report, which states the basis.",
