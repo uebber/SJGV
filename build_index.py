@@ -1098,7 +1098,7 @@ def ounce_ledger(c: dict, conf: tuple[float, float, float],
        Lake both are, moves claim out of the reserve tranche and into the tail.
        That mattered once the ledger mix became the published convexity number:
        the blend read 57.3/29.6/13.1 where the category shares read
-       57.9/29.5/12.7, overstating the inferred tail by 0.5pp. Where the
+       57.9/29.5/12.7 on the same book, overstating the inferred tail by 0.5pp. Where the
        per-category shares are sourced they are authoritative and the blend
        becomes a reconciliation control (see reconcile_eligibility); where they
        are not, the blend is the fallback and is exact whenever it is 1.0.
@@ -2280,9 +2280,13 @@ def print_ledger(rows: list[dict], stats: dict, gold_aud: float) -> None:
           f"§6.4 {stats['max_statement_age_months']:g}-month bar.")
     print(f"  CLAIM applies the §6 confidence weights: P&P 1.0, M&I non-reserve 0.5, "
           f"Inferred 0.2.")
-    print(f"  The index's claim is {mix['reserves']:.0%} unhedged reserves, "
-          f"{mix['mi_non_reserve']:.0%} near-money M&I and")
-    print(f"  {mix['inferred']:.0%} inferred tail. That mix IS the convexity position "
+    # One decimal, not zero. The M&I share currently sits at 29.50%, so an
+    # integer percentage flips between 29 and 30 on a 0.01pp move — and this is
+    # the statistic §10.4 calls the one to watch over time. A published number
+    # that changes when nothing has is worse than a less round one.
+    print(f"  The index's claim is {mix['reserves']:.1%} unhedged reserves, "
+          f"{mix['mi_non_reserve']:.1%} near-money M&I and")
+    print(f"  {mix['inferred']:.1%} inferred tail. That mix IS the convexity position "
           f"and it is the number to")
     print(f"  watch over time: M&I and inferred ounces are waste at a low gold price "
           f"and ore at a high")
