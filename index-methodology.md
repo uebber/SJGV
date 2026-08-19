@@ -315,7 +315,8 @@ the wrong split**: an ineligible asset that is reserve-light and Inferred-heavy,
 as Pogo and Red Lake both are, silently moves claim out of the reserve tranche
 and into the tail. That was tolerable while the ledger mix was a curiosity and
 became a defect once §10.4 published it as the convexity position — the blend
-read 57.3 / 29.6 / 13.1 where the category shares read 57.9 / 29.5 / 12.7,
+read 57.3 / 29.6 / 13.1 where the category shares read 57.9 / 29.5 / 12.7 on
+the same book,
 overstating the inferred tail by 0.5pp *in the direction that flatters the
 product*.
 
@@ -513,10 +514,14 @@ Nothing about them is calibrated on this cohort, on any price history, or on any
 backtest — which is precisely why they survived the cut and the scoring layer did
 not.
 
-**The mix they produce is the headline convexity statistic.** Currently the index
-claim is **58% unhedged reserves, 29% near-money M&I, 13% inferred tail.** Watch
-it over time: a book drifting toward reserves is a book losing its option
-inventory.
+**The mix they produce is the headline convexity statistic.** It is published to
+one decimal, not rounded to whole percent: the M&I share sits at 29.50%, so an
+integer reading flips between 29 and 30 on a 0.01pp move. It did exactly that on
+18 Aug 2026 when the Westgold net-debt correction lifted that name's weight by
+0.18pp — nothing about the ledger changed and the published number moved anyway.
+Currently the index claim is **57.8% unhedged reserves, 29.5% near-money M&I,
+12.7% inferred tail.** Watch it over time: a book drifting toward reserves is a
+book losing its option inventory.
 
 **M&I non-reserve is required.** Every JORC and NI 43-101 annual statement
 discloses it, so a null is a sourcing gap, and admitting a name on P&P alone
@@ -848,7 +853,7 @@ cut-offs it never discloses), 8% of the book is reported on net-smelter-return
 value shells rather than a gold-grade cut-off at all, and the cut-off is set by
 marginal cost while the data layer carries one average AISC per company.
 
-So the **ledger mix** — 58% reserves / 29% M&I non-reserve / 13% inferred — is
+So the **ledger mix** — 57.8% reserves / 29.5% M&I non-reserve / 12.7% inferred — is
 not a placeholder for a better measure that is coming. It is the measure. Unlike
 this ratio it is made entirely of disclosed ounces rather than of a model's blind
 spot. **Report the mix; treat the 1.00 as a statement about the model; and do not
@@ -1110,7 +1115,7 @@ be able to hand us, and how sure are we?**
 | `mi_non_reserve_moz` | Measured & Indicated resource not yet booked as reserve | The **near-money option, and the largest single source of the index's convexity.** Drilled densely enough to support a mine plan, not yet economic at the company's own price deck. These are precisely the ounces a rising gold price converts into reserves — the mechanism §0.2 says the product exists to own. | **0.65pp** |
 | `inferred_moz` | Inferred resource | The **far out-of-the-money tail.** Geologically real, sparsely drilled, worth little unless the price moves a long way — which is the exact payoff shape the sovereign-debasement thesis is buying. | **0.43pp** |
 | `eligible_ounce_share` | Share of ounces under a Tier A sovereign | **Gate 1 expressed as a number instead of a verdict.** An ounce sitting under a gold-control regime, or under a state with the motive to start one, is not an ounce we own, so it is discarded at source rather than haircutting the company. This is the half of the objective that is not about leverage. Now the *fallback*, exact for the fourteen names at 1.0 and for the total claim of the three that are not. | **0.12pp** |
-| `eligible_pp_share` · `eligible_mi_share` · `eligible_inferred_share` | The same Gate 1 share, per resource category | The blended figure is confidence-weighted, so applying it to each tranche gets the **total right and the split wrong** (§2.4). Sourced for the three mixed-jurisdiction names from the per-asset counts their group figure was already derived from, so nothing new was fetched. *Adopting* them moved no weight by more than 0.01pp; what moved was the **published ledger mix**, from 57.3/29.6/13.1 to 57.9/29.5/12.7. | **2.27pp** / 1.08pp / 0.53pp |
+| `eligible_pp_share` · `eligible_mi_share` · `eligible_inferred_share` | The same Gate 1 share, per resource category | The blended figure is confidence-weighted, so applying it to each tranche gets the **total right and the split wrong** (§2.4). Sourced for the three mixed-jurisdiction names from the per-asset counts their group figure was already derived from, so nothing new was fetched. *Adopting* them moved no weight by more than 0.01pp; what moved was the **published ledger mix**, from 57.3/29.6/13.1 to 57.9/29.5/12.7 on the book as it then stood. The current mix reads 57.8/29.5/12.7 because the later Westgold net-debt correction moved that name's weight. | **2.27pp** / 1.08pp / 0.53pp |
 | `hedge_share_fwd24m` | Production already sold forward | A sold-forward ounce is **a short gold position inside a long gold product.** It converts at a fixed price and cannot participate in the move the index exists to capture, so it is subtracted from the claim rather than scored against it. | **0.06pp** |
 | `production_koz_yr` | Annual production rate | In the ledger it does one job: converting the disclosed hedge *percentage* into hedged *ounces*. (Also a Gate 2 input, where it does much more.) | via hedge |
 | `confidence_weights.proven_probable` = 1.0 | Reserve ounce = the unit of account | The numéraire of the ledger. Every other ounce is priced relative to this one, so it is definitional rather than tunable. | **0.74pp** |
