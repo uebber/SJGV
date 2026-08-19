@@ -43,6 +43,34 @@ filing without duplicating the citation on every line.
 A field value is normally a number. **One is a boolean:**
 `approvals_land_secured`.
 
+### Two optional sub-keys, and why a gate reads them
+
+```jsonc
+"aisc_aud_oz":          { "v": 3100, "range": [2800, 3400], "doc": "fy27_guidance" },
+"committed_capex_aud_m": { "v": 101, "horizon_years": 1.0,  "doc": "fy27_guidance" }
+```
+
+| Sub-key | Meaning | Effect |
+|---|---|---|
+| `range` | `[lo, hi]` — the span **the issuer published**, where `v` is its midpoint | Methodology §3.2. Gate 2 is swept to both ends and the verdict must be invariant. A flip is UNRESOLVED and the name is rejected. |
+| `horizon_years` | How many years of the Gate 2 stress window the figure covers | Methodology §3.2. Reported per name; never fills the shortfall. |
+
+Both are **transcriptions of what the cited document already states**, and both
+are subject to the same rule as `v`: if the document does not establish it, the
+sub-key is omitted. Two omissions therefore mean different things and neither
+means "fine":
+
+- **No `range`** means the issuer published a point, not that the point is exact.
+- **No `horizon_years`** means the record does not establish the period. It does
+  **not** mean the figure covers the window — the engine reads it as `unknown`
+  and prints it, which is how Westgold's one-line capex record surfaces.
+
+Record a `range` only where the issuer published the span for the **same quantity
+over the same period** as `v`. A span between two defensible analyst conventions
+is not one; Vault's "A$173m or A$364m depending on which capital lines count" is
+a scope choice and belongs in the `note`, because gating on it would gate on the
+analyst's indecision rather than on anything Vault disclosed.
+
 ### `largest_asset_pp_share` — a quantity where a judgement used to be
 
 The §8.1 single-asset cap reads a sourced float in [0, 1]: **the share of the

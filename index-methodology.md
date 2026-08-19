@@ -1,7 +1,7 @@
-# Index Methodology — SJGV v1.2
+# Index Methodology — SJGV v1.3
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.2
+**Version:** 1.3
 **Date:** 19 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
@@ -16,6 +16,7 @@
 
 | # | Date | Change |
 |---|------|--------|
+| 3 | 19 Aug 2026 | **§3.2 added — Gate 2 input basis; version 1.2 → 1.3.** `estimation_policy.on_absence` requires a gate verdict to be invariant across a range it cannot pin down, and that rule was wired for *absent* inputs only. **A value recorded at the midpoint of a range the issuer published bypassed it**, and on one name it was deciding the gate: Pantoro's AISC is the midpoint of its own FY27 guidance of A$2,800–3,400/oz, passing by A$51m at the midpoint and failing by A$12m at the top of the same sentence. Invariance across issuer-published ranges now **gates**, and **PNR is rejected** — the only name it decides; every other constituent is invariant, including Capricorn across its disclosed ±25% no-contingency band. Separately, `committed_capex_aud_m` now carries `horizon_years`, because seven constituents charge one guided year against the two-year window and Westgold's record establishes no period at all; that shortfall is **printed, not filled**, since annualising a guided year is `estimation_policy.forbidden`. **This moves weights: PNR out, 10.00pp one-way turnover, headline A$662 → A$739/oz.** |
 | 2 | 19 Aug 2026 | **§2.1 A2 redefined; version 1.1 → 1.2.** A2 is now measured on the **currency issuer** rather than on consolidated general government, and carries a third limb: **gross debt ≤ 85% of GDP**. **This is a rule change and not a sourcing fix, and the direction matters.** §12.2 item 4 asked for Canada's specified metrics to be sourced and A2 applied as written. Sourced, **Canada passes A2 as v1.1 wrote it** — general government net debt ~10–13% of GDP, *below Australia's ~19%*, and general government interest 8.8% of revenue against a 10% limit. Recording a FAIL against that would have been the v1.0 A4 defect exactly: the test passing and the verdict recorded anyway. The rule was therefore changed in the open. On the amended rule Canada fails twice — gross debt 105–110% of GDP, and **federal** interest at 10.3% of revenue. What the change gives up, and the Maastricht threshold rejected on measurement, is in §2.1. **No weight changes** — `data/sovereign.json` is a record, no engine code reads it, and Canada's exclusion is unchanged, so `eligible_ounce_share` does not move for EVN, VAU or NST. §12.2 item 4 closes; item 5 stays open. |
 | 1 | 18 Aug 2026 | **§2.1 A4 redefined; version 1.0 → 1.1.** v1.0 gated A4 on requisition history *and* on statutory powers suspended rather than repealed. Australia fails that test on both limbs and the v1.0 table recorded it as a PASS regardless. A4 is now a present-tense test of gold controls **in operation**; dormant powers and historical use are disclosed per country and carried as residual risk (§11.1). What the change gives up is stated in §2.1, not buried. **No weight changes** — `data/sovereign.json` is a record, and no engine code reads it. Canada's A2 and the s51(xxxi) characterisation question are reopened as §12.2 items 4 and 5. |
 
@@ -416,6 +417,73 @@ Pre-production companies cannot be tested on cash flow. The developer test is:
 against a A$400m market cap identically to a A$300m gap against a A$200m cap.
 The first is 12% dilution — bounded, knowable, priced. The second is a zombie.
 
+### 3.2 Input basis — the horizon a figure covers, and the range it came from
+
+`estimation_policy.on_absence` already settles what to do with a gate input the
+engine cannot pin down: run the gate across the range, and if the verdict differs
+at the two ends then **the answer is unknown, not favourable.** That doctrine was
+wired for *absent* inputs only. Two ways of being imprecise walked straight past
+it, and both ran in the direction that flatters.
+
+**1. A published range recorded at its midpoint — this gates.**
+`estimation_policy.permitted_provenance` allows "the midpoint of a range the
+issuer itself published" as a derived value, and that is right for recording a
+number. It is not right for *deciding* one. Pantoro is the case: its AISC is the
+midpoint of the issuer's own FY27 guidance of A$2,800–3,400/oz, and at A$3,100 it
+clears the stress by A$51m while at A$3,400 — the top of the same sentence — it
+fails by A$12m. A gate settled by which point of a published span the analyst
+picked is not a gate.
+
+> **A Gate 2 verdict must be invariant across every range the issuer published
+> for an input the gate reads. A name whose verdict flips is UNRESOLVED and is
+> rejected**, exactly as an absent input that flips is.
+
+Three boundaries, each deliberate:
+
+- **Issuer-published only.** Vault's committed capex could be A$173m or A$364m
+  depending on which capital lines are treated as committed. That span is a
+  choice between two analyst conventions, not a range Vault disclosed, and
+  probing it would gate on the analyst's indecision. It stays in the note.
+- **Each input on its own.** The sweep runs one field at a time, which is what
+  the absent-input test already does.
+- **The compound is reported, never gated.** Driving every ranged input to its
+  against-the-name end simultaneously is a scenario no disclosure asserts. A name
+  that survives each range alone and fails their compound is flagged **STRAINED**
+  — the same call §4 already makes on a spread that passes on the median and
+  breaches on p90. No constituent is STRAINED today.
+
+**2. A figure that covers less window than it is charged against — this is
+reported.** Gate 2 charges `committed_capex_aud_m` over `horizon_years`, and the
+cohort does not supply it on one basis. Ora Banda's is the issuer's own FY27 plus
+FY28 lines summed. Greatland's and Evolution's are whole-project totals that run
+*past* the window — which over-charges, and overstating a survival cost is the
+safe direction. But **Pantoro's, Regis's, Vault's, Catalyst's, Northern Star's,
+Capricorn's and Bellevue's are a single guided year charged against two**, and
+Westgold's record does not establish a period at all. A one-year figure against a
+two-year window understates the burn, and `docs/execution-capital-inventory.md`
+§3 concluded "direction is safe" on the strength of the two names that
+over-charge without checking the seven that do not.
+
+Every such figure now carries `horizon_years`, transcribed from the note that
+already establishes the period, and **an absent one reads as `unknown`, never as
+covered.** The build prints the shortfall per name.
+
+**It is disclosed rather than filled, and that is a decision.** Annualising a
+guided year into an unguided one is `estimation_policy.forbidden` in as many
+words. A cohort rate transferred onto an unguided period is the same invention
+wearing a peer group's clothes — and it would not be a small one: the cohort's
+observed upper rate is Capricorn building a second mine, which applied to
+Westgold's 387 koz would charge A$3.4bn and reject the book's largest position on
+a number nobody has published. **So the shortfall is measured and printed, and
+the committee can either accept it or fund the sourcing.** What it can no longer
+do is not know.
+
+The two rules are wired at different strengths on purpose. A published range is
+evidence the issuer supplied about a quantity the gate reads, so it decides. A
+missing period is evidence nobody supplied, so it discloses.
+
+---
+
 ## 4. Gate 3 — Tradability
 
 The market-capitalisation floor is **abolished**. Market cap is a proxy for
@@ -742,7 +810,9 @@ and it binds directly. Note that any asset-level cap set *above* the 15% name ca
 cannot bind on one company however concentrated — only on an asset two
 constituents share — which is why this one is set below it.
 
-**Sourced and live from 18 August 2026.** It binds on two constituents.
+**Sourced and live from 18 August 2026.** It bound on two constituents when it was
+adopted. **From 19 August 2026 it binds on Catalyst alone** — Pantoro left the book at
+Gate 2 under §3.2, not at this cap.
 
 #### What "single-asset" means, and how the engine decides it
 
@@ -1022,8 +1092,10 @@ Investors must understand four things:
 
    So the honest disclosure is **four of twelve constituents** (PNR, CYL, GGP,
    RXL) and **eight of seventeen candidates**. §8.1's 10% cap is applied from 18
-   August 2026 and binds on **Pantoro and Catalyst**, at a cost of A$41 per
-   claimed ounce on the headline KPI.
+   August 2026 and bound on **Pantoro and Catalyst**, at a cost of A$41 per
+   claimed ounce on the headline KPI. Pantoro has since been rejected at Gate 2
+   (§3.2, 19 Aug 2026), so the cap now binds on Catalyst alone and the book is
+   **three of eleven** single-asset constituents: CYL, GGP and RXL.
 
    Note what the two additions have in common with each other and not with the
    original four: neither is a one-*mine* company. Catalyst runs a hub with nine
@@ -1078,11 +1150,12 @@ established the data does not exist. **Two opened the same day**, on the back of
 the A4 amendment: items 4 and 5. **Item 6 opened on 19 August 2026** and is the
 only one of the three that is a defect in the live build rather than a question
 about it. **Item 4 closed on 19 August 2026**, by an A2 amendment rather than by
-the sourcing it asked for — the sourcing came back the other way.
+the sourcing it asked for — the sourcing came back the other way. Two items are
+open: 5 and 6.
 
 | # | Item | Outcome |
 |---|------|---------|
-| 1 | **Single-asset status, all 17.** | **CLOSED — sourced.** Replaced the unsourced `single_asset` boolean with a sourced `largest_asset_pp_share` and a declared 0.80 threshold (§8.1). Eight of seventeen flag, not the four §11 named; the cap binds on **PNR and CYL**, 7.52% one-way turnover, and it costs **+6.4% on A$ per claimed ounce**. Three regression names behaved: PNR and RXL returned 1.000, CMM returned 0.700 under the forward rule fixed before the number was computed. |
+| 1 | **Single-asset status, all 17.** | **CLOSED — sourced.** Replaced the unsourced `single_asset` boolean with a sourced `largest_asset_pp_share` and a declared 0.80 threshold (§8.1). Eight of seventeen flag, not the four §11 named; the cap bound on **PNR and CYL** when adopted (CYL alone from 19 Aug 2026, §3.2), 7.52% one-way turnover, and it costs **+6.4% on A$ per claimed ounce**. Three regression names behaved: PNR and RXL returned 1.000, CMM returned 0.700 under the forward rule fixed before the number was computed. |
 | 2 | **Grade-tonnage curves.** | **CLOSED — not sourceable from public disclosure.** Phase 0 survey over ≈11 MB of primary text across all seventeen: **zero of twelve constituents** publish a resource at two or more cut-offs or a grade-tonnage table. One partial (RXL, a *chart* for its underground resource only) and one unknown (WGX's five NI 43-101 reports, issuer URLs dead). Full write-up and the three findings that would have blocked Phase 2 regardless: `docs/grade-tonnage-survey.md`. **The §6 ledger stays static in the gold price and §9.2's modelled 1.00 keeps saying what it says.** |
 | 3 | **Jurisdiction B1 / B3 verification.** | **CLOSED — verified.** B1 verified from statutory instruments for every exposed jurisdiction: WA 2.5% flat, VIC 2.75% flat, NSW **4.0% flat** (confirming a claim §2.3 was making ahead of its data), QLD a **price-linked 2.5–5.0% scale saturated at its 5% ceiling**, TAS profit-based capped at 5.35% and **no longer an exposure** (Henty sold May 2025). WA **B3 verified**, and it reframed the test: no statutory determination periods, 42.4% on-time against an 80% target. `jurisdictions.json` records the statutory instrument for each. Remaining unverified: B1 for SA, NT and NZ (nil exposure), and B2/B3/B4 outside WA. |
 | 4 | **Canada's A2, now load-bearing alone.** | **CLOSED 19 Aug 2026 — sourced, and then the rule was changed. Read both halves.** Sourced first, as the item asked: Canadian general government net debt is **~10–13% of GDP — below Australia's ~19%** — and general government interest is **8.8% of revenue** against a 10% limit. **Canada passed A2 as v1.1 wrote it.** Recording FAIL anyway would have repeated the v1.0 A4 defect one amendment after fixing it. So A2 was rewritten instead (§2.1, amendment 2): measured on the **currency issuer**, with a third limb at **gross debt ≤ 85% of GDP**. Canada fails on gross (105–110%) and on federal interest (**10.3%** of revenue, PBO projecting 13.1% by 2030-31); the net-debt limb still passes and is not the basis. **Zero weight change** — Canada stays out, so no `eligible_ounce_share` moves, and no engine code reads `data/sovereign.json`. What the closure leaves behind is recorded in §2.2: the exclusion does not survive the old rule, and Canada's A4 dormant-power register remains uncompiled by decision. |
@@ -1173,6 +1246,8 @@ ours, is durable, and is reachable.
 | `ineligible_nav_share` · `gates.max_ineligible_nav_share` = 0.25 | NAV under an ineligible sovereign | Catches the **jurisdictional hook** (§2.5) that proportional ounce-discounting cannot: a subsidiary in an impaired jurisdiction gives that state leverage over the *whole* entity, not over its share of production. | **3.63pp** |
 | `aisc_aud_oz` | All-in sustaining cost per ounce | **A survival input only — never a reward.** High cost means more gold delta, which the index wants, right up to the point where the company cannot survive the down leg. That point is exactly where cost stops being an advantage and becomes a gate. | **15.00pp** |
 | `committed_capex_aud_m` | Contracted, non-deferrable spend | A funded must-build **burns cash through the drawdown**; a deferrable project is a real option that can be left unexercised. Only the first destroys ounces you have already paid for. | **15.00pp** |
+| `<input>_range` on a Gate 2 input | The span the **issuer** published, where the recorded value is its midpoint | **The midpoint may record a number; it may not decide a gate (§3.2).** Sweeping each ranged input to both of its own published ends and requiring one verdict is `estimation_policy.on_absence` applied to imprecision that is disclosed rather than missing. It decides exactly one name today and that name is a 10% position. | **10.00pp** *(rejects PNR on `aisc_aud_oz` [2800, 3400])* |
+| `committed_capex_aud_m_horizon_years` | Years of the stress window the capex figure actually covers | **Reported, and structurally unable to reach a weight by design (§3.2).** Seven constituents charge one guided year against a two-year window; the shortfall is printed rather than filled, because annualising a guided year into an unguided one is `estimation_policy.forbidden`. Listed here and not in §13.5 because it is a *decision* to leave it inert, not a property of the input. | 0.00pp *(disclosure only)* |
 | `production_koz_yr` | Annual production | Sizes the stressed cash flow — how fast the company can earn its way through the drawdown. | **3.63pp** |
 | `net_debt_aud_m` | Net debt | Opening liquidity for the stress test, and the maturity wall behind it. | **15.00pp** |
 | **AUD gold history** → the Gate 2 anchor | Trailing 3y real average of AUD gold | The stress price. Anchoring to a **trailing average rather than spot** stops the gate weakening exactly when spot is most extended — i.e. when survival risk is actually highest. | **15.00pp** |
@@ -1205,7 +1280,7 @@ claim down — it removes it.
 | `constraints.max_developer_sleeve` = 0.15 | Pre-production sleeve cap | Bounds the aggregate of that failure mode. Sized to what qualifies, never forced to fill. | 0.00pp *(per-name cap binds first)* |
 | `largest_asset_pp_share` | Share of eligible P&P reserves at one asset | Where there is no second asset, there is nothing to absorb the failure. **Sourced for all 17 on 18 Aug 2026** from per-asset Ore Reserve tables. Replaces the `single_asset` boolean, which was a hand-set judgement seventeen times over; the judgement now sits in one config threshold where the audit can see it. | **5.00pp** *(on PNR)* |
 | `constraints.single_asset_pp_share_threshold` = 0.80 | Where the derived boolean flips | The only judgement in the classification, and it is declared rather than baked into the data. Set where the cross-section has a gap: nothing sits between 0.773 and 0.999. Tri-state — an absent share derives `None`, asserted on every build. | **3.30pp** *(on CYL; 1.70pp latent on WGX)* |
-| `constraints.max_single_asset_name` = 0.10 | Tighter cap for one-mine companies | Derived from the objective, unlike the variance cap it replaced, which was calibrated on daily price noise and appeared nowhere in the mandate. **Binds on PNR and CYL.** Costs +6.4% on A$/claimed oz — see §8.1. | **5.00pp** |
+| `constraints.max_single_asset_name` = 0.10 | Tighter cap for one-mine companies | Derived from the objective, unlike the variance cap it replaced, which was calibrated on daily price noise and appeared nowhere in the mandate. Bound on PNR and CYL when adopted; **binds on CYL alone from 19 Aug 2026**, PNR having been rejected at Gate 2 under §3.2. Costs +6.4% on A$/claimed oz — see §8.1. | **5.00pp** |
 | `sleeve` | producer / near-producer / developer | Not a number — a classification that **routes three tests at once**: the Gate 2 variant, the Gate 3 spread limit, and the developer caps. | routing |
 
 ### 13.5 Read, printed, and structurally unable to reach a weight
@@ -1244,4 +1319,4 @@ those words for the same reason.
 
 ---
 
-*SJGV v1.2 — 19 August 2026. The sole methodology in force.*
+*SJGV v1.3 — 19 August 2026. The sole methodology in force.*

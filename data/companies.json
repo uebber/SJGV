@@ -131,8 +131,13 @@
     },
     "committed_capex_aud_m": {
      "v": 385,
+     "range": [
+      375,
+      395
+     ],
+     "horizon_years": 1.0,
      "doc": "nst_q3fy26",
-     "note": "DERIVED, sum of the three FY27 KCGM items the issuer costs individually: Mill Expansion tail ~A$160m + tailings dam facilities A$100-120m at the ISSUER-PUBLISHED midpoint A$110m + thermal power plant and transmission infrastructure A$115m = A$385m. CORRECTED from 300, which was A$270m plus a A$30m judgement round-up standing in for the thermal power station on the stated basis that it was 'not separately costed'. IT IS SEPARATELY COSTED, at A$115m, in the same bullet list that supplied the other two figures. CITATION ALSO CORRECTED: the record cited the JUNE quarterly, which contains neither figure — both come from the MARCH quarterly, the last document to publish an FY27 KCGM capex breakdown. Scope unchanged: Hemi excluded (FID late FY27), Operational Growth Capital of A$1,140-1,200m/yr excluded as deferrable under the §7.4 screen. Gate 2 unaffected — the sensitivity run says NST passes at A$560m and fails only at A$2,280m. Two unquantified upward risks: the June quarterly adds uncosted 'renewable energy infrastructure' to remaining FY27 works, and FY26 Operational Readiness underspent guidance by ~A$10m which may roll forward. Re-test 20 Aug 2026."
+     "note": "DERIVED, sum of the three FY27 KCGM items the issuer costs individually: Mill Expansion tail ~A$160m + tailings dam facilities A$100-120m at the ISSUER-PUBLISHED midpoint A$110m + thermal power plant and transmission infrastructure A$115m = A$385m. CORRECTED from 300, which was A$270m plus a A$30m judgement round-up standing in for the thermal power station on the stated basis that it was 'not separately costed'. IT IS SEPARATELY COSTED, at A$115m, in the same bullet list that supplied the other two figures. CITATION ALSO CORRECTED: the record cited the JUNE quarterly, which contains neither figure — both come from the MARCH quarterly, the last document to publish an FY27 KCGM capex breakdown. Scope unchanged: Hemi excluded (FID late FY27), Operational Growth Capital of A$1,140-1,200m/yr excluded as deferrable under the §7.4 screen. Gate 2 unaffected — the sensitivity run says NST passes at A$560m and fails only at A$2,280m. Two unquantified upward risks: the June quarterly adds uncosted 'renewable energy infrastructure' to remaining FY27 works, and FY26 Operational Readiness underspent guidance by ~A$10m which may roll forward. Re-test 20 Aug 2026. RANGE AND HORIZON BASIS RECORDED: one of the three legs is published as a span (tailings A$100-120m), so the total spans [375, 395]; the other two are points. FY27 only, so 1.0 of the 2.0-year window. Gate 2 is invariant across the range (§3.2)."
     },
     "hedge_share_fwd24m": {
      "v": 0.255,
@@ -295,8 +300,9 @@
     },
     "committed_capex_aud_m": {
      "v": 1210,
+     "horizon_years": 2.0,
      "doc": "evn_growth_asx",
-     "note": "DERIVED: sum of disclosed board-approved project capital with no apportionment — Northparkes E22 block cave A$545m (Evolution's 80% share; A$680m at 100%), Cowal Open Pit Continuation A$430m, Ernest Henry Bert A$160m and Northparkes Coarse Particle Flotation A$75m. VALUE UNCHANGED; this is a provenance upgrade from a miningweekly.com article to lodged documents, which matters because this input decides the name. The Cowal leg comes from the April 2025 board approval and is re-confirmed current in the June 2026 quarterly: 'Capital investment budget remains unchanged at $430 million with this investment spread over the seven year period to FY31.' Two statements are combined, which the same-statement rule normally forbids; it is unavoidable because the approvals are ten months apart, and each component is individually primary and individually current. THE PREVIOUS JUSTIFICATION WAS WRONG AND IS WITHDRAWN: it claimed 'Contractors are engaged (Redpath on Bert and E22, GR Engineering at Northparkes), so this is contracted, not planned.' The June 2026 quarterly says otherwise for both projects — 'the tender for the underground mining contract was conducted. Appointment of the contractor is planned for early in the September 2026 quarter' — and no contractor is named in any lodged document. The figure now rests on board approval plus works in execution, which is what is actually evidenced. EXCLUDED AS DEFERRABLE, each pre-FID or a study: the Northparkes Expansion Study A$14m, the Northparkes E44 study, the FY27 life-of-mine options 'requiring investment of $70-90 million, which was not included in the previous capital outlook', and the entire Greater Duchess/Carnaby programme, which is at PFS with the feasibility study and approvals both outstanding. STILL CONSERVATIVE, more than previously stated: Cowal has been drawing since FY25 and E22 first production is end-FY30, so a material but unquantified share of the A$1,210m is already spent and most of the remainder falls outside the two-year window."
+     "note": "DERIVED: sum of disclosed board-approved project capital with no apportionment — Northparkes E22 block cave A$545m (Evolution's 80% share; A$680m at 100%), Cowal Open Pit Continuation A$430m, Ernest Henry Bert A$160m and Northparkes Coarse Particle Flotation A$75m. VALUE UNCHANGED; this is a provenance upgrade from a miningweekly.com article to lodged documents, which matters because this input decides the name. The Cowal leg comes from the April 2025 board approval and is re-confirmed current in the June 2026 quarterly: 'Capital investment budget remains unchanged at $430 million with this investment spread over the seven year period to FY31.' Two statements are combined, which the same-statement rule normally forbids; it is unavoidable because the approvals are ten months apart, and each component is individually primary and individually current. THE PREVIOUS JUSTIFICATION WAS WRONG AND IS WITHDRAWN: it claimed 'Contractors are engaged (Redpath on Bert and E22, GR Engineering at Northparkes), so this is contracted, not planned.' The June 2026 quarterly says otherwise for both projects — 'the tender for the underground mining contract was conducted. Appointment of the contractor is planned for early in the September 2026 quarter' — and no contractor is named in any lodged document. The figure now rests on board approval plus works in execution, which is what is actually evidenced. EXCLUDED AS DEFERRABLE, each pre-FID or a study: the Northparkes Expansion Study A$14m, the Northparkes E44 study, the FY27 life-of-mine options 'requiring investment of $70-90 million, which was not included in the previous capital outlook', and the entire Greater Duchess/Carnaby programme, which is at PFS with the feasibility study and approvals both outstanding. STILL CONSERVATIVE, more than previously stated: Cowal has been drawing since FY25 and E22 first production is end-FY30, so a material but unquantified share of the A$1,210m is already spent and most of the remainder falls outside the two-year window. HORIZON BASIS: 2.0. These are whole-project totals and this note records that most of the remainder falls OUTSIDE the two-year window, so the figure over-charges the horizon. Overstating a survival cost is the safe direction and is not corrected (§3.2)."
     },
     "undrawn_facilities_aud_m": {
      "v": 525.0,
@@ -455,8 +461,13 @@
     },
     "committed_capex_aud_m": {
      "v": 551.5,
+     "range": [
+      425.5,
+      677.5
+     ],
+     "horizon_years": 1.0,
      "doc": "q4fy26",
-     "note": "DERIVED: Mt Gibson pre-production capital A$474m (A$345m plant and infrastructure plus A$129m for 15 months of pre-production mining, footed in the issuer's own table) plus FY27 KGP growth capital at the midpoint of the ISSUER-PUBLISHED A$70-85m range, A$77.5m. SCOPE DECISION TAKEN HERE FOR COHORT CONSISTENCY: the newly guided KGP growth capital is treated the same way as RRL's guided FY27 growth capital (which likewise includes pre-strip of new open pits) and NST's three separately guided FY27 KCGM items. THE PREVIOUS CAVEAT IS OUT OF DATE and is withdrawn: it read 'contingent on the federal environmental permit, so arguably not yet contracted', but the permit has been RECEIVED — 'Capricorn received the Approval Decision from the federal Minister's delegate, approving the expansion and operation of the MGGP under the EPBC Act' — and contracting has advanced, with the MACA mining services agreement executed in the quarter, MACA Interquip awarded the main plant construction scope, the A$129m estimate reflecting 'recently contracted open pit' rates and plant detailed design complete. Only the WA Part IV approval is outstanding. EXCLUDED: A$105m of 'Other LOM Project Capital' at Mt Gibson, which is post-production. NO CONTINGENCY IS INCLUDED IN THE A$474m — 'no contingency has been allowed in the estimate', at '+/- 25% accuracy with a 90% confidence level' — so an against-the-name bound on that leg alone would be A$593m. Gate 2 passes at every variant tested; it fails only on the compound of three conservative bounds at once (FY27 worst-end costs plus the full A$85m plus capex at +25%), which is not the methodology's test but is the honest statement of how much room this name has."
+     "note": "DERIVED: Mt Gibson pre-production capital A$474m (A$345m plant and infrastructure plus A$129m for 15 months of pre-production mining, footed in the issuer's own table) plus FY27 KGP growth capital at the midpoint of the ISSUER-PUBLISHED A$70-85m range, A$77.5m. SCOPE DECISION TAKEN HERE FOR COHORT CONSISTENCY: the newly guided KGP growth capital is treated the same way as RRL's guided FY27 growth capital (which likewise includes pre-strip of new open pits) and NST's three separately guided FY27 KCGM items. THE PREVIOUS CAVEAT IS OUT OF DATE and is withdrawn: it read 'contingent on the federal environmental permit, so arguably not yet contracted', but the permit has been RECEIVED — 'Capricorn received the Approval Decision from the federal Minister's delegate, approving the expansion and operation of the MGGP under the EPBC Act' — and contracting has advanced, with the MACA mining services agreement executed in the quarter, MACA Interquip awarded the main plant construction scope, the A$129m estimate reflecting 'recently contracted open pit' rates and plant detailed design complete. Only the WA Part IV approval is outstanding. EXCLUDED: A$105m of 'Other LOM Project Capital' at Mt Gibson, which is post-production. NO CONTINGENCY IS INCLUDED IN THE A$474m — 'no contingency has been allowed in the estimate', at '+/- 25% accuracy with a 90% confidence level' — so an against-the-name bound on that leg alone would be A$593m. Gate 2 passes at every variant tested; it fails only on the compound of three conservative bounds at once (FY27 worst-end costs plus the full A$85m plus capex at +25%), which is not the methodology's test but is the honest statement of how much room this name has. RANGE AND HORIZON BASIS RECORDED: the Mt Gibson leg carries the issuer's own '+/- 25% accuracy' on A$474m and no contingency, giving [355.5, 592.5]; the KGP leg is the issuer-published span [70, 85]. Total [425.5, 677.5]. Gate 2 is invariant across it on this input alone — the compound failure this note describes needs FY27 guided costs as well, and those are not the recorded basis (§3.2). Horizon 1.0: the Mt Gibson build sits inside the window but the KGP leg is FY27-only and FY28 is unguided, so the shorter leg sets the basis."
     },
     "undrawn_facilities_aud_m": {
      "v": 0.0,
@@ -598,8 +609,13 @@
     },
     "committed_capex_aud_m": {
      "v": 1390,
+     "range": [
+      1380,
+      1400
+     ],
+     "horizon_years": 1.0,
      "doc": "ggp_fy27",
-     "note": "DERIVED: Havieron pre-production capital to first gold A$1,065m plus FY27 Telfer growth capital at the midpoint of the ISSUER-PUBLISHED A$315-335m range, A$325m. BOTH LEGS VERIFIED VERBATIM and no new guidance supersedes them. The A$1,065m is board-approved (FID June 2026 after State Part IV and Federal EPBC approvals), AUD-denominated, 'to first gold' on a June 2025 cost base, and excludes the separate A$673m of post-first-gold expansion capital. NO DOUBLE COUNT: the separately guided FY27 Havieron growth capital of A$365-435m is a first-year subset of the A$1,065m and is not added. FY28 IS STILL NOT GUIDED — the 29 July document contains exactly one guidance table and it is FY27 only — so the withdrawn A$1,400m (which doubled the FY27 Telfer guide) remains correctly withdrawn and no extrapolation is performed. TWO OFFSETTING BIASES, now quantified: this UNDERSTATES by one unguided year of Telfer growth capital (FY26 actual A$231.5m, FY27 guided A$325m), and OVERSTATES Havieron, because the full A$1,065m is charged inside a two-year window although the build runs about two and a half years to first gold in FY29, leaving roughly A$200m outside it. Similar magnitude, opposite direction; neither is adjusted. Exploration and resource development of A$70-80m remains excluded as deferrable."
+     "note": "DERIVED: Havieron pre-production capital to first gold A$1,065m plus FY27 Telfer growth capital at the midpoint of the ISSUER-PUBLISHED A$315-335m range, A$325m. BOTH LEGS VERIFIED VERBATIM and no new guidance supersedes them. The A$1,065m is board-approved (FID June 2026 after State Part IV and Federal EPBC approvals), AUD-denominated, 'to first gold' on a June 2025 cost base, and excludes the separate A$673m of post-first-gold expansion capital. NO DOUBLE COUNT: the separately guided FY27 Havieron growth capital of A$365-435m is a first-year subset of the A$1,065m and is not added. FY28 IS STILL NOT GUIDED — the 29 July document contains exactly one guidance table and it is FY27 only — so the withdrawn A$1,400m (which doubled the FY27 Telfer guide) remains correctly withdrawn and no extrapolation is performed. TWO OFFSETTING BIASES, now quantified: this UNDERSTATES by one unguided year of Telfer growth capital (FY26 actual A$231.5m, FY27 guided A$325m), and OVERSTATES Havieron, because the full A$1,065m is charged inside a two-year window although the build runs about two and a half years to first gold in FY29, leaving roughly A$200m outside it. Similar magnitude, opposite direction; neither is adjusted. Exploration and resource development of A$70-80m remains excluded as deferrable. RANGE AND HORIZON BASIS RECORDED: the Havieron leg is a point (A$1,065m), the Telfer leg is the issuer-published span [315, 335], so the total spans [1380, 1400]. Horizon 1.0 because the unguided FY28 Telfer year is the binding gap — the offsetting Havieron overcharge this note quantifies runs the other way and is not netted (§3.2)."
     },
     "advt_shares_m": {
      "v": 1.882,
@@ -731,8 +747,9 @@
     },
     "committed_capex_aud_m": {
      "v": 229,
+     "horizon_years": 2.0,
      "doc": "gng_epc",
-     "note": "EXECUTED CONTRACT SUM for the 3.5-4.0 Mtpa Tower Hill mill: 'GR Engineering Services Limited ... has executed an engineering, procurement and construction (EPC) contract with Genesis Minerals (Leonora) Pty Ltd ... The contract sum is $229 million.' Corroborated by Genesis's own 23 Feb 2026 release estimating A$225m. Tower Hill is on track for first ore in FY28, so the whole contract sits inside the window. CORRECTED from 140: that figure is real and is Genesis's own, but it is the FY27 CASH-FLOW SLICE of this contract, not the commitment — 'Growth capital A$380-420m (includes A$140m for new Tower Hill mill; obviated post completion of Vault merger)'. The contracted-versus-deferrable split behind the previous value was the analyst's, not the company's. SOURCING ERROR ALSO CORRECTED: it cited a fool.com.au article dated 3 July 2026, but the lodged 3 July Business Update contains no FY27 guidance at all and says 'Full quarterly report including AISC set for release on Tuesday 28th July'. EXCLUDED: the A$40m owner's cost allowance (not contracted; the issuer's total anticipated capital cost is A$250-280m), FY27 exploration A$80-90m as deferrable, and the balance of the FY27 growth capital as deferrable development. NOT ADDED: A$24m of long-lead mill items reported as ordered, because it is not stated whether they sit inside or outside the A$229m. Runs A$89m against the name."
+     "note": "EXECUTED CONTRACT SUM for the 3.5-4.0 Mtpa Tower Hill mill: 'GR Engineering Services Limited ... has executed an engineering, procurement and construction (EPC) contract with Genesis Minerals (Leonora) Pty Ltd ... The contract sum is $229 million.' Corroborated by Genesis's own 23 Feb 2026 release estimating A$225m. Tower Hill is on track for first ore in FY28, so the whole contract sits inside the window. CORRECTED from 140: that figure is real and is Genesis's own, but it is the FY27 CASH-FLOW SLICE of this contract, not the commitment — 'Growth capital A$380-420m (includes A$140m for new Tower Hill mill; obviated post completion of Vault merger)'. The contracted-versus-deferrable split behind the previous value was the analyst's, not the company's. SOURCING ERROR ALSO CORRECTED: it cited a fool.com.au article dated 3 July 2026, but the lodged 3 July Business Update contains no FY27 guidance at all and says 'Full quarterly report including AISC set for release on Tuesday 28th July'. EXCLUDED: the A$40m owner's cost allowance (not contracted; the issuer's total anticipated capital cost is A$250-280m), FY27 exploration A$80-90m as deferrable, and the balance of the FY27 growth capital as deferrable development. NOT ADDED: A$24m of long-lead mill items reported as ordered, because it is not stated whether they sit inside or outside the A$229m. Runs A$89m against the name. HORIZON BASIS: 2.0 — first ore in FY28 puts the whole contract inside the window, as this note already states (§3.2)."
     },
     "reserve_price_aud": {
      "v": 2800,
@@ -1028,8 +1045,13 @@
     },
     "committed_capex_aud_m": {
      "v": 260.0,
+     "range": [
+      250,
+      270
+     ],
+     "horizon_years": 1.0,
      "doc": "fy27guid",
-     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY27 group growth capital range A$250-270m. Value unchanged; citation upgraded from fool.com.au to the lodged announcement, and every element of the previous note is verbatim confirmed. Composition: Duketon A$235-245m (Rosemont Stage 3 underground plus pre-strip of new open pits) and Tropicana A$15-25m (Regis 30% share of Havana underground pre-production). The issuer defines growth capital as 'open pit and underground pre-production mining costs, other growth-related project, property, plant and equipment costs and acquisitions'. EXCLUSIONS NOW BETTER SUPPORTED: exploration A$80-90m is deferrable; McPhillamys A$30-35m is excluded both because FID is targeted H1 CY2028 and because that spend is not capitalised at all — 'there was $9M of expenditure associated with McPhillamys, which continues to be expensed through the Profit and Loss account.' Sanity check: FY26 growth capital guidance was A$240-255m against an actual A$248.1m. Caveat: this is board-approved budget guidance, not a signed EPC contract; Regis has no fixed-price construction contract outstanding."
+     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY27 group growth capital range A$250-270m. Value unchanged; citation upgraded from fool.com.au to the lodged announcement, and every element of the previous note is verbatim confirmed. Composition: Duketon A$235-245m (Rosemont Stage 3 underground plus pre-strip of new open pits) and Tropicana A$15-25m (Regis 30% share of Havana underground pre-production). The issuer defines growth capital as 'open pit and underground pre-production mining costs, other growth-related project, property, plant and equipment costs and acquisitions'. EXCLUSIONS NOW BETTER SUPPORTED: exploration A$80-90m is deferrable; McPhillamys A$30-35m is excluded both because FID is targeted H1 CY2028 and because that spend is not capitalised at all — 'there was $9M of expenditure associated with McPhillamys, which continues to be expensed through the Profit and Loss account.' Sanity check: FY26 growth capital guidance was A$240-255m against an actual A$248.1m. Caveat: this is board-approved budget guidance, not a signed EPC contract; Regis has no fixed-price construction contract outstanding. RANGE AND HORIZON BASIS RECORDED: issuer-published FY27 span [250, 270], covering 1.0 of the 2.0-year Gate 2 window. Gate 2 is invariant across the range (§3.2)."
     },
     "undrawn_facilities_aud_m": {
      "v": 300.0,
@@ -1334,8 +1356,9 @@
     },
     "committed_capex_aud_m": {
      "v": 173,
+     "horizon_years": 1.0,
      "doc": "q4fy26",
-     "note": "CORRECTED from 53 — VAULT DOES PUBLISH A CONSOLIDATED FY27 GROWTH CAPITAL FIGURE and it is A$173m, in Table 3 of the lodged June 2026 quarterly. The site columns foot exactly: Leonora 62 + Deflector 10 + Mount Monger 5 + Sugar Zone 96 = 173. The previous A$53m was reconstructed from a trade-press summary by excluding Deflector A$48m and Mount Monger A$25m as 'largely captured in AISC' — that was the analyst's characterisation and the company states the opposite: 'Consistent with previous guidance, AISC excludes capital expenditure for mine development, services and mining fleet'. The A$48m the earlier pass excluded is not even a Deflector programme; it is the GROUP FY26 growth capital spend for the June quarter. ONLY the Growth Capital line is taken, because it is the issuer's own label and maps to the field definition. Four other outside-AISC capital lines are excluded with reasons: exploration A$25m is deferrable by policy; the A$45m underground mining fleet is expressly NOT committed ('the potential acquisition of mining fleet of approximately $45 million'); deferred stripping A$49m is a mining cost, not a build; and the A$46m open-pit owner-operator fleet transition likewise. On a total-capital-outside-AISC convention the figure would be A$364m; the honest span is 173-364 and both ends are covered by A$841.6m of net cash. Sugar Zone A$96m is not pre-FID — underground development commenced 1 July 2026 and key approvals were received in July 2026."
+     "note": "CORRECTED from 53 — VAULT DOES PUBLISH A CONSOLIDATED FY27 GROWTH CAPITAL FIGURE and it is A$173m, in Table 3 of the lodged June 2026 quarterly. The site columns foot exactly: Leonora 62 + Deflector 10 + Mount Monger 5 + Sugar Zone 96 = 173. The previous A$53m was reconstructed from a trade-press summary by excluding Deflector A$48m and Mount Monger A$25m as 'largely captured in AISC' — that was the analyst's characterisation and the company states the opposite: 'Consistent with previous guidance, AISC excludes capital expenditure for mine development, services and mining fleet'. The A$48m the earlier pass excluded is not even a Deflector programme; it is the GROUP FY26 growth capital spend for the June quarter. ONLY the Growth Capital line is taken, because it is the issuer's own label and maps to the field definition. Four other outside-AISC capital lines are excluded with reasons: exploration A$25m is deferrable by policy; the A$45m underground mining fleet is expressly NOT committed ('the potential acquisition of mining fleet of approximately $45 million'); deferred stripping A$49m is a mining cost, not a build; and the A$46m open-pit owner-operator fleet transition likewise. On a total-capital-outside-AISC convention the figure would be A$364m; the honest span is 173-364 and both ends are covered by A$841.6m of net cash. Sugar Zone A$96m is not pre-FID — underground development commenced 1 July 2026 and key approvals were received in July 2026. HORIZON BASIS: FY27 only, 1.0 of the 2.0-year window. No range recorded: A$173m is a single published figure. The '173-364' span this note describes is a choice between two ANALYST conventions, not an issuer-published range, and §3.2 deliberately excludes it — probing it would gate on which convention the analyst was undecided about."
     },
     "undrawn_facilities_aud_m": {
      "v": 0.0,
@@ -1458,8 +1481,13 @@
     },
     "committed_capex_aud_m": {
      "v": 95,
+     "range": [
+      90,
+      100
+     ],
+     "horizon_years": 1.0,
      "doc": "bgl_fy27",
-     "note": "Midpoint of guided FY27 non-sustaining capital A$90-100m. Exploration A$25-30m excluded as deferrable (PNR precedent). The contracted core is the paste plant at A$35-40m, under construction. The 1.0->1.6 Mtpa mill expansion is PAUSED and excluded — management states ~190 koz/yr needs no further plant capital. One year only; FY28 non-sustaining is unguided."
+     "note": "Midpoint of guided FY27 non-sustaining capital A$90-100m. Exploration A$25-30m excluded as deferrable (PNR precedent). The contracted core is the paste plant at A$35-40m, under construction. The 1.0->1.6 Mtpa mill expansion is PAUSED and excluded — management states ~190 koz/yr needs no further plant capital. One year only; FY28 non-sustaining is unguided. RANGE AND HORIZON BASIS RECORDED: issuer-published FY27 span [90, 100], covering 1.0 of the 2.0-year window — which is what this note already said in words (§3.2)."
     },
     "advt_shares_m": {
      "v": 6.4336,
@@ -1590,8 +1618,9 @@
     },
     "committed_capex_aud_m": {
      "v": 455,
+     "horizon_years": 2.0,
      "doc": "pres_dd2026",
-     "note": "DERIVED from the issuer's own 'Updated FY27 Capital Guidance' table, summing only contracted or Board-approved lines inside the two-year horizon: new 3 Mtpa mill FY27 A$240m + FY28 A$135m = A$375m, plus 'Approved: Waihi Underground' FY27 A$40m + FY28 A$40m = A$80m. The FY27/FY28 phasing is the issuer's, not an apportionment. CORRECTED FROM 233, WHICH WAS THE GR ENGINEERING EPC CONTRACT SUM — a line item inside the A$375m the Board approved on 18 May 2026, not the committed build. EXCLUDED with reasons: exploration A$75m/yr deferrable; 'infrastructure growth and upgrades' ~A$180m is 'pending final Board approvals' per the same deck; Round Dam open pit A$160m is 'Pending FID'; Waihi FY29 A$5m is outside the horizon. The no-apportionment reading of the board totals (375 + 90 = A$465m) gives the same verdict. THIS INPUT DECIDES GATE 2 FOR THIS NAME — see SOURCES.md."
+     "note": "DERIVED from the issuer's own 'Updated FY27 Capital Guidance' table, summing only contracted or Board-approved lines inside the two-year horizon: new 3 Mtpa mill FY27 A$240m + FY28 A$135m = A$375m, plus 'Approved: Waihi Underground' FY27 A$40m + FY28 A$40m = A$80m. The FY27/FY28 phasing is the issuer's, not an apportionment. CORRECTED FROM 233, WHICH WAS THE GR ENGINEERING EPC CONTRACT SUM — a line item inside the A$375m the Board approved on 18 May 2026, not the committed build. EXCLUDED with reasons: exploration A$75m/yr deferrable; 'infrastructure growth and upgrades' ~A$180m is 'pending final Board approvals' per the same deck; Round Dam open pit A$160m is 'Pending FID'; Waihi FY29 A$5m is outside the horizon. The no-apportionment reading of the board totals (375 + 90 = A$465m) gives the same verdict. THIS INPUT DECIDES GATE 2 FOR THIS NAME — see SOURCES.md. HORIZON BASIS: 2.0 — the issuer's own FY27 and FY28 lines are summed, as this note already states. The only name in the cohort built on the horizon the gate actually tests (§3.2)."
     },
     "mi_non_reserve_moz": {
      "v": 1.215,
@@ -1755,8 +1784,9 @@
     },
     "committed_capex_aud_m": {
      "v": 22.0,
+     "horizon_years": 1.0,
      "doc": "hy_dec2025",
-     "note": "A$21.969m of 'capital expenditure contracted but not provided for in the financial statements, within one year', Note 17 of the REVIEWED half-year accounts at 31 Dec 2025 — literally contracted, which is the §3 definition. REPLACES 31, which was the headline of a September 2024 announcement ('1Moz Reserve allows Catalyst to double production for A$31m'), a two-year-old development-plan estimate rather than a commitment and substantially already spent. NOTE THE DIRECTION: this moves in the name's favour, so it is recorded that Gate 2 is invariant across [22, 31] against A$331m net cash and A$100m undrawn. EXCLUDED: the PP2 mill expansion at A$50-75m is pre-FID ('A decision has not yet been made'); exploration A$82m FY26 actual is deferrable; the FY27 plant back-end upgrade carries no disclosed figure. Supersede at the FY26 annual report, which will carry the 30 Jun 2026 commitments note."
+     "note": "A$21.969m of 'capital expenditure contracted but not provided for in the financial statements, within one year', Note 17 of the REVIEWED half-year accounts at 31 Dec 2025 — literally contracted, which is the §3 definition. REPLACES 31, which was the headline of a September 2024 announcement ('1Moz Reserve allows Catalyst to double production for A$31m'), a two-year-old development-plan estimate rather than a commitment and substantially already spent. NOTE THE DIRECTION: this moves in the name's favour, so it is recorded that Gate 2 is invariant across [22, 31] against A$331m net cash and A$100m undrawn. EXCLUDED: the PP2 mill expansion at A$50-75m is pre-FID ('A decision has not yet been made'); exploration A$82m FY26 actual is deferrable; the FY27 plant back-end upgrade carries no disclosed figure. Supersede at the FY26 annual report, which will carry the 30 Jun 2026 commitments note. HORIZON BASIS: the commitments note is expressly 'within one year', so 1.0 of the 2.0-year window (§3.2)."
     },
     "mi_non_reserve_moz": {
      "v": 1.933,
@@ -1861,8 +1891,12 @@
     },
     "aisc_aud_oz": {
      "v": 3100,
+     "range": [
+      2800,
+      3400
+     ],
      "doc": "fy27_guidance",
-     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY2027 range A$2,800-3,400/oz. The June 2026 quarter actual was A$4,107/oz and no FY2026 full-year AISC has been published."
+     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY2027 range A$2,800-3,400/oz. The June 2026 quarter actual was A$4,107/oz and no FY2026 full-year AISC has been published. RANGE RECORDED: the issuer-published FY2027 span this midpoint is taken from is [2800, 3400]. It is machine-readable because it DECIDES GATE 2 (§3.2) — at 3,100 Pantoro clears the stress by A$51m, at the top of its own guidance it fails by A$12m. Recording the midpoint is permitted provenance; letting the midpoint settle a binary gate is not."
     },
     "net_debt_aud_m": {
      "v": -223.4,
@@ -1871,13 +1905,18 @@
     },
     "production_koz_yr": {
      "v": 97.5,
+     "range": [
+      90,
+      105
+     ],
      "doc": "fy27_guidance",
-     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY2027 range 90-105 koz. Guidance is H2-weighted (H1 40-45%, H2 55-60%). Gate context: FY2026 delivered 77,408 oz against 86-92 koz guidance, a ~12% miss."
+     "note": "DERIVED as the midpoint of the ISSUER-PUBLISHED FY2027 range 90-105 koz. Guidance is H2-weighted (H1 40-45%, H2 55-60%). Gate context: FY2026 delivered 77,408 oz against 86-92 koz guidance, a ~12% miss. RANGE RECORDED: the issuer-published FY2027 span this midpoint is taken from is [90, 105]. Gate 2 is invariant across it (§3.2)."
     },
     "committed_capex_aud_m": {
      "v": 101,
+     "horizon_years": 1.0,
      "doc": "fy27_guidance",
-     "note": "FY2027 'major project and growth capital expenditure of $101 million reflecting the substantial investment in new underground mines and pre-stripping costs for Stage 3 at Gladstone open pit'. Exploration of A$45m is guided separately in the same announcement and is excluded as deferrable. DEFINITION CAVEAT: this is guided FY27 spend rather than a contracted sum, though the underlying projects are board-approved — the Board has approved re-commencement of open pit mining at Green Lantern, and Gladstone Stage 3 and Daisy South were board-approved in the June quarter. No pre-FID project is counted. Do not confuse with the ~A$67m on the Diggers slide, which is FY2026 ACTUAL spend."
+     "note": "FY2027 'major project and growth capital expenditure of $101 million reflecting the substantial investment in new underground mines and pre-stripping costs for Stage 3 at Gladstone open pit'. Exploration of A$45m is guided separately in the same announcement and is excluded as deferrable. DEFINITION CAVEAT: this is guided FY27 spend rather than a contracted sum, though the underlying projects are board-approved — the Board has approved re-commencement of open pit mining at Green Lantern, and Gladstone Stage 3 and Daisy South were board-approved in the June quarter. No pre-FID project is counted. Do not confuse with the ~A$67m on the Diggers slide, which is FY2026 ACTUAL spend. HORIZON BASIS: FY2027 only, so 1.0 of the 2.0-year Gate 2 window. FY28 is unguided and is charged as zero; not filled, because annualising a guided year into an unguided one is estimation_policy.forbidden (§3.2)."
     },
     "shares_out_m": {
      "v": 389.72,

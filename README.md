@@ -20,11 +20,11 @@ part of the gold-equity proposition while making those failure modes explicit.
 > unit of enterprise value, in qualifying jurisdictions, while selecting
 > companies able to survive a severe gold drawdown without forced equity issuance.
 
-The current construction holds 12 ASX-listed companies at **A$662 of funded EV
-per confidence-weighted claimed ounce**, versus **A$892 for the same companies
-at market-cap weights**. That is a 26% lower headline EV per
-claimed ounce, produced by portfolio construction alone. The claim is 57.8% Proven & Probable
-reserves, 29.5% Measured & Indicated non-reserve material and 12.7% Inferred material.
+The current construction holds 11 ASX-listed companies at **A$739 of funded EV
+per confidence-weighted claimed ounce**, versus **A$904 for the same companies
+at market-cap weights**. That is an 18% lower headline EV per
+claimed ounce, produced by portfolio construction alone. The claim is 58.2% Proven & Probable
+reserves, 29.4% Measured & Indicated non-reserve material and 12.5% Inferred material.
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.
@@ -231,12 +231,12 @@ connection is unavailable.
 
 **Market-data anchor:** 19 August 2026, spot A$6,347/oz  
 **Resource data sourced:** 17 August 2026  
-**Constituents:** 12  
-**Headline funded EV / claimed ounce:** A$662  
-**Same names, market-cap weighted:** A$892 — a 26% discount  
-**Claim mix:** 57.8% P&P / 29.5% M&I non-reserve / 12.7% Inferred  
-**Reported gold beta:** 1.71  
-**Effective number of holdings:** 11.2
+**Constituents:** 11  
+**Headline funded EV / claimed ounce:** A$739  
+**Same names, market-cap weighted:** A$904 — an 18% discount  
+**Claim mix:** 58.2% P&P / 29.4% M&I non-reserve / 12.5% Inferred  
+**Reported gold beta:** 1.70  
+**Effective number of holdings:** 10.2
 
 Both A$/oz figures are emitted by the build. The market-cap comparator used to be
 maintained by hand and had drifted to four different values across the tree — a
@@ -244,15 +244,28 @@ source comment said A$910, this README said A$917, an in-flight branch said A$91
 and the figure was A$892. It is now computed from the same rows as the headline,
 so the two cannot disagree.
 
-The claim mix is published to one decimal deliberately. The M&I share sits within
-0.01pp of 29.50, so a whole-percent reading flips between 29 and 30 on a move
-that is not a move — and this is the statistic the methodology nominates as the
-one to watch over time.
+The claim mix is published to one decimal deliberately. The M&I share sat within
+0.01pp of 29.50 on the twelve-name book, so a whole-percent reading flipped
+between 29 and 30 on a move that is not a move — and this is the statistic the
+methodology nominates as the one to watch over time.
 
-Westgold is the largest position at approximately 12.3%. PNR and CYL are capped
-at 10% as single-asset companies; RXL is capped at 5% as a developer. The live
-build writes the complete constituent table and cap effects to the point-in-time
-snapshot rather than asking this README to serve as a second output file.
+Westgold is the largest position at approximately 13.9%. CYL is capped at 10% as
+a single-asset company; RXL is capped at 5% as a developer. The live build writes
+the complete constituent table and cap effects to the point-in-time snapshot
+rather than asking this README to serve as a second output file.
+
+**Pantoro left the book on 19 August 2026, and the headline moved A$77/oz because
+of it.** PNR is the one constituent whose survival inputs were forward guidance
+rather than trailing actuals, and both were recorded at the midpoint of the
+issuer's published range. At the midpoint of its FY27 AISC guidance it cleared
+the two-year stress by A$51m; at the top of the same guidance sentence it failed
+by A$12m. Methodology §3.2 now requires a Gate 2 verdict to be invariant across
+the ranges the issuer itself published, and a verdict that flips is unknown
+rather than favourable. It decides exactly one name — every other constituent is
+invariant across its own disclosed ranges, including Capricorn across the ±25%
+accuracy band on an estimate that carries no contingency. Losing the cheapest
+claim in the universe at A$354/oz is most of why the headline rose; that is the
+price of the rule and it is stated rather than absorbed.
 
 One known staleness sits inside that largest position. On 18 August 2026 Westgold
 declared a maiden 1,145 koz Probable reserve at Fletcher and lifted the Fletcher
