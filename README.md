@@ -1,308 +1,288 @@
 # SJGV — Stable Jurisdiction Gold Value Index
 
-**A gold miner index that counts ounces instead of market capitalisation.**
+SJGV is a rules-based gold-equity index built for a specific investment regime:
+**gold is repriced materially higher, the value of future mineable inventory
+rises with it, and the path is volatile enough that dilution and sovereign risk
+matter.** Instead of giving the largest weight to the companies the market
+already values most highly, SJGV asks a more direct question: *how much eligible,
+unhedged gold in the ground do I control for each dollar of enterprise value?*
 
-Buy a gold miner and what you are actually buying is a pile of gold that hasn't
-been dug up yet. SJGV weights each company by **how much of that pile you get per
-euro**, and buys nothing whose pile sits somewhere a government has a motive to
-take.
+That question is the reason the index exists. Physical gold gives clean exposure
+to the metal, but not to the expansion of economic mine inventory or to industry
+consolidation. Gold miners can provide both, but conventional miner indices are
+usually market-cap weighted: as a company's ounces become more expensive, the
+index owns more of them. Simple EV-per-ounce screens have the opposite problem.
+They can make weak resources, sold-forward production, unfunded projects and
+fragile balance sheets look deceptively cheap. SJGV is designed to keep the useful
+part of the gold-equity proposition while making those failure modes explicit.
 
-Twelve ASX-listed companies. **A$679 of enterprise value per ounce of claimed
-gold — against A$917 for the same twelve companies weighted by market cap.**
-Same names, same day, same disclosed reserves. A quarter more gold in the ground
-for the same money, purely from how the weights are set.
+> **The mandate:** own the largest sourceable claim on future unhedged gold per
+> unit of enterprise value, in qualifying jurisdictions, without depending on
+> forced equity issuance through a severe gold drawdown.
 
----
+The current construction holds 12 ASX-listed companies at **A$677 of funded EV
+per confidence-weighted claimed ounce**, versus approximately **A$917 for the
+same companies at market-cap weights**. That is a 26% lower headline EV per
+claimed ounce, produced by portfolio construction alone. The claim is 58% Proven & Probable reserves,
+29% Measured & Indicated non-reserve material and 13% Inferred material.
 
-## Why ounces
-
-A mine is a strip of call options on gold: one option per ounce, strike equal to
-what that ounce costs to extract, expiring in whatever year the mine plan digs it
-up. If you own gold miners for exposure to the gold price, the thing you want is
-**the most options, at the lowest strikes, for the least money.**
-
-Market-cap weighting cannot do that, and not by accident. It sizes each position
-by what the market currently pays for that company's ounces, so the more
-expensive an ounce becomes, the more of it you hold. Every re-rating buys you
-less gold per euro and the index calls that a bigger position.
-
-SJGV inverts it. One formula, no scores:
-
-```
-              ClaimedUnhedgedOunces_i
-  w_i    ∝    ───────────────────────
-                    FundedEV_i
-```
-
-Nothing else. No composite, no ranking, no quality tilt, no factor blend. A term
-is allowed into the weight only if it changes **how many ounces are claimed, or
-what was paid for them.** Everything else in this repository is a report.
-
----
-
-## What goes into the count, and why it is not obvious
-
-**Resources, not just reserves.** Proven & Probable is only the part a company
-has already committed to mining at today's prices. SJGV also counts Measured &
-Indicated at 0.5 and Inferred at 0.2. Those discounts are the only judgement left
-anywhere in the weight, and they sit where a judgement belongs — deciding how
-many ounces are claimed, not scoring a company.
-
-The current book is **58% reserves, 29% near-money M&I, 13% inferred tail**.
-That mix is the convexity position, and the investment case below is about why.
-
-**Hedged ounces are subtracted.** Gold a company has already sold forward is gold
-you do not own the upside to. It comes off the reserve tranche first, because
-that is where a forward gets delivered from.
-
-**Unfunded capex is added to the price.** A developer sitting on ounces it cannot
-afford to dig up has not really got them yet. The money still to be spent before
-first pour is added to enterprise value, so the ounces are priced at what they
-genuinely cost. Uncorrected, an unfunded project looks like the cheapest gold in
-the world on the strength of money it has not raised.
-
-**Everything is sourced to a document.** No estimated inputs, ever. A value with
-no source is a gap to close or a company to reject — never a number someone made
-up. Absence must never read as zero where zero would flatter.
-
----
-
-## Two gates, and the two disasters they are for
-
-Weighting only happens after two binary tests. Neither is a score, neither can be
-offset by cheapness, and each is aimed at a different way of losing everything.
-
-> **Gate 1 defends against 1933. Gate 2 defends against 2013.**
-
-**Gate 1 — where the ounces are.** The scenario this index is built for is gold
-repricing violently upward. In that scenario the danger is not a permitting delay,
-it is a government that wants the metal. So the test is applied to the country
-where the rock physically sits, and it asks whether that state has the motive and
-the machinery:
-
-- **Own, freely floating currency** — not a reserve currency, not a currency-union
-  member. A state whose currency can devalue has no need to repress gold; the FX
-  does the adjustment for it. A reserve issuer has both a unique motive and unique
-  tools.
-- **Solvent sovereign** — net debt ≤ 60% of GDP and interest ≤ 10% of revenue.
-- **No gold controls in operation** — no confiscation, compulsory delivery,
-  administered monopsony or gold-export ban in force today, checked against
-  primary law rather than recollection.
-
-Nothing here promises a state *cannot* take your gold, and the earlier version of
-this README came close to implying it. The honest claim is narrower. Two of these
-three tests are about **motive** — a solvent state with a currency that devalues
-on its own has no reason to reach for the metal. The third is about **machinery**,
-and it is present tense: nothing is operating now.
-
-What it is not is a promise about tomorrow, and Australia is the reason to say so
-plainly. Part IV of the Banking Act 1959 — compulsory delivery of private gold to
-the Reserve Bank, an export ban, a purchase monopsony — *ran until 30 January
-1976*. It was switched off by Proclamation, never repealed, and Parliament has
-kept amending it as recently as 2016. It can be switched back on by an executive
-act, in part or in whole, on any day. Compensation reaches the delivery limb and
-arguably not the rest.
-
-An earlier draft of the methodology tried to gate that risk away by banning
-dormant powers outright. Australia fails that test, so the rule would have emptied
-the index; the v1.0 tables recorded a pass against it anyway. The rule is gone. In
-its place the exposure is written down in full — every section, how it activates,
-what it pays — in §11.1 of the methodology, and carried as a disclosed risk the
-index does not price. That is a smaller claim than the one it replaces, and it is
-one the repository can actually support.
-
-**Gate 2 — who is still standing.** *Does this company reach the other side of a
-40% real gold drawdown without issuing equity?* Cash, undrawn facilities, free
-cash flow at the stress price, committed capex, debt maturities. Run **unhedged**,
-so nobody passes survival on the strength of the forward sales that reduce their
-claim. The drawdown is applied to a three-year real average rather than to spot,
-because anchoring to spot makes a survival gate weakest exactly when spot is most
-extended.
-
-Cost lives here and only here. AISC decides whether a company survives; it does
-not decide how many ounces it owns, so it never reaches a weight.
-
-**Four caps follow**, and all four answer one question: *how much of the claim can
-a single uncorrelated operational failure destroy permanently?* A fault, a flood,
-a tenement dispute or a fraud does not mark a claim down — it removes it.
-
-| Constraint | Setting |
-|---|---|
-| Single-name maximum | 15% |
-| Single-asset company maximum | 10% |
-| Developer sleeve | ≤ 15%, per name ≤ 5% |
-| Ineligible-jurisdiction NAV per constituent | 25% |
+This is not a forecast and it is not a backtest. It is a transparent statement
+of what the portfolio owns today.
 
 ---
 
 ## The investment case
 
-Three ways it pays, and one thing it protects.
+SJGV is optimized for a gold revaluation in which the optionality embedded in
+mineral inventory becomes economically important.
 
-**You own more of the asset.** A$679 against A$917 per ounce is not a forecast, a
-factor premium or a backtest — it is the price of the same twelve companies'
-disclosed gold, arranged two ways. Nothing has to happen for that discount to be
-real; it is what you own on day one.
+At higher gold prices, lower cut-off grades can become economic, mine lives can
+extend and already-defined material can support new or larger mine plans. That
+does **not** upgrade geological confidence by itself—Inferred material still
+requires further work before it can become Measured or Indicated—but it can make
+more of a known resource commercially relevant. A reserves-only portfolio owns
+the ounces already admitted to the mine plan. SJGV also owns a discounted claim
+on what may enter later.
 
-**You own the option, not just the strip in the money.** 42% of the claim is
-Measured & Indicated and Inferred material — ounces in nobody's mine plan yet,
-already written down to 0.5 and 0.2 in the count before a euro is allocated to
-them. That tranche is where a gold miner's gearing to the gold price actually
-comes from, and a reserves-only count prices it at nothing.
+The index can be rewarded in three distinct ways:
 
-**You hold what an acquirer buys.** Acquirers in this sector transact on ounces
-in the ground, and this book is, by construction, the cheapest ounces in the only
-jurisdiction that passes Gate 1. That is not hypothetical here: **Vault is 8.4%
-of the book and under a signed Genesis scheme** targeting November 2026,
-Evolution is itself acquiring Carnaby, and five schemes have moved across the
-sector since May 2026 — one of them collapsing mid-flight when a rival outbid it,
-inside a ten-week window.
+1. **Gold rises and future inventory becomes more valuable.** The portfolio owns
+   non-reserve material before it enters a reserve or production plan.
+2. **The valuation gap closes.** The present book controls more claimed gold per
+   unit of enterprise value than the same names at market-cap weights. Gold need
+   not rise for that relative discount to narrow.
+3. **The sector consolidates.** A portfolio selected for attributable ounces and
+   valuation naturally owns assets relevant to reserve replacement and corporate
+   transactions.
 
-**And Gate 1 protects you from being right.** The scenario this index exists for
-is the one in which gold becomes politically interesting. Owning the correct
-asset into that scenario is worth nothing if it sits somewhere with a motive to
-take it.
+The design is equally explicit about the path. A miner that must issue equity at
+the bottom of a cycle permanently reduces the ounces behind each existing share.
+Gate 2 therefore asks whether the company can survive a two-year, 40% real gold
+drawdown without doing so. The goal is not to avoid mark-to-market losses; it is
+to avoid turning a cyclical loss into permanent impairment.
 
-### Where the convexity is — and where it is not
+### Where it should work—and where it should not
 
-A gold mine's convexity is not a modelling artefact, it is a physical mechanism:
-**as the gold price rises the cut-off grade falls, and rock that was waste
-becomes ore.** Ounces migrate from Inferred to M&I to Proven & Probable, and the
-ounce count itself grows without a single new drill hole. Counting the
-non-reserve tranches at 0.5 and 0.2 is how you own that migration *before* it
-happens. An index counting reserves alone owns the in-the-money strip and none of
-the option.
-
-Three things must be said plainly about how far that can be evidenced.
-
-**The NAV model shows zero gamma, and that is a statement about the model.**
-Modelled capture at ±40% is 1.61 up and 1.61 down — a ratio of exactly 1.00. On a
-fixed mine plan at a single AISC, NAV is `A × (deck − AISC) − debt`, which is
-linear in the deck, so every finite difference returns the same delta. The 1.00
-is arithmetic, not evidence of an absence.
-
-**The mechanism cannot be measured from public disclosure.** A survey of ≈11 MB
-of primary text found that **zero of twelve constituents publish a resource at two
-or more cut-off grades.** Issuers run the curve and table only its argmax. So the
-ledger is static in the gold price by necessity, not by choice, and no cut-off
-elasticity is assumed — assuming one would manufacture the exact number the
-product is judged on.
-
-**Realised up-versus-down capture is not a finding either.** β_up 1.70 against
-β_dn 1.15, a ratio of 1.48 against 1.28 for the same names cap-weighted — on 23
-down weeks, with a 95% interval of [0.12, 4.44]. That interval spans "no
-convexity at all" and "three times gold". It is reported because it was measured,
-not because it demonstrates anything.
-
-**So the convexity position is the ledger mix and nothing else: 58% reserves, 29%
-near-money M&I, 13% inferred tail.** That is made of disclosed ounces rather than
-of a model's output, and it is the number to watch — a book drifting toward
-reserves is a book losing its optionality.
-
-### Why not simply take leverage instead
-
-Because measured in ounces, linear leverage *must* lose over a round trip. Start
-at 1.00 oz; gold doubles and a 2× exposure triples the index, taking you to 1.50
-oz; gold halves back to where it began and symmetric capture destroys the
-position entirely. At a realistic 1.3× downside capture you end at 1.05 oz — a 5%
-gain from a full round trip in which gold went nowhere.
-
-Ounce accumulation across a cycle is therefore a function of **convexity, not
-leverage**, and this is the third and least-discussed reason gold equities failed
-to deliver leverage between 2011 and 2020. It is why β_gold is reported and
-checked against a 1.4–1.8 band rather than maximised, why a 2.0+ target was
-considered and rejected, and why Gate 2 exists at all.
-
-### When it is worth holding, and when it is not
-
-| Scenario | How this index behaves |
+| Scenario | Expected behaviour |
 |---|---|
-| **Gold reprices violently upward** | The design case. Cut-off grades fall and the 42% of the claim sitting in non-reserve material starts migrating into mine plans. Gate 1 is what keeps the win — a solvent state with its own floating currency and no gold controls running has neither the motive nor the standing machinery to come for the metal. What it does have is Part IV, switched off since 1976 and revivable by Proclamation; that is disclosed, not priced. |
-| **The sector consolidates** | You are holding the list an acquirer screens for. Evidenced above, and running now. |
-| **Gold flat, miners de-rate** | The plain value case. Nothing needs to happen to the gold price; the position pays if A$ per ounce mean-reverts toward what the market pays elsewhere. |
-| **Gold drawdown** | You lose money. Nothing here is a hedge and the book is geared. What Gate 2 buys is that the loss is not made *permanent*: every constituent reaches the far side of a 40% real drawdown without issuing equity, so the ounces behind each share are the ones you started with. Dilution at the bottom is how gold equity holders were destroyed in the last cycle. |
-| **Sustained bull led by expensive large caps** | The worst case, and structural rather than fixable. See below. |
-
-One asymmetry worth knowing: the ledger counts an ounce at A$1,717 AISC and an
-ounce at A$3,100 identically. High-cost ounces have the most operating leverage
-to a rising price and are the first to be worth nothing in a falling one, so the
-book is more geared in both directions than the ounce count alone suggests.
+| **Sharp, sustained gold revaluation** | The design case. Resource optionality, operating leverage and reserve replacement become more valuable. |
+| **Sector consolidation** | The ounce-and-value discipline should place the portfolio near the assets strategic buyers are trying to replace. |
+| **Flat gold, valuation mean reversion** | The portfolio can benefit if cheap claims re-rate toward the sector. |
+| **Gold drawdown** | The index will lose money. The survival gate is intended to preserve the claim through the cycle, not hedge the decline. |
+| **Bull market led by expensive large-cap “quality”** | The structural weak case. SJGV underweights ounces the market already prices richly and sells into price strength when the disclosed claim does not change. |
 
 ---
 
-## The book
+## Why SJGV is different
 
-**12 constituents · A$679 per claimed ounce · β_gold 1.72 · effective N 11.3**
-Built 18 August 2026 against live IBKR prices, spot A$6,218/oz.
+### It weights the asset, not the market's opinion of the asset
 
-| | Weight | A$/claimed oz | Claimed Moz | Sleeve |
-|---|---|---|---|---|
-| Westgold Resources (WGX) | 12.16% | 602 | 7.77 | producer |
-| Catalyst Metals (CYL) | 10.00% | 530 | 2.63 | producer |
-| Pantoro Gold (PNR) | 10.00% | 372 | 2.03 | producer |
-| Northern Star Resources (NST) | 9.59% | 763 | 42.84 | producer |
-| Regis Resources (RRL) | 8.93% | 819 | 5.55 | producer |
-| Genesis Minerals (GMD) | 8.64% | 846 | 10.02 | producer |
-| Vault Minerals (VAU) | 8.44% | 867 | 6.34 | producer |
-| Ramelius Resources (RMS) | 8.31% | 880 | 7.14 | producer |
-| Greatland Resources (GGP) | 8.18% | 895 | 7.94 | producer |
-| Capricorn Metals (CMM) | 6.74% | 1,085 | 6.48 | producer |
-| Rox Resources (RXL) | 5.00% | 458 | 1.23 | developer |
-| Evolution Mining (EVN) | 4.01% | 1,827 | 15.44 | producer |
+The raw signal is claimed unhedged ounces divided by funded enterprise value.
+There is no composite score, factor blend or discretionary quality overlay. A
+term may affect a weight only if it changes either the amount of gold claimed or
+the capital paid for that claim.
 
-Caps bind on three: PNR 15.8% → 10%, CYL 11.1% → 10%, RXL 12.8% → 5%.
+### It separates return drivers from ruin controls
 
----
+Cheapness cannot compensate for a failed jurisdiction, an inability to survive
+the stress case or an untradeable security. Those are binary gates applied before
+weighting. Concentration limits are applied afterwards. The investment signal is
+therefore not diluted by turning every risk into another score.
 
-## What you are giving up
+### It treats optionality explicitly
 
-Stated plainly, because a methodology that only lists its strengths is selling
-something.
+P&P reserves, M&I non-reserve material and Inferred material are not treated as
+equivalent. They enter the ledger at 1.0, 0.5 and 0.2 respectively. The resulting
+ledger makes the optionality exposure visible instead of hiding it in a narrative
+or a proprietary valuation model.
 
-**It will lag when expensive quality re-rates.** Evolution is the most expensive
-claim in the universe at A$1,827/oz and is held at 4%, against roughly 25% in a
-cap-weighted book. When a name like that runs, this index does not participate.
-That is not a flaw to be tuned away — it is the objective, working.
+### Missing data cannot improve a company
 
-**It sells into strength.** Because market cap sits in the denominator, a company
-whose share price rises on unchanged ounces gets a *smaller* weight. The index is
-structurally contrarian, and in a sustained sector re-rating that costs money.
+Every live input points to a source document. Values are derived only when the
+arithmetic is reproducible from that document. An absent value is a gap, a
+provisional gate result or a rejection—never a convenient zero. The repository's
+working rule is **derive or fail**.
 
-**It is concentrated and currently single-country.** Twelve names, all
-ASX-listed. The jurisdictional framework is applied globally and whitelists
-nobody — Australia is an output, not an input — but today it is the only Tier A
-pass, so this is an Australian book with Australian weather, Australian politics
-and Australian labour costs.
+### It is designed to be falsifiable
 
-**It cannot be backtested, and no simulated track record will ever appear here.**
-Point-in-time reserve statements and price decks do not exist for past dates, so
-the gates cannot be honestly re-run on history. Every number published is
-arithmetic on currently disclosed inputs — which is also why none of it carries
-survivorship or look-ahead bias.
+The methodology publishes its gates, parameters, source notes, cap effects and
+point-in-time snapshots. Reporting models may describe the portfolio, but they
+cannot silently influence a weight. There is deliberately no simulated history:
+the point-in-time resource statements and assumptions needed for an honest
+historical reconstruction do not exist.
 
 ---
 
-## Repository
+## How the index works
 
-| Path | What it is |
+The full rules are in [`index-methodology.md`](index-methodology.md). The engine
+follows a simple order: **qualify, count, price, weight, cap**.
+
+### 1. Qualify the company
+
+The starting universe is a defined set of ASX-listed gold companies. A company
+must first satisfy the gold-purity requirement, then pass three gates:
+
+| Gate | Question |
 |---|---|
-| [`index-methodology.md`](index-methodology.md) | The methodology. §6 is the ounce ledger and §7 the weight — those two sections are the entire model. §13 is the factor inventory: 51 inputs, established by perturbing each one and measuring the book, and no others |
-| `build_index.py` | The engine: gates, ledger, weighting, caps, basket sizing |
-| `nav_model.py` | The §9 NAV model — implied deck and P/NAV. **Reporting only, by decision.** No output reaches a weight |
-| `data/` | The provenance-tracked data layer — every value names the document it came from. [`data/README.md`](data/README.md) has the schema |
-| `tools/` | `gaps.py` (what is missing) · `provenance.py` (whether it is any good) · `sensitivity.py` (what each gap is worth in pp) · `config_audit.py` (does the code read what config declares) · `snapshot.py` (point-in-time record and turnover) · `asymmetry.py` (up-versus-down capture) · `asx.py` (share counts, ADVT) · `fetch.py` / `extract.py` (sourcing) |
-| `snapshots/` | One frozen directory per rebalance: data, parameters, output, engine commit |
+| **Jurisdiction** | Are the counted ounces in a country with its own floating currency, acceptable sovereign finances and no gold-control regime currently operating? |
+| **Survival** | Can the company withstand the methodology's two-year, 40% real gold drawdown without forced equity issuance? |
+| **Tradability** | Is the security's regular-hours quoted spread inside the sleeve limit? |
 
-Two rules govern every change:
+Resource and reserve statements supporting the ledger must also be no more than
+18 months old. Mixed-jurisdiction companies receive category-specific eligibility
+shares for P&P, M&I non-reserve and Inferred ounces; one blended jurisdiction
+share is not reused across all three categories.
 
-- **DERIVE OR FAIL.** No invented inputs. A value without a source document is a
-  gap to be closed or a name to be rejected, never an estimate.
-- **Every parameter names a consumer.** `tools/config_audit.py` cross-checks each
-  `config.json` leaf against the reads a real build recorded. A parameter that is
-  declared but never read is a bug: it describes a rule the index does not apply.
+Gate 1 reduces risk; it does not make confiscation impossible. Australia is the
+only current national pass and dormant Part IV powers in the *Banking Act 1959*
+remain an explicit, unpriced common risk. The methodology records that exposure
+rather than claiming it has been eliminated.
+
+### 2. Build the ounce ledger
+
+For each survivor:
+
+```text
+Claimed ounces
+    = 1.0 × eligible Proven & Probable
+    + 0.5 × eligible Measured & Indicated outside reserves
+    + 0.2 × eligible Inferred
+    − ounces sold forward over the hedge horizon
+```
+
+Hedged ounces are subtracted from P&P first. A bought put does not reduce the
+claim; a forward sale does, because its upside has already been sold.
+
+The 1.0 / 0.5 / 0.2 values are policy discounts for confidence and development
+distance. They do not assert that every ounce within a category has the same
+grade, recovery, metallurgy, capital requirement or economic value.
+
+### 3. Price the claim
+
+The current production denominator is:
+
+```text
+Funded EV = market capitalisation + net debt + residual developer funding gap
+```
+
+The developer adjustment prevents an unfunded project from looking cheap merely
+because the capital required to build it has not yet been raised.
+
+This field is also the main open design issue. Residual funding gap measures
+financing capacity, while remaining execution capital measures economic cost;
+they are not the same quantity. [PR #3](https://github.com/uebber/SJGV/pull/3)
+specifies a production migration to separate them and apply remaining execution
+capital consistently to producers and developers. Until that migration is
+approved, the headline A$/oz figure should be read as the current construction
+statistic, not as a complete look-through acquisition-and-build cost.
+
+### 4. Set raw weights
+
+```text
+                         ClaimedUnhedgedOunces_i
+Raw weight_i   ∝         ───────────────────────
+                               FundedEV_i
+```
+
+Proportional signal weighting spreads the resource-value exposure across all
+qualifying names. It is not the solution to a literal optimization that fills
+the cheapest claim to its cap before buying the next one.
+
+### 5. Apply impairment caps
+
+| Constraint | Limit |
+|---|---:|
+| Single company | 15% |
+| Company with ≥80% of eligible P&P at one asset | 10% |
+| Developer sleeve | 15% |
+| Single developer | 5% |
+| Ineligible-jurisdiction NAV per constituent | 25% |
+
+These limits address permanent, company-specific loss: a plant failure, flood,
+geotechnical event, tenure dispute or failed development project can remove a
+claim rather than merely mark it down.
+
+### 6. Rebalance from current disclosure
+
+- **Annual deep rebalance:** rebuild the resource, reserve and jurisdiction data.
+- **Quarterly light rebalance:** update quarterly-disclosed financial and market
+  inputs.
+- **Event driven:** act on corporate transactions, jurisdiction events and gate
+  breaches when they occur.
+
+Market prices, spreads, gold history and risk statistics are obtained through a
+local IBKR TWS session. The repository does not fabricate replacements when that
+connection is unavailable.
 
 ---
 
-## Licence
+## Current construction
 
-Provided for informational and educational purposes. This is not financial advice.
+**Market-data anchor:** 18 August 2026  
+**Constituents:** 12  
+**Headline funded EV / claimed ounce:** A$677  
+**Same names, market-cap weighted:** approximately A$917  
+**Claim mix:** 58% P&P / 29% M&I non-reserve / 13% Inferred  
+**Reported gold beta:** 1.72  
+**Effective number of holdings:** approximately 11.3
+
+Westgold is the largest position at approximately 12.3%. PNR and CYL are capped
+at 10% as single-asset companies; RXL is capped at 5% as a developer. The live
+build writes the complete constituent table and cap effects to the point-in-time
+snapshot rather than asking this README to serve as a second output file.
+
+The A$677 portfolio figure is the inverse of the portfolio's weighted claim
+yield—a weighted harmonic construction statistic. It is useful for comparing
+two weighting schemes on the same inputs, but it is not literally the equity
+capital paid for a look-through ounce.
+
+---
+
+## What the index does not promise
+
+- **It is not a hedge.** A gold drawdown will hurt, and high-cost ounces can lose
+  value quickly.
+- **It does not prove convexity.** The 58 / 29 / 13 ledger mix demonstrates
+  exposure to resource optionality. The current fixed-plan NAV model is linear
+  in gold price, and the realised up/down sample is too weak to establish more.
+- **It does not make ounces economically identical.** Category discounts do not
+  normalize grade, recovery, strip ratio, metallurgy, mine timing, royalties or
+  future capital.
+- **It will lag expensive quality when expensive quality leads.** That is the
+  predictable cost of refusing to chase a re-rating unsupported by more ounces.
+- **It is currently an Australian portfolio.** Name caps diversify operational
+  failures, not the common legal, fiscal, labour or currency risks of one country.
+- **It has no honest historical backtest.** Current disclosures are preserved as
+  snapshots so a prospective record can be built from here.
+
+These are not footnotes to the strategy. They define the conditions under which
+the strategy should—and should not—be expected to work.
+
+---
+
+## Repository map
+
+| Path | Purpose |
+|---|---|
+| [`index-methodology.md`](index-methodology.md) | Binding methodology and amendment record |
+| `build_index.py` | Gates, ledger construction, weighting, caps and basket output |
+| `data/` | Provenance-tracked company, jurisdiction and parameter data |
+| [`data/README.md`](data/README.md) | Data schema and sourcing conventions |
+| `nav_model.py` | Reporting-only NAV and implied-deck model |
+| `tools/` | Provenance, gaps, sensitivity, configuration audit, snapshots and asymmetry diagnostics |
+| `snapshots/` | Frozen point-in-time inputs, outputs, parameters and engine commit |
+
+Two rules govern every production change:
+
+1. **Derive or fail.** A sourceable value may be derived; an invented value may
+   not enter the index.
+2. **Every parameter names a consumer.** A declared rule that the engine does not
+   read is a defect, not documentation.
+
+---
+
+## Licence and disclaimer
+
+Provided for informational and educational purposes. Nothing in this repository
+is investment advice, an offer, or a recommendation to buy or sell a security.
