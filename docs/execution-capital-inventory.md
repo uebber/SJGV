@@ -100,9 +100,28 @@ That flips EVN's `survives_on_cash_alone`, and §13.3 records
 `gate2.count_undrawn_facilities` as "the parameter that currently decides EVN".
 Northparkes E22 (A$545m, first production end-FY30) would move it further.
 
-**Direction is safe** — today's treatment makes survival *harder* than §3 specifies,
-so nothing unsound is live. But the gate is not measuring the two-year burn it
-claims to, and the error varies by name.
+~~**Direction is safe** — today's treatment makes survival *harder* than §3 specifies,
+so nothing unsound is live.~~ **WITHDRAWN 19 Aug 2026.** The gate is not measuring the
+two-year burn it claims to, and the error varies by name — that part stands. The
+conclusion drawn from it does not. The table above lists only the names whose figures
+run *past* the window, and generalised from them. The names that run *short* of it were
+never tabled: **PNR, RRL, VAU, CYL, NST and CMM's KGP leg are single guided years
+charged against a two-year window, and WGX's record establishes no period at all.** A
+one-year figure against a two-year window understates the burn, which is the direction
+a survival gate must never err in, and it is live on seven constituents rather than
+zero.
+
+Methodology §3.2 now records `horizon_years` per figure and prints the shortfall. It is
+not filled: annualising a guided year into an unguided one is `estimation_policy`
+forbidden, and a cohort rate on an unguided period is the same invention in a peer
+group's clothes — the cohort's upper rate is CMM building a second mine, which on WGX's
+387 koz would charge A$3.4bn and eject the book's largest position on a number nobody
+published.
+
+**PNR is out of the book**, but not on this limb. Its FY27 AISC and production are
+recorded at the midpoints of the issuer's published ranges, and the Gate 2 verdict flips
+between A$2,800 and A$3,400/oz — UNRESOLVED under §3.2, 10.00pp of turnover. See
+`data/SOURCES.md`.
 
 **Nothing flips into the book.** BGL's A$95m is FY27-only, so a true two-year figure
 is larger, not smaller; OBM is already horizon-correct and fails by A$211m.

@@ -112,6 +112,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import itertools
 import json
 import logging
 import math
@@ -523,12 +524,30 @@ def _flatten(record: dict) -> dict:
     Provenance is preserved separately on `_docs` so the build output can cite
     where any number came from. An omitted field stays omitted — the schema
     forbids guessed values, so absence here means genuinely unsourced.
+
+    Two optional sub-keys travel with the value and are flattened alongside it,
+    because a gate has to be able to read them (§3.2):
+
+      `range`          [lo, hi] — the span the ISSUER published, where `v` is
+                       its midpoint. Flattened to `<field>_range`.
+      `horizon_years`  how many years of the Gate 2 stress horizon the figure
+                       actually covers. Flattened to `<field>_horizon_years`.
+
+    Both are transcriptions of what a cited document already states. Neither may
+    be inferred: an omitted `range` means the issuer published a point, and an
+    omitted `horizon_years` means the record does not establish the period —
+    which is a different thing from establishing that it covers the horizon, and
+    the engine treats it as such.
     """
     flat = {k: v for k, v in record.items() if k not in ("fields", "documents")}
     flat["_docs"] = record.get("documents", {})
     flat["_field_docs"] = {}
     for name, spec in record.get("fields", {}).items():
         flat[name] = spec.get("v")
+        if spec.get("range") is not None:
+            flat[f"{name}_range"] = tuple(spec["range"])
+        if spec.get("horizon_years") is not None:
+            flat[f"{name}_horizon_years"] = spec["horizon_years"]
         flat["_field_docs"][name] = {"doc": spec.get("doc"), "note": spec.get("note")}
     return flat
 
@@ -1268,6 +1287,125 @@ def gate_input_invariant(c: dict, field: str, lo: float, hi: float,
                    f"the outcome is unknown, not favourable")
 
 
+# The Gate 2 inputs a disclosed range or a horizon basis can attach to. Listed
+# rather than inferred so that adding a range to some unrelated field cannot
+# silently start deciding a gate.
+GATE2_RANGED_INPUTS = ("aisc_aud_oz", "production_koz_yr",
+                       "committed_capex_aud_m", "undrawn_facilities_aud_m",
+                       "net_debt_aud_m")
+
+
+def disclosed_ranges(c: dict) -> dict[str, tuple[float, float]]:
+    """Issuer-published ranges attached to this name's Gate 2 inputs (§3.2).
+
+    A range is here only when the record took a midpoint of a span the ISSUER
+    published for the SAME quantity over the SAME period. An analyst's span
+    between two defensible conventions is not one — Vault's "the honest span is
+    173-364" is a scope choice and stays in the note, because probing it would
+    gate on which convention the analyst was undecided about rather than on
+    anything Vault disclosed.
+    """
+    return {f: c[f"{f}_range"] for f in GATE2_RANGED_INPUTS
+            if c.get(f"{f}_range") is not None and c.get(f) is not None}
+
+
+def gate2_range_invariance(c: dict, ranges: dict[str, tuple[float, float]],
+                           anchor_gold: float, mcap: float | None,
+                           cfg: dict) -> dict:
+    """Is the Gate 2 verdict invariant across the ranges the issuer published?
+
+    `estimation_policy.on_absence` already says what to do with a gate input the
+    engine cannot pin down: run the gate across the range, and if the verdict
+    differs at the ends then the answer is unknown rather than favourable. That
+    doctrine was wired for ABSENT inputs only, so a value the issuer published as
+    a RANGE — recorded at its midpoint, which `permitted_provenance` allows —
+    walked past it. Pantoro is the case that exposed it: recorded at the midpoint
+    of its own FY27 AISC guidance it survives the stress by A$51m, and at the top
+    of that same guidance range it fails. A midpoint is a permitted way to record
+    a number. It is not a permitted way to decide a gate.
+
+    Two verdicts come back and they are deliberately different in kind.
+
+    SINGLE-FIELD gates. Each ranged input is swept to both of its ends on its
+    own, which is exactly what gate_input_invariant already does for an absent
+    one. A flip means this issuer's own disclosure does not determine the answer.
+
+    JOINT is reported, never gated. Every ranged input at its against-the-name
+    end at once is a compound of independent uncertainties, and treating that as
+    a failure would reject a name for a scenario no disclosure asserts. It is
+    flagged STRAINED instead — the same call Gate 3 already makes on a name that
+    passes on the median spread and breaches on p90.
+    """
+    out = {"tested": sorted(ranges), "flipped": [], "strained": False}
+    if not ranges:
+        return {**out, "ok": True, "reason": "no issuer-published range on a Gate 2 input"}
+
+    for field, (lo, hi) in sorted(ranges.items()):
+        ok, why = gate_input_invariant(c, field, lo, hi, anchor_gold, mcap, cfg)
+        if not ok:
+            out["flipped"].append(f"{field} {lo:,.0f}–{hi:,.0f}")
+
+    corners = {gate2_survival({**c, **dict(zip(ranges, corner))},
+                              anchor_gold, mcap, cfg).get("pass")
+               for corner in itertools.product(*(ranges[f] for f in ranges))}
+    out["strained"] = len(corners) > 1 and not out["flipped"]
+
+    if out["flipped"]:
+        return {**out, "ok": False,
+                "reason": ("Gate 2 is not invariant across the issuer's own published "
+                           f"range for {', '.join(out['flipped'])} — the verdict is "
+                           "unknown, not favourable")}
+    return {**out, "ok": True,
+            "reason": ("invariant across every published range"
+                       + (" on each input alone, but NOT at every combination of "
+                          "their against-the-name ends — STRAINED, reported not gated"
+                          if out["strained"] else ""))}
+
+
+def gate2_horizon_coverage(c: dict, cfg: dict) -> dict:
+    """How much of the stress horizon the committed-capex figure actually covers.
+
+    Gate 2 charges `committed_capex_aud_m` against a horizon_years window, and
+    the cohort does not supply it on one basis. Ora Banda's figure is the
+    issuer's own FY27 plus FY28 lines summed; Pantoro's, Regis's, Vault's,
+    Catalyst's and Bellevue's are a single guided year charged against two.
+    Greatland's and Evolution's are whole-project totals that run PAST the
+    window, which over-charges and is safe. A one-year figure against a two-year
+    window is the opposite, and understating a survival cost is the one direction
+    a gate must never err in.
+
+    This reports the shortfall; it does not fill it. Annualising a guided year
+    into an unguided one is `estimation_policy.forbidden` in as many words
+    ("run-rate annualisation or extrapolation of a disclosed period into an
+    undisclosed one"), and a cohort rate transferred onto an unguided period
+    would be the same invention wearing a peer group's clothes. What the engine
+    can honestly say is which names are charged for less than the window they are
+    tested over, and by how many years.
+
+    An ABSENT horizon_years is `unknown`, never `covered`. The record either
+    establishes the period or it does not, and Westgold's does not.
+    """
+    horizon = cfg["gate2"]["horizon_years"]
+    v = c.get("committed_capex_aud_m")
+    if v is None:
+        return {"state": "absent", "covered_years": None, "shortfall_years": None,
+                "note": "no committed-capex figure — handled by the absent-input "
+                        "invariance sweep, not here"}
+    covered = c.get("committed_capex_aud_m_horizon_years")
+    if covered is None:
+        return {"state": "unknown", "covered_years": None, "shortfall_years": None,
+                "note": f"A${v:,.0f}m is charged against a {horizon:g}y window and the "
+                        "record does not establish what period it covers"}
+    shortfall = max(0.0, horizon - covered)
+    if shortfall <= 1e-9:
+        return {"state": "covered", "covered_years": covered, "shortfall_years": 0.0,
+                "note": f"covers the full {horizon:g}y window"}
+    return {"state": "partial", "covered_years": covered,
+            "shortfall_years": round(shortfall, 2),
+            "note": f"A${v:,.0f}m covers {covered:g}y of a {horizon:g}y window — "
+                    f"{shortfall:g}y of committed spend is unsourced and charged as zero"}
+
+
 def cohort_range(constituents: list[dict], field: str,
                  scale_by: str | None = None) -> tuple[float, float] | None:
     """Empirical range of a field across the names that disclose it.
@@ -1678,6 +1816,20 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
                 if not ok:
                     reject(f"GATE 2 UNRESOLVED — {why}")
                     continue
+
+        # §3.2 — the same doctrine, for an input that IS present but was recorded
+        # at the midpoint of a range the issuer published. Absence was already
+        # caught above; a published range was not, and it is the same question.
+        g2["range_invariance"] = gate2_range_invariance(
+            c, disclosed_ranges(c), anchor_gold, mcap_aud_m, meta)
+        if not g2["range_invariance"]["ok"]:
+            reject(f"GATE 2 UNRESOLVED — {g2['range_invariance']['reason']}")
+            continue
+
+        # §3.2 — reported, never gated. Whether the committed-capex figure spans
+        # the window it is charged against. See gate2_horizon_coverage for why
+        # filling the shortfall would be the forbidden extrapolation.
+        g2["horizon"] = gate2_horizon_coverage(c, meta)
 
         # ── GATE 3 (§4) — tradability, binary ────────────────────────────────
         g3 = gate3_tradability(c, (spreads or {}).get(sym), meta)
@@ -2264,6 +2416,46 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
                   f"Do not quote it.)")
     for n in con["notes"]:
         print(f"  • {n}")
+
+    print_gate2_basis(rows)
+
+
+def print_gate2_basis(rows: list[dict]) -> None:
+    """§3.2 — the two things Gate 2 knows about its own inputs and used not to say.
+
+    Both were invisible before 19 Aug 2026, and invisible in the direction that
+    flatters: a survival gate charged for one year of a two-year window, and a
+    survival gate settled by the midpoint of a range whose other end says the
+    opposite. The names that pass are printed with the basis they passed on.
+    """
+    partial = [(r, r["gate2"]["horizon"]) for r in rows
+               if (r.get("gate2") or {}).get("horizon", {}).get("state")
+               in ("partial", "unknown")]
+    strained = [r for r in rows
+                if (r.get("gate2") or {}).get("range_invariance", {}).get("strained")]
+    if not partial and not strained:
+        return
+
+    print("\nGATE 2 INPUT BASIS (§3.2) — reported, and the reason PNR is not in the book")
+    if partial:
+        print("  Committed capex is charged against a 2y stress window. These names are "
+              "charged for less:")
+        for r, h in sorted(partial, key=lambda x: -(x[1]["shortfall_years"] or 99)):
+            span = ("period NOT ESTABLISHED by the record" if h["state"] == "unknown"
+                    else f"{h['covered_years']:g}y of 2y — {h['shortfall_years']:g}y unsourced")
+            print(f"    {r['ticker']:<5} A${r['gate2']['detail']['committed_capex_aud_m']:>7,.0f}m   {span}")
+        print("  The shortfall is NOT filled. Annualising a guided year into an unguided "
+              "one is")
+        print("  estimation_policy.forbidden, and a cohort rate on an unguided period is "
+              "the same")
+        print("  invention in a peer group's clothes. It is disclosed so it can be "
+              "sourced, not modelled.")
+    if strained:
+        for r in strained:
+            print(f"  {r['ticker']} STRAINED — passes every published range one at a time, "
+                  f"fails at the compound")
+            print(f"    of their against-the-name ends. Flagged, not rejected (Gate 3 p90 "
+                  f"precedent).")
 
 
 def print_ledger(rows: list[dict], stats: dict, gold_aud: float) -> None:

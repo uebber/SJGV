@@ -491,6 +491,27 @@ but its FY27 production is 28 koz higher. **This is a methodology decision, not 
 sourcing one.** The cleanest resolution is to re-run the whole cohort on FY27 guidance
 once every name has published it, which for most of them is within the next fortnight.
 
+**PARTLY ADDRESSED 19 Aug 2026 — methodology §3.2, and it cost a constituent.** The
+open question above is about which *year* the two legs are drawn from. Underneath it
+sat a second question nobody had asked: whether a capex figure covers the *window* it
+is charged against. It often does not. `committed_capex_aud_m` now carries
+`horizon_years`, and seven constituents turn out to charge one guided year against the
+two-year stress window — RRL, VAU, CMM, NST, PNR, CYL and BGL — while WGX's record
+establishes no period at all. GGP and EVN run past the window and over-charge, which is
+safe; `docs/execution-capital-inventory.md` §3 generalised from those two to "direction
+is safe" and that conclusion is now withdrawn. The shortfall is **printed, not filled**:
+annualising a guided year is forbidden above, and a cohort rate on an unguided period is
+the same invention in a peer group's clothes.
+
+**PNR is the name where the period question was never academic**, and it is the one
+constituent whose AISC and production are FY27 *guidance* rather than FY26 actuals — so
+it was period-aligned with its own capex and imprecise instead. Both legs were recorded
+at the midpoint of the issuer's published range. Gate 2 passed at A$3,100/oz and failed
+at A$3,400/oz, the top of the same guidance sentence. Under §3.2 that is UNRESOLVED, and
+PNR is rejected: **10.00pp of one-way turnover, headline A$662 → A$739/oz.** The four
+other names carrying a published capex range — RRL, NST, CMM and GGP — are invariant
+across theirs, CMM including its disclosed ±25% no-contingency band.
+
 ### Values still deliberately absent
 
 - **RMS `committed_capex_aud_m`** — the only remaining provisional pass. The
