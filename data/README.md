@@ -55,6 +55,7 @@ A field value is normally a number. **One is a boolean:**
 | `range` | `[lo, hi]` — the span **the issuer published**, where `v` is its midpoint | Methodology §3.2. Gate 2 is swept to both ends and the verdict must be invariant. A flip is UNRESOLVED and the name is rejected. |
 | `horizon_years` | How many years of the Gate 2 stress window the figure covers | Methodology §3.2. Sizes the shortfall. Coverage itself never gates. |
 | `annual_leg_aud_m` | The recurring guided portion inside the value, excluding any finite build that already spans the window | Methodology §3.2. Continued across the shortfall as a robustness probe; the pass must survive it at `gate2.horizon_continuation_cover`. |
+| `term_date` | ISO date a facility ends. On `undrawn_facilities_aud_m` only | Methodology §3. Credited only if it reaches the end of the Gate 2 window. **Absent means not credited** — an unverified facility cannot prove liquidity. Record the EARLIEST date the facility could lapse where the exact day is undisclosed. |
 
 Both are **transcriptions of what the cited document already states**, and both
 are subject to the same rule as `v`: if the document does not establish it, the

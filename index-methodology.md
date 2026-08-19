@@ -1,7 +1,7 @@
-# Index Methodology — SJGV v1.5
+# Index Methodology — SJGV v1.6
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.5
+**Version:** 1.6
 **Date:** 20 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
@@ -16,6 +16,7 @@
 
 | # | Date | Change |
 |---|------|--------|
+| 6 | 20 Aug 2026 | **§3 undrawn facilities must outlive the stress window; version 1.5 → 1.6. No weight moves.** Gate 2 credited undrawn credit for the full horizon without reading its term date. Evolution's audited FY26 report proved the assumption wrong — Revolving Credit Facility A terms **1 Aug 2028**, nineteen days inside the window — and Regis's A$300m lapses **3 Feb 2028**. Both were counted in full. A facility is now credited only if its sourced term date reaches the end of the horizon; an **absent** term date is not credited either, because crediting an unverified facility makes a survival test easier. Refinancing is not assumed. Seven constituents lose their credit (EVN and RRL on date, WGX/CYL/GMD/RMS/RXL for want of one) and **all seven still pass on cash and cash flow alone**; only NST and GGP keep theirs, which matters because they are the two that hold their pass on a revolver. New sourced sub-key `term_date`. |
 | 5 | 20 Aug 2026 | **§3.2 horizon limb resolved on materiality; version 1.4 → 1.5. No weight moves today, and that is the point.** The v1.3 shortfall report is retained and now carries a gate. **Binding on coverage was rejected**: the missing figure is FY28 guidance, Australian miners guide one year ahead, so the rule could not be satisfied by diligence and would grade disclosure format — OBM publishes an FY27+FY28 phasing table and RRL publishes one year, identical solvency, opposite verdicts. PR #5 proposed it; applied as its own §2 states rather than as its §4.1 tabulates it would have left **four constituents at an effective 3.6 and a 30% top weight the §8.1 caps cannot hold**, breaking the objective's own `P(permanent impairment) ≈ 0` to enforce a survival test nothing was failing. What gates instead is whether the shortfall could decide anything: the guided annual leg is continued across the unsourced remainder and the pass must survive it, at `gate2.horizon_continuation_cover` = 1.0. Cover runs 2.0× (GGP) to 18.8× (CYL), so it binds on nobody today — the §6.4 discipline — and it would have caught PNR independently at 0.51×. WGX has no established period and therefore no leg to continue: reported **UNTESTED** and routed to §12.2 item 6, whose trigger is the early-September Strategic Outlook. New sourced field `annual_leg_aud_m`; new parameter `gate2.horizon_continuation_cover`. |
 | 4 | 20 Aug 2026 | **Binding text corrected; version 1.3 → 1.4. No rule changed and no weight moved by this line.** Four misstatements in the binding document, all found by external review and all landed from PR #5. **§0** stated the construction as `maximise ClaimedUnhedgedOunces / FundedEV subject to …`; nothing searches over portfolios, each name is held in proportion to its own claim yield, and the section now says so and prices the difference — a literal cap-filling optimiser reaches ~A$630/oz over 8 names against the proportional book's A$739 at an effective 10.2. **§0.2, §6.1, §9.2 and §13.1** described JORC categories as option moneyness and said a falling cut-off moves ounces from M&I into P&P; confidence and economics are orthogonal axes, conversion needs the Modifying Factors at PFS level or better, and Inferred cannot convert at all until upgraded. **§3** listed a debt maturity schedule among the engine's inputs, which the engine does not consume. **§7.2 and §10.2** froze A$684/A$910 and A$640/A$910 into the binding text while the engine emitted neither — the §12.3 defect applied to an output; live figures now come from the build and its snapshot only. |
 | 3 | 19 Aug 2026 | **§3.2 added — Gate 2 input basis; version 1.2 → 1.3.** `estimation_policy.on_absence` requires a gate verdict to be invariant across a range it cannot pin down, and that rule was wired for *absent* inputs only. **A value recorded at the midpoint of a range the issuer published bypassed it**, and on one name it was deciding the gate: Pantoro's AISC is the midpoint of its own FY27 guidance of A$2,800–3,400/oz, passing by A$51m at the midpoint and failing by A$12m at the top of the same sentence. Invariance across issuer-published ranges now **gates**, and **PNR is rejected** — the only name it decides; every other constituent is invariant, including Capricorn across its disclosed ±25% no-contingency band. Separately, `committed_capex_aud_m` now carries `horizon_years`, because seven constituents charge one guided year against the two-year window and Westgold's record establishes no period at all; that shortfall is **printed, not filled**, since annualising a guided year is `estimation_policy.forbidden`. **This moves weights: PNR out, 10.00pp one-way turnover, headline A$662 → A$739/oz.** |
@@ -419,6 +420,32 @@ exists.
 **The test is run unhedged.** The hedge book is marked to the stress price and
 then disregarded. Otherwise a company passes survival on the strength of the very
 forward sales that reduce its claim under §6.3.
+
+**A facility must outlive the window.** Gate 2 credits committed-but-undrawn
+credit as liquidity available through the drawdown, which is true only if the
+facility still exists at the end of it.
+
+> **An undrawn facility is credited only if its term date falls on or after the
+> horizon ends. An absent term date is not credited either.**
+
+Evolution's audited FY26 report settled a question this document had been
+carrying as a caveat: Revolving Credit Facility A terms **1 August 2028**,
+nineteen days inside a window opened on the 20 August 2026 build. Regis's A$300m
+lapses **3 February 2028**, six months inside. Both were being counted in full.
+Crediting a facility whose term is unsourced is the same error one step earlier —
+it makes a survival test easier on an unverified input, which is the one
+direction it may not err in — so absence drops the facility rather than the
+requirement. **Refinancing is not assumed**: a revolver rolled every three years
+for a decade is still a contract that ends on a date, and the drawdown this gate
+describes is exactly the scenario in which it is not rolled.
+
+Adopted while binding on nobody. Seven of the eleven constituents lose their
+facility to this rule — EVN and RRL on a sourced date inside the window, WGX,
+CYL, GMD, RMS and RXL for want of one — and **every one still passes on cash and
+cash flow alone.** Only NST and GGP keep their credit, on tranches maturing March
+2030 and no earlier than April 2031. Those two are the names that needed it: both
+held their pass on a revolver, and sourcing the dates is what turned that from an
+assumption into a fact.
 
 **Cost lives here.** AISC is a survival input. It is not a quality reward and it
 is not a score input of any kind. Rewarding low AISC with a weight
@@ -1348,7 +1375,7 @@ ours, is durable, and is reachable.
 | **AUD gold history** → the Gate 2 anchor | Trailing 3y real average of AUD gold | The stress price. Anchoring to a **trailing average rather than spot** stops the gate weakening exactly when spot is most extended — i.e. when survival risk is actually highest. | **15.00pp** |
 | `gate2.gold_drawdown` = 0.40 | Depth of the stress | §0.1: a levered book must survive the down leg to compound ounces through a cycle. This is how deep a hole each name must climb out of. | **15.00pp** |
 | `gate2.count_undrawn_facilities` = true | Does a revolver count as survival | Decides whether committed-but-undrawn credit is liquidity or wishful thinking. It decided **EVN** until 20 Aug 2026, when the audited commitments note replaced a A$1,210m board-approved proxy with A$222m of contracted spend and EVN began surviving on cash alone. **It now decides NST and GGP** — both hold their pass on a revolver, and setting it false ejects 20.1pp of the book rather than 4.2pp. Note also that Evolution's own facility is confirmed to lapse 1 Aug 2028, nineteen days INSIDE the two-year window; moot for EVN now, but the engine credits a facility for the full horizon and does not read its term date. | **20.08pp** |
-| `undrawn_facilities_aud_m` | Committed undrawn credit | Liquidity that exists but is not on the balance sheet. Absent is read as zero, which makes the gate harder — the safe direction. | 0.00pp *(not binding)* |
+| `undrawn_facilities_aud_m` · `term_date` | Committed undrawn credit, and the date it ends | Liquidity that exists but is not on the balance sheet — **and only until the facility does.** Credited only where a sourced term date reaches the end of the stress window (§3). Absent amount reads as zero; absent term date drops the facility. Seven of eleven constituents are now credited nothing here and all seven still pass; NST and GGP keep theirs and are the two that need it. | 0.00pp *(no name flips; latent 20.08pp if both surviving facilities lapsed)* |
 | `gate2.cost_inflation_pa` = 0.05 | AISC path through the stress | **Costs do not fall with the gold price.** They did not in 2013, which is why so much of the industry went cash-negative. Holding AISC flat is also an assumption, and it is the optimistic one. | 0.00pp *(bites at 30%)* |
 | `gate2.horizon_years` = 2.0 | How long the company must hold out | Two years is where a balance sheet either holds or does not. The 2011–15 drawdown ran roughly four. | 0.00pp *(bites at 6y)* |
 | `gate2.tax_rate` = 0.30 | The state's share of stressed cash flow | The sovereign takes its cut before the shareholder sees survival. | 0.00pp *(bites at 80%)* |
@@ -1414,4 +1441,4 @@ those words for the same reason.
 
 ---
 
-*SJGV v1.5 — 20 August 2026. The sole methodology in force.*
+*SJGV v1.6 — 20 August 2026. The sole methodology in force.*

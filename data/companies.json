@@ -133,8 +133,9 @@
     },
     "undrawn_facilities_aud_m": {
      "v": 1750,
+     "term_date": "2030-03-01",
      "doc": "nst_q4fy26",
-     "note": "Two equal tranches maturing March 2030 and March 2031, undrawn and available at quarter end, so the facility outlives the Gate 2 horizon. Value unchanged; citation moves from a newsletter to the lodged quarterly. NOT included: the A$50m and US$99.5m contingent-instrument facilities, which are drawn and are bank-guarantee lines rather than liquidity."
+     "note": "Two equal tranches maturing March 2030 and March 2031, undrawn and available at quarter end, so the facility outlives the Gate 2 horizon. Value unchanged; citation moves from a newsletter to the lodged quarterly. NOT included: the A$50m and US$99.5m contingent-instrument facilities, which are drawn and are bank-guarantee lines rather than liquidity. TERM DATE RECORDED (§3): Two equal tranches maturing March 2030 and March 2031. The EARLIEST tranche date is recorded, which is the bound running against the name; both outlive a window ending August 2028."
     },
     "committed_capex_aud_m": {
      "v": 410.0,
@@ -320,8 +321,9 @@
     },
     "undrawn_facilities_aud_m": {
      "v": 525.0,
+     "term_date": "2028-08-01",
      "doc": "ar_fy26",
-     "note": "CONFIRMED AUDITED, and the caveat the previous note flagged is now RESOLVED AGAINST THE NAME. Note 9(a): Revolving Credit Facility A, A$525.0m, nil drawn, term date 1 AUGUST 2028. The Gate 2 horizon runs two years from the 20 Aug 2026 build, to 20 Aug 2028 — so the facility lapses NINETEEN DAYS BEFORE the window closes and should not be credited for the full horizon. It is left at 525 rather than zeroed because the point is now moot: with committed capex on the audited commitments basis EVN survives on cash alone by roughly A$0.9bn, so the facility decides nothing. Re-test if either input moves. Performance bond facilities C and D (A$340m and C$150m, partly drawn) are excluded — they issue guarantees, not drawable cash."
+     "note": "CONFIRMED AUDITED, and the caveat the previous note flagged is now RESOLVED AGAINST THE NAME. Note 9(a): Revolving Credit Facility A, A$525.0m, nil drawn, term date 1 AUGUST 2028. The Gate 2 horizon runs two years from the 20 Aug 2026 build, to 20 Aug 2028 — so the facility lapses NINETEEN DAYS BEFORE the window closes and should not be credited for the full horizon. It is left at 525 rather than zeroed because the point is now moot: with committed capex on the audited commitments basis EVN survives on cash alone by roughly A$0.9bn, so the facility decides nothing. Re-test if either input moves. Performance bond facilities C and D (A$340m and C$150m, partly drawn) are excluded — they issue guarantees, not drawable cash. TERM DATE RECORDED (§3): EXACT, audited: Note 9(a) gives Revolving Credit Facility A a term date of 1 August 2028. That is NINETEEN DAYS INSIDE a two-year window opened on the 20 August 2026 build, so the facility is not creditable as stress liquidity and the engine drops it. Immaterial — EVN survives on cash alone once committed capex is on the audited commitments basis."
     },
     "hedge_share_fwd24m": {
      "v": 0.0,
@@ -619,8 +621,9 @@
     },
     "undrawn_facilities_aud_m": {
      "v": 475.0,
+     "term_date": "2031-04-01",
      "doc": "ggp_fy27",
-     "note": "CORRECTED from 500. A$500m is the TOTAL facility package; only A$475m is undrawn drawable cash — Revolving Credit Facility A at A$250m on a five-year tenor plus Facility B at A$225m on a seven-year tenor, both fully undrawn at 30 June 2026. The remaining A$25m contingent instrument facility is both drawn to A$9m and restricted to issuing bank and performance guarantees. The issuer's own arithmetic settles it: 'Available liquidity refers to $1,289m net cash reported at 30 June 2026 plus the $475m in undrawn revolving Credit Facilities' = A$1,764m. The previous pair (-1290, 500) would have implied A$1,790m and overstated liquidity by A$26m. Again the secondary source was right and the entry was wrong. EARMARKING CORRECTED: the previous note said the facility was earmarked for Havieron; the executed documents say 'working capital and general corporate purposes including Havieron development', so it is general-purpose. Lenders ANZ, ING, HSBC, NAB and Westpac, with no mandatory hedging requirement."
+     "note": "CORRECTED from 500. A$500m is the TOTAL facility package; only A$475m is undrawn drawable cash — Revolving Credit Facility A at A$250m on a five-year tenor plus Facility B at A$225m on a seven-year tenor, both fully undrawn at 30 June 2026. The remaining A$25m contingent instrument facility is both drawn to A$9m and restricted to issuing bank and performance guarantees. The issuer's own arithmetic settles it: 'Available liquidity refers to $1,289m net cash reported at 30 June 2026 plus the $475m in undrawn revolving Credit Facilities' = A$1,764m. The previous pair (-1290, 500) would have implied A$1,790m and overstated liquidity by A$26m. Again the secondary source was right and the entry was wrong. EARMARKING CORRECTED: the previous note said the facility was earmarked for Havieron; the executed documents say 'working capital and general corporate purposes including Havieron development', so it is general-purpose. Lenders ANZ, ING, HSBC, NAB and Westpac, with no mandatory hedging requirement. TERM DATE RECORDED (§3): Facility A A$250m on a five-year tenor and Facility B A$225m on a seven-year tenor, both undrawn, executed with the ANZ/ING/HSBC/NAB/Westpac syndicate DURING THE JUNE 2026 QUARTER per the 29 July quarterly. The exact execution day is not disclosed, so the term is recorded at the EARLIEST it could fall — the first day of that quarter plus the shorter five-year tenor. Facility B runs to at least April 2033. Both outlive a window ending August 2028 by years, so the bound is not load-bearing; it is recorded because GGP is the one name in the book whose Gate 2 pass depends on its facility."
     },
     "committed_capex_aud_m": {
      "v": 1390,
@@ -1072,8 +1075,9 @@
     },
     "undrawn_facilities_aud_m": {
      "v": 300.0,
+     "term_date": "2028-02-03",
      "doc": "ar_fy25",
-     "note": "DERIVED: facility limit A$300m less amount drawn A$0. FILLS A GAP PREVIOUSLY TREATED AS ZERO. Every link sourced: the A$300m revolving credit facility was established 3 Feb 2025 on a stated three-year tenor, so it is on foot at 30 Jun 2026; the FY25 borrowings note records nothing drawn at 30 Jun 2025; the 31 Dec 2025 reviewed accounts show no borrowings and a cash-flow line 'Commitment fees paid on undrawn facility (1,279)', proving it was live and undrawn at the half; and the June 2026 quarterly's 'sector-leading debt-free balance sheet' means nothing was drawn at year end. CONFIDENCE IS QUALIFIED: no single document states the limit AS AT 30 Jun 2026 — it is a FY25 fact carried forward on a sourced tenor. Covenants (interest cover, net leverage, minimum reserves, minimum A$50m cash and bullion) are nowhere near binding at A$1,184m and nil debt. Settles 21 Aug 2026."
+     "note": "DERIVED: facility limit A$300m less amount drawn A$0. FILLS A GAP PREVIOUSLY TREATED AS ZERO. Every link sourced: the A$300m revolving credit facility was established 3 Feb 2025 on a stated three-year tenor, so it is on foot at 30 Jun 2026; the FY25 borrowings note records nothing drawn at 30 Jun 2025; the 31 Dec 2025 reviewed accounts show no borrowings and a cash-flow line 'Commitment fees paid on undrawn facility (1,279)', proving it was live and undrawn at the half; and the June 2026 quarterly's 'sector-leading debt-free balance sheet' means nothing was drawn at year end. CONFIDENCE IS QUALIFIED: no single document states the limit AS AT 30 Jun 2026 — it is a FY25 fact carried forward on a sourced tenor. Covenants (interest cover, net leverage, minimum reserves, minimum A$50m cash and bullion) are nowhere near binding at A$1,184m and nil debt. Settles 21 Aug 2026. TERM DATE RECORDED (§3): DERIVED: the A$300m revolving credit facility was established 3 February 2025 on a stated three-year tenor, so it lapses 3 February 2028 — roughly six months INSIDE a window ending August 2028, and not creditable. RRL survives on cash alone with A$776m to spare, so nothing turns on it. Refinancing is likely and is not assumed: elapsed time is not evidence, and neither is a lender's goodwill."
     },
     "advt_shares_m": {
      "v": 4.5874,
