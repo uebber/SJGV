@@ -17,8 +17,8 @@ fragile balance sheets look deceptively cheap. SJGV is designed to keep the usef
 part of the gold-equity proposition while making those failure modes explicit.
 
 > **The mandate:** own the largest sourceable claim on future unhedged gold per
-> unit of enterprise value, in qualifying jurisdictions, without depending on
-> forced equity issuance through a severe gold drawdown.
+> unit of enterprise value, in qualifying jurisdictions, while selecting
+> companies able to survive a severe gold drawdown without forced equity issuance.
 
 The current construction holds 12 ASX-listed companies at **A$677 of funded EV
 per confidence-weighted claimed ounce**, versus approximately **A$917 for the
@@ -66,7 +66,7 @@ to avoid turning a cyclical loss into permanent impairment.
 | Scenario | Expected behaviour |
 |---|---|
 | **Sharp, sustained gold revaluation** | The design case. Resource optionality, operating leverage and reserve replacement become more valuable. |
-| **Sector consolidation** | The ounce-and-value discipline should place the portfolio near the assets strategic buyers are trying to replace. |
+| **Sector consolidation** | The ounce-and-value discipline should favour companies whose ounces can replenish an acquirer's reserve base. |
 | **Flat gold, valuation mean reversion** | The portfolio can benefit if cheap claims re-rate toward the sector. |
 | **Gold drawdown** | The index will lose money. The survival gate is intended to preserve the claim through the cycle, not hedge the decline. |
 | **Bull market led by expensive large-cap “quality”** | The structural weak case. SJGV underweights ounces the market already prices richly and sells into price strength when the disclosed claim does not change. |
