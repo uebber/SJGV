@@ -49,6 +49,13 @@
      "url": "https://www.nsrltd.com/media/milhl0uw/half-year-report-ended-31-dec-2025-replacement.pdf",
      "date": "2026-02-12",
      "type": "primary"
+    },
+    "fy26_results_pres": {
+     "title": "FY26 Financial Results Presentation — FY27 Group guidance table and FY27 KCGM guidance slide",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03123137-6A1339304",
+     "asx_announcement": "03123137",
+     "date": "2026-08-20",
+     "type": "primary"
     }
    },
    "fields": {
@@ -130,15 +137,15 @@
      "note": "Two equal tranches maturing March 2030 and March 2031, undrawn and available at quarter end, so the facility outlives the Gate 2 horizon. Value unchanged; citation moves from a newsletter to the lodged quarterly. NOT included: the A$50m and US$99.5m contingent-instrument facilities, which are drawn and are bank-guarantee lines rather than liquidity."
     },
     "committed_capex_aud_m": {
-     "v": 385,
+     "v": 410.0,
      "range": [
-      375,
-      395
+      350.0,
+      470.0
      ],
      "horizon_years": 1.0,
-     "annual_leg_aud_m": 385.0,
-     "doc": "nst_q3fy26",
-     "note": "DERIVED, sum of the three FY27 KCGM items the issuer costs individually: Mill Expansion tail ~A$160m + tailings dam facilities A$100-120m at the ISSUER-PUBLISHED midpoint A$110m + thermal power plant and transmission infrastructure A$115m = A$385m. CORRECTED from 300, which was A$270m plus a A$30m judgement round-up standing in for the thermal power station on the stated basis that it was 'not separately costed'. IT IS SEPARATELY COSTED, at A$115m, in the same bullet list that supplied the other two figures. CITATION ALSO CORRECTED: the record cited the JUNE quarterly, which contains neither figure — both come from the MARCH quarterly, the last document to publish an FY27 KCGM capex breakdown. Scope unchanged: Hemi excluded (FID late FY27), Operational Growth Capital of A$1,140-1,200m/yr excluded as deferrable under the §7.4 screen. Gate 2 unaffected — the sensitivity run says NST passes at A$560m and fails only at A$2,280m. Two unquantified upward risks: the June quarterly adds uncosted 'renewable energy infrastructure' to remaining FY27 works, and FY26 Operational Readiness underspent guidance by ~A$10m which may roll forward. Re-test 20 Aug 2026. RANGE AND HORIZON BASIS RECORDED: one of the three legs is published as a span (tailings A$100-120m), so the total spans [375, 395]; the other two are points. FY27 only, so 1.0 of the 2.0-year window. Gate 2 is invariant across the range (§3.2). ANNUAL LEG: the whole A$385m. All three costed items are FY27 KCGM guidance, so the entire figure recurs in principle; none of it is a finite build already spanning the window. Consumed by §3.2's continuation probe."
+     "annual_leg_aud_m": 410.0,
+     "doc": "fy26_results_pres",
+     "note": "SUPERSEDED BY FY27 GUIDANCE, 20 Aug 2026, and the analyst-assembled sum is retired. The issuer now publishes ONE consolidated line for the KCGM build scope: 'KCGM Mill Expansion and Readiness A$350-470M', so the value is the midpoint A$410m of an ISSUER-PUBLISHED range and the range is recorded for the §3.2 sweep. It replaces A$385m, which was three items summed by hand off the superseded March quarterly (mill tail ~A$160m + tailings A$100-120m + thermal power A$115m) — the VAU precedent applies: where the issuer publishes a consolidated figure, take it rather than reconstruct one. EXCLUDED, unchanged: Operational Growth Capital A$1,150-1,300m as deferrable, and the Hemi Project A$200-250m, which the guidance describes as 'primarily for ongoing engineering and design' with FID still ahead — pre-FID spend is deferrable on the RRL/McPhillamys precedent. COMPOSITION CAVEAT, recorded rather than resolved: it is not stated whether the tailings dam and thermal power items now sit inside the A$350-470m Mill Expansion and Readiness line or inside Operational Growth Capital, which is excluded. The consolidated figure is larger than the sum it replaces, so the recorded value does not fall, but the scope boundary is the issuer's and not this record's. ALSO DISCLOSED AND WORTH THE FLAG: the Mill Expansion Project total is now A$1.75-1.81B against an initial estimate of A$1.53B, a 15-18% overrun, with only A$150-210m of it left in FY27. The two unquantified upward risks the previous note carried — an uncosted renewable energy item and ~A$10m of FY26 Operational Readiness underspend — are not separately identified in the FY27 guidance and are treated as absorbed into it."
     },
     "hedge_share_fwd24m": {
      "v": 0.255,
@@ -226,6 +233,12 @@
      "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1685873/Evolution_agrees_to_acquire_Carnaby_Resources.pdf",
      "date": "2026-07-27",
      "type": "primary"
+    },
+    "ar_fy26": {
+     "title": "Appendix 4E and FY26 Financial Report (audited) — Note 19(a)(ii) capital commitments, Note 9 interest bearing liabilities, Note 6(b) net cash",
+     "url": "https://yourir.info/resources/851ef7ffa345f09f/announcements/evn.asx/2A1690301/Appendix_4E_and_FY26_Financial_Report.pdf",
+     "date": "2026-08-20",
+     "type": "primary"
     }
    },
    "fields": {
@@ -280,9 +293,9 @@
      "note": "Ordinary Fully Paid; numOfShares x priceClose reproduces the API market cap; +0.1% vs the previously filed figure"
     },
     "net_debt_aud_m": {
-     "v": -18.0,
-     "doc": "q4fy26",
-     "note": "DERIVED: gross debt at 31 Mar 2026 was cash A$1,371m less net cash A$42m = A$1,329m; the June quarter had no debt repayment and the revolver stayed undrawn, so gross debt at 30 Jun 2026 is unchanged at A$1,329m, against cash of A$1,347m, giving net cash of A$18m. BULLION: no — Evolution reports a plain closing group cash balance and the words bullion, gold-on-hand and metal-in-transit appear nowhere in either quarterly. QUALIFIED: Evolution did not state a 30 June net cash NUMBER, only 'Maintained net cash position with a cash balance of $1,347M', so this is arithmetic across two statements and ignores non-cash debt movements such as FX on any non-AUD tranche, capitalised interest and leases. THE SIGN DOES NOT FLIP — the issuer asserts a net cash position in a lodged document. Updated from -42.0, which was the 31 March position; the A$24m deterioration is the A$399m cash dividend exceeding the quarter's free cash flow. Audited figure lands 19 Aug 2026."
+     "v": -18.8,
+     "doc": "ar_fy26",
+     "note": "AUDITED, and it confirms the pre-audit derivation almost exactly (-18.0). Note 9: US Private Placements A$1,383.025m at the 0.6869 closing rate, bank loans nil. The issuer's stated net cash basis (Note 6(b): cash and cash equivalents less external borrowings offset by cash-flow-hedge derivatives) nets the A$37.5m derivative asset and the A$16.8m gross cumulative hedge reserve, giving a USPP balance of A$1,328.7m against cash of A$1,347.496m — net cash A$18.8m. Same basis as the NST record, which also uses the issuer's own published definition. ON A PLAIN UNHEDGED BASIS the sign flips: A$1,380.583m of interest bearing liabilities against A$1,347.496m of cash is A$33.1m of net DEBT. The hedged basis is used because the USPP is cross-currency hedged and the issuer reconciles it to A$1,329.0m at hedged values; the A$51.9m spread between the two readings is 0.18% of a A$29bn EV and moves no weight either way."
     },
     "mi_non_reserve_moz": {
      "v": 11.3,
@@ -300,15 +313,15 @@
      "note": "DERIVED: FY26 group gold produced 715 koz less Mt Rawdon 22 koz = 693 koz on a continuing-operations basis, both figures from the same table in the same statement. GOLD ONLY — copper (66 kt) is a separate table and no gold-equivalent figure is used. The continuing-operations basis is chosen for two reasons, both running against the name. First, basis consistency: the A$1,717/oz AISC is explicitly for continuing operations excluding Mt Rawdon, so pairing it with 715 koz would credit Mt Rawdon's 22 koz at continuing-operations costs when its own FY26 AISC was A$5,297/oz, inflating Gate 2 free cash flow. Second, forward validity: Mt Rawdon is gone — FY26 was 'its final full year of operation', with only 'a limited amount of remaining low-grade stockpiles in the September 2026 quarter'. CORRECTED from 745, which was the FY26 guidance midpoint; the actual landed near the bottom of the 710-780 range."
     },
     "committed_capex_aud_m": {
-     "v": 1210,
+     "v": 221.936,
      "horizon_years": 2.0,
-     "doc": "evn_growth_asx",
-     "note": "DERIVED: sum of disclosed board-approved project capital with no apportionment — Northparkes E22 block cave A$545m (Evolution's 80% share; A$680m at 100%), Cowal Open Pit Continuation A$430m, Ernest Henry Bert A$160m and Northparkes Coarse Particle Flotation A$75m. VALUE UNCHANGED; this is a provenance upgrade from a miningweekly.com article to lodged documents, which matters because this input decides the name. The Cowal leg comes from the April 2025 board approval and is re-confirmed current in the June 2026 quarterly: 'Capital investment budget remains unchanged at $430 million with this investment spread over the seven year period to FY31.' Two statements are combined, which the same-statement rule normally forbids; it is unavoidable because the approvals are ten months apart, and each component is individually primary and individually current. THE PREVIOUS JUSTIFICATION WAS WRONG AND IS WITHDRAWN: it claimed 'Contractors are engaged (Redpath on Bert and E22, GR Engineering at Northparkes), so this is contracted, not planned.' The June 2026 quarterly says otherwise for both projects — 'the tender for the underground mining contract was conducted. Appointment of the contractor is planned for early in the September 2026 quarter' — and no contractor is named in any lodged document. The figure now rests on board approval plus works in execution, which is what is actually evidenced. EXCLUDED AS DEFERRABLE, each pre-FID or a study: the Northparkes Expansion Study A$14m, the Northparkes E44 study, the FY27 life-of-mine options 'requiring investment of $70-90 million, which was not included in the previous capital outlook', and the entire Greater Duchess/Carnaby programme, which is at PFS with the feasibility study and approvals both outstanding. STILL CONSERVATIVE, more than previously stated: Cowal has been drawing since FY25 and E22 first production is end-FY30, so a material but unquantified share of the A$1,210m is already spent and most of the remainder falls outside the two-year window. HORIZON BASIS: 2.0. These are whole-project totals and this note records that most of the remainder falls OUTSIDE the two-year window, so the figure over-charges the horizon. Overstating a survival cost is the safe direction and is not corrected (§3.2)."
+     "doc": "ar_fy26",
+     "note": "REPLACES A$1,210m WITH THE AUDITED COMMITMENTS NOTE, and the direction is favourable so the reasoning has to hold on provenance alone. The field is defined as CONTRACTED, non-deferrable spend. Note 19(a)(ii) of the audited FY26 financial report gives exactly that: capital projects and joint arrangement commitments of A$146.411m within one year plus A$75.525m between one and five years, A$221.936m total. The whole A$221.936m is charged inside the two-year window even though part of it runs past FY28 — apportioning it is forbidden and over-charging is the safe direction, so horizon_years is 2.0. The A$1,210m it replaces was a sum of four BOARD-APPROVED project totals (Northparkes E22 A$545m, Cowal A$430m, Ernest Henry Bert A$160m, Northparkes CPF A$75m) assembled by hand across two statements ten months apart, and this record had ALREADY withdrawn the claim that they were contracted — the June quarterly showed the E22 mining contract still out to tender. Board approval is not a contract, the audited note is, and CYL is recorded on this identical basis (Note 17, capital contracted but not provided for). THE MATERIAL CONSEQUENCE: EVN now survives Gate 2 on cash alone rather than only by drawing its revolver, which retires the standing note that gate2.count_undrawn_facilities decides this name. The A$1,210m of board-approved project capital does not disappear — it is the execution-capital input for the §12.2 item 6 denominator migration, where it is admissible as an UPPER_BOUND."
     },
     "undrawn_facilities_aud_m": {
      "v": 525.0,
-     "doc": "q4fy26",
-     "note": "THE LARGEST SINGLE CHANGE ON THIS TICKER. The field was previously treated as zero, a conservative bound rather than a sourced value. The issuer discloses: 'Total liquidity is $1,872 million, which includes an undrawn $525 million revolving credit facility that is available until 2028.' Unchanged across all four FY26 quarters and reconciling exactly to the disclosed total liquidity (1,347 + 525 = 1,872). CAVEAT THAT MUST BE CARRIED: the facility is 'available until 2028', and the Gate 2 horizon runs to August 2028, so if 2028 means FY28 the facility expires just inside the window. Favourable and also relevant: 'there are no debt repayments due until FY29', so no maturity falls inside the horizon."
+     "doc": "ar_fy26",
+     "note": "CONFIRMED AUDITED, and the caveat the previous note flagged is now RESOLVED AGAINST THE NAME. Note 9(a): Revolving Credit Facility A, A$525.0m, nil drawn, term date 1 AUGUST 2028. The Gate 2 horizon runs two years from the 20 Aug 2026 build, to 20 Aug 2028 — so the facility lapses NINETEEN DAYS BEFORE the window closes and should not be credited for the full horizon. It is left at 525 rather than zeroed because the point is now moot: with committed capex on the audited commitments basis EVN survives on cash alone by roughly A$0.9bn, so the facility decides nothing. Re-test if either input moves. Performance bond facilities C and D (A$340m and C$150m, partly drawn) are excluded — they issue guarantees, not drawable cash."
     },
     "hedge_share_fwd24m": {
      "v": 0.0,
