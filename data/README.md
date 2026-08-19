@@ -53,7 +53,8 @@ A field value is normally a number. **One is a boolean:**
 | Sub-key | Meaning | Effect |
 |---|---|---|
 | `range` | `[lo, hi]` — the span **the issuer published**, where `v` is its midpoint | Methodology §3.2. Gate 2 is swept to both ends and the verdict must be invariant. A flip is UNRESOLVED and the name is rejected. |
-| `horizon_years` | How many years of the Gate 2 stress window the figure covers | Methodology §3.2. Reported per name; never fills the shortfall. |
+| `horizon_years` | How many years of the Gate 2 stress window the figure covers | Methodology §3.2. Sizes the shortfall. Coverage itself never gates. |
+| `annual_leg_aud_m` | The recurring guided portion inside the value, excluding any finite build that already spans the window | Methodology §3.2. Continued across the shortfall as a robustness probe; the pass must survive it at `gate2.horizon_continuation_cover`. |
 
 Both are **transcriptions of what the cited document already states**, and both
 are subject to the same rule as `v`: if the document does not establish it, the
@@ -64,6 +65,15 @@ means "fine":
 - **No `horizon_years`** means the record does not establish the period. It does
   **not** mean the figure covers the window — the engine reads it as `unknown`
   and prints it, which is how Westgold's one-line capex record surfaces.
+- **No `annual_leg_aud_m` on a short-covered figure** means there is nothing to
+  continue, so the continuation probe reports `UNTESTED` and the name is routed
+  to §12.2 item 6 as a capital-state question. `UNTESTED` is not a pass, and the
+  routing is printed rather than silent.
+
+Record `annual_leg_aud_m` as the portion that would recur in the unsourced tail.
+Exclude finite builds already inside the window: Capricorn's A$474m Mt Gibson
+build and Greatland's A$1,065m Havieron build are out of their legs, which is why
+those two read A$78m and A$325m against recorded totals of A$552m and A$1,390m.
 
 Record a `range` only where the issuer published the span for the **same quantity
 over the same period** as `v`. A span between two defensible analyst conventions

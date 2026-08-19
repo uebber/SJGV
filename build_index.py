@@ -332,7 +332,8 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
         "conditional", "§3.1 D1 — read only when a developer is in the universe"),
     "gate2.developer_max_funding_gap_of_mcap": (
         "conditional", "§3.1 D3 — read only when a developer is in the universe"),
-
+    "gate2.horizon_continuation_cover": (
+        "engine", "§3.2 — build_index.gate2_horizon_materiality; how much headroom a pass needs against the guided annual leg continued across the unsourced tail of the window"),
     "constraints.max_single_name": ("engine", "§8.1 impairment cap"),
     "constraints.max_single_asset_name": (
         "engine", "§8.1 tighter cap for single-asset companies"),
@@ -532,6 +533,10 @@ def _flatten(record: dict) -> dict:
                        its midpoint. Flattened to `<field>_range`.
       `horizon_years`  how many years of the Gate 2 stress horizon the figure
                        actually covers. Flattened to `<field>_horizon_years`.
+      `annual_leg_aud_m`
+                       the recurring guided portion inside the value, excluding
+                       any finite build already spanning the window. Flattened
+                       to `<field>_annual_leg_aud_m`.
 
     Both are transcriptions of what a cited document already states. Neither may
     be inferred: an omitted `range` means the issuer published a point, and an
@@ -548,6 +553,8 @@ def _flatten(record: dict) -> dict:
             flat[f"{name}_range"] = tuple(spec["range"])
         if spec.get("horizon_years") is not None:
             flat[f"{name}_horizon_years"] = spec["horizon_years"]
+        if spec.get("annual_leg_aud_m") is not None:
+            flat[f"{name}_annual_leg_aud_m"] = spec["annual_leg_aud_m"]
         flat["_field_docs"][name] = {"doc": spec.get("doc"), "note": spec.get("note")}
     return flat
 
@@ -1406,6 +1413,87 @@ def gate2_horizon_coverage(c: dict, cfg: dict) -> dict:
                     f"{shortfall:g}y of committed spend is unsourced and charged as zero"}
 
 
+def gate2_horizon_materiality(c: dict, cfg: dict, anchor_gold: float,
+                              mcap: float | None, horizon: dict) -> dict:
+    """§3.2 — does the unsourced tail of the stress window decide the verdict?
+
+    The horizon shortfall is real: seven constituents charge one guided year of
+    committed capex against a two-year window. What to do about it was the
+    question, and gating on COVERAGE was rejected. The missing number is FY28
+    guidance, and Australian gold miners guide one year ahead — so a coverage
+    rule cannot be satisfied by diligence, only by disclosure format. Ora Banda
+    publishes an FY27+FY28 phasing table and Regis publishes one year; identical
+    solvency, opposite verdicts. This repository has already deleted one rule for
+    grading disclosure habits rather than substance (the capital design's E2) and
+    should not adopt another.
+
+    So the test is MATERIALITY, not coverage. Take the recurring annual leg the
+    issuer HAS guided, continue it across the unsourced remainder of the window,
+    and require the pass to survive:
+
+        probe = committed_capex + annual_leg × shortfall_years
+        cover = ending_liquidity / (annual_leg × shortfall_years)
+
+    Read `probe` as a robustness test and never as an estimate of year two. The
+    engine does not record it, no field is filled from it, and it is exactly the
+    shape gate_input_invariant already uses for an absent input: evaluate at a
+    bound, and require the verdict to hold there. What it asserts is only that a
+    pass must survive the most ordinary continuation of what the issuer itself
+    guided. `gate2.horizon_continuation_cover` sets how much margin that needs.
+
+    Adopted while binding on nobody, which is the §6.4 discipline: the tightest
+    cover in the current book is about 2× at Greatland and Capricorn, whose
+    project legs already over-cover the window, and the loosest is Catalyst at
+    nearly 19×. It would have caught Pantoro — A$51m of headroom against a A$101m
+    guided year is 0.5× — which passed the arithmetic and was removed by a
+    different limb entirely.
+
+    UNTESTED, and said out loud rather than skipped: a name whose record
+    establishes no period has no annual leg to continue, so there is nothing to
+    probe. That is not a horizon question but a capital-STATE question — an
+    unresolved scope — and it belongs to §12.2 item 6 with its own dated trigger.
+    Westgold is the only such name and the routing is a recorded decision, not a
+    silent pass.
+    """
+    if horizon["state"] == "covered" or horizon["state"] == "absent":
+        return {"tested": False, "ok": True, "reason": "no shortfall to test"}
+
+    shortfall = horizon.get("shortfall_years")
+    leg = c.get("committed_capex_aud_m_annual_leg_aud_m")
+    if horizon["state"] == "unknown" or shortfall is None or leg is None:
+        return {"tested": False, "ok": True, "state": "UNTESTED",
+                "reason": ("no period established, so no annual leg to continue — "
+                           "routed to the capital-state item (§12.2 item 6), not "
+                           "silently passed")}
+
+    remainder = leg * shortfall
+    base = c.get("committed_capex_aud_m") or 0.0
+    probe = dict(c)
+    probe["committed_capex_aud_m"] = base + remainder
+    g = gate2_survival(probe, anchor_gold, mcap, cfg)
+    headroom = (gate2_survival(c, anchor_gold, mcap, cfg)
+                .get("detail", {}).get("ending_with_facilities_aud_m"))
+    cover = (headroom / remainder) if remainder > 0 and headroom is not None else None
+    need = cfg["gate2"]["horizon_continuation_cover"]
+
+    out = {"tested": True, "annual_leg_aud_m": leg,
+           "shortfall_years": shortfall,
+           "continued_remainder_aud_m": round(remainder, 1),
+           "probe_capex_aud_m": round(base + remainder, 1),
+           "cover": round(cover, 2) if cover is not None else None,
+           "required_cover": need}
+    if cover is not None and cover < need:
+        return {**out, "ok": False,
+                "reason": (f"the pass does not survive one more year at the guided "
+                           f"A${leg:,.0f}m — headroom A${headroom:,.0f}m is {cover:.2f}× "
+                           f"the unsourced remainder against a {need:.2f}× bar, so the "
+                           f"unguided tail of the window decides the verdict")}
+    return {**out, "ok": True,
+            "reason": (f"survives the guided annual leg continued across the "
+                       f"{shortfall:g}y shortfall — {cover:.1f}× cover"
+                       if cover is not None else "no remainder to continue")}
+
+
 def cohort_range(constituents: list[dict], field: str,
                  scale_by: str | None = None) -> tuple[float, float] | None:
     """Empirical range of a field across the names that disclose it.
@@ -1826,10 +1914,17 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             reject(f"GATE 2 UNRESOLVED — {g2['range_invariance']['reason']}")
             continue
 
-        # §3.2 — reported, never gated. Whether the committed-capex figure spans
-        # the window it is charged against. See gate2_horizon_coverage for why
-        # filling the shortfall would be the forbidden extrapolation.
+        # §3.2 — whether the committed-capex figure spans the window it is
+        # charged against. The COVERAGE is reported and never gated: filling the
+        # shortfall would be the forbidden extrapolation, and gating on it would
+        # grade disclosure format rather than solvency. What gates is whether the
+        # shortfall could decide anything.
         g2["horizon"] = gate2_horizon_coverage(c, meta)
+        g2["horizon_materiality"] = gate2_horizon_materiality(
+            c, meta, anchor_gold, mcap_aud_m, g2["horizon"])
+        if not g2["horizon_materiality"]["ok"]:
+            reject(f"GATE 2 UNRESOLVED — {g2['horizon_materiality']['reason']}")
+            continue
 
         # ── GATE 3 (§4) — tradability, binary ────────────────────────────────
         g3 = gate3_tradability(c, (spreads or {}).get(sym), meta)
@@ -2439,17 +2534,35 @@ def print_gate2_basis(rows: list[dict]) -> None:
     print("\nGATE 2 INPUT BASIS (§3.2) — reported, and the reason PNR is not in the book")
     if partial:
         print("  Committed capex is charged against a 2y stress window. These names are "
-              "charged for less:")
-        for r, h in sorted(partial, key=lambda x: -(x[1]["shortfall_years"] or 99)):
-            span = ("period NOT ESTABLISHED by the record" if h["state"] == "unknown"
-                    else f"{h['covered_years']:g}y of 2y — {h['shortfall_years']:g}y unsourced")
-            print(f"    {r['ticker']:<5} A${r['gate2']['detail']['committed_capex_aud_m']:>7,.0f}m   {span}")
-        print("  The shortfall is NOT filled. Annualising a guided year into an unguided "
+              "charged for less,")
+        print("  and the COVER column is what decides them: headroom over the guided "
+              "annual leg")
+        print("  continued across the unsourced tail (§3.2, gate2.horizon_continuation_cover).")
+        for r, h in sorted(partial, key=lambda x: (x[0]["gate2"]["horizon_materiality"]
+                                                   .get("cover") or 1e9)):
+            m = r["gate2"]["horizon_materiality"]
+            span = ("period NOT ESTABLISHED" if h["state"] == "unknown"
+                    else f"{h['covered_years']:g}y of 2y")
+            cover = (f"{m['cover']:>5.1f}x" if m.get("cover") is not None
+                     else "UNTESTED")
+            leg = (f"leg A${m['annual_leg_aud_m']:,.0f}m" if m.get("annual_leg_aud_m")
+                   else "no annual leg to continue")
+            print(f"    {r['ticker']:<5} A${r['gate2']['detail']['committed_capex_aud_m']:>7,.0f}m  "
+                  f"{span:<22} {cover:>9}   {leg}")
+        print("  The shortfall is NOT filled — annualising a guided year into an unguided "
               "one is")
-        print("  estimation_policy.forbidden, and a cohort rate on an unguided period is "
-              "the same")
-        print("  invention in a peer group's clothes. It is disclosed so it can be "
-              "sourced, not modelled.")
+        print("  estimation_policy.forbidden. The probe behind COVER is a robustness test, "
+              "never a")
+        print("  recorded value. Gating on coverage itself was rejected: FY28 guidance does "
+              "not exist")
+        print("  a year ahead, so that rule would grade disclosure format rather than "
+              "solvency.")
+        if any(r["gate2"]["horizon_materiality"].get("state") == "UNTESTED"
+               for r, _ in partial):
+            print("  UNTESTED is not a pass: no established period means no leg to "
+                  "continue, and the")
+            print("  name is routed to the capital-state item, §12.2 item 6, with its own "
+                  "trigger date.")
     if strained:
         for r in strained:
             print(f"  {r['ticker']} STRAINED — passes every published range one at a time, "

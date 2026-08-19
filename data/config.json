@@ -1,6 +1,6 @@
 {
  "_schema": "Methodology parameters. These are committee decisions, not observations — index-methodology.md is the source of truth and every entry cites its section. Observations live in the other files in this directory. There is no scoring layer, and every survivor is either a gate threshold, an ounce-category discount, or an impairment cap. Not one is a scoring coefficient. The test a parameter must now pass to exist: does it change how many ounces are claimed, or what was paid for them?",
- "methodology": "SJGV v1.4",
+ "methodology": "SJGV v1.5",
  "adopted": "2026-08-18",
  "objective": {
   "beta_target": [
@@ -81,6 +81,8 @@
    "DFS"
   ],
   "developer_max_funding_gap_of_mcap": 0.3,
+  "horizon_continuation_cover": 1.0,
+  "horizon_continuation_note": "\u00a73.2. Committed capex is charged over horizon_years, but seven constituents supply a single guided year. Gating on COVERAGE was considered and rejected: the missing number is FY28 guidance, Australian miners guide one year ahead, so the rule could not be satisfied by diligence and would grade disclosure format \u2014 OBM publishes an FY27+FY28 phasing table and RRL publishes one year, identical solvency, opposite verdicts. This repository already deleted one rule for grading disclosure habits (the capital design\u0027s E2). What gates instead is MATERIALITY: take the recurring annual leg the issuer has guided, continue it across the unsourced remainder of the window, and require the pass to survive it. cover = ending liquidity / (annual leg x shortfall years), and this parameter is the bar. 1.0 means a pass must survive one more year at the guided rate. It is a robustness probe, never an estimate: no field is filled from it, and it is the same shape gate_input_invariant already uses for an absent input. ADOPTED WHILE BINDING ON NOBODY, the \u00a76.4 discipline \u2014 the tightest cover in the book is about 2x (GGP, CMM), the loosest 18.8x (CYL). It would have caught PNR at 0.5x. A name with no established period has no leg to continue and is routed to \u00a712.2 item 6 as a capital-state question, reported UNTESTED rather than silently passed; WGX is the only one.",
   "ref": "§3 and §3.1. Binary, never a tilt. One question for producers: does the company reach the other side of a 40% real gold drawdown, applied to a trailing 3-year real average rather than to spot (see anchor_note), without issuing equity? Horizon is 2 years — the 2011-2015 drawdown ran roughly four, but two years is where a balance sheet either holds or does not.",
   "unhedged_note": "The test is run UNHEDGED (§3). Revenue is computed at the stress price on all production and any hedge gain is disregarded. Otherwise a company passes survival on the strength of the very forward sales that penalise it under §6 purity — Catalyst's 30 koz sold at A$6,075 would pay off handsomely in exactly this scenario.",
   "cost_note": "AISC is inflated at cost_inflation_pa, compounding annually over the horizon. Holding it FLAT is also an assumption and it is the optimistic one: in 2013 costs did not fall with the price, which is exactly why so much of the industry went cash-negative. 5% is set below the 8-12% nominal the sector is currently reporting, on the view that some of that is activity-driven and would ease in a downturn.",

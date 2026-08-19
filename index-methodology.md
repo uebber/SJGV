@@ -1,7 +1,7 @@
-# Index Methodology — SJGV v1.4
+# Index Methodology — SJGV v1.5
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.4
+**Version:** 1.5
 **Date:** 20 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
@@ -16,6 +16,7 @@
 
 | # | Date | Change |
 |---|------|--------|
+| 5 | 20 Aug 2026 | **§3.2 horizon limb resolved on materiality; version 1.4 → 1.5. No weight moves today, and that is the point.** The v1.3 shortfall report is retained and now carries a gate. **Binding on coverage was rejected**: the missing figure is FY28 guidance, Australian miners guide one year ahead, so the rule could not be satisfied by diligence and would grade disclosure format — OBM publishes an FY27+FY28 phasing table and RRL publishes one year, identical solvency, opposite verdicts. PR #5 proposed it; applied as its own §2 states rather than as its §4.1 tabulates it would have left **four constituents at an effective 3.6 and a 30% top weight the §8.1 caps cannot hold**, breaking the objective's own `P(permanent impairment) ≈ 0` to enforce a survival test nothing was failing. What gates instead is whether the shortfall could decide anything: the guided annual leg is continued across the unsourced remainder and the pass must survive it, at `gate2.horizon_continuation_cover` = 1.0. Cover runs 2.0× (GGP) to 18.8× (CYL), so it binds on nobody today — the §6.4 discipline — and it would have caught PNR independently at 0.51×. WGX has no established period and therefore no leg to continue: reported **UNTESTED** and routed to §12.2 item 6, whose trigger is the early-September Strategic Outlook. New sourced field `annual_leg_aud_m`; new parameter `gate2.horizon_continuation_cover`. |
 | 4 | 20 Aug 2026 | **Binding text corrected; version 1.3 → 1.4. No rule changed and no weight moved by this line.** Four misstatements in the binding document, all found by external review and all landed from PR #5. **§0** stated the construction as `maximise ClaimedUnhedgedOunces / FundedEV subject to …`; nothing searches over portfolios, each name is held in proportion to its own claim yield, and the section now says so and prices the difference — a literal cap-filling optimiser reaches ~A$630/oz over 8 names against the proportional book's A$739 at an effective 10.2. **§0.2, §6.1, §9.2 and §13.1** described JORC categories as option moneyness and said a falling cut-off moves ounces from M&I into P&P; confidence and economics are orthogonal axes, conversion needs the Modifying Factors at PFS level or better, and Inferred cannot convert at all until upgraded. **§3** listed a debt maturity schedule among the engine's inputs, which the engine does not consume. **§7.2 and §10.2** froze A$684/A$910 and A$640/A$910 into the binding text while the engine emitted neither — the §12.3 defect applied to an output; live figures now come from the build and its snapshot only. |
 | 3 | 19 Aug 2026 | **§3.2 added — Gate 2 input basis; version 1.2 → 1.3.** `estimation_policy.on_absence` requires a gate verdict to be invariant across a range it cannot pin down, and that rule was wired for *absent* inputs only. **A value recorded at the midpoint of a range the issuer published bypassed it**, and on one name it was deciding the gate: Pantoro's AISC is the midpoint of its own FY27 guidance of A$2,800–3,400/oz, passing by A$51m at the midpoint and failing by A$12m at the top of the same sentence. Invariance across issuer-published ranges now **gates**, and **PNR is rejected** — the only name it decides; every other constituent is invariant, including Capricorn across its disclosed ±25% no-contingency band. Separately, `committed_capex_aud_m` now carries `horizon_years`, because seven constituents charge one guided year against the two-year window and Westgold's record establishes no period at all; that shortfall is **printed, not filled**, since annualising a guided year is `estimation_policy.forbidden`. **This moves weights: PNR out, 10.00pp one-way turnover, headline A$662 → A$739/oz.** |
 | 2 | 19 Aug 2026 | **§2.1 A2 redefined; version 1.1 → 1.2.** A2 is now measured on the **currency issuer** rather than on consolidated general government, and carries a third limb: **gross debt ≤ 85% of GDP**. **This is a rule change and not a sourcing fix, and the direction matters.** §12.2 item 4 asked for Canada's specified metrics to be sourced and A2 applied as written. Sourced, **Canada passes A2 as v1.1 wrote it** — general government net debt ~10–13% of GDP, *below Australia's ~19%*, and general government interest 8.8% of revenue against a 10% limit. Recording a FAIL against that would have been the v1.0 A4 defect exactly: the test passing and the verdict recorded anyway. The rule was therefore changed in the open. On the amended rule Canada fails twice — gross debt 105–110% of GDP, and **federal** interest at 10.3% of revenue. What the change gives up, and the Maastricht threshold rejected on measurement, is in §2.1. **No weight changes** — `data/sovereign.json` is a record, no engine code reads it, and Canada's exclusion is unchanged, so `eligible_ounce_share` does not move for EVN, VAU or NST. §12.2 item 4 closes; item 5 stays open. |
@@ -487,35 +488,85 @@ Three boundaries, each deliberate:
   — the same call §4 already makes on a spread that passes on the median and
   breaches on p90. No constituent is STRAINED today.
 
-**2. A figure that covers less window than it is charged against — this is
-reported.** Gate 2 charges `committed_capex_aud_m` over `horizon_years`, and the
-cohort does not supply it on one basis. Ora Banda's is the issuer's own FY27 plus
-FY28 lines summed. Greatland's and Evolution's are whole-project totals that run
-*past* the window — which over-charges, and overstating a survival cost is the
-safe direction. But **Pantoro's, Regis's, Vault's, Catalyst's, Northern Star's,
-Capricorn's and Bellevue's are a single guided year charged against two**, and
-Westgold's record does not establish a period at all. A one-year figure against a
+**2. A figure that covers less window than it is charged against — the coverage
+is reported, and its *materiality* gates.** Gate 2 charges
+`committed_capex_aud_m` over `horizon_years`, and the cohort does not supply it
+on one basis. Ora Banda's is the issuer's own FY27 plus FY28 lines summed.
+Greatland's and Evolution's are whole-project totals that run *past* the window,
+which over-charges — and overstating a survival cost is the safe direction. But
+**Regis's, Vault's, Catalyst's, Northern Star's, Capricorn's KGP leg and
+Greatland's Telfer leg are a single guided year charged against two**, and
+Westgold's record establishes no period at all. A one-year figure against a
 two-year window understates the burn, and `docs/execution-capital-inventory.md`
-§3 concluded "direction is safe" on the strength of the two names that
-over-charge without checking the seven that do not.
+§3 concluded "direction is safe" from the two names that over-charge without
+checking the seven that do not.
 
 Every such figure now carries `horizon_years`, transcribed from the note that
 already establishes the period, and **an absent one reads as `unknown`, never as
-covered.** The build prints the shortfall per name.
+covered.**
 
-**It is disclosed rather than filled, and that is a decision.** Annualising a
-guided year into an unguided one is `estimation_policy.forbidden` in as many
-words. A cohort rate transferred onto an unguided period is the same invention
-wearing a peer group's clothes — and it would not be a small one: the cohort's
-observed upper rate is Capricorn building a second mine, which applied to
-Westgold's 387 koz would charge A$3.4bn and reject the book's largest position on
-a number nobody has published. **So the shortfall is measured and printed, and
-the committee can either accept it or fund the sourcing.** What it can no longer
-do is not know.
+**Gating on coverage itself was considered and rejected.** The missing number is
+FY28 capital guidance, and Australian gold miners guide one year ahead — so a
+coverage rule could not be satisfied by any amount of diligence, only by
+disclosure format. Ora Banda publishes an FY27+FY28 phasing table; Regis
+publishes one year. Identical solvency, opposite verdicts. This document has
+already deleted one rule for grading disclosure habits rather than substance, and
+will not adopt another. Filling the gap is worse still: annualising a guided year
+into an unguided one is `estimation_policy.forbidden` in as many words, and a
+cohort rate transferred onto an unguided period is the same invention wearing a
+peer group's clothes — the cohort's upper rate is Capricorn building a second
+mine, which on Westgold's 387 koz would charge A$3.4bn and reject the largest
+position in the book on a number nobody has published.
 
-The two rules are wired at different strengths on purpose. A published range is
-evidence the issuer supplied about a quantity the gate reads, so it decides. A
-missing period is evidence nobody supplied, so it discloses.
+**What gates is whether the shortfall could decide anything.** Take the recurring
+annual leg the issuer *has* guided, continue it across the unsourced remainder of
+the window, and require the pass to survive:
+
+```
+remainder  =  annual leg × shortfall years
+probe      =  committed capex + remainder
+cover      =  ending liquidity ÷ remainder          ≥ gate2.horizon_continuation_cover
+```
+
+> **A pass must survive one more year at the rate the issuer itself guided.**
+> A name whose verdict turns on the unguided tail of the window has not passed;
+> it is UNRESOLVED, and it is rejected.
+
+The probe is a robustness test and **never an estimate of year two**. No field is
+filled from it and nothing records it. It is the same shape `gate_input_invariant`
+already applies to an absent input: evaluate at a bound, require the verdict to
+hold there. `annual_leg_aud_m` excludes any finite build already spanning the
+window, because such a build does not recur — Capricorn's Mt Gibson and
+Greatland's Havieron are out of their legs for that reason, leaving A$78m and
+A$325m of genuinely annual guidance.
+
+**Adopted while binding on nobody**, which is the §6.4 discipline. Cover across
+the book runs from **2.0× at Greatland** and 2.1× at Capricorn to 18.8× at
+Catalyst; the two tightest are the mixed names whose project legs already
+over-cover. It would have caught Pantoro independently — A$51m of headroom
+against a A$101m guided year is **0.51×** — which passed the arithmetic and was
+removed by the published-range limb instead.
+
+Swept, the bar is inert to **2.0×** and first ejects Greatland at 2.05×, then
+Capricorn at 2.2×. So 1.0 sits a full doubling clear of the nearest name, in the
+same kind of gap the 0.80 single-asset threshold occupies, and the setting can be
+argued in `config.json` rather than inferred from an exclusion it produced.
+
+**UNTESTED is said out loud and is not a pass.** A record that establishes no
+period has no annual leg to continue, so there is nothing to probe. That is not a
+horizon question but a capital-**state** question: an unresolved scope. Westgold
+is the only such name — A$145m for a Higginsville stage the issuer has deferred
+in favour of an uncosted 4 Mtpa case — and it is routed to §12.2 item 6, which
+carries its own dated trigger in the Strategic Outlook of early September 2026.
+Routing it is a recorded decision, not a silent pass.
+
+The three rules sit at deliberately different strengths, and the ordering is the
+point. **A published range** is evidence the issuer supplied about a quantity the
+gate reads, so it decides. **A missing period** is evidence nobody supplied, so it
+discloses — gating on it would punish disclosure format. **Whether that missing
+period could change the answer** is arithmetic on figures the issuer did supply,
+so it decides too. Nothing here fills a gap; each rule asks only what the
+disclosure already on the record is capable of settling.
 
 ---
 
@@ -1290,7 +1341,8 @@ ours, is durable, and is reachable.
 | `aisc_aud_oz` | All-in sustaining cost per ounce | **A survival input only — never a reward.** High cost means more gold delta, which the index wants, right up to the point where the company cannot survive the down leg. That point is exactly where cost stops being an advantage and becomes a gate. | **15.00pp** |
 | `committed_capex_aud_m` | Contracted, non-deferrable spend | A funded must-build **burns cash through the drawdown**; a deferrable project is a real option that can be left unexercised. Only the first destroys ounces you have already paid for. | **15.00pp** |
 | `<input>_range` on a Gate 2 input | The span the **issuer** published, where the recorded value is its midpoint | **The midpoint may record a number; it may not decide a gate (§3.2).** Sweeping each ranged input to both of its own published ends and requiring one verdict is `estimation_policy.on_absence` applied to imprecision that is disclosed rather than missing. It decides exactly one name today and that name is a 10% position. | **10.00pp** *(rejects PNR on `aisc_aud_oz` [2800, 3400])* |
-| `committed_capex_aud_m_horizon_years` | Years of the stress window the capex figure actually covers | **Reported, and structurally unable to reach a weight by design (§3.2).** Seven constituents charge one guided year against a two-year window; the shortfall is printed rather than filled, because annualising a guided year into an unguided one is `estimation_policy.forbidden`. Listed here and not in §13.5 because it is a *decision* to leave it inert, not a property of the input. | 0.00pp *(disclosure only)* |
+| `committed_capex_aud_m_horizon_years` | Years of the stress window the capex figure actually covers | Sets the shortfall the continuation probe runs over. **Coverage itself never gates** (§3.2) — that would grade disclosure format rather than solvency — but it sizes the test that does. | via the probe |
+| `committed_capex_aud_m_annual_leg_aud_m` · `gate2.horizon_continuation_cover` = 1.0 | The recurring guided portion, and how much headroom a pass must hold against it continued across the unsourced tail | **A pass must survive one more year at the rate the issuer itself guided.** The leg excludes finite builds already spanning the window, because those do not recur. Binds on nobody today — cover runs 2.0× to 18.8× — and would have rejected PNR at 0.51×. Adopted while costing nothing, on the §6.4 precedent. | **10.00pp** *(latent: the weight of any name whose cover falls under 1.0×)* |
 | `production_koz_yr` | Annual production | Sizes the stressed cash flow — how fast the company can earn its way through the drawdown. | **3.63pp** |
 | `net_debt_aud_m` | Net debt | Opening liquidity for the stress test, and the maturity wall behind it. | **15.00pp** |
 | **AUD gold history** → the Gate 2 anchor | Trailing 3y real average of AUD gold | The stress price. Anchoring to a **trailing average rather than spot** stops the gate weakening exactly when spot is most extended — i.e. when survival risk is actually highest. | **15.00pp** |
@@ -1362,4 +1414,4 @@ those words for the same reason.
 
 ---
 
-*SJGV v1.4 — 20 August 2026. The sole methodology in force.*
+*SJGV v1.5 — 20 August 2026. The sole methodology in force.*
