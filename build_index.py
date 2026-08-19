@@ -649,6 +649,19 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
     payload = json.loads((DATA_DIR / "companies.json").read_text())
     market = json.loads((DATA_DIR / "market.json").read_text())
 
+    # §6.4 measures a resource statement's age against the date the LEDGER was
+    # sourced, and the ledger is companies.json. Two files carry a `_sourced`
+    # date and they are allowed to differ — market.json records when the
+    # offline price fallbacks were taken, which has nothing to do with when a
+    # reserve statement was read. The gate used to read market.json's, and on
+    # 20 Aug 2026 that ejected Westgold at ~13% of the book: its FY26 group
+    # statement is dated the 20th and the market file still said the 17th, so
+    # the document looked like it came from the future. Note the direction the
+    # old coupling erred in when the two merely disagreed rather than crossed —
+    # an earlier as_of makes every document look YOUNGER, which is the lenient
+    # side of a staleness bar.
+    market["_ledger_sourced"] = payload.get("_sourced") or market["_sourced"]
+
     companies, notes = [], []
     unknown: dict[str, set[str]] = {}
     for record in payload["companies"]:
@@ -2474,7 +2487,7 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
           f"all-in.  ◆ = single-asset company.")
     capw = stats.get("capweighted_aud_per_claimed_oz")
     if capw:
-        print(f"  Same twelve names on MARKET-CAP weights: A${capw:,.0f}/oz — a "
+        print(f"  Same {len(rows)} names on MARKET-CAP weights: A${capw:,.0f}/oz — a "
               f"{(1 - stats['aud_per_claimed_oz'] / capw) * 100:.0f}% discount, and "
               f"the only")
         print(f"  comparator the number above means anything against. Same names, "
@@ -2811,7 +2824,9 @@ def main() -> int:
     _assert_single_asset_tristate(meta)
 
     print(f"SJGV {meta['methodology']} — adopted {meta['adopted']}")
-    print(f"Data layer sourced {market['_sourced']}")
+    print(f"Data layer sourced {market['_ledger_sourced']}"
+          + ("" if market["_ledger_sourced"] == market["_sourced"]
+             else f" (market fallbacks {market['_sourced']})"))
     print(f"Universe: {len(tickers)} candidates, {len(excluded)} pre-excluded")
     for n in impute_notes:
         print(f"  RESOURCE RECONCILIATION: {n}")
@@ -2907,7 +2922,7 @@ def main() -> int:
     rows, rejected = compute_raw_weights(constituents, md["prices"], risk, gold_aud,
                                          meta, anchor_gold=anchor["anchor_aud"],
                                          spreads=md.get("spreads"), navs=navs,
-                                         as_of=market["_sourced"])
+                                         as_of=market["_ledger_sourced"])
 
     if not rows:
         print("\nERROR: no constituent passed the gates with complete data.",
@@ -3018,7 +3033,7 @@ def main() -> int:
     out = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "methodology": meta["methodology"],
-        "data_sourced": market["_sourced"],
+        "data_sourced": market["_ledger_sourced"],
         "gold_aud_oz": gold_aud, "gold_source": gold_src,
         "euraud": euraud, "fx_source": fx_src,
         # The numéraire the regression ran in ("AUD" / "USD (fallback…)").

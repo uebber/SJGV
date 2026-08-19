@@ -233,7 +233,7 @@ def main() -> int:
     anchor = B.gold_anchor(aud_gold, gold_aud, meta)["anchor_aud"]
 
     base = run(copy.deepcopy(cons), md["prices"], risk, gold_aud, meta, anchor,
-               as_of=market["_sourced"])
+               as_of=market["_ledger_sourced"])
     ranges = build_ranges(cons)
     weighted = set(base)
 
@@ -247,7 +247,7 @@ def main() -> int:
         c2 = copy.deepcopy(cons)
         mutate(c2)
         return delta(base, run(c2, md["prices"], risk, gold_aud, meta, anchor,
-                               as_of=market["_sourced"]))
+                               as_of=market["_ledger_sourced"]))
 
     # ── Score and cap inputs, per name ────────────────────────────────────
     results = []
