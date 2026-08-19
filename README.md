@@ -21,10 +21,10 @@ part of the gold-equity proposition while making those failure modes explicit.
 > companies able to survive a severe gold drawdown without forced equity issuance.
 
 The current construction holds 12 ASX-listed companies at **A$677 of funded EV
-per confidence-weighted claimed ounce**, versus approximately **A$917 for the
+per confidence-weighted claimed ounce**, versus approximately **A$915 for the
 same companies at market-cap weights**. That is a 26% lower headline EV per
-claimed ounce, produced by portfolio construction alone. The claim is 58% Proven & Probable reserves,
-29% Measured & Indicated non-reserve material and 13% Inferred material.
+claimed ounce, produced by portfolio construction alone. The claim is 57.8% Proven & Probable
+reserves, 29.5% Measured & Indicated non-reserve material and 12.7% Inferred material.
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.
@@ -222,10 +222,10 @@ connection is unavailable.
 **Market-data anchor:** 18 August 2026  
 **Constituents:** 12  
 **Headline funded EV / claimed ounce:** A$677  
-**Same names, market-cap weighted:** approximately A$917  
-**Claim mix:** 58% P&P / 29% M&I non-reserve / 13% Inferred  
+**Same names, market-cap weighted:** approximately A$915  
+**Claim mix:** 57.8% P&P / 29.5% M&I non-reserve / 12.7% Inferred  
 **Reported gold beta:** 1.72  
-**Effective number of holdings:** approximately 11.3
+**Effective number of holdings:** approximately 11.2
 
 Westgold is the largest position at approximately 12.3%. PNR and CYL are capped
 at 10% as single-asset companies; RXL is capped at 5% as a developer. The live
@@ -243,7 +243,7 @@ capital paid for a look-through ounce.
 
 - **It is not a hedge.** A gold drawdown will hurt, and high-cost ounces can lose
   value quickly.
-- **It does not prove convexity.** The 58 / 29 / 13 ledger mix demonstrates
+- **It does not prove convexity.** The 57.8 / 29.5 / 12.7 ledger mix demonstrates
   exposure to resource optionality. The current fixed-plan NAV model is linear
   in gold price, and the realised up/down sample is too weak to establish more.
 - **It does not make ounces economically identical.** Category discounts do not
@@ -272,6 +272,7 @@ the strategy should—and should not—be expected to work.
 | `nav_model.py` | Reporting-only NAV and implied-deck model |
 | `tools/` | Provenance, gaps, sensitivity, configuration audit, snapshots and asymmetry diagnostics |
 | `snapshots/` | Frozen point-in-time inputs, outputs, parameters and engine commit |
+| `docs/` | Supporting studies: grade-tonnage disclosure survey, sourcing brief, execution-capital inventory |
 
 Two rules govern every production change:
 
