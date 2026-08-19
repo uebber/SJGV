@@ -555,6 +555,8 @@ def _flatten(record: dict) -> dict:
             flat[f"{name}_horizon_years"] = spec["horizon_years"]
         if spec.get("annual_leg_aud_m") is not None:
             flat[f"{name}_annual_leg_aud_m"] = spec["annual_leg_aud_m"]
+        if spec.get("term_date") is not None:
+            flat[f"{name}_term_date"] = spec["term_date"]
         flat["_field_docs"][name] = {"doc": spec.get("doc"), "note": spec.get("note")}
     return flat
 
@@ -1580,6 +1582,46 @@ def gold_anchor(aud_gold_series: list[tuple[str, float]], spot_aud: float,
     }
 
 
+def creditable_undrawn(c: dict, cfg: dict, as_of: date) -> tuple[float, str | None]:
+    """§3 — a facility that lapses inside the stress window is not stress liquidity.
+
+    Gate 2 credits committed-but-undrawn credit as liquidity available through a
+    two-year drawdown. That is only true if the facility still exists at the end
+    of it. Evolution's audited FY26 report settled the question the record had
+    been carrying as a caveat: Revolving Credit Facility A terms 1 August 2028,
+    NINETEEN DAYS inside a window opened on the 20 August 2026 build. Regis's
+    A$300m lapses in February 2028, six months inside. Both were being counted in
+    full.
+
+    So a facility is creditable only if its term date is on or after the horizon
+    ends. An ABSENT term date is not creditable either: crediting an unverified
+    facility makes a survival test easier, which is the one direction it may not
+    err in, and the fix is to source the date rather than to assume the lender.
+
+    Refinancing is not assumed. A revolver rolled every three years for a decade
+    is still a contract that ends on a date, and in the drawdown this gate
+    describes it is exactly the kind of contract that does not get rolled.
+
+    Returns (creditable amount, reason to report) — the amount is zero and the
+    reason is set whenever a disclosed facility is dropped.
+    """
+    amt = c.get("undrawn_facilities_aud_m") or 0.0
+    if amt <= 0 or not cfg["gate2"]["count_undrawn_facilities"]:
+        return amt, None
+    horizon_end = as_of + timedelta(days=365.25 * cfg["gate2"]["horizon_years"])
+    raw = c.get("undrawn_facilities_aud_m_term_date")
+    if raw is None:
+        return 0.0, (f"A${amt:,.0f}m of undrawn facilities NOT credited — no term "
+                     f"date sourced, and an unverified facility cannot prove "
+                     f"liquidity at {horizon_end:%b %Y}")
+    term = date.fromisoformat(raw)
+    if term < horizon_end:
+        return 0.0, (f"A${amt:,.0f}m of undrawn facilities NOT credited — the "
+                     f"facility lapses {term:%d %b %Y}, inside a window running to "
+                     f"{horizon_end:%d %b %Y}")
+    return amt, None
+
+
 def gate2_survival(c: dict, anchor_gold: float, mcap_aud_m: float | None,
                    cfg: dict, stress_gold: float | None = None) -> dict:
     """Methodology §3 — binary survival gate. Never a tilt.
@@ -1894,12 +1936,21 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             reject(f"non-positive EV (A${ev_aud_m:,.0f}m) — net cash exceeds market cap")
             continue
 
+        # §3 — a facility that lapses inside the stress window is not stress
+        # liquidity. Applied to the record BEFORE the gate so that every probe
+        # downstream — the breaking point, the invariance sweeps, the
+        # continuation test — sees the same corrected liquidity.
+        creditable, facility_note = creditable_undrawn(c, meta, as_of)
+        if facility_note:
+            c = {**c, "undrawn_facilities_aud_m": creditable}
+
         # ── GATE 2 (§3) — binary, lexicographic, before any scoring ──────────
         # Sits here rather than earlier only because the developer variant needs
         # market cap to size the funding gap. Nothing downstream can buy a name
         # past a Gate 2 failure: a name that fails is rejected outright, never
         # weighted down.
         g2 = gate2_survival(c, anchor_gold, mcap_aud_m, meta)
+        g2["facility_note"] = facility_note
         if g2["pass"] is not True:
             reject(f"GATE 2 — {g2['reason']}")
             continue
@@ -2536,12 +2587,13 @@ def print_gate2_basis(rows: list[dict]) -> None:
     survival gate settled by the midpoint of a range whose other end says the
     opposite. The names that pass are printed with the basis they passed on.
     """
+    dropped = [r for r in rows if (r.get("gate2") or {}).get("facility_note")]
     partial = [(r, r["gate2"]["horizon"]) for r in rows
                if (r.get("gate2") or {}).get("horizon", {}).get("state")
                in ("partial", "unknown")]
     strained = [r for r in rows
                 if (r.get("gate2") or {}).get("range_invariance", {}).get("strained")]
-    if not partial and not strained:
+    if not partial and not strained and not dropped:
         return
 
     print("\nGATE 2 INPUT BASIS (§3.2) — reported, and the reason PNR is not in the book")
@@ -2576,6 +2628,12 @@ def print_gate2_basis(rows: list[dict]) -> None:
                   "continue, and the")
             print("  name is routed to the capital-state item, §12.2 item 6, with its own "
                   "trigger date.")
+    if dropped:
+        print("  Undrawn facilities NOT credited — a facility that lapses inside the "
+              "window is not")
+        print("  stress liquidity (§3). Every one of these names still passes without it:")
+        for r in dropped:
+            print(f"    {r['ticker']:<5} {r['gate2']['facility_note']}")
     if strained:
         for r in strained:
             print(f"  {r['ticker']} STRAINED — passes every published range one at a time, "
