@@ -2,7 +2,7 @@
 
 **Status:** **accepted as the design of record; not yet implemented.** Second revision — closes the four blockers raised on the first, against the sourced inventory in `docs/execution-capital-inventory.md`. Design only: no engine, data, gate, parameter or weight has changed, so **the defect described in §1 and §2 is still live in the build.**  
 **Decision taken:** implement the capital-field split for every constituent in one production change; defer the asset-evidence overlay.  
-**Progress:** Step 1 (sourcing inventory) is complete — `docs/execution-capital-inventory.md`. Step 2 (schema and engine change) is open, and blocks on EVN disclosure; see §12.2 of `index-methodology.md`.
+**Progress:** Step 1 (sourcing inventory) is complete — `docs/execution-capital-inventory.md`. The final production decisions, including the Gate 2 horizon limb, are in `docs/capital-gate2-production-decision.md`. Schema and engine implementation remain open.
 
 ## 1. Revised decision
 
@@ -130,7 +130,7 @@ with effective N unchanged at 11.2. GGP is the largest single move at −0.76pp.
 |---|---:|---|---|
 | GGP | 1,065 | `POINT` | Havieron to first gold; June 2025 cost base |
 | EVN | 1,210 | `UPPER_BOUND` | Gross-as-remaining; spend-to-date undisclosed |
-| CMM | 474 | `POINT` | No contingency, ±25% accuracy |
+| CMM | 593 | `UPPER_BOUND` | A$474m at the issuer's +25% accuracy bound; no contingency |
 | RMS | 381 | `UPPER_BOUND` | Exact on the FY26 Commitments note, 21 Aug 2026 |
 | NST | 385 | `POINT` | Three FY27 KCGM items; FY27 guidance 20 Aug 2026 |
 | RXL | 320 | `POINT` | A$382.6m rolled forward by A$62.877m of FY26 spend |
@@ -147,8 +147,11 @@ and can only overstate. EVN is not blocked. It is a *poor* bound — it assumes
 nothing has been spent on a programme drawing since FY25 and running to FY31 —
 and that is a reason to source spend-to-date, not a reason to exclude the name.
 
-The initial switch therefore blocks on **WGX alone**, at 12.3% of the book, and
-unblocks no earlier than the Strategic Outlook in early September 2026.
+The capital inventory therefore blocks on **WGX alone** while the horizon limb
+remains report-only. The production decision now makes that limb binding:
+WGX becomes ineligible rather than entering the denominator at zero, so the
+capital migration can proceed for the eligible book. Re-entry requires both
+capital totals to resolve.
 
 ## 3. Proposed production fields
 
@@ -294,7 +297,7 @@ number is a point estimate or a bound:
 |---|---|
 | `cost_base_date` | Distinct from the estimate's as-of date. Greatland's A$1,065m Havieron figure is struck on a **June 2025 cost base** and approved in June 2026; escalation between the two is real and undisclosed. |
 | `accuracy_range` | Capricorn's A$474m Mt Gibson estimate is at "±25% accuracy with a 90% confidence level". A ±25% figure is not the same kind of object as a contracted sum. |
-| `contingency_included` | The same Capricorn estimate states "no contingency has been allowed". An estimate without contingency is a lower bound on the delivered cost even when it is a point estimate of the scope. |
+| `contingency_included` | The same Capricorn estimate states "no contingency has been allowed". The A$474m centre cannot be labelled `POINT`; the production decision uses the issuer's own +25% endpoint, A$593m, as `UPPER_BOUND`. |
 
 `LOWER_BOUND` is a recorded state, not a rejection. The figure stays visible, is
 reported, and is available to Gate 2 where a *smaller* capital number makes the
@@ -309,8 +312,8 @@ including unfinished material projects housed inside producers. At minimum:
 
 - Havieron's A$1,065m pre-production build cannot remain at zero because GGP is
   labelled a producer;
-- Mt Gibson's A$474m build must be treated consistently with a standalone
-  developer build; and
+- Mt Gibson's A$474m centre estimate must enter at the issuer-derived A$593m
+  upper bound, consistently with a standalone developer build; and
 - Tower Hill's executed A$229m EPC sum is evidence of a project commitment, but
   the denominator must use the sourceable **remaining total execution cost**,
   not assume an EPC contract equals all owner and project costs.
@@ -614,8 +617,9 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 ### Step 3 — switch all names together
 
 - For the initial switch, require a `POINT`, an `UPPER_BOUND`, or a sourced de
-  minimis zero for every selected constituent. `LOWER_BOUND` and `UNRESOLVED`
-  both block. On today's data that means WGX alone (§2.4 of this proposal).
+  minimis zero for every eligible constituent. `LOWER_BOUND` and `UNRESOLVED`
+  never enter as zero. Under the binding horizon decision WGX is ineligible,
+  so it does not block migration for the names that pass.
 - Apply `EV + remaining execution capital` to every sleeve in the same build.
 - Publish old and new denominators, raw weights, cap effects and final weights in
   the transition report.
@@ -699,12 +703,13 @@ all-name sourcing pass, field split, recurring-operations procedure and test
 plan as the next production change. Preserve the same-market-data replay as a
 separate approval checkpoint before weights move.
 
-The sourcing is further along than the first revision assumed. Eleven of twelve
-constituents resolve to a `POINT` or a conservative `UPPER_BOUND` today, and two
-of those become exact within days — Northern Star's FY27 guidance on 20 August
-and Ramelius's FY26 Commitments note on 21 August. The initial switch blocks on
-Westgold alone, and on a disclosure the issuer has scheduled: a preliminary
-4 Mtpa assessment in its Strategic Outlook in early September 2026.
+The sourcing is further along than the first revision assumed. EVN's gross
+approved total is admissible as an `UPPER_BOUND`; Capricorn enters at A$593m;
+Greatland's latest FY26 operating report reaffirms A$1,065m on its disclosed June
+2025 cost base. Westgold alone remains unresolved on execution capital. Under
+the binding horizon decision it is excluded until the FY26 financial result and
+Strategic Outlook supply complete evidence, rather than being rewarded with a
+zero or blocking the correction for every other name.
 
 Approve the rejected-alternatives table as institutional memory. Defer the
 asset-evidence overlay; implement only the lightweight scheduled/unscheduled

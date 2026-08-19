@@ -32,11 +32,11 @@ sourced to a primary document. Step 1's remaining fetch work is listed in §6.
 **No constituent is de minimis at the proposed 1% threshold** (§5). The materiality
 parameter, as proposed, excludes nobody in the current book.
 
-**One name blocks the switch on disclosure rather than effort: EVN.** Its four
-board-approved project totals are disclosed, but cumulative spend against them is
-not, and the note itself records that "a material but unquantified share of the
-A$1,210m is already spent". Remaining execution capital is therefore not derivable
-without apportionment, which `estimation_policy` forbids.
+**WGX is the unresolved name.** EVN's four board-approved totals are admissible
+as a conservative `UPPER_BOUND`: treating the A$1,210m gross programme as
+remaining assumes no spend-down and can only penalise the name. WGX's A$145m
+approved stage is now a lower bound on a deferred scope and omits larger uncosted
+scopes, so it cannot enter the denominator.
 
 **RMS is sourceable today on the RXL convention**, contrary to its own gaps note —
 see §4.11. It becomes exact on 21 August 2026.
@@ -119,7 +119,7 @@ The existing note already states both biases: understated by one unguided year o
 Telfer growth, overstated by ~A$200m of Havieron falling outside the horizon.
 **Sourceable now. Cost base is 14 months old and should be checked for escalation.**
 
-### 4.2 EVN — the blocking name
+### 4.2 EVN — admissible upper bound, exact remainder still worth sourcing
 Four totals disclosed; cumulative spend disclosed at neither project nor group level
 in a form that can be apportioned. Cowal has been drawing since FY25. Converting
 gross-approved to remaining requires exactly the apportionment
@@ -132,9 +132,10 @@ seven-year programme.
 ### 4.3 CMM — well-defined, with a disclosed accuracy band
 Mt Gibson A$474m = A$345m plant and infrastructure + A$129m for 15 months of
 pre-production mining, footed in the issuer's own table. A$105m of "Other LOM Project
-Capital" correctly excluded as post-production. **No contingency is included** and the
-estimate is "±25% accuracy with a 90% confidence level", so an against-the-name bound
-on that leg is A$593m. **Sourceable now.**
+Capital" is correctly excluded as post-production. **No contingency is included** and
+the estimate is "±25% accuracy with a 90% confidence level". The A$474m centre is not
+a denominator point; the production decision admits the issuer's +25% endpoint,
+**A$593m**, as an against-the-name `UPPER_BOUND`. **Sourceable now.**
 
 ### 4.4 RXL — roll-forward is available and should be applied
 A$382.6m is DFS Table 30 at Nov-25, on the explicit assumption that nothing has been
@@ -221,9 +222,11 @@ every other constituent runs off a June 2026 quarterly. `net_debt_aud_m` carries
 **empty note**. The record's own flag says "FY26 statement pending alongside August
 full-year results."
 
-This is a data-quality gap independent of the capital work, on a name that is the
-book's largest weight at 12.16% and is elsewhere described as "the most complete data
-record in the universe".
+This is a data-quality gap independent of the capital work, on the book's largest
+weight. Westgold's complete FY26 group Mineral Resource and Ore Reserve statement
+filed on 20 August 2026 and closes the Fletcher ledger supersession gap, but it
+contains no complete execution-capital total, project phasing or treasury split.
+It therefore does not resolve this section.
 
 ---
 
@@ -259,15 +262,16 @@ does it begin to work, dropping NST and CYL.
 | Name | Needed | Availability |
 |---|---|---|
 | RMS | FY26 Commitments note, capital contracted not provided for at 30 Jun 2026 | **21 Aug 2026**, confirmed in writing |
-| WGX | June 2026 quarterly / FY26 full-year result: Higginsville scope, completion date, net debt | August 2026, per the record's own flag |
+| WGX | FY26 financial result / Strategic Outlook: Higginsville and Murchison scope totals, phasing, cash/bullion/investments split | The 20 Aug group resource statement closes the ledger only; capital remains unresolved |
 | EVN | Cumulative spend to 30 Jun 2026 per project; phasing for E22, Bert, CPF | Unknown — may not be disclosed |
 | CYL | FY26 annual report Commitments note at 30 Jun 2026 | Pending |
 | NST | FY27 guidance, 20 Aug 2026: KCGM remaining works, the uncosted renewable energy item | **20 Aug 2026** |
 | GGP | Whether the June-2025 Havieron cost base has been escalated | Check FY26 result |
 | All | Confirmation that no other material unfinished scope exists — a sourced zero, not silence | Per name |
 
-Three of the seven resolve within days. EVN is the only one where the disclosure may
-simply not exist.
+The remaining hard disclosures are WGX's complete replacement-scope totals and
+EVN's exact remainder and phasing. EVN no longer blocks because the gross approved
+programme is an admissible upper bound; WGX has no comparable complete total.
 
 ---
 
