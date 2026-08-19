@@ -37,8 +37,23 @@ weight; it may never increase it.
 > decision is open rather than closed. What would settle it is disclosure, not
 > argument: FY28 guidance from RRL, VAU, NST and CYL, and a scope total from WGX.
 >
-> Adopt §2 as the design; re-table §4.1 across all eleven constituents before
-> any version of it binds.
+>
+> **RESOLVED 20 August 2026 — methodology §3.2, amendment 5.** The limb binds, but
+> on **materiality rather than coverage**. The guided annual leg is continued
+> across the unsourced remainder of the window and the pass must survive it
+> (`gate2.horizon_continuation_cover` = 1.0). That gates without grading
+> disclosure format and without inventing a burn rate, because it uses only
+> figures the issuer already published. Cover across the book runs 2.0× to 18.8×,
+> so it binds on nobody today; it would have rejected PNR independently at 0.51×.
+>
+> WGX is reported `UNTESTED` — no established period means no leg to continue —
+> and is routed to §12.2 item 6, where its trigger is the early-September
+> Strategic Outlook. That is where the question always belonged: A$145m is not a
+> short-period figure, it is an unresolved *scope*.
+>
+> §2's directional state machine stands as the design for the capital migration.
+> §4.1 still needs re-tabling across all eleven constituents before any
+> coverage-based version of it is revisited.
 
 ---
 
