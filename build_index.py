@@ -2053,9 +2053,23 @@ def portfolio_stats(rows: list[dict], meta: dict) -> dict:
 
     # The index's own price per ounce of claim: total EV bought per ounce
     # claimed, weighted as the book actually holds them. This is the headline
-    # construction number — cap-weighting the same names reads A$910/oz.
+    # construction number.
     oz_per_dollar = sum(r["weight"] * r["claimed_moz"] / r["funded_ev_aud_m"]
                         for r in rows)
+
+    # The same names on market-cap weights, same formula. This is the only
+    # comparator the headline number means anything against, and until 19 Aug
+    # 2026 it was maintained BY HAND: this comment said A$910, README.md said
+    # A$917 and an in-flight PR said A$915, while the true figure was A$892.
+    # Four values, none of them derived from anything. A published number with
+    # no consumer in the engine is the defect §12.3 exists to prevent, and it
+    # applies to outputs and not just to parameters. Computed here so it cannot
+    # drift again.
+    tot_mcap = sum(r["mcap_aud_m"] for r in rows if r.get("mcap_aud_m"))
+    capw_oz_per_dollar = (
+        sum((r["mcap_aud_m"] / tot_mcap) * r["claimed_moz"] / r["funded_ev_aud_m"]
+            for r in rows if r.get("mcap_aud_m"))
+        if tot_mcap > 0 else 0.0)
 
     # Which tranche the index's claim actually comes from. Each tranche is taken
     # AFTER its confidence weight, so the three shares sum to 1 and describe the
@@ -2100,6 +2114,8 @@ def portfolio_stats(rows: list[dict], meta: dict) -> dict:
         "wavg_p_nav": wavg("p_nav"),
         "wavg_deck_sensitivity": wavg("deck_sensitivity"),
         "aud_per_claimed_oz": (1.0 / oz_per_dollar) if oz_per_dollar > 0 else None,
+        "capweighted_aud_per_claimed_oz": ((1.0 / capw_oz_per_dollar)
+                                           if capw_oz_per_dollar > 0 else None),
         "ledger_mix": ledger_mix,
         "max_statement_age_months": meta["gates"]["max_resource_statement_age_months"],
         "oldest_statement_months": max(
@@ -2209,6 +2225,14 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
           f"Developer sleeve {stats['developer_sleeve']*100:.1f}%")
     print(f"Index price per claimed ounce: A${stats['aud_per_claimed_oz']:,.0f}/oz "
           f"all-in.  ◆ = single-asset company.")
+    capw = stats.get("capweighted_aud_per_claimed_oz")
+    if capw:
+        print(f"  Same twelve names on MARKET-CAP weights: A${capw:,.0f}/oz — a "
+              f"{(1 - stats['aud_per_claimed_oz'] / capw) * 100:.0f}% discount, and "
+              f"the only")
+        print(f"  comparator the number above means anything against. Same names, "
+              f"same day, same")
+        print(f"  disclosed ounces; the entire difference is how the weights are set.")
     gaps = [r for r in rows if r.get("funding_gap_aud_m")]
     print("  FUNDED EV = market cap + net debt + residual funding gap (§7) — what "
           "the ounces cost all-in,")
