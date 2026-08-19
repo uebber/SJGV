@@ -1,6 +1,6 @@
 {
  "_schema": "See data/README.md. Every field points at a document in the same record's `documents` map. Unknown values are OMITTED, never guessed.",
- "_sourced": "2026-08-18",
+ "_sourced": "2026-08-20",
  "_universe": "Gate 1 Tier A restricts to Australia. 17 candidates screened.",
  "companies": [
   {
