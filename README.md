@@ -20,11 +20,11 @@ part of the gold-equity proposition while making those failure modes explicit.
 > unit of enterprise value, in qualifying jurisdictions, while selecting
 > companies able to survive a severe gold drawdown without forced equity issuance.
 
-The current construction holds 11 ASX-listed companies at **A$739 of funded EV
-per confidence-weighted claimed ounce**, versus **A$904 for the same companies
+The current construction holds 11 ASX-listed companies at **A$743 of funded EV
+per confidence-weighted claimed ounce**, versus **A$905 for the same companies
 at market-cap weights**. That is an 18% lower headline EV per
-claimed ounce, produced by portfolio construction alone. The claim is 58.2% Proven & Probable
-reserves, 29.4% Measured & Indicated non-reserve material and 12.5% Inferred material.
+claimed ounce, produced by portfolio construction alone. The claim is 59.0% Proven & Probable
+reserves, 28.9% Measured & Indicated non-reserve material and 12.0% Inferred material.
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.
@@ -230,11 +230,11 @@ connection is unavailable.
 ## Current construction
 
 **Market-data anchor:** 19 August 2026, spot A$6,347/oz  
-**Resource data sourced:** 17 August 2026  
+**Resource data sourced:** 17 August 2026, Westgold superseded 20 August 2026  
 **Constituents:** 11  
-**Headline funded EV / claimed ounce:** A$739  
-**Same names, market-cap weighted:** A$904 — an 18% discount  
-**Claim mix:** 58.2% P&P / 29.4% M&I non-reserve / 12.5% Inferred  
+**Headline funded EV / claimed ounce:** A$743  
+**Same names, market-cap weighted:** A$905 — an 18% discount  
+**Claim mix:** 59.0% P&P / 28.9% M&I non-reserve / 12.0% Inferred  
 **Reported gold beta:** 1.70  
 **Effective number of holdings:** 10.2
 
@@ -249,7 +249,7 @@ The claim mix is published to one decimal deliberately. The M&I share sat within
 between 29 and 30 on a move that is not a move — and this is the statistic the
 methodology nominates as the one to watch over time.
 
-Westgold is the largest position at approximately 13.9%. CYL is capped at 10% as
+Westgold is the largest position at approximately 13.7%. CYL is capped at 10% as
 a single-asset company; RXL is capped at 5% as a developer. The live build writes
 the complete constituent table and cap effects to the point-in-time snapshot
 rather than asking this README to serve as a second output file.
@@ -267,14 +267,18 @@ accuracy band on an estimate that carries no contingency. Losing the cheapest
 claim in the universe at A$354/oz is most of why the headline rose; that is the
 price of the rule and it is stated rather than absorbed.
 
-One known staleness sits inside that largest position. On 18 August 2026 Westgold
-declared a maiden 1,145 koz Probable reserve at Fletcher and lifted the Fletcher
-resource 30%. The ledger is **not** updated from it: the company's P&P, M&I and
-Inferred figures are group totals as at 30 June 2025, and splicing one deposit
-into them would assume nothing else moved across a year in which the company
-mined 387 koz. The arithmetic is recorded as a pending supersession — a
-Fletcher-only delta would lift the claim about 14% — and is deliberately not
-entered until the group statement lands.
+**That staleness closed on 20 August 2026, and it closed in the direction the
+rule predicted.** Westgold's ledger had been running on 30 June 2025 group
+totals. On 18 August the company declared a maiden 1,145 koz Probable reserve at
+Fletcher, and the arithmetic of splicing that one deposit into the stale group
+figures implied a **+14%** claim. It was deliberately not entered, because doing
+so assumes nothing else moved across a year in which the company mined 387 koz.
+The complete FY26 group statement landed two days later and the claim actually
+moved **−2.1%**, from 7.770 to 7.603 Moz: reserves grew 41% and the booking deck
+rose from A$3,800 to A$4,800/oz, but depletion and the divestment of five
+non-core assets more than offset the Fletcher gain. A 16-point error, avoided by
+refusing a convenient patch — which is the clearest illustration in the book of
+why the derive-or-fail rule exists.
 
 The A$662 portfolio figure is the inverse of the portfolio's weighted claim
 yield—a weighted harmonic construction statistic. It is useful for comparing

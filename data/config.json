@@ -1,6 +1,6 @@
 {
  "_schema": "Methodology parameters. These are committee decisions, not observations — index-methodology.md is the source of truth and every entry cites its section. Observations live in the other files in this directory. There is no scoring layer, and every survivor is either a gate threshold, an ounce-category discount, or an impairment cap. Not one is a scoring coefficient. The test a parameter must now pass to exist: does it change how many ounces are claimed, or what was paid for them?",
- "methodology": "SJGV v1.3",
+ "methodology": "SJGV v1.4",
  "adopted": "2026-08-18",
  "objective": {
   "beta_target": [
