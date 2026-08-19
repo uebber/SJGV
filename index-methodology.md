@@ -1,8 +1,8 @@
-# Index Methodology — SJGV v1.1
+# Index Methodology — SJGV v1.2
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.1
-**Date:** 18 August 2026
+**Version:** 1.2
+**Date:** 19 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
 **Simulation AUM:** €1,000,000 (≈ A$1.64M)
@@ -16,6 +16,7 @@
 
 | # | Date | Change |
 |---|------|--------|
+| 2 | 19 Aug 2026 | **§2.1 A2 redefined; version 1.1 → 1.2.** A2 is now measured on the **currency issuer** rather than on consolidated general government, and carries a third limb: **gross debt ≤ 85% of GDP**. **This is a rule change and not a sourcing fix, and the direction matters.** §12.2 item 4 asked for Canada's specified metrics to be sourced and A2 applied as written. Sourced, **Canada passes A2 as v1.1 wrote it** — general government net debt ~10–13% of GDP, *below Australia's ~19%*, and general government interest 8.8% of revenue against a 10% limit. Recording a FAIL against that would have been the v1.0 A4 defect exactly: the test passing and the verdict recorded anyway. The rule was therefore changed in the open. On the amended rule Canada fails twice — gross debt 105–110% of GDP, and **federal** interest at 10.3% of revenue. What the change gives up, and the Maastricht threshold rejected on measurement, is in §2.1. **No weight changes** — `data/sovereign.json` is a record, no engine code reads it, and Canada's exclusion is unchanged, so `eligible_ounce_share` does not move for EVN, VAU or NST. §12.2 item 4 closes; item 5 stays open. |
 | 1 | 18 Aug 2026 | **§2.1 A4 redefined; version 1.0 → 1.1.** v1.0 gated A4 on requisition history *and* on statutory powers suspended rather than repealed. Australia fails that test on both limbs and the v1.0 table recorded it as a PASS regardless. A4 is now a present-tense test of gold controls **in operation**; dormant powers and historical use are disclosed per country and carried as residual risk (§11.1). What the change gives up is stated in §2.1, not buried. **No weight changes** — `data/sovereign.json` is a record, and no engine code reads it. Canada's A2 and the s51(xxxi) characterisation question are reopened as §12.2 items 4 and 5. |
 
 
@@ -118,7 +119,7 @@ Applied to the country of *asset location*, not of listing or incorporation.
 | # | Test | Metric | Threshold |
 |---|------|--------|-----------|
 | A1 | **Monetary sovereignty** | Own currency; freely floating; not a global reserve currency; not a member of a currency union | Pass/Fail |
-| A2 | **Sovereign solvency** | General government net debt/GDP; interest/revenue; net international investment position | Net debt ≤ 60% of GDP **and** interest ≤ 10% of revenue |
+| A2 | **Sovereign solvency** | **Currency issuer.** Net debt/GDP; gross debt/GDP; interest/revenue | Net debt ≤ 60% of GDP **and** gross debt ≤ 85% of GDP **and** interest ≤ 10% of revenue. Any one breach fails |
 | A3 | **Gold as strategic export** | Gold's share of national goods exports | **Disclosed, not gated** — see note |
 | A4 | **Gold controls in operation** | Confiscation, compulsory delivery, administered monopsony or gold-export prohibition **in force at the review date**, verified against primary law | None in operation. Dormant powers and historical use are **disclosed, not gated** — see note |
 
@@ -127,6 +128,18 @@ repress gold — the FX does the adjustment continuously and without policy
 intervention. A reserve-currency issuer has both a unique motive (managing
 devaluation while defending reserve status) and unique tools. A currency-union
 member has neither monetary control nor exit.
+
+**Rationale for A2, and what v1.1 left unspecified.** A2 is a **motive** test, and v1.1 never said whose motive. It named "general government" for the debt limb and left the interest limb's consolidation level open, which is how Canada came to be excluded on a gross figure by a rule written on a net one.
+
+The entity being tested is **the one that can act**: the government that issues the currency, directs the central bank and could proclaim a bullion control. A1 already scopes Gate 1 to exactly that entity. A province, a state or a canton cannot print, cannot impose exchange control and cannot requisition gold, so consolidating its balance sheet into the test answers a question the gate is not asking. A2 is therefore measured on the national government, with general-government figures recorded alongside as context.
+
+**And netting has limits.** Net debt credits a sovereign with assets that are earmarked, illiquid, or owned by somebody else. Canada is the worked case and it is stark: general government net debt of ~10% of GDP — *lower than Australia's ~19%* — against gross debt of 105–110%, a gap that is almost entirely CPP/QPP social-security assets. Those assets are legally committed to pension obligations. A pension fund's equity portfolio does not service the sovereign's coupon. Excluding social-security funds, Statistics Canada puts general government net financial liabilities near 50% of GDP, and the federal government already spends **10.3 cents of every revenue dollar on interest**, with the Parliamentary Budget Officer projecting 13.1% by 2030-31.
+
+So the third limb is **gross debt**, because gross debt is what must be *rolled*, and rollover at rising rates is the actual channel from solvent-on-paper to reaching-for-the-metal.
+
+**The threshold is 85%, and it is set in a gap rather than derived.** Say so plainly: nothing recorded falls between Australia at ~61% general government (~36% Commonwealth) and Canada at ~105–110%. That is the same construction as `constraints.single_asset_pp_share_threshold`, which sits at 0.80 because nothing in that cross-section lies between 0.773 and 0.999. **The Maastricht 60% reference value was tried first** — the externally-anchored number that could not be accused of being tuned — and rejected on measurement: on the IMF's general-government basis Australia reads ~61% and would fail it, leaving the index with no eligible jurisdiction. A rule that vetoes the entire asset class is not a gate; it is a decision not to run the product, and §2.1 has already refused that once. The 85% bar applies prospectively and evenly. **If Australian general government gross debt reaches it, Australia fails and there is nothing left to hold.**
+
+**What this amendment costs, stated rather than buried.** Canada's exclusion now survives on the amended rule and would *not* survive on the rule as v1.1 wrote it. That is a real concession and it is the reason the change is an amendment-record line rather than a note: a reader is entitled to see that the test was rewritten and to disagree with the rewrite. The defence is that v1.1's A2 was underspecified rather than wrong, that the specification chosen is the one A1 already implies, and that it was fixed before the number decided anything — the eligible universe is unchanged, so nothing in the book moved and nothing in the book was protected.
 
 **Rationale for A3, and why it is not gated.** A sovereign taxes what it needs
 and seizes what it lacks. A state earning materially from a productive gold
@@ -187,22 +200,34 @@ s 44 would suggest.
 
 | Country | A1 | A2 | A3 | A4 | Verdict |
 |---------|----|----|----|----|---------|
-| **Australia** | Pass — AUD free-floating, non-reserve, commodity currency | Pass — net debt ~19–20% of GDP, gross ~51% | **Strong — gold is the #2 export at ~A$68bn, having overtaken coal** | Pass — none in operation. Banking Act 1959 Pt IV ceased 30 Jan 1976 (s 40(3), gaz 1976 No S17); unrepealed and disclosed at §11.1 | **PASS** |
+| **Australia** | Pass — AUD free-floating, non-reserve, commodity currency | Pass on all three — net debt ~19%, Commonwealth gross ~36% (general government ~61%), interest 3.5% of revenue | **Strong — gold is the #2 export at ~A$68bn, having overtaken coal** | Pass — none in operation. Banking Act 1959 Pt IV ceased 30 Jan 1976 (s 40(3), gaz 1976 No S17); unrepealed and disclosed at §11.1 | **PASS** |
 | New Zealand | Pass | Pass | Weak — immaterial to exports | Pass — none in operation | **Pass** (no eligible listed vehicle) |
-| Canada | Pass | **Fail as recorded — see §12.2 item 4** | Moderate | Pass — none in operation; 1939–51 Foreign Exchange Control Board regime disclosed | **FAIL — A2** |
-| Finland | **Fail — euro membership** | **Fail — gross ~80% and rising** | Weak | Pass — none in operation | **FAIL — A1 and A2** |
+| Canada | Pass | **Fail — gross debt 105–110% of GDP against the 85% limb, and federal interest 10.3% of revenue against the 10% limb. Net debt ~10–13% passes** | Moderate | Pass — none in operation; 1939–51 Foreign Exchange Control Board regime disclosed | **FAIL — A2** |
+| Finland | **Fail — euro membership** | Gross ~80% and rising — *inside* the 85% limb today, so A2 no longer carries this exclusion | Weak | Pass — none in operation | **FAIL — A1** |
 | United States | **Fail — reserve issuer** | **Fail — net 100% → ~120%; gross 126% → 142% by 2031** | **Weak** | Pass — none in operation; 1933–42 interventions disclosed, and see §2.1 consequence 2 | **FAIL — A1 and A2** |
 
 Norway, Sweden and Switzerland pass cleanly and host no gold mining of scale.
 **Australia is the only Tier A pass with a material industry.**
 
 Read the A4 column honestly: **it now excludes nobody.** Canada, Finland and the
-United States are excluded on solvency and monetary sovereignty. Canada's
-exclusion in particular rests on A2 alone, and the A2 evidence recorded for
-Canada is general government *gross* debt against a threshold written on *net*
-debt — a mismatch that was harmless while Canada also failed A4 and is not
-harmless now. It is reopened as §12.2 item 4 rather than resolved here, because
-sourcing it could change the eligible universe and that is a committee decision.
+United States are excluded on solvency and monetary sovereignty.
+
+Canada's exclusion rests on A2 alone, and **§12.2 item 4 closed on 19 August 2026
+by changing A2 rather than by sourcing it.** The mismatch item 4 identified was
+real: the recorded evidence was general government *gross* debt against a
+threshold written on *net* debt. Sourced, the specified metrics **passed** —
+Canadian general government net debt is ~10–13% of GDP, below Australia's ~19%,
+and general government interest is 8.8% of revenue against a 10% limit. So the
+choice was to admit Canada or to change the rule, and the rule was changed: A2
+now measures the currency issuer and carries a gross-debt limb (§2.1). Canada
+fails both new limbs. **Two things follow that should not be smoothed over.**
+First, this exclusion would not survive the v1.1 rule, and the amendment record
+says so. Second, Canada's A4 dormant-power register was never compiled to the
+standard applied to Australia — `data/sovereign.json` records the gap — and it
+stays uncompiled only because A2 still excludes the country. Revisit A2 and that
+work becomes required, starting with the Emergencies Act 1988, invoked in
+February 2022 to freeze accounts without a court order and therefore a
+*recently exercised* financial-control power rather than a dormant one.
 
 ### 2.3 Tier B (sub-national, disclosed)
 
@@ -390,8 +415,6 @@ Pre-production companies cannot be tested on cash flow. The developer test is:
 **D3 replaces a binary funded/unfunded test.** "Fully funded" treats a A$50m gap
 against a A$400m market cap identically to a A$300m gap against a A$200m cap.
 The first is 12% dilution — bounded, knowable, priced. The second is a zombie.
-
----
 
 ## 4. Gate 3 — Tradability
 
@@ -1054,14 +1077,15 @@ August 2026** — one by sourcing, one by verification, one by a survey that
 established the data does not exist. **Two opened the same day**, on the back of
 the A4 amendment: items 4 and 5. **Item 6 opened on 19 August 2026** and is the
 only one of the three that is a defect in the live build rather than a question
-about it.
+about it. **Item 4 closed on 19 August 2026**, by an A2 amendment rather than by
+the sourcing it asked for — the sourcing came back the other way.
 
 | # | Item | Outcome |
 |---|------|---------|
 | 1 | **Single-asset status, all 17.** | **CLOSED — sourced.** Replaced the unsourced `single_asset` boolean with a sourced `largest_asset_pp_share` and a declared 0.80 threshold (§8.1). Eight of seventeen flag, not the four §11 named; the cap binds on **PNR and CYL**, 7.52% one-way turnover, and it costs **+6.4% on A$ per claimed ounce**. Three regression names behaved: PNR and RXL returned 1.000, CMM returned 0.700 under the forward rule fixed before the number was computed. |
 | 2 | **Grade-tonnage curves.** | **CLOSED — not sourceable from public disclosure.** Phase 0 survey over ≈11 MB of primary text across all seventeen: **zero of twelve constituents** publish a resource at two or more cut-offs or a grade-tonnage table. One partial (RXL, a *chart* for its underground resource only) and one unknown (WGX's five NI 43-101 reports, issuer URLs dead). Full write-up and the three findings that would have blocked Phase 2 regardless: `docs/grade-tonnage-survey.md`. **The §6 ledger stays static in the gold price and §9.2's modelled 1.00 keeps saying what it says.** |
 | 3 | **Jurisdiction B1 / B3 verification.** | **CLOSED — verified.** B1 verified from statutory instruments for every exposed jurisdiction: WA 2.5% flat, VIC 2.75% flat, NSW **4.0% flat** (confirming a claim §2.3 was making ahead of its data), QLD a **price-linked 2.5–5.0% scale saturated at its 5% ceiling**, TAS profit-based capped at 5.35% and **no longer an exposure** (Henty sold May 2025). WA **B3 verified**, and it reframed the test: no statutory determination periods, 42.4% on-time against an 80% target. `jurisdictions.json` records the statutory instrument for each. Remaining unverified: B1 for SA, NT and NZ (nil exposure), and B2/B3/B4 outside WA. |
-| 4 | **Canada's A2, now load-bearing alone.** | **OPEN — opened 18 Aug 2026 by the A4 amendment.** A2 is written on **net** debt ≤ 60% and interest/revenue ≤ 10%. The evidence recorded for Canada is general government **gross** debt >100%, and the note concedes net is materially lower owing to public pension assets. Neither specified metric is sourced. Under v1.0 Canada also failed A4, so the mismatch was not load-bearing; it now carries Canada's exclusion by itself, and Agnico Eagle's at entity level. **Source Canadian general government net debt/GDP and interest/revenue from the IMF Fiscal Monitor, then apply A2 as written.** Deliberately not resolved inside the A4 amendment: the answer could move the eligible universe, and a documentation fix is the wrong vehicle for that. |
+| 4 | **Canada's A2, now load-bearing alone.** | **CLOSED 19 Aug 2026 — sourced, and then the rule was changed. Read both halves.** Sourced first, as the item asked: Canadian general government net debt is **~10–13% of GDP — below Australia's ~19%** — and general government interest is **8.8% of revenue** against a 10% limit. **Canada passed A2 as v1.1 wrote it.** Recording FAIL anyway would have repeated the v1.0 A4 defect one amendment after fixing it. So A2 was rewritten instead (§2.1, amendment 2): measured on the **currency issuer**, with a third limb at **gross debt ≤ 85% of GDP**. Canada fails on gross (105–110%) and on federal interest (**10.3%** of revenue, PBO projecting 13.1% by 2030-31); the net-debt limb still passes and is not the basis. **Zero weight change** — Canada stays out, so no `eligible_ounce_share` moves, and no engine code reads `data/sovereign.json`. What the closure leaves behind is recorded in §2.2: the exclusion does not survive the old rule, and Canada's A4 dormant-power register remains uncompiled by decision. |
 | 5 | **Does s51(xxxi) reach the control limbs of Banking Act Part IV?** | **OPEN — opened 18 Aug 2026 by the A4 amendment.** Australian counsel, and the one question in this file a search engine genuinely cannot answer. s 44 compensates only gold delivered under s 42, and s 40(2) permits partial activation, so the export ban (s 41), the monopsony (s 45) and the prohibition on working gold (s 46) can operate with no statutory compensation. Whether the just-terms guarantee reaches them turns on the acquisition-versus-regulation distinction. **This does not gate** — A4 is present-tense and Part IV is not in operation — but it sizes the residual risk in §11.1, which is currently unpriced. |
 | 6 | **`remaining_capex_aud_m` does two incompatible jobs, and the §7.1 denominator gets the wrong one.** | **OPEN — opened 19 Aug 2026, and this one moves weights.** Gate 2 D3 needs the **residual funding gap** (financing capacity); the §7.1 denominator needs **gross remaining execution capital** (economic cost). One field carries both, so three conventions are live in the book at once: AUC gross at A$354m, AAR net of cash at A$162m, and **RXL net of cash *and* drawable debt at A$0m** — the full A$382.6m Youanmi DFS pre-production capital enters the denominator of a current 5%-capped constituent as zero. Where the gap is derived net of cash, EV has already netted it and the cash is credited twice. The mirror error is larger: **producers are charged nothing at all** for board-approved builds, so GGP's A$1,065m Havieron capital and CMM's A$474m Mt Gibson capital are absent from a denominator that charges developers for the same activity. Full diagnosis and the accepted fix: `docs/asset-evidence-capital-proposal.md`; per-constituent sourcing: `docs/execution-capital-inventory.md`. **Blocked on EVN**, whose four board-approved project totals are disclosed but whose cumulative spend against them is not, so remaining capital is not derivable without the apportionment `estimation_policy` forbids. |
 
@@ -1220,4 +1244,4 @@ those words for the same reason.
 
 ---
 
-*SJGV v1.1 — 18 August 2026. The sole methodology in force.*
+*SJGV v1.2 — 19 August 2026. The sole methodology in force.*

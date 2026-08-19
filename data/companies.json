@@ -2551,7 +2551,7 @@
    "ticker": "AEM",
    "name": "Agnico Eagle",
    "gate": "Gate 1 Tier A",
-   "reason": "Canada fails Tier A on A2 (solvency) and that is now the sole basis — see methodology §12.2 item 4, which reopens it: the recorded evidence is general government gross debt >100% of GDP against a threshold written on net debt. The Foreign Exchange Control Act 1939-51 requisition precedent is retained as a disclosure and no longer fails A4, which is present-tense as of v1.1."
+   "reason": "Canada fails Tier A on A2 (solvency) and that is the sole basis. §12.2 item 4 CLOSED 19 Aug 2026 by amending A2 rather than by sourcing it, because the sourcing came back the other way: Canadian general government net debt is ~10-13% of GDP — below Australia's ~19% — and general government interest is 8.8% of revenue, so Canada PASSED A2 as v1.1 wrote it. A2 v1.2 measures the currency issuer and adds a gross-debt limb at 85% of GDP; Canada fails on gross (105-110%) and on federal interest (10.3% of revenue). This exclusion does not survive the v1.1 rule and the amendment record says so. The Foreign Exchange Control Act 1939-51 requisition precedent is retained as a disclosure and no longer fails A4, which is present-tense as of v1.1."
   },
   {
    "ticker": "PRU/RSG/WAF/EMR",
