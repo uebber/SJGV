@@ -1,0 +1,65 @@
+{
+  "snapshot": "2026-08-20-v1.6",
+  "tag": "v1.6",
+  "taken_utc": "2026-08-20T12:48:00.354742+00:00",
+  "build_generated_utc": "2026-08-20T12:47:46.621748+00:00",
+  "git_commit": "88fdf403ec354d38103810c77eea328e5b567d58-dirty",
+  "engine_commit_at_build": "88fdf403ec354d38103810c77eea328e5b567d58",
+  "market_input": {
+    "status": "ok",
+    "engine_commit": "88fdf403ec354d38103810c77eea328e5b567d58",
+    "session_started_utc": "2026-08-20T12:46:49.625911+00:00",
+    "market_data_type_requested": "delayed-frozen",
+    "market_data_type_observed": [
+      "live"
+    ],
+    "price_fields": {
+      "histDailyClose": 10,
+      "marketPrice": 7
+    },
+    "n_requests": 50,
+    "n_series": 36,
+    "bars_rows": 12023,
+    "n_errors": 15,
+    "error_codes": [
+      2104,
+      2106,
+      2158
+    ],
+    "cli_overrides": {
+      "gold_aud": null,
+      "euraud": null
+    },
+    "bundle_sha256": "e906fcabfef5f37746bcda42a41c78b81364a4345422f7f9944d1ab88a6954d7",
+    "bars_sha256": "583bc89bf4afaec02ac10ce8de20d38b29f7dd734ba3482d90b8592138509a1d"
+  },
+  "methodology": "SJGV v1.6",
+  "data_sourced": "2026-08-20",
+  "gold_aud_oz": 6280.844783357347,
+  "euraud": 1.642785,
+  "gate2_anchor_aud": 4957.175045385597,
+  "n_constituents": 11,
+  "effective_n": 10.230973334502893,
+  "portfolio_beta_gold": 1.6953593752548384,
+  "weights": {
+    "NST": 0.113604,
+    "EVN": 0.045011,
+    "CMM": 0.076331,
+    "GGP": 0.091984,
+    "GMD": 0.098791,
+    "RMS": 0.092913,
+    "RRL": 0.098357,
+    "WGX": 0.136628,
+    "VAU": 0.096381,
+    "CYL": 0.1,
+    "RXL": 0.05
+  },
+  "artefacts": [
+    "data/companies.json",
+    "data/config.json",
+    "weights.json",
+    "basket.json",
+    "market_bundle.json",
+    "market_bars.csv"
+  ]
+}
