@@ -365,9 +365,19 @@ Still open:
 
 ## Point-in-time
 
-`tools/snapshot.py` freezes `companies.json`, `config.json`, the build output and
-the engine's git commit at each rebalance, under `snapshots/<date>/`. Run it
-after every deep and light rebalance.
+`tools/snapshot.py` freezes `companies.json`, `config.json`, the build output,
+the raw TWS session behind the market inputs (`market_bundle.json` +
+`market_bars.csv`) and the engine's git commit at each rebalance, under
+`snapshots/<date>/`. Run it after every deep and light rebalance.
+
+The market bundle exists for the same reason every field in `companies.json`
+names a document. A price, a spread and a beta used to arrive with nothing but
+the number: not the contract IBKR resolved the symbol to, not the window
+requested, not whether the quote was live, frozen, delayed or — as on 20 August
+2026 — absent, with the last completed session's close standing in for it. The
+manifest re-hashes both files against the digests `weights.json` recorded at
+build time, so a snapshot cannot silently pair one run's weights with another
+run's market data.
 
 The history before the first snapshot (17 August 2026) cannot be reconstructed:
 point-in-time reserves and price decks are not published anywhere, so the gates
