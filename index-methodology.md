@@ -1168,10 +1168,21 @@ R² and σ_idio; modelled delta and the implied deck (§9); effective number of
 stocks; ineligible-jurisdiction NAV share; capacity ceiling; turnover and
 realised trading cost in basis points.
 
-`tools/snapshot.py` freezes the data layer, the parameters, the output and the
-engine commit at each rebalance, and `--diff` reports one-way turnover, entries,
-exits and which underlying fields moved. History before the first snapshot cannot
-be reconstructed and is not claimed.
+`tools/snapshot.py` freezes the data layer, the parameters, the output, the raw
+TWS session behind the market inputs and the engine commit at each rebalance, and
+`--diff` reports one-way turnover, entries, exits and which underlying fields
+moved. History before the first snapshot cannot be reconstructed and is not
+claimed.
+
+The market session is frozen as `market_bundle.json` and `market_bars.csv`:
+request parameters, contract identifiers, quote fields, market-data type, the
+TWS error channel, per-call timestamps and every historical bar consumed. This
+is a **record, not a rule** — nothing in it gates a name and no gate reads it.
+It exists because §12.3 requires an input to name its source, and until now the
+market leg was the one input that named nothing. It also separates the four ways
+a price can move between two rebalances that the weights alone cannot: the
+market moved, the quote type changed, IBKR resolved the symbol to a different
+contract, or a config window changed.
 
 ---
 

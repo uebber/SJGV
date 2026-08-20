@@ -102,7 +102,12 @@ Run
     python build_index.py --nav-detail         # per-name §8 NAV, P/NAV, implied deck
     python build_index.py --gold-aud 6170 --euraud 1.636   # offline overrides
 
-Outputs weights.csv/json and, when sized, basket.csv/json. Then:
+Outputs weights.csv/json and, when sized, basket.csv/json. Every run also writes
+market_bundle.json + market_bars.csv — the raw TWS session that produced the
+prices, spreads and beta: request parameters, contract identifiers, per-quote
+market-data type, timestamps at both ends of every call, and the engine commit.
+That is the market leg's source document, and tools/snapshot.py freezes it with
+the rest. Then:
 
     python tools/config_audit.py --strict         # after any config edit
     python tools/snapshot.py                      # after any rebalance
@@ -111,13 +116,16 @@ Outputs weights.csv/json and, when sized, basket.csv/json. Then:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import csv
+import hashlib
 import itertools
 import json
 import logging
 import math
 import os
 import re
+import subprocess
 import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -152,6 +160,37 @@ TRADING_DAYS = 252
 DAYS_PER_MONTH = 30.4375
 
 MARKET_DATA_TYPE_LABELS = {1: "live", 2: "frozen", 3: "delayed", 4: "delayed-frozen"}
+
+# What the session asks TWS for. 4 = frozen realtime where the account is
+# subscribed, delayed-frozen otherwise. Named here because the bundle records it
+# as the REQUESTED type alongside the type each ticker actually came back as,
+# and those two disagree per contract depending on entitlement and time of day.
+MARKET_DATA_TYPE_REQUESTED = 4
+
+# The raw bar record, in IBKR's own field order. BID_ASK bars do not carry
+# prices in these fields' usual sense — see _spread_history — so the columns are
+# named after the API, not after what a TRADES bar happens to mean.
+BAR_COLUMNS = ("series", "date", "open", "high", "low", "close", "volume",
+               "average", "bar_count")
+
+# Ticker fields copied verbatim into the bundle. A defined list rather than a
+# sweep of the object: the point of a frozen input is that the same build reads
+# the same fields next year, and an attribute that appears or disappears with an
+# ib_insync release would silently change the record. Anything absent on this
+# version records as null rather than vanishing.
+TICKER_FIELDS = (
+    "marketDataType", "bid", "bidSize", "ask", "askSize", "last", "lastSize",
+    "prevBid", "prevAsk", "prevLast", "volume", "open", "high", "low", "close",
+    "vwap", "halted", "delayedBid", "delayedAsk", "delayedLast", "delayedClose",
+)
+
+# Contract fields copied verbatim. conId is the identifier that matters: symbol
+# and exchange are what we ASKED for, conId is what IBKR resolved it to, and a
+# reissued or re-listed ASX code is exactly the case where the two diverge.
+CONTRACT_FIELDS = (
+    "conId", "secType", "symbol", "localSymbol", "tradingClass", "exchange",
+    "primaryExchange", "currency", "multiplier", "lastTradeDateOrContractMonth",
+)
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -691,7 +730,314 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
 # IBKR
 # ──────────────────────────────────────────────────────────────────────────
 
-def _gold_and_fx(ib) -> dict:
+def engine_commit() -> str | None:
+    """The commit the build ran from, with a dirty flag if the tree was edited.
+
+    tools/snapshot.py records this too, but it records it when the SNAPSHOT is
+    taken. That is a different instant, and on any workflow where the build runs
+    first and the snapshot lands after an edit, it is a different commit — which
+    would pin the wrong engine to the numbers. Stamp it in the session, where the
+    market data was actually read.
+    """
+    try:
+        out = subprocess.run(["git", "rev-parse", "HEAD"], cwd=HERE,
+                             capture_output=True, text=True, timeout=10)
+        dirty = subprocess.run(["git", "status", "--porcelain"], cwd=HERE,
+                               capture_output=True, text=True, timeout=10)
+        if out.returncode != 0:
+            return None
+        return out.stdout.strip() + ("-dirty" if dirty.stdout.strip() else "")
+    except Exception:
+        return None
+
+
+def short_commit(commit: str | None) -> str:
+    """Twelve characters of sha, and the dirty flag intact.
+
+    Slicing the raw string would drop the "-dirty" suffix, which is the part
+    that says the build does not correspond to any commit anyone else can check
+    out. Same rule as tools/snapshot.py.
+    """
+    if not commit:
+        return "—"
+    sha, _, flag = commit.partition("-")
+    return sha[:12] + (f"-{flag}" if flag else "")
+
+
+def _utc() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _contract_raw(contract) -> dict:
+    """Contract identity as IBKR resolved it, not as we asked for it."""
+    out = {}
+    for f in CONTRACT_FIELDS:
+        v = getattr(contract, f, None)
+        out[f] = None if v in ("", 0) else v
+    return out
+
+
+def _ticker_raw(tk) -> dict:
+    """One quote, verbatim, with NaN normalised to null.
+
+    ib_insync carries "no value" as float('nan'), which json.dumps happily
+    writes as the bare token NaN — not valid JSON, and it would make the frozen
+    bundle unreadable by anything stricter than Python. Every numeric field
+    therefore goes through _f().
+    """
+    out: dict = {}
+    for f in TICKER_FIELDS:
+        v = getattr(tk, f, None)
+        out[f] = v if isinstance(v, (bool, str)) or v is None else _f(v)
+    out["marketDataTypeLabel"] = MARKET_DATA_TYPE_LABELS.get(
+        out.get("marketDataType"), str(out.get("marketDataType")))
+    # Derived by ib_insync from the fields above, not sent by TWS. Recorded
+    # because _first_price and the price ladder in fetch_market_data read them,
+    # so a bundle without them cannot reproduce which field won.
+    out["_derived"] = {"marketPrice": _f(tk.marketPrice()),
+                       "midpoint": _f(tk.midpoint())}
+    out["time_utc"] = tk.time.isoformat() if getattr(tk, "time", None) else None
+    return out
+
+
+class IBRecorder:
+    """Everything the TWS session was asked, and everything it answered.
+
+    WHY THIS EXISTS
+    ---------------
+    Every other input to a weight carries the document it was read from —
+    data/companies.json will not accept a value without one, and tools/
+    provenance.py grades the documents. The market leg carried nothing. A build
+    printed a price and a spread and a beta, and the only record of where they
+    came from was the number itself: not the contract IBKR resolved, not the
+    window requested, not whether the quote was live, frozen or delayed, not
+    what the account was entitled to at that minute, and not the bars the
+    regression consumed. Re-running the build a day later gives different
+    numbers and no way to tell which part moved.
+
+    So the session logs itself. The log is not a debugging aid — it is the
+    source document for the one class of input that could not otherwise have
+    one, and it is frozen into the snapshot alongside the data layer and the
+    parameters.
+
+    WHAT IS RECORDED
+    ----------------
+        session    host/port/client id, TWS server version and clock, the
+                   requested market-data type, the engine commit
+        requests   every API call in order, with its parameters and the UTC
+                   instants either side of it
+        contracts  what was asked for and what conId came back
+        quotes     each ticker's raw fields, and the market-data type that
+                   ticker actually returned
+        errors     everything TWS said on the error channel, including the
+                   informational messages — a subscription refusal arrives here
+                   and nowhere else, and without it a quote of -1.0 looks like
+                   a price rather than a rejection
+        prices     which field each name's price was finally taken from
+        bars       every bar of every historical series, unaggregated
+
+    Nothing here is derived, and nothing here is corrected. A failed request is
+    recorded as a failed request; that is the point.
+
+    ONE CAVEAT ON marketDataType. The value recorded per quote is ib_insync's
+    Ticker.marketDataType, which is initialised to 1 ("live") and overwritten
+    only if TWS sends a market-data-type message for that request. A session
+    where TWS sends nothing therefore records "live" by default rather than by
+    observation. Read it against `errors` and against `prices`: a ticker
+    reporting "live" with -1.0 quotes, a subscription error and a price resolved
+    from histDailyClose was not a live quote, and the bundle carries all four
+    facts so the reader is not required to trust the first one.
+    """
+
+    def __init__(self, host: str, port: int, client_id: int):
+        self.session: dict = {
+            "host": host, "port": port, "client_id": client_id, "readonly": True,
+            "market_data_type_requested": MARKET_DATA_TYPE_REQUESTED,
+            "market_data_type_requested_label":
+                MARKET_DATA_TYPE_LABELS.get(MARKET_DATA_TYPE_REQUESTED),
+            "engine_commit": engine_commit(),
+            "started_utc": _utc(),
+        }
+        self.requests: list[dict] = []
+        self.contracts: dict[str, dict] = {}
+        self.quotes: dict[str, dict] = {}
+        self.errors: list[dict] = []
+        self.prices: dict[str, dict] = {}
+        self.series: dict[str, dict] = {}
+        self.bar_rows: list[list] = []
+
+    @contextlib.contextmanager
+    def call(self, name: str, **params):
+        """Log one API call around its own execution.
+
+        The caller sets entry["result"]. An exception is recorded and re-raised:
+        the callers below swallow IBKR failures by design (a missing FX leg
+        degrades to a fallback rather than killing the build), and a swallowed
+        failure that left no trace is how a bundle would come to look complete
+        while a series was silently empty.
+        """
+        entry = {"seq": len(self.requests) + 1, "call": name, "params": params,
+                 "sent_utc": _utc()}
+        self.requests.append(entry)
+        try:
+            yield entry
+        except Exception as exc:
+            entry["error"] = f"{type(exc).__name__}: {exc}"
+            raise
+        finally:
+            entry["received_utc"] = _utc()
+
+    def contract(self, requested: dict, qualified) -> dict:
+        rec = {"requested": requested, "qualified": _contract_raw(qualified)}
+        self.contracts[str(rec["qualified"]["conId"] or requested.get("symbol"))] = rec
+        return rec
+
+    def quote(self, tk) -> None:
+        self.quotes[str(getattr(tk.contract, "conId", None))] = {
+            "contract": _contract_raw(tk.contract), "ticker": _ticker_raw(tk)}
+
+    def error(self, req_id, code, message, contract) -> None:
+        """One message off the TWS error channel.
+
+        IBKR sends status notices down the same channel as failures — 2104
+        "market data farm connection is OK" is not an error and 354 "requested
+        market data is not subscribed" is. Both are kept: the farm notices state
+        which data farms were up at the moment the build read prices, which is
+        part of what the session was, and filtering to "real" errors would mean
+        this file deciding which of TWS's statements about itself to preserve.
+        """
+        self.errors.append({
+            "utc": _utc(), "req_id": req_id, "code": code, "message": message,
+            "con_id": getattr(contract, "conId", None) or None,
+            "symbol": getattr(contract, "symbol", None) or None,
+        })
+
+    def price(self, symbol: str, resolved: dict) -> None:
+        """Which field the engine's price ladder finally settled on.
+
+        `field` is the whole point. A price taken from `last` and a price taken
+        from `histDailyClose` are the same number type and completely different
+        claims — the first is a quote, the second is yesterday's (or today's)
+        session close standing in for one — and only this line separates them.
+        """
+        self.prices[symbol] = resolved
+
+    def bars(self, key: str, meta: dict, bars) -> None:
+        """Store a historical series verbatim.
+
+        Bars go to market_bars.csv rather than into the JSON: 11 names over two
+        years of daily TRADES, three months of BID_ASK and five years of gold
+        and AUDUSD is roughly nine thousand rows, and nine thousand indented
+        JSON objects is a file nobody opens. The JSON keeps the index — request
+        parameters, count, first and last date — and the CSV keeps the numbers.
+        """
+        self.series[key] = {**meta, "n_bars": len(bars),
+                            "first": str(bars[0].date) if bars else None,
+                            "last": str(bars[-1].date) if bars else None}
+        for b in bars:
+            self.bar_rows.append([
+                key, str(b.date), _f(b.open), _f(b.high), _f(b.low), _f(b.close),
+                _f(b.volume), _f(getattr(b, "average", None)),
+                getattr(b, "barCount", None),
+            ])
+
+    def bundle(self) -> dict:
+        self.session["finished_utc"] = _utc()
+        return {
+            "_schema": "Raw IBKR/TWS session for one build: request parameters, "
+                       "contract identifiers, quote fields, market-data type and "
+                       "the index of every historical series. Bars themselves are "
+                       "in market_bars.csv, keyed on `series`. Written by "
+                       "build_index.py; frozen by tools/snapshot.py.",
+            "session": self.session,
+            "requests": self.requests,
+            "errors": self.errors,
+            "contracts": self.contracts,
+            "quotes": self.quotes,
+            "prices": self.prices,
+            "series": self.series,
+        }
+
+
+class NullRecorder(IBRecorder):
+    """Records nothing, for callers that are not producing a frozen build.
+
+    tools/asymmetry.py and tools/sensitivity.py open their own sessions to
+    answer a diagnostic question; they are not the index and their reads are not
+    an index input, so they should not silently overwrite the build's bundle.
+    Skipping the git call in __init__ also keeps _history usable with no
+    repository at all.
+    """
+
+    def __init__(self):
+        self.session, self.requests = {}, []
+        self.contracts, self.quotes, self.series, self.bar_rows = {}, {}, {}, []
+
+
+def _series_key(contract, what: str, duration: str) -> str:
+    """Stable name for one historical series, unique within a session.
+
+    Keyed on the local symbol rather than the conId so the CSV stays legible;
+    the conId is one hop away in market_bundle.json → series → con_id, and a
+    build that pulled two contracts with one local symbol would be a different
+    problem entirely.
+    """
+    sym = getattr(contract, "localSymbol", None) or contract.symbol
+    return f"{sym}:{what}:{duration.replace(' ', '')}"
+
+
+def write_market_bundle(bundle: dict, bar_rows: list[list]) -> dict:
+    """Write market_bundle.json + market_bars.csv; return the digest block.
+
+    The digests go into weights.json so the output names the exact input that
+    produced it. Two files can sit next to each other in a snapshot directory
+    and still not belong together — someone re-runs a build, copies one file and
+    not the other — and a sha256 is the only thing that catches it.
+    """
+    bars_path = HERE / "market_bars.csv"
+    with bars_path.open("w", newline="") as f:
+        wr = csv.writer(f)
+        wr.writerow(BAR_COLUMNS)
+        wr.writerows(bar_rows)
+    bars_sha = hashlib.sha256(bars_path.read_bytes()).hexdigest()
+
+    bundle["bars_file"] = {"path": "market_bars.csv", "columns": list(BAR_COLUMNS),
+                           "n_rows": len(bar_rows), "sha256": bars_sha}
+    text = json.dumps(bundle, indent=2, default=str) + "\n"
+    (HERE / "market_bundle.json").write_text(text)
+
+    observed = sorted({q["ticker"]["marketDataTypeLabel"]
+                       for q in bundle["quotes"].values()})
+    fields: dict[str, int] = {}
+    for p in bundle["prices"].values():
+        k = p["field"] or "unresolved"
+        fields[k] = fields.get(k, 0) + 1
+    return {
+        "bundle": "market_bundle.json",
+        "bundle_sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "bars": "market_bars.csv",
+        "bars_sha256": bars_sha,
+        "bars_rows": len(bar_rows),
+        "engine_commit": bundle["session"]["engine_commit"],
+        "session_started_utc": bundle["session"]["started_utc"],
+        "session_finished_utc": bundle["session"]["finished_utc"],
+        "market_data_type_requested":
+            bundle["session"]["market_data_type_requested_label"],
+        "market_data_type_observed": observed,
+        # Where the prices in this build actually came from. Kept next to the
+        # market-data type because the two together are the honest statement and
+        # either alone is not: "live" over a set of histDailyClose fields means
+        # the quote channel returned nothing and the closes carried the build.
+        "price_fields": dict(sorted(fields.items())),
+        "n_requests": len(bundle["requests"]),
+        "n_contracts": len(bundle["contracts"]),
+        "n_series": len(bundle["series"]),
+        "n_errors": len(bundle["errors"]),
+        "error_codes": sorted({e["code"] for e in bundle["errors"]}),
+    }
+
+
+def _gold_and_fx(ib, rec: IBRecorder) -> dict:
     """Spot gold in USD and the two FX legs we need.
 
     Gold in AUD drives the reserve-price gap and operating-leverage terms;
@@ -712,10 +1058,17 @@ def _gold_and_fx(ib) -> dict:
         return None
 
     try:
-        gold = Contract(secType="CMDTY", symbol="XAUUSD",
-                        exchange="SMART", currency="USD")
-        ib.qualifyContracts(gold)
-        [tk] = ib.reqTickers(gold)
+        spec = {"secType": "CMDTY", "symbol": "XAUUSD",
+                "exchange": "SMART", "currency": "USD"}
+        gold = Contract(**spec)
+        with rec.call("qualifyContracts", contracts=[spec]) as e:
+            ib.qualifyContracts(gold)
+            e["result"] = [_contract_raw(gold)]
+        rec.contract(spec, gold)
+        with rec.call("reqTickers", conIds=[gold.conId], symbols=["XAUUSD"]) as e:
+            [tk] = ib.reqTickers(gold)
+            rec.quote(tk)
+            e["result"] = {"XAUUSD": _ticker_raw(tk)}
         out["xauusd"] = _first_price(tk)
     except Exception:
         pass
@@ -723,8 +1076,15 @@ def _gold_and_fx(ib) -> dict:
     for key, pair in (("audusd", "AUDUSD"), ("euraud", "EURAUD")):
         try:
             fx = Forex(pair)
-            ib.qualifyContracts(fx)
-            [tk] = ib.reqTickers(fx)
+            spec = {"secType": "CASH", "pair": pair, "exchange": "IDEALPRO"}
+            with rec.call("qualifyContracts", contracts=[spec]) as e:
+                ib.qualifyContracts(fx)
+                e["result"] = [_contract_raw(fx)]
+            rec.contract(spec, fx)
+            with rec.call("reqTickers", conIds=[fx.conId], symbols=[pair]) as e:
+                [tk] = ib.reqTickers(fx)
+                rec.quote(tk)
+                e["result"] = {pair: _ticker_raw(tk)}
             out[key] = _first_price(tk)
         except Exception:
             pass
@@ -756,7 +1116,8 @@ def _gold_and_fx(ib) -> dict:
 
 
 def _history(ib, contract, what: str = "TRADES",
-             duration: str | None = None) -> list[tuple[str, float]]:
+             duration: str | None = None,
+             rec: IBRecorder | None = None) -> list[tuple[str, float]]:
     """(date, close) daily bars over `duration`. Historical-bar
     entitlements are usually broader than live-tick entitlements, so this often
     works where streaming data doesn't.
@@ -769,26 +1130,41 @@ def _history(ib, contract, what: str = "TRADES",
 
     whatToShow is TRADES for equities. FX and spot metals have no trade prints,
     so they need MIDPOINT; TRADES against them returns an empty series rather
-    than an error, which would look like "no history" downstream.
+    than an error, which would look like "no history" downstream. Both attempts
+    are recorded, and the one the engine consumed is flagged `used` — a series
+    silently sourced from the fallback is a different measurement, and the
+    bundle should say so rather than leave it to be inferred from the numbers.
     """
+    rec = rec or NullRecorder()
+    duration = duration or HISTORY_DURATION_DEFAULT
     attempts = [what] if what == "MIDPOINT" else [what, "MIDPOINT"]
     for w in attempts:
+        key = _series_key(contract, w, duration)
+        params = {"con_id": getattr(contract, "conId", None),
+                  "symbol": contract.symbol, "endDateTime": "",
+                  "durationStr": duration, "barSizeSetting": "1 day",
+                  "whatToShow": w, "useRTH": True, "formatDate": 1}
         try:
-            bars = ib.reqHistoricalData(
-                contract, endDateTime="",
-                durationStr=duration or HISTORY_DURATION_DEFAULT,
-                barSizeSetting="1 day", whatToShow=w, useRTH=True, formatDate=1,
-            )
+            with rec.call("reqHistoricalData", series=key, **params) as e:
+                bars = ib.reqHistoricalData(
+                    contract, endDateTime="", durationStr=duration,
+                    barSizeSetting="1 day", whatToShow=w, useRTH=True,
+                    formatDate=1,
+                )
+                e["result"] = {"n_bars": len(bars)}
         except Exception:
             continue
         series = [(str(b.date), float(b.close))
                   for b in bars if b.close and b.close > 0]
+        rec.bars(key, {**params, "requested_what_to_show": what,
+                       "used": bool(series)}, bars)
         if series:
             return series
     return []
 
 
-def _spread_history(ib, contract, duration: str = SPREAD_DURATION_DEFAULT) -> list[dict]:
+def _spread_history(ib, contract, duration: str = SPREAD_DURATION_DEFAULT,
+                    rec: IBRecorder | None = None) -> list[dict]:
     """Daily time-averaged quoted spread over regular trading hours.
 
     IBKR's BID_ASK daily bars do not carry prices in the usual sense: `open` is
@@ -805,13 +1181,25 @@ def _spread_history(ib, contract, duration: str = SPREAD_DURATION_DEFAULT) -> li
     order of magnitude, enough to fail eight names on an artifact. useRTH=True
     confines this to continuous trading.
     """
+    rec = rec or NullRecorder()
+    key = _series_key(contract, "BID_ASK", duration)
+    params = {"con_id": getattr(contract, "conId", None),
+              "symbol": contract.symbol, "endDateTime": "",
+              "durationStr": duration, "barSizeSetting": "1 day",
+              "whatToShow": "BID_ASK", "useRTH": True, "formatDate": 1}
     try:
-        bars = ib.reqHistoricalData(
-            contract, endDateTime="", durationStr=duration,
-            barSizeSetting="1 day", whatToShow="BID_ASK", useRTH=True, formatDate=1,
-        )
+        with rec.call("reqHistoricalData", series=key, **params) as e:
+            bars = ib.reqHistoricalData(
+                contract, endDateTime="", durationStr=duration,
+                barSizeSetting="1 day", whatToShow="BID_ASK", useRTH=True,
+                formatDate=1,
+            )
+            e["result"] = {"n_bars": len(bars)}
     except Exception:
         return []
+    rec.bars(key, {**params, "used": True,
+                   "bid_ask_convention": "open = session time-weighted average "
+                                         "bid, close = average ask"}, bars)
     out = []
     for b in bars:
         bid, ask = float(b.open), float(b.close)
@@ -859,24 +1247,70 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
     what makes β_gold responsive or stable, and the spread window is what stops
     one disorderly session deciding a gate. They arrive from config; the
     defaults exist only for a caller that has not loaded it.
+
+    The session records itself into `result["bundle"]` — see IBRecorder. Nothing
+    downstream reads it; it exists so the market leg of the build carries a
+    source document like every other input.
     """
     history_duration = history_duration or HISTORY_DURATION_DEFAULT
     spread_duration = spread_duration or SPREAD_DURATION_DEFAULT
+    import ib_insync
     from ib_insync import IB, Contract, Forex, Stock, util
 
     util.logToConsole(logging.WARNING)
     ib = IB()
-    ib.connect(HOST, PORT, clientId=CLIENT_ID, readonly=True)
+    rec = IBRecorder(HOST, PORT, CLIENT_ID)
+    # Subscribed before connecting, so a refusal during the handshake is caught
+    # too. This is the only channel on which TWS explains itself.
+    ib.errorEvent += rec.error
+    with rec.call("connect", host=HOST, port=PORT, clientId=CLIENT_ID,
+                  readonly=True) as e:
+        ib.connect(HOST, PORT, clientId=CLIENT_ID, readonly=True)
+        e["result"] = {"server_version": ib.client.serverVersion()}
 
     result: dict = {"prices": {}, "history": {}, "spreads": {}, "gold_history": [],
                     "audusd_history": [], "fx": {}}
 
     try:
-        ib.reqMarketDataType(4)  # frozen realtime if subscribed, else delayed-frozen
+        # The TWS clock, not ours. A frozen build is timestamped by this machine,
+        # and a machine whose clock has drifted would date the bundle wrongly
+        # with nothing to check it against.
+        with rec.call("reqCurrentTime") as e:
+            server_now = ib.reqCurrentTime()
+            e["result"] = {"server_time_utc": server_now.isoformat()}
+        rec.session.update({
+            "ib_insync_version": ib_insync.__version__,
+            "tws_server_version": ib.client.serverVersion(),
+            "tws_server_time_utc": server_now.isoformat(),
+            "history_duration": history_duration,
+            "spread_duration": spread_duration,
+            "gold_history_duration": GOLD_HISTORY_DURATION,
+            "tickers_requested": list(tickers),
+        })
 
+        with rec.call("reqMarketDataType",
+                      marketDataType=MARKET_DATA_TYPE_REQUESTED,
+                      label=MARKET_DATA_TYPE_LABELS[MARKET_DATA_TYPE_REQUESTED]):
+            # Frozen realtime if subscribed, else delayed-frozen. What each
+            # ticker actually came back as is recorded per quote, because the
+            # request is not the answer.
+            ib.reqMarketDataType(MARKET_DATA_TYPE_REQUESTED)
+
+        specs = [{"secType": "STK", "symbol": t, "exchange": "ASX",
+                  "currency": "AUD"} for t in tickers]
         contracts = [Stock(t, "ASX", "AUD") for t in tickers]
-        ib.qualifyContracts(*contracts)
-        quotes = ib.reqTickers(*contracts)
+        with rec.call("qualifyContracts", contracts=specs) as e:
+            ib.qualifyContracts(*contracts)
+            e["result"] = [_contract_raw(c) for c in contracts]
+        for spec, c in zip(specs, contracts):
+            rec.contract(spec, c)
+
+        with rec.call("reqTickers", conIds=[c.conId for c in contracts],
+                      symbols=list(tickers)) as e:
+            quotes = ib.reqTickers(*contracts)
+            e["result"] = {"n_tickers": len(quotes)}
+        for tk in quotes:
+            rec.quote(tk)
 
         for tk in quotes:
             sym = tk.contract.symbol
@@ -895,9 +1329,9 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
             bid, ask = _pos(tk.bid), _pos(tk.ask)
             spread_pct = (ask - bid) / ((ask + bid) / 2) * 100 if bid and ask else None
 
-            closes = _history(ib, tk.contract, duration=history_duration)
+            closes = _history(ib, tk.contract, duration=history_duration, rec=rec)
             result["spreads"][sym] = spread_stats(
-                _spread_history(ib, tk.contract, spread_duration))
+                _spread_history(ib, tk.contract, spread_duration, rec=rec))
             if price is None and closes:
                 price, field = closes[-1][1], "histDailyClose"
 
@@ -907,15 +1341,22 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
                 "market_data_type": MARKET_DATA_TYPE_LABELS.get(
                     getattr(tk, "marketDataType", None),
                     str(getattr(tk, "marketDataType", None))),
+                "con_id": getattr(tk.contract, "conId", None),
             }
+            rec.price(sym, {**result["prices"][sym],
+                            "candidates": {n: v for n, v in candidates}})
             result["history"][sym] = closes
 
-        gold = Contract(secType="CMDTY", symbol="XAUUSD",
-                        exchange="SMART", currency="USD")
+        gold_spec = {"secType": "CMDTY", "symbol": "XAUUSD",
+                     "exchange": "SMART", "currency": "USD"}
+        gold = Contract(**gold_spec)
         try:
-            ib.qualifyContracts(gold)
+            with rec.call("qualifyContracts", contracts=[gold_spec]) as e:
+                ib.qualifyContracts(gold)
+                e["result"] = [_contract_raw(gold)]
+            rec.contract(gold_spec, gold)
             result["gold_history"] = _history(ib, gold, "MIDPOINT",
-                                              GOLD_HISTORY_DURATION)
+                                              GOLD_HISTORY_DURATION, rec=rec)
         except Exception:
             result["gold_history"] = []
 
@@ -924,16 +1365,36 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
         # the wrong numéraire for an all-AUD cost base.
         try:
             audusd = Forex("AUDUSD")
-            ib.qualifyContracts(audusd)
+            audusd_spec = {"secType": "CASH", "pair": "AUDUSD",
+                           "exchange": "IDEALPRO"}
+            with rec.call("qualifyContracts", contracts=[audusd_spec]) as e:
+                ib.qualifyContracts(audusd)
+                e["result"] = [_contract_raw(audusd)]
+            rec.contract(audusd_spec, audusd)
             result["audusd_history"] = _history(ib, audusd, "MIDPOINT",
-                                                GOLD_HISTORY_DURATION)
+                                                GOLD_HISTORY_DURATION, rec=rec)
         except Exception:
             result["audusd_history"] = []
 
-        result["fx"] = _gold_and_fx(ib)
+        result["fx"] = _gold_and_fx(ib, rec)
     finally:
-        ib.disconnect()
+        with rec.call("disconnect") as e:
+            # Byte and message counts, from TWS's side of the socket. A session
+            # that returned a suspiciously small bundle should show a
+            # suspiciously small byte count, and if it does not, the loss
+            # happened in this file rather than on the wire.
+            with contextlib.suppress(Exception):
+                s = ib.client.connectionStats()
+                e["result"] = {"duration_s": round(s.duration, 3),
+                               "msgs_sent": s.numMsgSent,
+                               "msgs_recv": s.numMsgRecv,
+                               "bytes_sent": s.numBytesSent,
+                               "bytes_recv": s.numBytesRecv}
+                rec.session["connection_stats"] = e["result"]
+            ib.disconnect()
 
+    result["bundle"] = rec.bundle()
+    result["bar_rows"] = rec.bar_rows
     return result
 
 
@@ -2900,6 +3361,31 @@ def main() -> int:
               file=sys.stderr)
         return 2
 
+    # Written here, before anything downstream can fail, because the session is
+    # the one input that cannot be re-read: TWS will answer the same questions
+    # differently in an hour, and a build that died after the fetch would
+    # otherwise throw away the only copy of what it was told.
+    bundle = write_market_bundle(md["bundle"], md["bar_rows"])
+    bundle["cli_overrides"] = {"gold_aud": args.gold_aud, "euraud": args.euraud}
+    print(f"\nIBKR session {bundle['session_started_utc'][11:19]}Z–"
+          f"{bundle['session_finished_utc'][11:19]}Z  "
+          f"{bundle['n_requests']} requests, {bundle['n_contracts']} contracts, "
+          f"{bundle['n_series']} series, {bundle['bars_rows']:,} bars")
+    print(f"  market data requested {bundle['market_data_type_requested']}, "
+          f"returned {'/'.join(bundle['market_data_type_observed']) or '—'}"
+          f"   engine {short_commit(bundle['engine_commit'])}")
+    print("  prices from "
+          + (", ".join(f"{k}×{v}" for k, v in bundle["price_fields"].items()) or "—")
+          + (f"   {bundle['n_errors']} TWS message(s), codes "
+             f"{', '.join(str(c) for c in bundle['error_codes'])}"
+             if bundle["n_errors"] else ""))
+    if bundle["price_fields"].get("histDailyClose"):
+        print(f"  {bundle['price_fields']['histDailyClose']} price(s) are a "
+              f"historical daily close, not a quote: the quote channel returned "
+              f"nothing for those contracts on this session. Per-name detail in "
+              f"market_bundle.json → prices.")
+    print("  Wrote → market_bundle.json, market_bars.csv")
+
     fx = md["fx"]
     gold_aud, gold_src = args.gold_aud, "cli"
     if gold_aud is None and fx.get("xauusd") and fx.get("audusd"):
@@ -3094,6 +3580,10 @@ def main() -> int:
         "data_sourced": market["_ledger_sourced"],
         "gold_aud_oz": gold_aud, "gold_source": gold_src,
         "euraud": euraud, "fx_source": fx_src,
+        # The market leg's source document: which TWS session, which contracts,
+        # which market-data type, which engine — and the digests that say these
+        # weights came from THAT bundle and not a neighbouring copy of it.
+        "market_input": bundle,
         # The numéraire the regression ran in ("AUD" / "USD (fallback…)").
         "regressor_basis": bases,
         "gate2_anchor": anchor,

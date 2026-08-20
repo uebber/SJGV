@@ -32,11 +32,22 @@ recomputed from it:
                      committee decision must be separable from one caused by the
                      market, and only this makes that possible
     weights.json  the output, including gate verdicts and NAV detail
+    market_bundle.json  the raw TWS session behind the prices, spreads and beta:
+                     request parameters, contract identifiers, quote fields,
+                     market-data type, timestamps and the engine commit
+    market_bars.csv  every historical bar that session returned
     manifest.json    git commit, gold price, FX, and a digest of the weights
 
 The git commit matters: it identifies the ENGINE. Data, parameters and code are
 the three things that can move a weight, and a snapshot that pins only the first
 two would leave the most confusing of the three unrecorded.
+
+The market bundle matters for the same reason one layer down. Every other input
+carries the document it was read from; the market leg used to carry only the
+number. A price that moved between two snapshots could have moved because the
+market moved, because the quote came back delayed instead of frozen, because
+IBKR resolved the symbol to a different conId, or because the window in config
+changed — and the record could not tell those apart. Now it can.
 
 WHAT --diff MEASURES
 --------------------
@@ -50,6 +61,7 @@ applied to the turnover it caused.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import subprocess
@@ -60,7 +72,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOTS = ROOT / "snapshots"
 ARTEFACTS = ("data/companies.json", "data/config.json", "weights.json",
-             "basket.json")
+             "basket.json", "market_bundle.json", "market_bars.csv")
 
 
 def git_commit() -> str | None:
@@ -88,6 +100,60 @@ def short(commit: str | None) -> str:
         return "—"
     sha, _, flag = commit.partition("-")
     return sha[:12] + (f"-{flag}" if flag else "")
+
+
+def market_integrity(dest: Path, market: dict) -> dict:
+    """Check the frozen bundle is the one that produced these weights.
+
+    weights.json records the sha256 of market_bundle.json and market_bars.csv at
+    the instant the build wrote them. This re-hashes the copies that just landed
+    in the snapshot and says whether they still match. The failure it catches is
+    mundane and would be invisible: a second build runs between the first build
+    and the snapshot, the root artefacts are overwritten, and the directory then
+    pairs one run's weights with another run's market data. Both files look
+    fine. The digests do not.
+
+    A build from before this record existed reports `unrecorded` rather than a
+    failure — the old snapshots are not retroactively wrong, they simply never
+    pinned their session.
+    """
+    if not market:
+        return {"status": "unrecorded",
+                "note": "build predates the market bundle; no session frozen"}
+
+    out = {
+        "status": "ok",
+        "engine_commit": market.get("engine_commit"),
+        "session_started_utc": market.get("session_started_utc"),
+        "market_data_type_requested": market.get("market_data_type_requested"),
+        "market_data_type_observed": market.get("market_data_type_observed"),
+        # Carried into the manifest rather than left in the bundle because it
+        # is the line that decides how much the prices in this snapshot are
+        # worth: a book priced from histDailyClose is priced from session
+        # closes, and the manifest is what a later reader opens first.
+        "price_fields": market.get("price_fields"),
+        "n_requests": market.get("n_requests"),
+        "n_series": market.get("n_series"),
+        "bars_rows": market.get("bars_rows"),
+        "n_errors": market.get("n_errors"),
+        "error_codes": market.get("error_codes"),
+        "cli_overrides": market.get("cli_overrides"),
+    }
+    mismatches = []
+    for rel, key in (("market_bundle.json", "bundle_sha256"),
+                     ("market_bars.csv", "bars_sha256")):
+        claimed = market.get(key)
+        path = dest / rel
+        actual = (hashlib.sha256(path.read_bytes()).hexdigest()
+                  if path.exists() else None)
+        out[key] = actual
+        if claimed and actual != claimed:
+            mismatches.append(f"{rel}: weights.json claims {claimed[:12]}, "
+                              f"file hashes to {(actual or '—')[:12]}")
+    if mismatches:
+        out["status"] = "MISMATCH"
+        out["mismatches"] = mismatches
+    return out
 
 
 def take(tag: str | None) -> Path:
@@ -118,12 +184,19 @@ def take(tag: str | None) -> Path:
             copied.append(rel)
 
     rows = weights.get("weights") or []
+    market = weights.get("market_input") or {}
     manifest = {
         "snapshot": name,
         "tag": tag,
         "taken_utc": datetime.now(timezone.utc).isoformat(),
         "build_generated_utc": weights.get("generated_utc"),
         "git_commit": git_commit(),
+        # The commit the BUILD ran from, which is the one that produced these
+        # numbers. git_commit above is the tree at snapshot time; they differ
+        # the moment anything is edited between the run and the freeze, and
+        # then only this one identifies the engine.
+        "engine_commit_at_build": market.get("engine_commit"),
+        "market_input": market_integrity(dest, market),
         "methodology": weights.get("methodology"),
         "data_sourced": weights.get("data_sourced"),
         "gold_aud_oz": weights.get("gold_aud_oz"),
@@ -192,6 +265,15 @@ def diff(a: str, b: str) -> None:
     if ma["git_commit"] != mb["git_commit"]:
         print(f"  ENGINE CHANGED: {short(ma['git_commit'])} → "
               f"{short(mb['git_commit'])} — some of this is code, not market.")
+
+    # A quote that arrived delayed on one date and frozen on the next is a
+    # different measurement of the same thing, and it moves prices, spreads and
+    # therefore weights without a single field or parameter changing.
+    ta = (ma.get("market_input") or {}).get("market_data_type_observed")
+    tb = (mb.get("market_input") or {}).get("market_data_type_observed")
+    if ta and tb and ta != tb:
+        print(f"  MARKET-DATA TYPE CHANGED: {'/'.join(ta)} → {'/'.join(tb)} — "
+              f"the quotes are not the same kind of quote.")
 
     print(f"\n  {'TICK':<6}{'FROM':>9}{'TO':>9}{'Δpp':>8}")
     print("  " + "─" * 32)
@@ -289,6 +371,28 @@ def main() -> int:
     print(f"  {m['n_constituents']} constituents, Eff N {m['effective_n']:.1f}, "
           f"gold A${m['gold_aud_oz']:,.0f}, commit {short(m['git_commit'])}")
     print(f"  {len(m['artefacts'])} artefact(s): {', '.join(m['artefacts'])}")
+
+    mi = m["market_input"]
+    if mi["status"] == "unrecorded":
+        print("  Market session: NOT FROZEN — this build predates the bundle.")
+    else:
+        print(f"  Market session {(mi['session_started_utc'] or '')[:19]}Z, "
+              f"{mi['n_requests']} requests over {mi['n_series']} series, "
+              f"{mi['bars_rows']:,} bars, data "
+              f"{'/'.join(mi['market_data_type_observed'] or []) or '—'}")
+        print("  Prices from "
+              + (", ".join(f"{k}×{v}"
+                           for k, v in (mi.get("price_fields") or {}).items())
+                 or "—"))
+        print(f"  Engine at build {short(mi['engine_commit'])}"
+              + ("" if mi["engine_commit"] == m["git_commit"]
+                 else f" — DIFFERS from the tree at snapshot time; the build's "
+                      f"commit is the one that made these numbers."))
+        if mi["status"] != "ok":
+            print("  MARKET BUNDLE MISMATCH — these weights were not produced by "
+                  "the session frozen beside them:")
+            for line in mi.get("mismatches", []):
+                print(f"    {line}")
     n = len([p for p in SNAPSHOTS.glob("*") if (p / "manifest.json").exists()])
     if n < 2:
         print("  First snapshot. Turnover and transition cost begin at the second.")

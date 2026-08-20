@@ -225,6 +225,14 @@ Market prices, spreads, gold history and risk statistics are obtained through a
 local IBKR TWS session. The repository does not fabricate replacements when that
 connection is unavailable.
 
+That session now leaves a record. Every build writes `market_bundle.json` and
+`market_bars.csv`: the request parameters, the contract identifiers IBKR
+resolved, every quote field, the market-data type, the TWS error channel, the
+UTC instants on either side of each call, the engine commit, and every
+historical bar the session returned. The market leg was the one input to a
+weight that carried no source document, and it carries one now — frozen into the
+snapshot beside the data layer and the parameters.
+
 ---
 
 ## Current construction
@@ -319,7 +327,7 @@ the strategy should—and should not—be expected to work.
 | [`data/README.md`](data/README.md) | Data schema and sourcing conventions |
 | `nav_model.py` | Reporting-only NAV and implied-deck model |
 | `tools/` | Provenance, gaps, sensitivity, configuration audit, snapshots and asymmetry diagnostics |
-| `snapshots/` | Frozen point-in-time inputs, outputs, parameters and engine commit |
+| `snapshots/` | Frozen point-in-time inputs, outputs, parameters, raw TWS session and engine commit |
 | `docs/` | Supporting studies: grade-tonnage disclosure survey, sourcing brief, execution-capital inventory, and the accepted capital-denominator design |
 
 Two rules govern every production change:

@@ -11,6 +11,8 @@
 /weights.json
 /basket.csv
 /basket.json
+/market_bundle.json
+/market_bars.csv
 __pycache__/
 /asymmetry.json
 /asx_quotes.json
