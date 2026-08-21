@@ -164,8 +164,8 @@ def value_company(c: dict, deck_aud: float, cfg: dict,
     """NAV in A$m for one company at one gold deck. None if unmodellable.
 
     Developers are handled on the same arithmetic with two differences: the
-    whole schedule is discounted at the development rate, and the residual
-    capital to first pour is subtracted as a near-term outflow. Their
+    whole schedule is discounted at the development rate, and gross remaining
+    execution capital is subtracted as a near-term outflow. Their
     production_koz_yr is planned nameplate from the study the §3.1 D1 gate
     already requires, so the input exists for every name that can pass that gate.
     """
@@ -204,7 +204,9 @@ def value_company(c: dict, deck_aud: float, cfg: dict,
                                  plan["non_reserve_years"], r_dev)
 
     net_debt = c.get("net_debt_aud_m") or 0.0
-    remaining_capex = (c.get("remaining_capex_aud_m") or 0.0) if developer else 0.0
+    remaining_capex = (
+        c.get("remaining_execution_capex_aud_m") or 0.0
+    ) if developer else 0.0
 
     nav = pv_reserve + pv_non_reserve - net_debt - remaining_capex
     return {
@@ -213,7 +215,7 @@ def value_company(c: dict, deck_aud: float, cfg: dict,
         "pv_reserve_aud_m": pv_reserve,
         "pv_non_reserve_aud_m": pv_non_reserve,
         "net_debt_aud_m": net_debt,
-        "remaining_capex_aud_m": remaining_capex,
+        "remaining_execution_capex_aud_m": remaining_capex,
         "margin_aud_oz": margin,
         "discount_rate_reserve": r_reserve,
         "discount_rate_non_reserve": r_dev,
@@ -224,11 +226,10 @@ def value_company(c: dict, deck_aud: float, cfg: dict,
 def conservative_deck(cfg: dict, anchor_aud: float | None) -> tuple[float | None, str]:
     """The §9 conservative long-term deck, and where it came from.
 
-    Default is the Gate 2 anchor — the trailing 3-year real average of AUD gold.
-    That choice is deliberate: it invents no number, it is already argued and
-    already defended in §3, and it means the survival gate and the conservative
-    valuation deck cannot drift apart. Set nav_model.conservative_deck to
-    "fixed" and give conservative_deck_aud_oz a value to override it.
+    Default is the trailing 3-year real average of AUD gold. It is a
+    reporting-only reference under v1.7; Gate 2 applies its shock to spot.
+    Set nav_model.conservative_deck to "fixed" and give
+    conservative_deck_aud_oz a value to override it.
     """
     nm = cfg["nav_model"]
     mode = nm["conservative_deck"]
@@ -236,9 +237,11 @@ def conservative_deck(cfg: dict, anchor_aud: float | None) -> tuple[float | None
         v = nm.get("conservative_deck_aud_oz")
         return (v, f"fixed A${v:,.0f}/oz (config)") if v else (
             None, "fixed deck configured but conservative_deck_aud_oz is null")
+    if mode not in {"trailing_real_reference", "gate2_anchor"}:
+        raise ValueError(f"unknown nav_model.conservative_deck {mode!r}")
     if anchor_aud:
-        return anchor_aud, "Gate 2 anchor — trailing real average of AUD gold"
-    return None, "no Gate 2 anchor available"
+        return anchor_aud, "trailing real average of AUD gold"
+    return None, "no trailing real AUD-gold reference available"
 
 
 def value_all(constituents: list[dict], spot_aud: float, cfg: dict,

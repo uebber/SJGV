@@ -12,7 +12,7 @@ than the filing, and paraphrases drop qualifiers, mix vintages and round.
 
 Why this matters more than it sounds: the load-bearing fields are the worst
 affected. On the 2026-08-17 baseline, 67 of 228 values (29.4%) were secondary,
-including AISC for eight names — and AISC is a GATE 2 input, so a survival gate
+including AISC for eight names — and AISC is a GATE 2 input, so a health gate
 was being decided on aggregator reporting. Pantoro carried nine secondary values
 against one primary while holding the 15% single-name cap.
 
@@ -82,6 +82,26 @@ def main() -> int:
                     "gate": f in GATE_FIELDS,
                     "url": docs.get(v.get("doc"), {}).get("url", ""),
                 })
+        for project in c.get("execution_capital_projects", []):
+            if not isinstance(project, dict):
+                continue
+            for suffix, doc_key in (
+                    ("committed", project.get("committed_capex_doc")),
+                    ("coverage", project.get("coverage_doc")),
+                    ("execution", project.get("execution_capital_doc"))):
+                field = ("execution_capital_projects."
+                         f"{project.get('project_id', '?')}.{suffix}")
+                if args.field and field != args.field:
+                    continue
+                doc = docs.get(doc_key, {})
+                source_type = doc.get("type", "none")
+                tally[source_type] += 1
+                if source_type != "primary":
+                    rows.append({
+                        "ticker": c["ticker"], "field": field,
+                        "type": source_type, "weight": weights.get(c["ticker"]),
+                        "gate": True, "url": doc.get("url", ""),
+                    })
 
     total = sum(tally.values()) or 1
     print(f"SOURCE QUALITY — {total} field values across {len(companies)} candidates\n")

@@ -13,6 +13,27 @@
     "WA",
     "Alaska(INELIGIBLE)"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "kcgm-expansion-readiness",
+     "scope": "KCGM Mill Expansion and Readiness",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 410.0,
+     "committed_capex_range_aud_m": [350.0, 470.0],
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "fy26_results_pres",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "fy26_results_pres",
+     "coverage_note": "FY27 guidance covers one year of the two-year Gate 2 window; FY28 committed spend is not disclosed.",
+     "remaining_execution_capex_aud_m": 470.0,
+     "execution_capital_range_aud_m": [350.0, 470.0],
+     "execution_capital_state": "UPPER_BOUND",
+     "execution_capital_doc": "fy26_results_pres"
+    }
+   ],
    "documents": {
     "rr2026": {
      "title": "Annual Mineral Resources and Ore Reserves Update (as at 31 Mar 2026)",
@@ -204,6 +225,25 @@
     "WA",
     "Ontario(INELIGIBLE)"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "group-approved-projects",
+     "scope": "Northparkes, Ernest Henry and Cowal approved projects",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 221.936,
+     "committed_capex_state": "UPPER_BOUND",
+     "committed_capex_doc": "ar_fy26",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2031-06-30",
+     "coverage_doc": "ar_fy26",
+     "coverage_note": "The audited commitments note combines A$146.411m within one year and A$75.525m between one and five years; charging all of it inside Gate 2 over-covers the horizon.",
+     "remaining_execution_capex_aud_m": 1210.0,
+     "execution_capital_state": "UPPER_BOUND",
+     "execution_capital_doc": "evn_growth_asx"
+    }
+   ],
    "documents": {
     "rr2026": {
      "title": "Annual Mineral Resources and Ore Reserves Statement (as at 31 Dec 2025)",
@@ -394,6 +434,45 @@
    "jurisdictions": [
     "WA"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "mt-gibson",
+     "scope": "Mt Gibson Gold Project",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 474.0,
+     "committed_capex_range_aud_m": [355.5, 592.5],
+     "committed_capex_state": "POINT",
+     "committed_capex_doc": "mggp_pfs_2026",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2028-06-30",
+     "coverage_doc": "mggp_pfs_2026",
+     "coverage_note": "Whole finite pre-production scope; the disclosed 15-month build completes inside the horizon, so no project spend is omitted after completion.",
+     "remaining_execution_capex_aud_m": 592.5,
+     "execution_capital_range_aud_m": [355.5, 592.5],
+     "execution_capital_state": "UPPER_BOUND",
+     "execution_capital_doc": "mggp_pfs_2026"
+    },
+    {
+     "project_id": "karlawinda-growth",
+     "scope": "Karlawinda recurring growth capital",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 77.5,
+     "committed_capex_range_aud_m": [70.0, 85.0],
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "q4fy26",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "q4fy26",
+     "coverage_note": "FY27 recurring growth guidance covers one year; FY28 is not disclosed.",
+     "remaining_execution_capex_aud_m": 0.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "q4fy26"
+    }
+   ],
    "documents": {
     "asx_api": {
      "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
@@ -550,6 +629,43 @@
    "sleeve": "producer",
    "jurisdictions": [
     "WA"
+   ],
+   "execution_capital_projects": [
+    {
+     "project_id": "havieron",
+     "scope": "Havieron pre-production build",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 1065.0,
+     "committed_capex_state": "UPPER_BOUND",
+     "committed_capex_doc": "ggp_fy27",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2029-06-30",
+     "coverage_doc": "ggp_fy27",
+     "coverage_note": "The whole build to first gold in FY29 extends beyond the Gate 2 horizon, so A$1,065m is an upper bound on in-window burn.",
+     "remaining_execution_capex_aud_m": 1065.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "ggp_fy27"
+    },
+    {
+     "project_id": "telfer-growth",
+     "scope": "Telfer recurring growth capital",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 325.0,
+     "committed_capex_range_aud_m": [315.0, 335.0],
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "ggp_fy27",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "ggp_fy27",
+     "coverage_note": "FY27 Telfer guidance covers one year; FY28 is not disclosed.",
+     "remaining_execution_capex_aud_m": 0.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "ggp_fy27"
+    }
    ],
    "documents": {
     "or_mar2026": {
@@ -716,6 +832,26 @@
    "jurisdictions": [
     "WA"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "tower-hill-mill",
+     "scope": "Tower Hill mill EPC",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 229.0,
+     "committed_capex_state": "POINT",
+     "committed_capex_doc": "gng_epc",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2028-06-30",
+     "coverage_doc": "gng_epc",
+     "coverage_note": "The complete executed EPC contract reaches first ore in FY28, inside the horizon.",
+     "remaining_execution_capex_aud_m": 280.0,
+     "execution_capital_range_aud_m": [250.0, 280.0],
+     "execution_capital_state": "UPPER_BOUND",
+     "execution_capital_doc": "q4fy26"
+    }
+   ],
    "documents": {
     "asx_api": {
      "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
@@ -865,6 +1001,25 @@
    "sleeve": "producer",
    "jurisdictions": [
     "WA"
+   ],
+   "execution_capital_projects": [
+    {
+     "project_id": "mt-magnet-programme",
+     "scope": "Mt Magnet execution programme and group commitments",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 79.218,
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "ar_fy26",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "ar_fy26",
+     "coverage_note": "The audited commitments note establishes only capital commitments within one year; no amount beyond one year is disclosed.",
+     "remaining_execution_capex_aud_m": 381.0,
+     "execution_capital_state": "UPPER_BOUND",
+     "execution_capital_doc": "nn_pfs_oct25"
+    }
    ],
    "documents": {
     "rr2025": {
@@ -1035,6 +1190,26 @@
     "WA",
     "NSW"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "group-growth-capital",
+     "scope": "Duketon and Tropicana recurring growth capital",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 260.0,
+     "committed_capex_range_aud_m": [250.0, 270.0],
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "fy27guid",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "fy27guid",
+     "coverage_note": "FY27 recurring growth guidance covers one year; FY28 is not disclosed.",
+     "remaining_execution_capex_aud_m": 0.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "fy27guid"
+    }
+   ],
    "documents": {
     "rr_apr2026": {
      "title": "Updated Mineral Resources and Ore Reserves (as at 31 Dec 2025) — MR 8.3 Moz, OR 2.0 Moz",
@@ -1203,6 +1378,25 @@
    "jurisdictions": [
     "WA"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "unresolved-growth-programme",
+     "scope": "Higginsville and Murchison growth programme",
+     "as_of": "2026-08-18",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": null,
+     "committed_capex_state": "UNRESOLVED",
+     "committed_capex_doc": "fletcher_or_aug26",
+     "coverage_start": null,
+     "coverage_end": null,
+     "coverage_doc": "fletcher_or_aug26",
+     "coverage_note": "No complete project total or Gate 2 coverage period is disclosed; the superseded A$145m scope cannot become a favourable zero.",
+     "remaining_execution_capex_aud_m": null,
+     "execution_capital_state": "UNRESOLVED",
+     "execution_capital_doc": "fletcher_or_aug26"
+    }
+   ],
    "documents": {
     "rr2025": {
      "title": "2025 Mineral Resource Estimate and Ore Reserves (as at 30 Jun 2025) — MR 16.3 Moz (M&I 9.2, Inferred 7.1), OR 3.5 Moz at max A$3,800/oz",
@@ -1255,6 +1449,12 @@
      "as_of": "2026-08-18",
      "doc": "fletcher_or_aug26",
      "note": "UNRESOLVED: the approved 2.6 Mtpa Higginsville scope is under review in favour of a larger uncosted 4 Mtpa case, while additional Murchison capacity is described as committed or planned without a total. The former A$145m is a favourable lower bound and is not retained."
+    },
+    "committed_capex_aud_m": {
+     "evidence_state": "UNRESOLVED",
+     "as_of": "2026-08-18",
+     "doc": "fletcher_or_aug26",
+     "note": "UNRESOLVED: no complete within-horizon capital amount or coverage period is disclosed. The former A$145m is a superseded lower bound and cannot prove a Gate 2 pass."
     },
     "pp_moz": {
      "v": 4.068,
@@ -1359,6 +1559,42 @@
    "jurisdictions": [
     "WA",
     "Ontario(idled, INELIGIBLE)"
+   ],
+   "execution_capital_projects": [
+    {
+     "project_id": "sugar-zone",
+     "scope": "Sugar Zone restart",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 96.0,
+     "committed_capex_state": "POINT",
+     "committed_capex_doc": "q4fy26",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2028-06-30",
+     "coverage_doc": "q4fy26",
+     "coverage_note": "FY27 guidance incorporates all Sugar Zone site expenditure and production begins in Q1 FY28, so the finite scope is complete inside the horizon.",
+     "remaining_execution_capex_aud_m": 96.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "q4fy26"
+    },
+    {
+     "project_id": "other-group-growth",
+     "scope": "Other group recurring growth capital",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 77.0,
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "q4fy26",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "q4fy26",
+     "coverage_note": "DERIVED as A$173m group FY27 growth capital less the A$96m finite Sugar Zone scope; FY28 recurring spend is not disclosed.",
+     "remaining_execution_capex_aud_m": 0.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "q4fy26"
+    }
    ],
    "documents": {
     "rr2025": {
@@ -1536,6 +1772,26 @@
    "jurisdictions": [
     "WA"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "fy27-non-sustaining",
+     "scope": "FY27 non-sustaining capital programme",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 95.0,
+     "committed_capex_range_aud_m": [90.0, 100.0],
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "bgl_fy27",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "bgl_fy27",
+     "coverage_note": "FY27 guidance covers one year and FY28 non-sustaining capital is not disclosed.",
+     "remaining_execution_capex_aud_m": null,
+     "execution_capital_state": "UNRESOLVED",
+     "execution_capital_doc": "bgl_fy27"
+    }
+   ],
    "documents": {
     "rr_fy26": {
      "title": "FY26 guidance and annual Resource & Reserve statement — reserves on an A$2,750/oz basis, resources at 2.5 g/t cut-off",
@@ -1668,6 +1924,42 @@
    "sleeve": "producer",
    "jurisdictions": [
     "WA"
+   ],
+   "execution_capital_projects": [
+    {
+     "project_id": "drive-to-300-mill",
+     "scope": "3 Mtpa processing plant",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 375.0,
+     "committed_capex_state": "POINT",
+     "committed_capex_doc": "pres_dd2026",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2028-06-30",
+     "coverage_doc": "pres_dd2026",
+     "coverage_note": "The issuer phases the complete board-approved mill amount across FY27 and FY28, exactly matching the horizon.",
+     "remaining_execution_capex_aud_m": 375.0,
+     "execution_capital_state": "UPPER_BOUND",
+     "execution_capital_doc": "drive300"
+    },
+    {
+     "project_id": "waihi-underground",
+     "scope": "Waihi Underground",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 80.0,
+     "committed_capex_state": "POINT",
+     "committed_capex_doc": "pres_dd2026",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2028-06-30",
+     "coverage_doc": "pres_dd2026",
+     "coverage_note": "The issuer phases A$40m in FY27 and A$40m in FY28; the separate A$5m FY29 amount lies outside Gate 2.",
+     "remaining_execution_capex_aud_m": 90.0,
+     "execution_capital_state": "UPPER_BOUND",
+     "execution_capital_doc": "drive300"
+    }
    ],
    "documents": {
     "rr2025": {
@@ -1832,6 +2124,25 @@
    "jurisdictions": [
     "WA",
     "VIC"
+   ],
+   "execution_capital_projects": [
+    {
+     "project_id": "contracted-capital",
+     "scope": "Capital contracted within one year",
+     "as_of": "2025-12-31",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 22.0,
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "hy_dec2025",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "hy_dec2025",
+     "coverage_note": "The commitments note establishes capital contracted within one year only; the remainder of the Gate 2 window is not disclosed.",
+     "remaining_execution_capex_aud_m": 0.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "hy_dec2025"
+    }
    ],
    "documents": {
     "asx_api": {
@@ -2005,6 +2316,25 @@
    "jurisdictions": [
     "WA"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "major-project-growth",
+     "scope": "FY27 major-project and growth programme",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": 101.0,
+     "committed_capex_state": "LOWER_BOUND",
+     "committed_capex_doc": "fy27_guidance",
+     "coverage_start": "2026-07-01",
+     "coverage_end": "2027-06-30",
+     "coverage_doc": "fy27_guidance",
+     "coverage_note": "FY27 guidance covers one year; FY28 major-project and growth capital is not disclosed.",
+     "remaining_execution_capex_aud_m": 0.0,
+     "execution_capital_state": "POINT",
+     "execution_capital_doc": "fy27_guidance"
+    }
+   ],
    "documents": {
     "asx_api": {
      "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
@@ -2159,6 +2489,25 @@
    "jurisdictions": [
     "WA"
    ],
+   "execution_capital_projects": [
+    {
+     "project_id": "unresolved-growth-programme",
+     "scope": "Lakewood, Coyote and Mt Clement growth programme",
+     "as_of": "2026-06-30",
+     "gate2_horizon_start": "2026-07-01",
+     "gate2_horizon_end": "2028-06-30",
+     "committed_within_gate2_horizon_aud_m": null,
+     "committed_capex_state": "UNRESOLVED",
+     "committed_capex_doc": "q4fy26_asx",
+     "coverage_start": null,
+     "coverage_end": null,
+     "coverage_doc": "q4fy26_asx",
+     "coverage_note": "Long-lead items are ordered but no forward amount or complete coverage period is disclosed; historical FY26 spend is not substituted.",
+     "remaining_execution_capex_aud_m": null,
+     "execution_capital_state": "UNRESOLVED",
+     "execution_capital_doc": "q4fy26_asx"
+    }
+   ],
    "documents": {
     "asx_api": {
      "title": "ASX company key-statistics (markitdigital), numOfShares — the exchange's own figure",
@@ -2185,6 +2534,12 @@
      "as_of": "2026-06-30",
      "doc": "q4fy26_asx",
      "note": "UNRESOLVED: Lakewood expansion long-lead items are ordered but no total is disclosed and timing remains conditional on ramp-up. Coyote and Mt Clement are pre-FID. Historical FY26 spend is not a remaining balance and is not annualised. BC8 is already blocked on AISC."
+    },
+    "committed_capex_aud_m": {
+     "evidence_state": "UNRESOLVED",
+     "as_of": "2026-06-30",
+     "doc": "q4fy26_asx",
+     "note": "UNRESOLVED: no forward committed-capital amount or coverage period is disclosed. Historical FY26 spend is not substituted."
     },
     "pp_moz": {
      "v": 0.33,

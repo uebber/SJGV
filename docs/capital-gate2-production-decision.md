@@ -1,14 +1,23 @@
 # Capital denominator and Gate 2 horizon — production decision
 
-**Status:** **partly accepted, 20 August 2026.** The capital-denominator
+**Status:** **superseded in part by methodology v1.7, 21 August 2026.** The capital-denominator
 decisions in §3 were implemented on 21 August 2026. **§1 decision 3 — making
 horizon coverage a binding Gate 2 limb — is NOT accepted**, and the reason is
 in the box below. The explicit per-project interval evaluator remains issue 4;
-the frozen generated baseline remains unchanged pending the issue-5 replay.
+it was implemented before the issue-5 replay and remains as the v1.7 evidence
+layer. The activated result is frozen in
+`snapshots/2026-08-21-v1.7-health`.
 **Origin:** PR #5, `agent/capital-gate2-fail-unfavourably`.
 **Evidence cut-off:** 21 August 2026.
 **Decision rule:** unavailable evidence may hold or reduce a constituent's
 weight; it may never increase it.
+
+> **v1.7 outcome.** The three-name interval replay demonstrated that complete
+> two-year capital coverage was functioning as a disclosure gate rather than a
+> health check. Directional evidence remains binding in the economic
+> denominator. Producer Gate 2 now uses GREEN/AMBER/RED damage states and only
+> RED excludes; incomplete commitment evidence is AMBER. Amendment 7 in the
+> binding methodology controls wherever this historical decision differs.
 
 ---
 

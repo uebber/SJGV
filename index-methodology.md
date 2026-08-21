@@ -1,8 +1,8 @@
-# Index Methodology — SJGV v1.6
+# Index Methodology — SJGV v1.7
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.6
-**Date:** 20 August 2026
+**Version:** 1.7
+**Date:** 21 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
 **Simulation AUM:** €1,000,000 (≈ A$1.64M)
@@ -16,6 +16,7 @@
 
 | # | Date | Change |
 |---|------|--------|
+| 7 | 21 Aug 2026 | **Gate 2 restored to a health check; version 1.6 → 1.7.** The unactivated capital-interval replay left only three names and could not satisfy the §8.1 caps. That was not evidence of three solvent companies: ten names were rejected because they did not publish a complete two-year capital upper bound. Producer Gate 2 now applies the stated 40% shock literally to current AUD spot, subtracts sourced unavoidable commitments, and classifies damage **GREEN / AMBER / RED**. A manageable recapitalisation is allowed: RED requires rescue capital above 30% of market cap or more than two normal-price cash-generation years to repair. Incomplete commitment coverage is AMBER, not a fabricated zero or an exclusion. Only RED is rejected. Gross execution capital remains in the denominator. The engine now also rejects an infeasible post-gate universe instead of renormalising through the name caps. |
 | 6 | 20 Aug 2026 | **§3 undrawn facilities must outlive the stress window; version 1.5 → 1.6. No weight moves.** Gate 2 credited undrawn credit for the full horizon without reading its term date. Evolution's audited FY26 report proved the assumption wrong — Revolving Credit Facility A terms **1 Aug 2028**, nineteen days inside the window — and Regis's A$300m lapses **3 Feb 2028**. Both were counted in full. A facility is now credited only if its sourced term date reaches the end of the horizon; an **absent** term date is not credited either, because crediting an unverified facility makes a survival test easier. Refinancing is not assumed. Seven constituents lose their credit (EVN and RRL on date, WGX/CYL/GMD/RMS/RXL for want of one) and **all seven still pass on cash and cash flow alone**; only NST and GGP keep theirs, which matters because they are the two that hold their pass on a revolver. New sourced sub-key `term_date`. |
 | 5 | 20 Aug 2026 | **§3.2 horizon limb resolved on materiality; version 1.4 → 1.5. No weight moves today, and that is the point.** The v1.3 shortfall report is retained and now carries a gate. **Binding on coverage was rejected**: the missing figure is FY28 guidance, Australian miners guide one year ahead, so the rule could not be satisfied by diligence and would grade disclosure format — OBM publishes an FY27+FY28 phasing table and RRL publishes one year, identical solvency, opposite verdicts. PR #5 proposed it; applied as its own §2 states rather than as its §4.1 tabulates it would have left **four constituents at an effective 3.6 and a 30% top weight the §8.1 caps cannot hold**, breaking the objective's own `P(permanent impairment) ≈ 0` to enforce a survival test nothing was failing. What gates instead is whether the shortfall could decide anything: the guided annual leg is continued across the unsourced remainder and the pass must survive it, at `gate2.horizon_continuation_cover` = 1.0. Cover runs 2.0× (GGP) to 18.8× (CYL), so it binds on nobody today — the §6.4 discipline — and it would have caught PNR independently at 0.51×. WGX has no established period and therefore no leg to continue: reported **UNTESTED** and routed to §12.2 item 6, whose trigger is the early-September Strategic Outlook. New sourced field `annual_leg_aud_m`; new parameter `gate2.horizon_continuation_cover`. |
 | 4 | 20 Aug 2026 | **Binding text corrected; version 1.3 → 1.4. No rule changed and no weight moved by this line.** Four misstatements in the binding document, all found by external review and all landed from PR #5. **§0** stated the construction as `maximise ClaimedUnhedgedOunces / FundedEV subject to …`; nothing searches over portfolios, each name is held in proportion to its own claim yield, and the section now says so and prices the difference — a literal cap-filling optimiser reaches ~A$630/oz over 8 names against the proportional book's A$739 at an effective 10.2. **§0.2, §6.1, §9.2 and §13.1** described JORC categories as option moneyness and said a falling cut-off moves ounces from M&I into P&P; confidence and economics are orthogonal axes, conversion needs the Modifying Factors at PFS level or better, and Inferred cannot convert at all until upgraded. **§3** listed a debt maturity schedule among the engine's inputs, which the engine does not consume. **§7.2 and §10.2** froze A$684/A$910 and A$640/A$910 into the binding text while the engine emitted neither — the §12.3 defect applied to an output; live figures now come from the build and its snapshot only. |
@@ -41,7 +42,8 @@ RawWeight_i  =  ClaimedUnhedgedOunces_i / FundedEV_i
 Weight       =  normalise(apply_declared_caps(RawWeight))
 reported        β_gold ∈ [1.4, 1.8]
 constrained     P(permanent impairment) ≈ 0 — via the §8.1 caps
-                P(forced equity issuance in a 40% real drawdown) ≈ 0 — via Gate 2
+                P(corporate failure or multi-year operating damage under a
+                  40% spot drawdown) ≈ 0 — via Gate 2
 ```
 
 **Read that as a construction, not as an optimisation.** Earlier versions of this
@@ -398,7 +400,52 @@ exposure the index does not fully neutralise.
 
 ---
 
-## 3. Gate 2 — Survival
+## 3. Gate 2 — Producer health
+
+Binary at the index boundary, with three reported health states. Never a weight
+tilt.
+
+> **After a literal 40% fall in current AUD gold lasting two years, is the
+> damage manageable, or would rescue financing or the recovery burden threaten
+> the company?**
+
+This is not a proof that every plan can be funded without issuing equity. An
+ordinary recapitalisation is survivable. For each producer:
+
+```
+stress price       = current AUD spot × (1 − 40%)
+stress resources   = net cash + qualifying undrawn facilities
+                     + two-year post-AISC stress cash generation
+                     − sourced unavoidable commitments
+rescue capital     = max(0, −stress resources)
+rescue burden      = rescue capital ÷ current market capitalisation
+recovery years     = rescue capital ÷ annual cash generation at current spot
+```
+
+AISC is inflated 5% per year and already includes sustaining capital. The test
+is unhedged. A facility counts only when its sourced term reaches the end of the
+window; refinancing is not assumed. Net debt is conservatively treated as due
+inside the horizon until a maturity ledger exists.
+
+| State | Meaning | Index treatment |
+|---|---|---|
+| **GREEN** | No rescue capital required at the adverse edge of sourced commitments | Eligible |
+| **AMBER** | A bounded rescue is required, or commitment evidence is incomplete | Eligible and reported |
+| **RED** | Rescue capital exceeds 30% of market cap, or more than two normal-price cash-generation years are needed to repair it | Excluded |
+
+Only contracted or genuinely non-deferrable commitments belong in the health
+cash burn. Discretionary growth can be stopped in a crisis. Gross remaining
+execution capital remains in the §7 denominator, where it measures asset cost.
+
+The literal spot shock replaces the trailing-anchor shock, which had become
+roughly a 52% fall from the price on screen while still being described as 40%.
+The trailing real average remains a conservative NAV reference. A health gate
+need not reject a name merely to demonstrate that it ran.
+
+### Historical v1.6 producer test — superseded, retained as rationale
+
+The following producer-test text records the prior fully-funded-survival design
+and is not binding under v1.7. Section 3.1 remains binding for developers.
 
 Binary. Never a tilt.
 
@@ -480,7 +527,22 @@ Pre-production companies cannot be tested on cash flow. The developer test is:
 against a A$400m market cap identically to a A$300m gap against a A$200m cap.
 The first is 12% dilution — bounded, knowable, priced. The second is a zombie.
 
-### 3.2 Input basis — the horizon a figure covers, and the range it came from
+### 3.2 Capital evidence under the health check
+
+A finite upper edge of sourced unavoidable commitments is tested because it is
+conservative. Where only a lower edge is sourced, the engine subtracts that
+known obligation and reports **AMBER**; it neither extrapolates a second year nor
+calls the evidence complete. An unresolved amount also forces AMBER unless the
+sourced evidence already demonstrates RED. Missing production or AISC still
+makes the health test untestable and excludes the name.
+
+Issuer-published ranges are swept at both ends. A RED result at either end
+excludes; variation between GREEN and AMBER is reported but does not reject.
+Project interval records remain required for provenance and reconciliation with
+the economic-capital denominator; complete two-year project guidance is not an
+admission condition.
+
+### Historical v1.3–v1.6 input-basis rules — superseded
 
 `estimation_policy.on_absence` already settles what to do with a gate input the
 engine cannot pin down: run the gate across the range, and if the verdict differs
@@ -1282,8 +1344,9 @@ established the data does not exist. **Two opened the same day**, on the back of
 the A4 amendment: items 4 and 5. **Item 6 opened on 19 August 2026** and is the
 only one of the three that is a defect in the live build rather than a question
 about it. **Item 4 closed on 19 August 2026**, by an A2 amendment rather than by
-the sourcing it asked for — the sourcing came back the other way. Two items are
-open: 5 and 6.
+the sourcing it asked for — the sourcing came back the other way. **Item 6
+closed on 21 August 2026** with the capital-field split, all-sleeve denominator,
+and v1.7 health test. Item 5 is the only open item.
 
 | # | Item | Outcome |
 |---|------|---------|
@@ -1292,7 +1355,7 @@ open: 5 and 6.
 | 3 | **Jurisdiction B1 / B3 verification.** | **CLOSED — verified.** B1 verified from statutory instruments for every exposed jurisdiction: WA 2.5% flat, VIC 2.75% flat, NSW **4.0% flat** (confirming a claim §2.3 was making ahead of its data), QLD a **price-linked 2.5–5.0% scale saturated at its 5% ceiling**, TAS profit-based capped at 5.35% and **no longer an exposure** (Henty sold May 2025). WA **B3 verified**, and it reframed the test: no statutory determination periods, 42.4% on-time against an 80% target. `jurisdictions.json` records the statutory instrument for each. Remaining unverified: B1 for SA, NT and NZ (nil exposure), and B2/B3/B4 outside WA. |
 | 4 | **Canada's A2, now load-bearing alone.** | **CLOSED 19 Aug 2026 — sourced, and then the rule was changed. Read both halves.** Sourced first, as the item asked: Canadian general government net debt is **~10–13% of GDP — below Australia's ~19%** — and general government interest is **8.8% of revenue** against a 10% limit. **Canada passed A2 as v1.1 wrote it.** Recording FAIL anyway would have repeated the v1.0 A4 defect one amendment after fixing it. So A2 was rewritten instead (§2.1, amendment 2): measured on the **currency issuer**, with a third limb at **gross debt ≤ 85% of GDP**. Canada fails on gross (105–110%) and on federal interest (**10.3%** of revenue, PBO projecting 13.1% by 2030-31); the net-debt limb still passes and is not the basis. **Zero weight change** — Canada stays out, so no `eligible_ounce_share` moves, and no engine code reads `data/sovereign.json`. What the closure leaves behind is recorded in §2.2: the exclusion does not survive the old rule, and Canada's A4 dormant-power register remains uncompiled by decision. |
 | 5 | **Does s51(xxxi) reach the control limbs of Banking Act Part IV?** | **OPEN — opened 18 Aug 2026 by the A4 amendment.** Australian counsel, and the one question in this file a search engine genuinely cannot answer. s 44 compensates only gold delivered under s 42, and s 40(2) permits partial activation, so the export ban (s 41), the monopsony (s 45) and the prohibition on working gold (s 46) can operate with no statutory compensation. Whether the just-terms guarantee reaches them turns on the acquisition-versus-regulation distinction. **This does not gate** — A4 is present-tense and Part IV is not in operation — but it sizes the residual risk in §11.1, which is currently unpriced. |
-| 6 | **`remaining_capex_aud_m` does two incompatible jobs, and the §7.1 denominator gets the wrong one.** | **OPEN — opened 19 Aug 2026, and this one moves weights.** Gate 2 D3 needs the **residual funding gap** (financing capacity); the §7.1 denominator needs **gross remaining execution capital** (economic cost). One field carries both, so three conventions are live in the book at once: AUC gross at A$354m, AAR net of cash at A$162m, and **RXL net of cash *and* drawable debt at A$0m** — the full A$382.6m Youanmi DFS pre-production capital enters the denominator of a current 5%-capped constituent as zero. Where the gap is derived net of cash, EV has already netted it and the cash is credited twice. The mirror error is larger: **producers are charged nothing at all** for board-approved builds, so GGP's A$1,065m Havieron capital and CMM's A$474m Mt Gibson capital are absent from a denominator that charges developers for the same activity. Full diagnosis: `docs/asset-evidence-capital-proposal.md`; per-constituent sourcing: `docs/execution-capital-inventory.md`; production decisions: `docs/capital-gate2-production-decision.md`. **THE BLOCKER WAS MISRECORDED AND IS CORRECTED 20 Aug 2026: it is WGX, not EVN.** EVN's four gross board-approved totals are an admissible `UPPER_BOUND` — treating all approved capital as remaining omits no spend and can only raise the denominator, which is the convention RXL and RMS already use. It is a poor bound, not an inadmissible one. WGX is the genuine blocker: A$145m is a lower bound on a scope now deferred in favour of an uncosted 4 Mtpa case, and the issuer separately calls further Murchison milling committed without costing it. Also settled: **CMM enters at A$593m**, the upper end of the issuer's own disclosed ±25% band, rather than A$474m relabelled a `POINT` when the same source says no contingency is included; **GGP holds at A$1,065m** with its June 2025 cost base recorded and no assumed spend-down. |
+| 6 | **`remaining_capex_aud_m` does two incompatible jobs, and the §7.1 denominator gets the wrong one.** | **CLOSED 21 Aug 2026.** The field was replaced by gross `remaining_execution_capex_aud_m`, developer `available_project_funding_aud_m`, and the engine-derived residual gap. Every sleeve now pays gross execution capital in the denominator; only developer D3 reads the residual funding gap. WGX, BGL and BC8 remain excluded where no denominator-safe execution-capital value exists. Producer Gate 2 separately reads sourced unavoidable commitments under amendment 7 and no longer requires complete two-year project guidance. |
 
 Three things the closures leave behind, none of them a reopening:
 
@@ -1378,22 +1441,23 @@ ours, is durable, and is reachable.
 | `ineligible_nav_share` · `gates.max_ineligible_nav_share` = 0.25 | NAV under an ineligible sovereign | Catches the **jurisdictional hook** (§2.5) that proportional ounce-discounting cannot: a subsidiary in an impaired jurisdiction gives that state leverage over the *whole* entity, not over its share of production. | **3.63pp** |
 | `aisc_aud_oz` | All-in sustaining cost per ounce | **A survival input only — never a reward.** High cost means more gold delta, which the index wants, right up to the point where the company cannot survive the down leg. That point is exactly where cost stops being an advantage and becomes a gate. | **15.00pp** |
 | `committed_capex_aud_m` | Contracted, non-deferrable spend | A funded must-build **burns cash through the drawdown**; a deferrable project is a real option that can be left unexercised. Only the first destroys ounces you have already paid for. | **15.00pp** |
-| `<input>_range` on a Gate 2 input | The span the **issuer** published, where the recorded value is its midpoint | **The midpoint may record a number; it may not decide a gate (§3.2).** Sweeping each ranged input to both of its own published ends and requiring one verdict is `estimation_policy.on_absence` applied to imprecision that is disclosed rather than missing. It decides exactly one name today and that name is a 10% position. | **10.00pp** *(rejects PNR on `aisc_aud_oz` [2800, 3400])* |
-| `committed_capex_aud_m_horizon_years` | Years of the stress window the capex figure actually covers | Sets the shortfall the continuation probe runs over. **Coverage itself never gates** (§3.2) — that would grade disclosure format rather than solvency — but it sizes the test that does. | via the probe |
-| `committed_capex_aud_m_annual_leg_aud_m` · `gate2.horizon_continuation_cover` = 1.0 | The recurring guided portion, and how much headroom a pass must hold against it continued across the unsourced tail | **A pass must survive one more year at the rate the issuer itself guided.** The leg excludes finite builds already spanning the window, because those do not recur. Binds on nobody today — cover runs 2.0× to 18.8× — and would have rejected PNR at 0.51×. Adopted while costing nothing, on the §6.4 precedent. | **10.00pp** *(latent: the weight of any name whose cover falls under 1.0×)* |
+| `<input>_range` on a Gate 2 input | The span the **issuer** published | Both ends are tested. A RED result at either end excludes; GREEN/AMBER variation is reported without pretending the midpoint is exact. | live |
+| `execution_capital_projects` coverage and state | Evidence for unavoidable stress-period commitments | A finite adverse upper edge is tested. A lower or unresolved edge makes the result AMBER; it does not invent future discretionary spend or grade the issuer's guidance format. | state |
 | `production_koz_yr` | Annual production | Sizes the stressed cash flow — how fast the company can earn its way through the drawdown. | **3.63pp** |
 | `net_debt_aud_m` | Net debt | Opening liquidity for the stress test, and the maturity wall behind it. | **15.00pp** |
-| **AUD gold history** → the Gate 2 anchor | Trailing 3y real average of AUD gold | The stress price. Anchoring to a **trailing average rather than spot** stops the gate weakening exactly when spot is most extended — i.e. when survival risk is actually highest. | **15.00pp** |
-| `gate2.gold_drawdown` = 0.40 | Depth of the stress | §0.1: a levered book must survive the down leg to compound ounces through a cycle. This is how deep a hole each name must climb out of. | **15.00pp** |
-| `gate2.count_undrawn_facilities` = true | Does a revolver count as survival | Decides whether committed-but-undrawn credit is liquidity or wishful thinking. It decided **EVN** until 20 Aug 2026, when the audited commitments note replaced a A$1,210m board-approved proxy with A$222m of contracted spend and EVN began surviving on cash alone. **It now decides NST and GGP** — both hold their pass on a revolver, and setting it false ejects 20.1pp of the book rather than 4.2pp. Note also that Evolution's own facility is confirmed to lapse 1 Aug 2028, nineteen days INSIDE the two-year window; moot for EVN now, but the engine credits a facility for the full horizon and does not read its term date. | **20.08pp** |
+| **AUD gold spot** · `gate2.stress_price_basis` = `spot` | Origin of the health shock | Makes 40% mean a literal 40% fall from the price available today, rather than a larger hidden shock from a trailing anchor. | live |
+| `gate2.gold_drawdown` = 0.40 | Depth of the stress | §0.1: the book must avoid permanent impairment through the down leg. | live |
+| `gate2.producer_max_rescue_capital_of_mcap` = 0.30 | Maximum manageable rescue raise | Allows ordinary recapitalisation but rejects a financing need large enough to threaten existing shareholders and execution. | live |
+| `gate2.producer_max_recovery_years` = 2.0 | Maximum repair burden | Rejects a deficit that would consume more than two years of normal-price cash generation. | live |
+| `gate2.count_undrawn_facilities` = true | Does a revolver count as health liquidity | Credited only when its sourced term reaches the horizon. The engine reads the term date and never assumes refinancing. | live |
 | `undrawn_facilities_aud_m` · `term_date` | Committed undrawn credit, and the date it ends | Liquidity that exists but is not on the balance sheet — **and only until the facility does.** Credited only where a sourced term date reaches the end of the stress window (§3). Absent amount reads as zero; absent term date drops the facility. Seven of eleven constituents are now credited nothing here and all seven still pass; NST and GGP keep theirs and are the two that need it. | 0.00pp *(no name flips; latent 20.08pp if both surviving facilities lapsed)* |
 | `gate2.cost_inflation_pa` = 0.05 | AISC path through the stress | **Costs do not fall with the gold price.** They did not in 2013, which is why so much of the industry went cash-negative. Holding AISC flat is also an assumption, and it is the optimistic one. | 0.00pp *(bites at 30%)* |
 | `gate2.horizon_years` = 2.0 | How long the company must hold out | Two years is where a balance sheet either holds or does not. The 2011–15 drawdown ran roughly four. | 0.00pp *(bites at 6y)* |
 | `gate2.tax_rate` = 0.30 | The state's share of stressed cash flow | The sovereign takes its cut before the shareholder sees survival. | 0.00pp *(bites at 80%)* |
-| `gate2.anchor` · `anchor_years` = 3.0 · `anchor_inflation_pa` = 0.03 | Window and deflator for the anchor | Put the historical anchor in the same money as the AISC path, which inflates at `cost_inflation_pa`. Setting inflation to zero gives a lower anchor and a harsher test. | 0.00pp *(anchor moves A$4,863–5,922, no name flips)* |
+| `gate2.anchor` · `anchor_years` · `anchor_inflation_pa` | Trailing real reference (legacy namespace) | Retained solely for the conservative reporting NAV deck; it no longer sets the Gate 2 stress price. | reporting only |
 | `study_stage` · `gate2.developer_min_study_stage` | PFS minimum, DFS preferred | **Scoping-study economics move too much to weight a portfolio on.** A pre-PFS ounce count is a geologist's estimate, not a claim. | **5.00pp** |
 | `approvals_land_secured` | Permits *and* land access | A permitting checkbox with unresolved native title or freehold access is not access. This is Gate 1 risk arriving at the project level. | **5.00pp** |
-| `remaining_capex_aud_m` · `gate2.developer_max_funding_gap_of_mcap` = 0.30 | Residual funding gap vs market cap | **Bounded dilution.** An unbounded funding gap is an unbounded haircut on the claim. 12% dilution is priced; 150% is a zombie. The field is now **dual-role**: it gates here and it enters the denominator at §13.2, and the gate running first is what stops absence reading as zero there. | 0.00pp *(cannot bind — RXL's gap is 0)* |
+| `remaining_execution_capex_aud_m` · `available_project_funding_aud_m` · `gate2.developer_max_funding_gap_of_mcap` = 0.30 | Gross economic build cost and residual funding gap | Gross execution capital enters the denominator for every sleeve. Developer D3 separately subtracts sourced available project funding and gates only on the residual gap, so financing never makes construction economically free. | 0.00pp *(RXL's residual gap is 0)* |
 | **spread history** · `gates.producer_max_spread_pct` = 1.0 · `developer_max_spread_pct` = 4.0 | Median RTH time-weighted quoted spread | **A claim that cannot be exited is not a position.** Spread rather than market cap, because cap is a proxy and spread is the thing itself. Developers get a wider limit because they are bought once and held to first pour. | **5.00pp** |
 | `gates.spread_window` = 3M | Measurement window | Long enough that one disorderly session cannot decide a gate. | live |
 | `gates.spread_measure` | Assertion, not a threshold | Halts the run if config claims to measure something the code does not. The gate ran on post-close quotes once and would have dropped 8 of 14 names on an artefact. | assertion |
@@ -1413,7 +1477,7 @@ claim down — it removes it.
 | `constraints.max_developer_sleeve` = 0.15 | Pre-production sleeve cap | Bounds the aggregate of that failure mode. Sized to what qualifies, never forced to fill. | 0.00pp *(per-name cap binds first)* |
 | `largest_asset_pp_share` | Share of eligible P&P reserves at one asset | Where there is no second asset, there is nothing to absorb the failure. **Sourced for all 17 on 18 Aug 2026** from per-asset Ore Reserve tables. Replaces the `single_asset` boolean, which was a hand-set judgement seventeen times over; the judgement now sits in one config threshold where the audit can see it. | **5.00pp** *(on PNR)* |
 | `constraints.single_asset_pp_share_threshold` = 0.80 | Where the derived boolean flips | The only judgement in the classification, and it is declared rather than baked into the data. Set where the cross-section has a gap: nothing sits between 0.773 and 0.999. Tri-state — an absent share derives `None`, asserted on every build. | **3.30pp** *(on CYL; 1.70pp latent on WGX)* |
-| `constraints.max_single_asset_name` = 0.10 | Tighter cap for one-mine companies | Derived from the objective, unlike the variance cap it replaced, which was calibrated on daily price noise and appeared nowhere in the mandate. Bound on PNR and CYL when adopted; **binds on CYL alone from 19 Aug 2026**, PNR having been rejected at Gate 2 under §3.2. Costs +6.4% on A$/claimed oz — see §8.1. | **5.00pp** |
+| `constraints.max_single_asset_name` = 0.10 | Tighter cap for one-mine companies | Derived from the objective, unlike the variance cap it replaced, which was calibrated on daily price noise and appeared nowhere in the mandate. Under v1.7 it binds on PNR and CYL; RXL is separately bound by the 5% developer cap. | **5.00pp** |
 | `sleeve` | producer / near-producer / developer | Not a number — a classification that **routes three tests at once**: the Gate 2 variant, the Gate 3 spread limit, and the developer caps. | routing |
 
 ### 13.5 Read, printed, and structurally unable to reach a weight
@@ -1423,7 +1487,7 @@ of the model, and none should be described as though it were.
 
 | Factor | Verified by | What it is for instead |
 |---|---|---|
-| **Gold spot** | A$3,000 / A$6,216 / A$12,000 → identical book | Diagnostics and the §9 NAV report. Gold enters the *weights* nowhere; it enters the *gates* once, through the Gate 2 anchor. |
+| **Gold spot** | Live AUD gold price | Sets the literal Gate 2 health shock and supplies the §9 NAV report. It never enters the raw-weight formula, but can change eligibility if a producer turns RED. |
 | `reserve_price_aud`, `resource_price_aud` | deleted from all 17 → 0.000pp | The §6 ledger's most informative disclosure: how far below spot the P&P tranche is booked, and therefore how under-booked it is. |
 | `mr_total_moz` | deleted from all 17 → 0.000pp | Reconciling the ledger against the disclosed resource total. |
 | `advt_shares_m`, `gates.capacity_max_*` | 5 days → 0.01 → 0.000pp | The §4.3 capacity report. Enforces nothing at €1m. |

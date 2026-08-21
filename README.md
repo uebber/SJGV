@@ -18,13 +18,15 @@ part of the gold-equity proposition while making those failure modes explicit.
 
 > **The mandate:** own the largest sourceable claim on future unhedged gold per
 > unit of enterprise value, in qualifying jurisdictions, while selecting
-> companies able to survive a severe gold drawdown without forced equity issuance.
+> companies whose survival and operating plans are not endangered by a severe
+> gold drawdown.
 
-The frozen pre-migration construction holds 11 ASX-listed companies at **A$743 of funded EV
-per confidence-weighted claimed ounce**, versus **A$905 for the same companies
-at market-cap weights**. That is an 18% lower headline EV per
-claimed ounce, produced by portfolio construction alone. The claim is 59.0% Proven & Probable
-reserves, 28.9% Measured & Indicated non-reserve material and 12.0% Inferred material.
+The activated v1.7 construction holds 12 ASX-listed companies at **A$826 of
+all-in EV per confidence-weighted claimed ounce**, versus **A$1,071 for the same
+companies at market-cap weights**. That is a 23% lower headline EV per claimed
+ounce, produced by portfolio construction alone. The claim is 59.1% Proven &
+Probable reserves, 28.7% Measured & Indicated non-reserve material and 12.2%
+Inferred material.
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.
@@ -55,11 +57,13 @@ The index can be rewarded in three distinct ways:
    valuation naturally owns assets relevant to reserve replacement and corporate
    transactions.
 
-The design is equally explicit about the path. A miner that must issue equity at
-the bottom of a cycle permanently reduces the ounces behind each existing share.
-Gate 2 therefore asks whether the company can survive a two-year, 40% real gold
-drawdown without doing so. The goal is not to avoid mark-to-market losses; it is
-to avoid turning a cyclical loss into permanent impairment.
+The design is equally explicit about the path. A miner needing a modest capital
+raise at the bottom of a cycle is damaged, not necessarily destroyed. Gate 2
+therefore applies a literal two-year, 40% AUD-gold drawdown and asks whether the
+rescue burden is manageable: no more than 30% of market capitalisation and no
+more than two normal cash-generation years to repair. The goal is not to avoid
+mark-to-market losses or every issuance; it is to avoid turning a cyclical loss
+into permanent impairment or a multi-year operational setback.
 
 ### Where it should work—and where it should not
 
@@ -68,7 +72,7 @@ to avoid turning a cyclical loss into permanent impairment.
 | **Sharp, sustained gold revaluation** | The design case. Resource optionality, operating leverage and reserve replacement become more valuable. |
 | **Sector consolidation** | The ounce-and-value discipline should favour companies whose ounces can replenish an acquirer's reserve base. |
 | **Flat gold, valuation mean reversion** | The portfolio can benefit if cheap claims re-rate toward the sector. |
-| **Gold drawdown** | The index will lose money. The survival gate is intended to preserve the claim through the cycle, not hedge the decline. |
+| **Gold drawdown** | The index will lose money. The health gate is intended to screen out permanent impairment and multi-year operational setbacks, not hedge the decline or prohibit every recapitalisation. |
 | **Bull market led by expensive large-cap “quality”** | The structural weak case. SJGV underweights ounces the market already prices richly and sells into price strength when the disclosed claim does not change. |
 
 ---
@@ -84,8 +88,8 @@ the capital paid for that claim.
 
 ### It separates return drivers from ruin controls
 
-Cheapness cannot compensate for a failed jurisdiction, an inability to survive
-the stress case or an untradeable security. Those are binary gates applied before
+Cheapness cannot compensate for a failed jurisdiction, RED health under the
+stress case or an untradeable security. Those are gates applied before
 weighting. Concentration limits are applied afterwards. The investment signal is
 therefore not diluted by turning every risk into another score.
 
@@ -126,7 +130,7 @@ must first satisfy the gold-purity requirement, then pass three gates:
 | Gate | Question |
 |---|---|
 | **Jurisdiction** | Are the counted ounces in a country with its own floating currency, acceptable sovereign finances and no gold-control regime currently operating? |
-| **Survival** | Can the company withstand the methodology's two-year, 40% real gold drawdown without forced equity issuance? |
+| **Producer health** | Would a literal two-year, 40% AUD-gold drawdown require rescue capital too large to raise or take more than two normal years to repair? |
 | **Tradability** | Is the security's regular-hours quoted spread inside the sleeve limit? |
 
 Resource and reserve statements supporting the ledger must also be no more than
@@ -231,16 +235,16 @@ snapshot beside the data layer and the parameters.
 
 ---
 
-## Frozen baseline construction
+## Current v1.7 snapshot
 
-**Market-data anchor:** 19 August 2026, spot A$6,347/oz  
-**Resource data sourced:** 17 August 2026, Westgold superseded 20 August 2026  
-**Constituents:** 11  
-**Headline funded EV / claimed ounce:** A$743  
-**Same names, market-cap weighted:** A$905 — an 18% discount  
-**Claim mix:** 59.0% P&P / 28.9% M&I non-reserve / 12.0% Inferred  
-**Reported gold beta:** 1.70  
-**Effective number of holdings:** 10.2
+- **Market session:** 21 August 2026, spot A$6,444/oz
+- **Resource data sourced:** 21 August 2026
+- **Constituents:** 12
+- **Headline all-in EV / claimed ounce:** A$826
+- **Same names, market-cap weighted:** A$1,071 — a 23% discount
+- **Claim mix:** 59.1% P&P / 28.7% M&I non-reserve / 12.2% Inferred
+- **Reported gold beta:** 1.76
+- **Effective number of holdings:** 11.1
 
 Both A$/oz figures are emitted by the build. The market-cap comparator used to be
 maintained by hand and had drifted to four different values across the tree — a
@@ -253,23 +257,19 @@ The claim mix is published to one decimal deliberately. The M&I share sat within
 between 29 and 30 on a move that is not a move — and this is the statistic the
 methodology nominates as the one to watch over time.
 
-Westgold is the largest position at approximately 13.7%. CYL is capped at 10% as
-a single-asset company; RXL is capped at 5% as a developer. The live build writes
-the complete constituent table and cap effects to the point-in-time snapshot
-rather than asking this README to serve as a second output file.
+Northern Star is the largest position at 11.82%. CYL and PNR are capped at 10%
+as single-asset companies; RXL is capped at 5% as a developer. The live build
+writes the complete constituent table and cap effects to
+snapshots/2026-08-21-v1.7-health rather than asking this README to serve as a
+second output file.
 
-**Pantoro left the book on 19 August 2026, and the headline moved A$77/oz because
-of it.** PNR is the one constituent whose survival inputs were forward guidance
-rather than trailing actuals, and both were recorded at the midpoint of the
-issuer's published range. At the midpoint of its FY27 AISC guidance it cleared
-the two-year stress by A$51m; at the top of the same guidance sentence it failed
-by A$12m. Methodology §3.2 now requires a Gate 2 verdict to be invariant across
-the ranges the issuer itself published, and a verdict that flips is unknown
-rather than favourable. It decides exactly one name — every other constituent is
-invariant across its own disclosed ranges, including Capricorn across the ±25%
-accuracy band on an estimate that carries no contingency. Losing the cheapest
-claim in the universe at A$354/oz is most of why the headline rose; that is the
-price of the rule and it is stated rather than absorbed.
+Pantoro's v1.3 exclusion exposed a real weakness in the former binary test: the
+verdict flipped across the issuer's own AISC range. Under v1.7 both ends remain
+inside AMBER health, so PNR returns at its 10% single-asset cap. Ora Banda also
+enters: after the 40% spot shock it needs about A$167m of rescue capital, only
+5.3% of current market capitalisation and 0.61 normal cash-generation years.
+That is damage, but not the existential or multi-year setback Gate 2 exists to
+exclude.
 
 **That staleness closed on 20 August 2026, and it closed in the direction the
 rule predicted.** Westgold's ledger had been running on 30 June 2025 group
@@ -284,7 +284,7 @@ non-core assets more than offset the Fletcher gain. A 16-point error, avoided by
 refusing a convenient patch — which is the clearest illustration in the book of
 why the derive-or-fail rule exists.
 
-The A$662 portfolio figure is the inverse of the portfolio's weighted claim
+The A$826 portfolio figure is the inverse of the portfolio's weighted claim
 yield—a weighted harmonic construction statistic. It is useful for comparing
 two weighting schemes on the same inputs, but it is not literally the equity
 capital paid for a look-through ounce.

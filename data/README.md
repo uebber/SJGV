@@ -53,8 +53,8 @@ A field value is normally a number. **One is a boolean:**
 | Sub-key | Meaning | Effect |
 |---|---|---|
 | `range` | `[lo, hi]` — the span **the issuer published**, where `v` is its midpoint | Methodology §3.2. Gate 2 is swept to both ends and the verdict must be invariant. A flip is UNRESOLVED and the name is rejected. |
-| `horizon_years` | How many years of the Gate 2 stress window the figure covers | Methodology §3.2. Sizes the shortfall. Coverage itself never gates. |
-| `annual_leg_aud_m` | The recurring guided portion inside the value, excluding any finite build that already spans the window | Methodology §3.2. Continued across the shortfall as a robustness probe; the pass must survive it at `gate2.horizon_continuation_cover`. |
+| `horizon_years` | Legacy summary of how many years the aggregate figure covered | Retained for the issue-1 fixture; live Gate 2 coverage comes from dated project records below. |
+| `annual_leg_aud_m` | Legacy recurring-guidance split | Retained for historical comparison; it is not extrapolated or consumed by the interval evaluator. |
 | `term_date` | ISO date a facility ends. On `undrawn_facilities_aud_m` only | Methodology §3. Credited only if it reaches the end of the Gate 2 window. **Absent means not credited** — an unverified facility cannot prove liquidity. Record the EARLIEST date the facility could lapse where the exact day is undisclosed. |
 | `evidence_state` | Directional classification: `POINT`, `UPPER_BOUND`, `LOWER_BOUND`, `CARRY_FORWARD`, or `UNRESOLVED` | Validated by the engine. A denominator accepts only `POINT`, `UPPER_BOUND`, or an unexpired `CARRY_FORWARD`; `LOWER_BOUND` and `UNRESOLVED` reject the name rather than shrinking economic cost. |
 | `as_of` | ISO measurement date for a capital amount | Dates a carry-forward and the common capital basis. If omitted, the cited document date is used. |
@@ -89,23 +89,59 @@ stored. All-in EV adds remaining execution capital once for producers and
 developers. Developer Gate 2 alone reads the residual funding gap. Producer
 `committed_capex_aud_m` remains the separate stress-window cash-burn input.
 
+Every producer-path company (`producer` and `near_producer`) also carries a
+top-level `execution_capital_projects` list. Each record joins the economic project
+scope to its Gate 2 cash-burn evidence:
+
+```jsonc
+{
+  "project_id": "project-id",
+  "scope": "Issuer-defined project boundary",
+  "as_of": "2026-06-30",
+  "gate2_horizon_start": "2026-07-01",
+  "gate2_horizon_end": "2028-06-30",
+  "committed_within_gate2_horizon_aud_m": 100,
+  "committed_capex_range_aud_m": [90, 110],
+  "committed_capex_state": "LOWER_BOUND",
+  "committed_capex_doc": "fy27_guidance",
+  "coverage_start": "2026-07-01",
+  "coverage_end": "2027-06-30",
+  "coverage_doc": "fy27_guidance",
+  "coverage_note": "FY27 only; FY28 is not disclosed.",
+  "remaining_execution_capex_aud_m": 0,
+  "execution_capital_state": "POINT",
+  "execution_capital_doc": "fy27_guidance"
+}
+```
+
+Project amounts must sum back to the company fields. Dates make direction
+mechanical: evidence ending before the horizon is a `LOWER_BOUND`; evidence
+extending beyond it is an `UPPER_BOUND`; exact coverage retains its sourced
+state. The recorded FY27–FY28 horizon is derived as the two financial years
+immediately after the common 30 June 2026 capital measurement date; it is a
+Gate 2 accounting boundary, not an issuer forecast. A finite project completed
+inside the horizon may cover the whole window
+when its cited total is explicitly to completion, because the post-completion
+amount for that same scope is then sourced zero. Evidence that both omits and
+exceeds parts of the window must be decomposed or marked `UNRESOLVED`.
+
+Gate 2 evaluates the resulting interval. A finite upper edge is tested directly.
+Where no finite upper exists, the sourced lower edge is tested and the health
+state is at least `AMBER`; a `RED` result already demonstrated at that lower
+edge still excludes. No calendar proration or annualisation fills an interval.
+
 Recurring annual growth guidance is not a remaining total to completion and
 therefore stays in Gate 2 rather than entering the denominator. A numeric zero
 must cite the filing that establishes why no finite material scope is included.
 
 - **No `range`** means the issuer published a point, not that the point is exact.
-- **No `horizon_years`** means the record does not establish the period. It does
-  **not** mean the figure covers the window — the engine reads it as `unknown`
-  and prints it rather than treating an unspecified period as full coverage.
-- **No `annual_leg_aud_m` on a short-covered figure** means there is nothing to
-  continue, so the continuation probe reports `UNTESTED` and the name is routed
-  to §12.2 item 6 as a capital-state question. `UNTESTED` is not a pass, and the
-  routing is printed rather than silent.
-
-Record `annual_leg_aud_m` as the portion that would recur in the unsourced tail.
-Exclude finite builds already inside the window: Capricorn's A$474m Mt Gibson
-build and Greatland's A$1,065m Havieron build are out of their legs, which is why
-those two read A$78m and A$325m against recorded totals of A$552m and A$1,390m.
+- **No coverage dates** means the commitment evidence is incomplete; it never
+  means full coverage. Producer health is at least AMBER, while the economic
+  denominator continues to require a safe execution-capital value.
+- Gate 2 tests a finite adverse upper edge where one exists. Otherwise it uses
+  only the sourced unavoidable lower edge and reports AMBER; it does not
+  annualise guidance or invent future discretionary spend. Sourced evidence
+  that already produces RED still excludes the name.
 
 Record a `range` only where the issuer published the span for the **same quantity
 over the same period** as `v`. A span between two defensible analyst conventions

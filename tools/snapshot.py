@@ -201,7 +201,9 @@ def take(tag: str | None) -> Path:
         "data_sourced": weights.get("data_sourced"),
         "gold_aud_oz": weights.get("gold_aud_oz"),
         "euraud": weights.get("euraud"),
-        "gate2_anchor_aud": (weights.get("gate2_anchor") or {}).get("anchor_aud"),
+        "gold_reference_aud": (
+            weights.get("gold_reference") or weights.get("gate2_anchor") or {}
+        ).get("anchor_aud"),
         "n_constituents": len(rows),
         "effective_n": (weights.get("stats") or {}).get("effective_n"),
         "portfolio_beta_gold": (weights.get("stats") or {}).get("portfolio_beta_gold"),

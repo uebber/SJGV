@@ -45,6 +45,12 @@ class ExecutionCapitalTest(unittest.TestCase):
         self.assertEqual(gap["state"], "POINT")
         self.assertEqual(gap["value_aud_m"], 0.0)
         self.assertAlmostEqual(capital["effective_aud_m"], 319.723)
+        nav = B.nav_model.value_company(
+            rox, self.gold, self.cfg, B.confidence_weights(self.cfg)
+        )
+        self.assertAlmostEqual(
+            nav["remaining_execution_capex_aud_m"], 319.723
+        )
 
     def test_project_funding_never_reduces_denominator_capital(self) -> None:
         base = self.companies["RXL"]
@@ -119,7 +125,7 @@ class ExecutionCapitalTest(unittest.TestCase):
         self.assertIn("D3 residual funding gap spans", verdict["reason"])
 
     def test_weight_pipeline_adds_execution_capital_for_both_sleeves(self) -> None:
-        for ticker in ("NST", "RXL"):
+        for ticker in ("GMD", "RXL"):
             rows, rejected = B.compute_raw_weights(
                 [self.companies[ticker]], self.prices, {}, self.gold, self.cfg,
                 anchor_gold=self.anchor, as_of=self.as_of,
@@ -141,6 +147,112 @@ class ExecutionCapitalTest(unittest.TestCase):
         self.assertEqual(rows, [])
         self.assertIn("EXECUTION CAPITAL", rejected[0]["reason"])
         self.assertIn("UNRESOLVED", rejected[0]["reason"])
+
+    def test_project_capital_reconciles_to_company_records(self) -> None:
+        payload = json.loads((ROOT / "data/companies.json").read_text())
+        for record in payload["companies"]:
+            if record["sleeve"] == "developer":
+                continue
+            self.assertEqual(B._validate_capital_schema(record), [])
+
+        broken = copy.deepcopy(next(
+            c for c in payload["companies"] if c["ticker"] == "GMD"))
+        broken["execution_capital_projects"][0][
+            "remaining_execution_capex_aud_m"] += 1.0
+        errors = B._validate_capital_schema(broken)
+        self.assertTrue(any("project execution capital does not reconcile" in e
+                            for e in errors))
+
+    def test_explicit_dates_detect_under_and_over_coverage(self) -> None:
+        under = B.gate2_capital_interval(self.companies["NST"], self.cfg)
+        over = B.gate2_capital_interval(self.companies["EVN"], self.cfg)
+        self.assertEqual(under["projects"][0]["coverage_state"], "UNDER")
+        self.assertEqual(under["state"], "LOWER_BOUND")
+        self.assertEqual(over["projects"][0]["coverage_state"], "OVER")
+        self.assertEqual(over["state"], "UPPER_BOUND")
+
+        payload = json.loads((ROOT / "data/companies.json").read_text())
+        raw = {c["ticker"]: c for c in payload["companies"]}
+        wrong_under = copy.deepcopy(raw["NST"])
+        wrong_under["execution_capital_projects"][0][
+            "committed_capex_state"] = "POINT"
+        self.assertTrue(any("under-coverage requires LOWER_BOUND" in e
+                            for e in B._validate_capital_schema(wrong_under)))
+        wrong_over = copy.deepcopy(raw["EVN"])
+        wrong_over["execution_capital_projects"][0][
+            "committed_capex_state"] = "POINT"
+        self.assertTrue(any("over-coverage requires UPPER_BOUND" in e
+                            for e in B._validate_capital_schema(wrong_over)))
+
+    def test_lower_bound_health_pass_is_amber_but_distress_is_red(self) -> None:
+        nst = self.companies["NST"]
+        amber = B.gate2_survival(nst, self.gold, 1_000.0, self.cfg)
+        self.assertTrue(amber["pass"])
+        self.assertEqual(amber["health"], "AMBER")
+        self.assertFalse(amber["detail"]["capital_evidence_complete"])
+
+        failure = copy.deepcopy(nst)
+        project = failure["execution_capital_projects"][0]
+        project["committed_within_gate2_horizon_aud_m"] = 10_000.0
+        project["committed_capex_range_aud_m"] = [10_000.0, 10_000.0]
+        failure["committed_capex_aud_m"] = 10_000.0
+        failed = B.gate2_survival(failure, self.gold, 1_000.0, self.cfg)
+        self.assertFalse(failed["pass"])
+        self.assertEqual(failed["health"], "RED")
+
+    def test_finite_upper_bound_can_prove_green_or_red(self) -> None:
+        evn = self.companies["EVN"]
+        passed = B.gate2_survival(evn, self.gold, 10_000.0, self.cfg)
+        self.assertTrue(passed["pass"])
+        self.assertEqual(passed["health"], "GREEN")
+
+        uncertain = copy.deepcopy(evn)
+        uncertain["execution_capital_projects"][0][
+            "committed_within_gate2_horizon_aud_m"] = 10_000.0
+        uncertain["committed_capex_aud_m"] = 10_000.0
+        verdict = B.gate2_survival(uncertain, self.gold, 10_000.0, self.cfg)
+        self.assertFalse(verdict["pass"])
+        self.assertEqual(verdict["health"], "RED")
+
+    def test_manageable_rescue_is_eligible_amber(self) -> None:
+        company = copy.deepcopy(self.companies["OBM"])
+        company["undrawn_facilities_aud_m"] = B.creditable_undrawn(
+            company, self.cfg, date.fromisoformat(self.as_of)
+        )[0]
+        verdict = B.gate2_survival(
+            company, self.gold, 3_100.0, self.cfg
+        )
+        self.assertTrue(verdict["pass"])
+        self.assertEqual(verdict["health"], "AMBER")
+        self.assertGreater(verdict["detail"]["rescue_capital_aud_m"], 0.0)
+        self.assertLessEqual(
+            verdict["detail"]["rescue_capital_of_mcap"],
+            self.cfg["gate2"]["producer_max_rescue_capital_of_mcap"],
+        )
+        self.assertLessEqual(
+            verdict["detail"]["recovery_years"],
+            self.cfg["gate2"]["producer_max_recovery_years"],
+        )
+
+    def test_producer_health_thresholds_are_validated(self) -> None:
+        broken = copy.deepcopy(self.cfg)
+        broken["gate2"]["producer_max_rescue_capital_of_mcap"] = 1.1
+        with self.assertRaisesRegex(ValueError, "must be in"):
+            B.gate2_survival(
+                self.companies["EVN"], self.gold, 10_000.0, broken
+            )
+
+    def test_infeasible_survivor_set_cannot_breach_caps(self) -> None:
+        rows = [
+            {"ticker": "P1", "sleeve": "producer", "single_asset": False,
+             "weight": 0.4},
+            {"ticker": "P2", "sleeve": "producer", "single_asset": False,
+             "weight": 0.4},
+            {"ticker": "D1", "sleeve": "developer", "single_asset": True,
+             "weight": 0.2},
+        ]
+        with self.assertRaisesRegex(ValueError, "constraint set is infeasible"):
+            B.apply_constraints(rows, self.cfg)
 
 
 if __name__ == "__main__":

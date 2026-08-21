@@ -57,6 +57,7 @@ import copy
 import json
 import statistics as st
 import sys
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -239,7 +240,7 @@ def main() -> int:
 
     print(f"SJGV weight sensitivity — materiality bar {TH:.2f}pp")
     print(f"Baseline: {len(base)} constituents, gold A${gold_aud:,.0f}, "
-          f"Gate 2 anchor A${anchor:,.0f}")
+          f"reporting gold reference A${anchor:,.0f}")
     print("Metric: largest absolute change in ANY final weight, in percentage points,\n"
           "after gates and the §8.1 caps.\n")
 
@@ -323,43 +324,47 @@ def main() -> int:
         print(f"{j['field']:<24}{j['n']:>3}{j['impact']:>10.3f}  {verdict}"
               f"  (on {j['on']})")
 
-    # ── Gate inputs — critical value, not weight delta ────────────────────
+    # ── Gate 2 health — distance to RED, not a disclosure-completeness test ─
     print("\n" + "═" * 78)
-    print("GATE INPUTS — critical value at which Gate 2 flips to FAIL")
+    print("GATE 2 HEALTH — additional unavoidable capital at which health turns RED")
     print("═" * 78)
-    kind, lo, hi, desc = ranges["committed_capex_aud_m"]
-    print(f"Empirical range, {desc}: A${lo:,.0f} – A${hi:,.0f} per oz of annual production")
-    print(f"(from the only three names that disclose it)\n")
-    print(f"{'TICK':<6}{'W?':<4}{'PROD koz':>9}{'PLAUSIBLE A$m':>15}"
-          f"{'CRITICAL A$m':>14}{'HEADROOM':>10}  VERDICT")
+    print("The tested amount is the adverse finite upper edge where available,"
+          " otherwise the sourced lower edge. Headroom is extra capital beyond"
+          " that amount, not an estimate of undisclosed spend.\n")
+    print(f"{'TICK':<6}{'W?':<4}{'STATE':>8}{'TESTED A$m':>13}"
+          f"{'EXTRA TO RED':>14}{'% MCAP':>9}")
     print("─" * 78)
     gate_rows = []
-    for c in sorted([c for c in cons if c.get("committed_capex_aud_m") is None],
-                    key=lambda x: x["ticker"]):
-        prod = c.get("production_koz_yr")
-        if not prod or c.get("sleeve") == "developer":
+    as_of_date = date.fromisoformat(market["_ledger_sourced"])
+    for original in sorted(cons, key=lambda x: x["ticker"]):
+        if original.get("sleeve") == "developer":
             continue
-        plaus_hi = hi * prod / 1000
-        # Bisect for the committed capex at which this name first fails Gate 2.
-        crit, step, cap = None, max(plaus_hi, 50.0), 200_000.0
-        probe = 0.0
-        while probe <= cap:
-            t = dict(c)
-            t["committed_capex_aud_m"] = probe
-            if B.gate2_survival(t, anchor, None, meta).get("pass") is False:
+        c = dict(original)
+        px = (md["prices"].get(c["ticker"]) or {}).get("price")
+        mcap = c.get("shares_out_m") * px if c.get("shares_out_m") and px else None
+        if not mcap or not c.get("production_koz_yr") or not c.get("aisc_aud_oz"):
+            continue
+        creditable, _ = B.creditable_undrawn(c, meta, as_of_date)
+        c["undrawn_facilities_aud_m"] = creditable
+        interval = B.gate2_capital_interval(c, meta)
+        tested = (interval.get("upper_aud_m") if interval.get("upper_aud_m") is not None
+                  else interval.get("lower_aud_m") or 0.0)
+        current = B.gate2_survival(c, gold_aud, mcap, meta)
+        crit, step, limit = None, max(mcap / 1000, 1.0), tested + 2 * mcap
+        probe = tested
+        while probe <= limit:
+            verdict = B._gate2_producer_at_capex(
+                c, gold_aud, meta, probe, mcap_aud_m=mcap)
+            if verdict.get("health") == "RED":
                 crit = probe
                 break
-            probe += max(cap / 4000, 1.0)
-        head = (crit / plaus_hi) if (crit and plaus_hi) else None
-        verdict = ("acceptable" if (head and head > 1.5) else
-                   "MATERIAL — plausible capex can fail this name"
-                   if head else "acceptable")
-        if c["ticker"] not in weighted:
-            verdict += " (not weighted)"
-        gate_rows.append((c["ticker"], crit, plaus_hi, head))
-        print(f"{c['ticker']:<6}{'y' if c['ticker'] in weighted else '·':<4}{prod:>9,.0f}"
-              f"{plaus_hi:>15,.0f}{(f'{crit:,.0f}' if crit else '>200,000'):>14}"
-              f"{(f'{head:,.1f}x' if head else '—'):>10}  {verdict}")
+            probe += step
+        extra = crit - tested if crit is not None else None
+        gate_rows.append((c["ticker"], current.get("health"), tested, extra, mcap))
+        print(f"{c['ticker']:<6}{'y' if c['ticker'] in weighted else '·':<4}"
+              f"{(current.get('health') or 'UNTESTED'):>8}{tested:>13,.0f}"
+              f"{(f'{extra:,.0f}' if extra is not None else '>2×mcap'):>14}"
+              f"{(f'{extra/mcap:.0%}' if extra is not None else '—'):>9}")
 
     # ── Cap inputs — what the §8.1 single-asset cap is worth, per name ────
     # The per-name block above only measures MISSING values, so once a field is
@@ -436,10 +441,10 @@ def main() -> int:
                     x["aisc_aud_oz"] = val
         d, w, _ = scenario(mut)
         bc8_worst = max(bc8_worst, d)
-    print(f"BC8 admitted (AISC A${min(aiscs):,.0f} – A${max(aiscs):,.0f}, cohort range)")
+    print(f"BC8 AISC tested at A${min(aiscs):,.0f} – A${max(aiscs):,.0f}, cohort range")
     print(f"  max Δw {bc8_worst:>7.3f}pp  "
-          f"{'MATERIAL' if bc8_worst >= TH else 'acceptable'} — a 15th constituent "
-          f"dilutes every existing weight.")
+          f"{'MATERIAL' if bc8_worst >= TH else 'no admission'} — execution "
+          f"capital remains unresolved, so AISC alone cannot admit the name.")
 
     # Gate 3 — now measured rather than bounded. The baseline already enforces it.
     sp = md.get("spreads") or {}
@@ -464,8 +469,8 @@ def main() -> int:
     print("  deletion rather than by decision.")
 
     print("\nundrawn_facilities_aud_m — absent for 6 weighted names, but it is treated as")
-    print("  ZERO and only ever ADDS liquidity, so supplying it can turn a fail into a")
-    print("  pass and never the reverse. No name currently fails. Impact on weights is")
+    print("  ZERO and only ever ADDS liquidity, so supplying it can improve health and")
+    print("  never worsen it. No producer is currently RED. Impact on weights is")
     print("  identically 0.000pp by construction. CLOSED.")
 
     # ── Everything at once ────────────────────────────────────────────────
@@ -499,11 +504,12 @@ def main() -> int:
     print("AGGREGATE")
     print("═" * 78)
     print(f"Largest single weight move from any ONE parameterised gap: {top:.3f}pp")
+    agg_name = agg_on or "no constituent"
     print(f"All parameterised gaps wrong together:                    {agg:.3f}pp "
-          f"(on {agg_on}){'  CONSTITUENT SET CHANGES' if agg_set else ''}")
+          f"(on {agg_name}){'  CONSTITUENT SET CHANGES' if agg_set else ''}")
     print(f"Materiality bar: {TH:.2f}pp\n")
     print("Excluded from those two figures because they are not perturbable:")
-    print("  · BC8 — admission adds a constituent rather than moving one")
+    print("  · BC8 — AISC alone cannot admit it while execution capital is unresolved")
     print("  · Gate 3 — measured and enforced, 0.000pp")
     print(f"  · §8.1 single-asset cap — SOURCED for all 17 on 18 Aug 2026, so it")
     print(f"    is no longer a gap. Its live effect is {cap_worst:.3f}pp and it is")

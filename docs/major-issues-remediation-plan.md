@@ -1,9 +1,9 @@
 # Major issues remediation plan
 
 **Created:** 21 August 2026  
-**Status:** in progress — issues 1–3 completed 21 August 2026. Issue 3 implements
-the schema and engine split; generated weights remain the frozen baseline until
-the coordinated replay in issue 5.
+**Status:** complete — issues 1–6 completed 21 August 2026. The issue-5
+three-name replay triggered the approved v1.7 producer-health correction; the
+fresh build has twelve constituents and satisfies its caps.
 
 ## Purpose
 
@@ -76,19 +76,28 @@ The approved target design is recorded in
      execution-capital parameters have named consumers, and
      `tests/test_execution_capital.py` covers the split and both sleeves.
 
-4. **Make Gate 2 capital coverage explicit.**
+4. **Make Gate 2 capital coverage explicit — COMPLETE (21 August 2026).**
    - Add per-project Gate 2 horizon start/end, coverage start/end, and
      committed-within-horizon capital records.
    - Implement the interval Gate 2 evaluator and reconcile its capital to the
      execution-capital record.
-   - Require a load-bearing unresolved capital input to return `UNRESOLVED` and
-     exclude the name rather than treating it as zero.
-   - WGX remains ineligible unless its primary disclosure resolves both the
-     execution-capital scope and within-horizon evidence.
-   - Acceptance: under-coverage and over-coverage are detected, and a Gate 2
-     pass cannot rely on a favourable missing amount.
+   - Represent every unresolved amount explicitly rather than treating it as
+     zero. An unresolved economic-capital denominator excludes; incomplete
+     stress-period commitments make producer health AMBER.
+   - WGX remains ineligible unless its primary disclosure resolves the
+     execution-capital denominator.
+   - Acceptance: under-coverage and over-coverage are detected, and Gate 2
+     reports incomplete commitment evidence without fabricating future spend.
+   - Evidence: every producer-path company now carries reconciled
+     `execution_capital_projects` records with explicit horizon and coverage dates.
+     `build_index.gate2_capital_interval` aggregates directional intervals;
+     Gate 2 tests a finite adverse upper edge where available, excludes a RED
+     result proved at the lower edge, and otherwise tests the sourced lower edge
+     with an AMBER evidence flag. Focused tests cover under/over-coverage,
+     directional verdicts, project reconciliation, and the WGX no-zero
+     denominator invariant.
 
-5. **Replay and audit before activation.**
+5. **Replay and audit before activation — COMPLETE (21 August 2026).**
    - Fetch fresh TWS market data and run old-versus-new builds from the same
      inputs where possible.
    - Publish per-name old/new denominator, Gate 2 result, raw weight, cap
@@ -100,8 +109,13 @@ The approved target design is recorded in
    - Acceptance: all configuration reads are observed; provenance and
      missing-data results meet repository rules; no unresolved input can
      favour a constituent.
+   - Evidence: `docs/2026-08-21-issue-5-replay.md` preserves both the rejected
+     three-name strict replay and the approved v1.7 activation. `tools/replay.py`
+     reconstructs a build from a recorded TWS bundle and bars without contacting
+     TWS. The final build has twelve constituents; all configuration reads are
+     observed, and every move above 0.5pp is attributed.
 
-6. **Reconcile documentation and obtain activation approval.**
+6. **Reconcile documentation and obtain activation approval — COMPLETE (21 August 2026).**
    - Correct the obsolete statement in `index-methodology.md` that says the
      engine does not read facility term dates.
    - Correct the stale statement in `docs/execution-capital-inventory.md` that
@@ -110,6 +124,13 @@ The approved target design is recorded in
      capital decision document to match the approved implementation.
    - Obtain explicit approval for the coordinated methodology, engine, and data
      change before freezing a successful rebalance with `tools/snapshot.py`.
+   - Evidence: the user approved the producer-health redesign on 21 August.
+     Methodology amendment 7 records the change; the capital decision and
+     issue-5 replay retain the rejected strict design as historical rationale.
+     The definitive TWS build at `2026-08-21T18:16:51Z` has twelve
+     constituents, no RED producer, and no cap breach. Its exact data,
+     parameters, market bundle, weights and €1m basket are frozen in
+     `snapshots/2026-08-21-v1.7-health`.
 
 ## Decision gates
 

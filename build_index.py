@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SJGV v1.0 — index construction and basket sizing.
+SJGV v1.7 — index construction and basket sizing.
 
 Computes the basket from the data layer rather than from a hardcoded list, and
 May-2026 weights (including RUP, delisted 16 Jun 2026 into Agnico Eagle).
@@ -141,7 +141,7 @@ HERE = Path(__file__).resolve().parent
 DATA_DIR = HERE / "data"
 
 # Gold and AUD/USD are pulled over a longer window than the equities because the
-# Gate 2 anchor averages over gate2.anchor_years. The regression is unaffected:
+# trailing NAV reference averages over gate2.anchor_years. The regression is unaffected:
 # it inner-joins on the equity dates, so it still spans the equity window.
 GOLD_HISTORY_DURATION = "5 Y"
 
@@ -368,13 +368,15 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "gate2.horizon_years": ("engine", "§3 survival horizon"),
     "gate2.tax_rate": ("engine", "§3 survival FCF, and the §8 NAV model"),
     "gate2.count_undrawn_facilities": ("engine", "§3 liquidity definition"),
+    "gate2.stress_price_basis": ("engine", "spot basis for the literal drawdown"),
+    "gate2.producer_max_rescue_capital_of_mcap": (
+        "engine", "largest manageable producer recapitalisation"),
+    "gate2.producer_max_recovery_years": (
+        "engine", "maximum normalised recovery burden"),
     "gate2.developer_min_study_stage": (
         "conditional", "§3.1 D1 — read only when a developer is in the universe"),
     "gate2.developer_max_funding_gap_of_mcap": (
         "conditional", "§3.1 D3 — read only when a developer is in the universe"),
-    "gate2.horizon_continuation_cover": (
-        "engine", "§3.2 — build_index.gate2_horizon_materiality; how much headroom a pass needs against the guided annual leg continued across the unsourced tail of the window"),
-
     "execution_capital.materiality_of_ev": (
         "engine", "build_index.execution_capital_ledger — aggregate execution "
                   "capital below this share of pre-capex EV is de minimis"),
@@ -393,7 +395,8 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "nav_model.built": ("engine", "guards the §9 model"),
     "nav_model.discount_rate_real_producing": ("engine", "§9, reporting only"),
     "nav_model.discount_rate_real_development": ("engine", "§9, reporting only"),
-    "nav_model.conservative_deck": ("engine", "gate2_anchor | fixed"),
+    "nav_model.conservative_deck": (
+        "engine", "trailing_real_reference | fixed"),
     "nav_model.conservative_deck_aud_oz": (
         "conditional", "read only when conservative_deck is 'fixed'"),
     "nav_model.decks": ("engine", "§9, the decks NAV is reported at"),
@@ -571,6 +574,64 @@ CAPITAL_EVIDENCE_STATES = {
 }
 EXECUTION_CAPITAL_FIELD = "remaining_execution_capex_aud_m"
 PROJECT_FUNDING_FIELD = "available_project_funding_aud_m"
+EXECUTION_CAPITAL_PROJECTS_KEY = "execution_capital_projects"
+GATE2_CAPITAL_PROJECT_KEYS = {
+    "project_id", "scope", "as_of", "gate2_horizon_start", "gate2_horizon_end",
+    "committed_within_gate2_horizon_aud_m", "committed_capex_range_aud_m",
+    "committed_capex_state", "committed_capex_doc", "coverage_start",
+    "coverage_end", "coverage_doc", "coverage_note",
+    EXECUTION_CAPITAL_FIELD, "execution_capital_range_aud_m",
+    "execution_capital_state", "execution_capital_doc",
+}
+
+
+def _directional_interval(value: object, state: object,
+                          disclosed_range: object = None
+                          ) -> tuple[float, float] | None:
+    """Turn one directional capital record into a closed/non-negative interval.
+
+    A published range refines the amount before direction is applied.  It never
+    changes the direction: a one-year A$350–470m guide is still only a lower
+    bound on a two-year window, so its interval is [350, +inf), not [350, 470].
+    """
+    if state not in CAPITAL_EVIDENCE_STATES:
+        return None
+    if state == "UNRESOLVED":
+        return 0.0, math.inf
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return None
+    value = float(value)
+    if not math.isfinite(value) or value < 0:
+        return None
+    lo = hi = value
+    if disclosed_range is not None:
+        if (not isinstance(disclosed_range, (list, tuple))
+                or len(disclosed_range) != 2):
+            return None
+        lo, hi = disclosed_range
+        if (not all(isinstance(v, (int, float)) and not isinstance(v, bool)
+                    for v in (lo, hi))
+                or not all(math.isfinite(float(v)) for v in (lo, hi))
+                or float(lo) < 0 or float(lo) > float(hi)
+                or not float(lo) <= value <= float(hi)):
+            return None
+        lo, hi = float(lo), float(hi)
+    if state in ("POINT", "CARRY_FORWARD"):
+        return lo, hi
+    if state == "UPPER_BOUND":
+        return 0.0, hi
+    if state == "LOWER_BOUND":
+        return lo, math.inf
+    return 0.0, math.inf
+
+
+def _iso_date(raw: object) -> date | None:
+    if not isinstance(raw, str):
+        return None
+    try:
+        return date.fromisoformat(raw)
+    except ValueError:
+        return None
 
 
 def _flatten(record: dict) -> dict:
@@ -589,22 +650,18 @@ def _flatten(record: dict) -> dict:
 
       `range`          [lo, hi] — the span the ISSUER published, where `v` is
                        its midpoint. Flattened to `<field>_range`.
-      `horizon_years`  how many years of the Gate 2 stress horizon the figure
-                       actually covers. Flattened to `<field>_horizon_years`.
-      `annual_leg_aud_m`
-                       the recurring guided portion inside the value, excluding
-                       any finite build already spanning the window. Flattened
-                       to `<field>_annual_leg_aud_m`.
+      `horizon_years`, `annual_leg_aud_m`
+                       legacy issue-3 basis retained in build fixtures. Live
+                       Gate 2 capital coverage now comes from the explicit
+                       per-project intervals in `execution_capital_projects`.
       `evidence_state` directional classification used by capital validation.
       `as_of`           measurement date for an amount, including carry-forward.
       `cost_base_date`, `accuracy_range`, `contingency_included`
                        estimate-quality facts retained for capital reporting.
 
-    Both are transcriptions of what a cited document already states. Neither may
-    be inferred: an omitted `range` means the issuer published a point, and an
-    omitted `horizon_years` means the record does not establish the period —
-    which is a different thing from establishing that it covers the horizon, and
-    the engine treats it as such.
+    These are transcriptions of what a cited document already states. Neither
+    may be inferred. The legacy horizon keys remain available to regression
+    tooling, but only the dated project records decide live Gate 2 coverage.
     """
     flat = {k: v for k, v in record.items() if k not in ("fields", "documents")}
     flat["_docs"] = record.get("documents", {})
@@ -632,9 +689,9 @@ def _validate_capital_schema(record: dict) -> list[str]:
     """Validate directional capital evidence before it can reach a formula.
 
     The two issue-3 fields always require an explicit state, including a
-    sourced ``UNRESOLVED`` shell.  Other capital fields are validated whenever
-    they opt into the state machine; issue 4 will make the Gate 2 project bridge
-    mandatory without weakening this validation in the meantime.
+    sourced ``UNRESOLVED`` shell.  Issue 4 additionally requires every producer
+    path to carry project records that put execution capital and Gate 2 burn on
+    one scope, with explicit horizon and evidence-coverage dates.
     """
     errors: list[str] = []
     fields = record.get("fields", {})
@@ -675,7 +732,185 @@ def _validate_capital_schema(record: dict) -> list[str]:
         if not doc or doc not in record.get("documents", {}):
             errors.append(f"{name} evidence_state {state} has no valid document")
 
+    if record.get("sleeve") != "developer":
+        projects = record.get(EXECUTION_CAPITAL_PROJECTS_KEY)
+        if not isinstance(projects, list) or not projects:
+            errors.append(f"{EXECUTION_CAPITAL_PROJECTS_KEY} missing or empty")
+        else:
+            errors.extend(_validate_execution_capital_projects(record, projects))
+
     return [f"{ticker}: {error}" for error in errors]
+
+
+def _validate_execution_capital_projects(record: dict,
+                                     projects: list[object]) -> list[str]:
+    """Validate and reconcile the per-project issue-4 capital bridge."""
+    errors: list[str] = []
+    documents = record.get("documents", {})
+    fields = record.get("fields", {})
+    seen: set[str] = set()
+    horizon: tuple[date, date] | None = None
+    common_as_of: date | None = None
+    committed_values: list[float] = []
+    committed_range_lows: list[float] = []
+    committed_range_highs: list[float] = []
+    execution_values: list[float] = []
+    execution_lower = 0.0
+    execution_upper = 0.0
+    any_committed_unresolved = False
+    any_execution_unresolved = False
+
+    for index, project in enumerate(projects):
+        label = f"{EXECUTION_CAPITAL_PROJECTS_KEY}[{index}]"
+        if not isinstance(project, dict):
+            errors.append(f"{label} is not an object")
+            continue
+        project_id = project.get("project_id")
+        if not isinstance(project_id, str) or not project_id.strip():
+            errors.append(f"{label} has no id")
+            project_id = label
+        elif project_id in seen:
+            errors.append(f"{label} duplicates id {project_id!r}")
+        seen.add(project_id)
+        stray = set(project) - GATE2_CAPITAL_PROJECT_KEYS
+        if stray:
+            errors.append(f"{project_id}: unknown keys {sorted(stray)}")
+        if not isinstance(project.get("scope"), str) or not project["scope"].strip():
+            errors.append(f"{project_id}: scope missing")
+        project_as_of = _iso_date(project.get("as_of"))
+        if project_as_of is None:
+            errors.append(f"{project_id}: invalid or missing as_of date")
+        elif common_as_of is None:
+            common_as_of = project_as_of
+        elif project_as_of != common_as_of:
+            errors.append(f"{project_id}: project records do not share one as_of date")
+
+        h_start = _iso_date(project.get("gate2_horizon_start"))
+        h_end = _iso_date(project.get("gate2_horizon_end"))
+        if h_start is None or h_end is None or h_start > h_end:
+            errors.append(f"{project_id}: invalid Gate 2 horizon dates")
+        else:
+            current = (h_start, h_end)
+            if horizon is None:
+                horizon = current
+            elif horizon != current:
+                errors.append(f"{project_id}: project horizons do not match")
+
+        c_start = _iso_date(project.get("coverage_start"))
+        c_end = _iso_date(project.get("coverage_end"))
+        coverage_present = c_start is not None and c_end is not None
+        if ((project.get("coverage_start") is None)
+                != (project.get("coverage_end") is None)):
+            errors.append(f"{project_id}: coverage_start and coverage_end must travel together")
+        elif coverage_present and c_start > c_end:
+            errors.append(f"{project_id}: coverage_start is after coverage_end")
+        if not isinstance(project.get("coverage_note"), str):
+            errors.append(f"{project_id}: coverage_note missing")
+
+        committed_state = project.get("committed_capex_state")
+        committed_value = project.get("committed_within_gate2_horizon_aud_m")
+        committed_range = project.get("committed_capex_range_aud_m")
+        committed_interval = _directional_interval(
+            committed_value, committed_state, committed_range)
+        if committed_interval is None:
+            errors.append(f"{project_id}: invalid committed-capex amount/state/range")
+        if committed_state == "UNRESOLVED":
+            any_committed_unresolved = True
+            if committed_value is not None:
+                errors.append(f"{project_id}: UNRESOLVED committed capex carries a value")
+            if coverage_present:
+                errors.append(f"{project_id}: UNRESOLVED committed capex claims coverage dates")
+        else:
+            if isinstance(committed_value, (int, float)) and not isinstance(committed_value, bool):
+                committed_values.append(float(committed_value))
+                if isinstance(committed_range, list) and len(committed_range) == 2:
+                    committed_range_lows.append(float(committed_range[0]))
+                    committed_range_highs.append(float(committed_range[1]))
+                else:
+                    committed_range_lows.append(float(committed_value))
+                    committed_range_highs.append(float(committed_value))
+            if not coverage_present:
+                errors.append(f"{project_id}: resolved committed capex has no coverage dates")
+
+        committed_doc = project.get("committed_capex_doc")
+        coverage_doc = project.get("coverage_doc")
+        for key, doc in (("committed_capex_doc", committed_doc),
+                         ("coverage_doc", coverage_doc)):
+            if doc not in documents:
+                errors.append(f"{project_id}: {key} is not a valid document key")
+
+        if (h_start is not None and h_end is not None and coverage_present
+                and committed_state != "UNRESOLVED"):
+            under = c_start > h_start or c_end < h_end
+            over = c_start < h_start or c_end > h_end
+            if under and over:
+                errors.append(f"{project_id}: coverage both omits and exceeds the horizon; "
+                              "the amount must be decomposed or UNRESOLVED")
+            elif under and committed_state != "LOWER_BOUND":
+                errors.append(f"{project_id}: under-coverage requires LOWER_BOUND")
+            elif over and committed_state != "UPPER_BOUND":
+                errors.append(f"{project_id}: over-coverage requires UPPER_BOUND")
+
+        execution_state = project.get("execution_capital_state")
+        execution_value = project.get(EXECUTION_CAPITAL_FIELD)
+        execution_range = project.get("execution_capital_range_aud_m")
+        execution_interval = _directional_interval(
+            execution_value, execution_state, execution_range)
+        if execution_interval is None:
+            errors.append(f"{project_id}: invalid execution-capital amount/state/range")
+        else:
+            execution_lower += execution_interval[0]
+            execution_upper = (execution_upper + execution_interval[1]
+                               if math.isfinite(execution_upper)
+                               and math.isfinite(execution_interval[1])
+                               else math.inf)
+        if execution_state == "UNRESOLVED":
+            any_execution_unresolved = True
+            if execution_value is not None:
+                errors.append(f"{project_id}: UNRESOLVED execution capital carries a value")
+        elif isinstance(execution_value, (int, float)) and not isinstance(execution_value, bool):
+            execution_values.append(float(execution_value))
+        if project.get("execution_capital_doc") not in documents:
+            errors.append(f"{project_id}: execution_capital_doc is not a valid document key")
+
+    committed = fields.get("committed_capex_aud_m") or {}
+    committed_value = committed.get("v") if isinstance(committed, dict) else None
+    if any_committed_unresolved:
+        if committed_value is not None:
+            errors.append("aggregate committed_capex_aud_m carries a value while a project is UNRESOLVED")
+    elif not isinstance(committed_value, (int, float)) or isinstance(committed_value, bool):
+        errors.append("aggregate committed_capex_aud_m missing despite resolved projects")
+    elif not math.isclose(float(committed_value), sum(committed_values), abs_tol=1e-6):
+        errors.append("project committed capex does not reconcile to committed_capex_aud_m")
+    elif isinstance(committed.get("range"), list):
+        aggregate_range = committed["range"]
+        if (len(aggregate_range) != 2
+                or not math.isclose(float(aggregate_range[0]),
+                                    sum(committed_range_lows), abs_tol=1e-6)
+                or not math.isclose(float(aggregate_range[1]),
+                                    sum(committed_range_highs), abs_tol=1e-6)):
+            errors.append("project committed ranges do not reconcile to committed_capex_aud_m")
+
+    execution = fields.get(EXECUTION_CAPITAL_FIELD) or {}
+    execution_value = execution.get("v") if isinstance(execution, dict) else None
+    if any_execution_unresolved:
+        if execution_value is not None:
+            errors.append(f"aggregate {EXECUTION_CAPITAL_FIELD} carries a value while a project is UNRESOLVED")
+    elif not isinstance(execution_value, (int, float)) or isinstance(execution_value, bool):
+        errors.append(f"aggregate {EXECUTION_CAPITAL_FIELD} missing despite resolved projects")
+    elif not math.isclose(float(execution_value), sum(execution_values), abs_tol=1e-6):
+        errors.append(f"project execution capital does not reconcile to {EXECUTION_CAPITAL_FIELD}")
+    aggregate_execution_interval = _directional_interval(
+        execution.get("v"), execution.get("evidence_state"),
+        execution.get("accuracy_range"))
+    if aggregate_execution_interval is not None:
+        agg_lo, agg_hi = aggregate_execution_interval
+        same_upper = ((math.isinf(agg_hi) and math.isinf(execution_upper))
+                      or math.isclose(agg_hi, execution_upper, abs_tol=1e-6))
+        if (not math.isclose(agg_lo, execution_lower, abs_tol=1e-6)
+                or not same_upper):
+            errors.append(f"project execution-capital interval does not reconcile to {EXECUTION_CAPITAL_FIELD}")
+    return errors
 
 
 def reconcile_resource(c: dict) -> str | None:
@@ -1859,8 +2094,7 @@ def gate_input_invariant(c: dict, field: str, lo: float, hi: float,
 # rather than inferred so that adding a range to some unrelated field cannot
 # silently start deciding a gate.
 GATE2_RANGED_INPUTS = ("aisc_aud_oz", "production_koz_yr",
-                       "committed_capex_aud_m", "undrawn_facilities_aud_m",
-                       "net_debt_aud_m")
+                       "undrawn_facilities_aud_m", "net_debt_aud_m")
 
 
 def disclosed_ranges(c: dict) -> dict[str, tuple[float, float]]:
@@ -1930,178 +2164,170 @@ def gate2_range_invariance(c: dict, ranges: dict[str, tuple[float, float]],
                           if out["strained"] else ""))}
 
 
-def gate2_horizon_coverage(c: dict, cfg: dict) -> dict:
-    """How much of the stress horizon the committed-capex figure actually covers.
+def gate2_capital_interval(c: dict, cfg: dict) -> dict:
+    """Aggregate project Gate 2 capital without imputing missing periods.
 
-    Gate 2 charges `committed_capex_aud_m` against a horizon_years window, and
-    the cohort does not supply it on one basis. Ora Banda's figure is the
-    issuer's own FY27 plus FY28 lines summed; Pantoro's, Regis's, Vault's,
-    Catalyst's and Bellevue's are a single guided year charged against two.
-    Greatland's and Evolution's are whole-project totals that run PAST the
-    window, which over-charges and is safe. A one-year figure against a two-year
-    window is the opposite, and understating a survival cost is the one direction
-    a gate must never err in.
-
-    This reports the shortfall; it does not fill it. Annualising a guided year
-    into an unguided one is `estimation_policy.forbidden` in as many words
-    ("run-rate annualisation or extrapolation of a disclosed period into an
-    undisclosed one"), and a cohort rate transferred onto an unguided period
-    would be the same invention wearing a peer group's clothes. What the engine
-    can honestly say is which names are charged for less than the window they are
-    tested over, and by how many years.
-
-    An ABSENT horizon_years is `unknown`, never `covered`. The record either
-    establishes the period or it does not, and Westgold's does not.
+    Coverage dates determine direction before amounts are summed.  A project
+    record that ends before the Gate 2 horizon is a lower bound; one that runs
+    past the horizon is an upper bound.  The data validator requires those
+    directions to be explicit, and this evaluator preserves them as an interval
+    rather than promoting either side to a point.
     """
-    horizon = cfg["gate2"]["horizon_years"]
-    v = c.get("committed_capex_aud_m")
-    if v is None:
-        return {"state": "absent", "covered_years": None, "shortfall_years": None,
-                "note": "no committed-capex figure — handled by the absent-input "
-                        "invariance sweep, not here"}
-    covered = c.get("committed_capex_aud_m_horizon_years")
-    if covered is None:
-        return {"state": "unknown", "covered_years": None, "shortfall_years": None,
-                "note": f"A${v:,.0f}m is charged against a {horizon:g}y window and the "
-                        "record does not establish what period it covers"}
-    shortfall = max(0.0, horizon - covered)
-    if shortfall <= 1e-9:
-        return {"state": "covered", "covered_years": covered, "shortfall_years": 0.0,
-                "note": f"covers the full {horizon:g}y window"}
-    return {"state": "partial", "covered_years": covered,
-            "shortfall_years": round(shortfall, 2),
-            "note": f"A${v:,.0f}m covers {covered:g}y of a {horizon:g}y window — "
-                    f"{shortfall:g}y of committed spend is unsourced and charged as zero"}
+    projects = c.get(EXECUTION_CAPITAL_PROJECTS_KEY)
+    if not isinstance(projects, list) or not projects:
+        return {
+            "ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+            "upper_aud_m": None,
+            "reason": "no per-project Gate 2 capital records",
+            "projects": [],
+        }
 
+    lower = 0.0
+    upper = 0.0
+    nominal_total = 0.0
+    has_unresolved = False
+    project_rows = []
+    expected_horizon: tuple[date, date] | None = None
+    expected_days = cfg["gate2"]["horizon_years"] * 365.25
 
-def gate2_horizon_materiality(c: dict, cfg: dict, anchor_gold: float,
-                              mcap: float | None, horizon: dict) -> dict:
-    """§3.2 — does the unsourced tail of the stress window decide the verdict?
+    for project in projects:
+        project_id = project.get("project_id", "?") if isinstance(project, dict) else "?"
+        if not isinstance(project, dict):
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None, "reason": "invalid project capital record",
+                    "projects": project_rows}
+        h_start = _iso_date(project.get("gate2_horizon_start"))
+        h_end = _iso_date(project.get("gate2_horizon_end"))
+        if h_start is None or h_end is None or h_start > h_end:
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": f"{project_id} has invalid Gate 2 horizon dates",
+                    "projects": project_rows}
+        if abs((h_end - h_start).days - expected_days) > 2.0:
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": (f"{project_id} horizon is {(h_end - h_start).days} days, "
+                               f"not configured {cfg['gate2']['horizon_years']:g} years"),
+                    "projects": project_rows}
+        if expected_horizon is None:
+            expected_horizon = (h_start, h_end)
+        elif expected_horizon != (h_start, h_end):
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": "project Gate 2 horizons do not match",
+                    "projects": project_rows}
 
-    The horizon shortfall is real: seven constituents charge one guided year of
-    committed capex against a two-year window. What to do about it was the
-    question, and gating on COVERAGE was rejected. The missing number is FY28
-    guidance, and Australian gold miners guide one year ahead — so a coverage
-    rule cannot be satisfied by diligence, only by disclosure format. Ora Banda
-    publishes an FY27+FY28 phasing table and Regis publishes one year; identical
-    solvency, opposite verdicts. This repository has already deleted one rule for
-    grading disclosure habits rather than substance (the capital design's E2) and
-    should not adopt another.
+        interval = _directional_interval(
+            project.get("committed_within_gate2_horizon_aud_m"),
+            project.get("committed_capex_state"),
+            project.get("committed_capex_range_aud_m"),
+        )
+        if interval is None:
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": f"{project_id} has invalid committed-capex evidence",
+                    "projects": project_rows}
+        lo, hi = interval
+        lower += lo
+        upper = upper + hi if math.isfinite(upper) and math.isfinite(hi) else math.inf
+        committed_value = project.get("committed_within_gate2_horizon_aud_m")
+        if project.get("committed_capex_state") == "UNRESOLVED":
+            has_unresolved = True
+        elif isinstance(committed_value, (int, float)) and not isinstance(committed_value, bool):
+            nominal_total += float(committed_value)
 
-    So the test is MATERIALITY, not coverage. Take the recurring annual leg the
-    issuer HAS guided, continue it across the unsourced remainder of the window,
-    and require the pass to survive:
+        c_start = _iso_date(project.get("coverage_start"))
+        c_end = _iso_date(project.get("coverage_end"))
+        if c_start is None or c_end is None:
+            coverage_state = "UNRESOLVED"
+        else:
+            under = c_start > h_start or c_end < h_end
+            over = c_start < h_start or c_end > h_end
+            coverage_state = ("MIXED" if under and over else
+                              "UNDER" if under else "OVER" if over else "EXACT")
+        state = project.get("committed_capex_state")
+        if (coverage_state == "UNRESOLVED" and state != "UNRESOLVED"):
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": f"{project_id} has no usable coverage dates",
+                    "projects": project_rows}
+        if coverage_state == "MIXED":
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": f"{project_id} both omits and exceeds the horizon",
+                    "projects": project_rows}
+        if coverage_state == "UNDER" and state != "LOWER_BOUND":
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": f"{project_id} under-coverage is not a LOWER_BOUND",
+                    "projects": project_rows}
+        if coverage_state == "OVER" and state != "UPPER_BOUND":
+            return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                    "upper_aud_m": None,
+                    "reason": f"{project_id} over-coverage is not an UPPER_BOUND",
+                    "projects": project_rows}
+        project_rows.append({
+            "project_id": project_id,
+            "state": project.get("committed_capex_state"),
+            "lower_aud_m": lo,
+            "upper_aud_m": hi if math.isfinite(hi) else None,
+            "coverage_state": coverage_state,
+            "coverage_start": project.get("coverage_start"),
+            "coverage_end": project.get("coverage_end"),
+            "coverage_note": project.get("coverage_note"),
+        })
 
-        probe = committed_capex + annual_leg × shortfall_years
-        cover = ending_liquidity / (annual_leg × shortfall_years)
+    reported = c.get("committed_capex_aud_m")
+    if ((has_unresolved and reported is not None)
+            or (not has_unresolved
+                and (not isinstance(reported, (int, float))
+                     or isinstance(reported, bool)
+                     or not math.isclose(float(reported), nominal_total,
+                                         abs_tol=1e-6)))):
+        return {"ok": False, "state": "UNRESOLVED", "lower_aud_m": 0.0,
+                "upper_aud_m": None,
+                "reason": "project capital does not reconcile to committed_capex_aud_m",
+                "projects": project_rows}
 
-    Read `probe` as a robustness test and never as an estimate of year two. The
-    engine does not record it, no field is filled from it, and it is exactly the
-    shape gate_input_invariant already uses for an absent input: evaluate at a
-    bound, and require the verdict to hold there. What it asserts is only that a
-    pass must survive the most ordinary continuation of what the issuer itself
-    guided. `gate2.horizon_continuation_cover` sets how much margin that needs.
-
-    Adopted while binding on nobody, which is the §6.4 discipline: the tightest
-    cover in the current book is about 2× at Greatland and Capricorn, whose
-    project legs already over-cover the window, and the loosest is Catalyst at
-    nearly 19×. It would have caught Pantoro — A$51m of headroom against a A$101m
-    guided year is 0.5× — which passed the arithmetic and was removed by a
-    different limb entirely.
-
-    UNTESTED, and said out loud rather than skipped: a name whose record
-    establishes no period has no annual leg to continue, so there is nothing to
-    probe. That is not a horizon question but a capital-STATE question — an
-    unresolved scope — and it belongs to §12.2 item 6 with its own dated trigger.
-    Westgold is the only such name and the routing is a recorded decision, not a
-    silent pass.
-    """
-    if horizon["state"] == "covered" or horizon["state"] == "absent":
-        return {"tested": False, "ok": True, "reason": "no shortfall to test"}
-
-    shortfall = horizon.get("shortfall_years")
-    leg = c.get("committed_capex_aud_m_annual_leg_aud_m")
-    if horizon["state"] == "unknown" or shortfall is None or leg is None:
-        return {"tested": False, "ok": True, "state": "UNTESTED",
-                "reason": ("no period established, so no annual leg to continue — "
-                           "routed to the capital-state item (§12.2 item 6), not "
-                           "silently passed")}
-
-    remainder = leg * shortfall
-    base = c.get("committed_capex_aud_m") or 0.0
-    probe = dict(c)
-    probe["committed_capex_aud_m"] = base + remainder
-    g = gate2_survival(probe, anchor_gold, mcap, cfg)
-    headroom = (gate2_survival(c, anchor_gold, mcap, cfg)
-                .get("detail", {}).get("ending_with_facilities_aud_m"))
-    cover = (headroom / remainder) if remainder > 0 and headroom is not None else None
-    need = cfg["gate2"]["horizon_continuation_cover"]
-
-    out = {"tested": True, "annual_leg_aud_m": leg,
-           "shortfall_years": shortfall,
-           "continued_remainder_aud_m": round(remainder, 1),
-           "probe_capex_aud_m": round(base + remainder, 1),
-           "cover": round(cover, 2) if cover is not None else None,
-           "required_cover": need}
-    if cover is not None and cover < need:
-        return {**out, "ok": False,
-                "reason": (f"the pass does not survive one more year at the guided "
-                           f"A${leg:,.0f}m — headroom A${headroom:,.0f}m is {cover:.2f}× "
-                           f"the unsourced remainder against a {need:.2f}× bar, so the "
-                           f"unguided tail of the window decides the verdict")}
-    return {**out, "ok": True,
-            "reason": (f"survives the guided annual leg continued across the "
-                       f"{shortfall:g}y shortfall — {cover:.1f}× cover"
-                       if cover is not None else "no remainder to continue")}
-
-
-def cohort_range(constituents: list[dict], field: str,
-                 scale_by: str | None = None) -> tuple[float, float] | None:
-    """Empirical range of a field across the names that disclose it.
-
-    Scaled by another field where the quantity depends on company size, so the
-    range transfers between a 50 koz producer and a 1,500 koz one. Cohort-derived
-    and never asserted: if fewer than three names disclose it there is no range,
-    and the caller must fail rather than guess a bound.
-    """
-    if scale_by:
-        vals = [c[field] / c[scale_by] for c in constituents
-                if c.get(field) is not None and c.get(scale_by)]
+    if math.isfinite(upper) and math.isclose(lower, upper, abs_tol=1e-12):
+        state = "POINT"
+    elif math.isfinite(upper):
+        state = "UPPER_BOUND" if lower == 0 else "BOUNDED_RANGE"
+    elif lower > 0:
+        state = "LOWER_BOUND"
     else:
-        vals = [c[field] for c in constituents if c.get(field) is not None]
-    return (min(vals), max(vals)) if len(vals) >= 3 else None
+        state = "UNRESOLVED"
+    start, end = expected_horizon or (None, None)
+    return {
+        "ok": True,
+        "state": state,
+        "lower_aud_m": lower,
+        "upper_aud_m": upper if math.isfinite(upper) else None,
+        "gate2_horizon_start": start.isoformat() if start else None,
+        "gate2_horizon_end": end.isoformat() if end else None,
+        "projects": project_rows,
+        "reason": None,
+    }
 
 
 def gold_anchor(aud_gold_series: list[tuple[str, float]], spot_aud: float,
                 cfg: dict) -> dict:
-    """The price Gate 2's drawdown is applied to (§3, config gate2.anchor).
+    """Trailing real-gold reference for the conservative reporting NAV deck.
 
-    Applying the drawdown to SPOT makes a survival gate mechanically weakest at
-    exactly the moment survival risk is highest — the more extended the price,
-    the higher the floor the test is measured down from. That is backwards, and
-    it showed: at 40% off A$6,170 the stress price was A$3,702, roughly 2023
-    levels, and every producer in the universe passed. The gate filtered
-    nothing.
-
-    A trailing real average fixes it structurally rather than by re-picking a
-    number. As spot runs ahead of the average the effective shock deepens on its
-    own, so the calibration does not have to be revisited every cycle.
+    Before v1.7 this was also the Gate 2 origin. Producer health now applies its
+    literal drawdown to spot; this reference remains because the reporting-only
+    NAV model needs a conservative long-term deck.
 
     Past prices are inflated to today's money at anchor_inflation_pa. That is
-    not a softener for its own sake: the AISC path in gate2_survival compounds
-    at cost_inflation_pa, so an anchor drawn from historical prices has to be in
-    the same money or the test silently compares today's costs against
-    yesterday's dollars.
+    required for a like-for-like reporting deck.
     """
     g = cfg["gate2"]
-    dd = g["gold_drawdown"]
 
     if g.get("anchor") != "trailing_average" or not aud_gold_series:
         why = ("configured to spot" if g.get("anchor") != "trailing_average"
                else "NO GOLD HISTORY — fell back to spot")
-        return {"anchor_aud": spot_aud, "stress_aud": spot_aud * (1.0 - dd),
+        return {"anchor_aud": spot_aud,
                 "basis": f"spot ({why})", "n_obs": 0,
-                "effective_dd_from_spot": dd,
                 "degraded": g.get("anchor") == "trailing_average"}
 
     years = g.get("anchor_years", 3.0)
@@ -2113,17 +2339,14 @@ def gold_anchor(aud_gold_series: list[tuple[str, float]], spot_aud: float,
     adjusted = [p * (1.0 + infl) ** ((n - 1 - i) / TRADING_DAYS)
                 for i, p in enumerate(v for _, v in window)]
     anchor = sum(adjusted) / n
-    stress = anchor * (1.0 - dd)
 
     return {
         "anchor_aud": anchor,
-        "stress_aud": stress,
         "basis": (f"trailing {years:g}y real average of AUD gold, "
                   f"{window[0][0]}→{window[-1][0]}, "
                   f"inflated to today at {infl:.1%}/yr"),
         "n_obs": n,
         "years_available": round(n / TRADING_DAYS, 2),
-        "effective_dd_from_spot": 1.0 - stress / spot_aud if spot_aud else None,
         "degraded": n < int(round(years * TRADING_DAYS)) * 0.8,
     }
 
@@ -2318,14 +2541,56 @@ def execution_capital_ledger(c: dict, ev_aud_m: float, cfg: dict,
 
 
 def gate2_survival(c: dict, anchor_gold: float, mcap_aud_m: float | None,
-                   cfg: dict, stress_gold: float | None = None) -> dict:
-    """Methodology §3 — binary survival gate. Never a tilt.
+                   cfg: dict, stress_gold: float | None = None,
+                   normal_gold: float | None = None) -> dict:
+    """Methodology §3 — producer health under a severe but repairable shock.
 
-    Producers face one question: does the company reach the other side of a 40%
-    real gold drawdown without issuing equity? The drawdown is applied to
-    anchor_gold — a trailing real average, not spot; see gold_anchor. Callers
-    that need a specific stress price (the breaking-point sweep) pass
-    stress_gold directly.
+    Gate 2 excludes demonstrated distress, not every company that might need
+    financing.  The adverse edge of a finite capital interval is used where it
+    exists.  A lower-bound or unresolved record contributes only its sourced,
+    unavoidable lower edge and makes the result AMBER rather than inventing a
+    future commitment.  GREEN and AMBER remain eligible; RED is excluded.
+    """
+    if c.get("sleeve") == "developer":
+        return _gate2_developer(c, mcap_aud_m, cfg)
+
+    capital = gate2_capital_interval(c, cfg)
+    lower = capital.get("lower_aud_m") or 0.0
+    upper = capital.get("upper_aud_m") if capital.get("ok") else None
+    complete = upper is not None
+    tested_capex = upper if complete else lower
+    health = _gate2_producer_at_capex(
+        c, anchor_gold, cfg, tested_capex, mcap_aud_m=mcap_aud_m,
+        stress_gold=stress_gold, normal_gold=normal_gold)
+    if health.get("pass") is not True:
+        return {**health, "capital_interval": capital, "provisional": False}
+    if complete:
+        return {**health, "capital_interval": capital, "provisional": False}
+
+    evidence = (capital.get("reason") or
+                f"only A${lower:,.0f}m of unavoidable commitments is sourced")
+    detail = {**(health.get("detail") or {}),
+              "capital_evidence_complete": False,
+              "capital_evidence_note": evidence}
+    return {
+        **health, "pass": True, "health": "AMBER", "detail": detail,
+        "reason": (f"AMBER — health check uses A${lower:,.0f}m of sourced "
+                   f"unavoidable commitments; future discretionary or unresolved "
+                   f"capital is not assumed ({evidence})"),
+        "capital_interval": capital, "provisional": True,
+    }
+
+
+def _gate2_producer_at_capex(c: dict, anchor_gold: float, cfg: dict,
+                             capex_val: float,
+                             stress_gold: float | None = None,
+                             normal_gold: float | None = None,
+                             mcap_aud_m: float | None = None) -> dict:
+    """Evaluate producer damage and recovery at one explicit capital amount.
+
+    A deficit is not automatically fatal.  It is RED only when the rescue raise
+    is too large relative to market capitalisation or normalised cash generation
+    would take too many years to repair it.  Smaller deficits are AMBER.
 
     Three things about the construction matter.
 
@@ -2339,22 +2604,25 @@ def gate2_survival(c: dict, anchor_gold: float, mcap_aud_m: float | None,
     drawdown; contracted spend is not. Counting all growth capex would fail
     almost every producer for spending they would simply stop.
 
-    Missing inputs make the test EASIER, which is the wrong direction for a
-    survival gate. A name that passes without a sourced committed-capex figure
-    is returned as provisional rather than as a clean pass.
+    Direction and missing evidence are resolved by :func:`gate2_survival`
+    before this point; this helper performs no defaulting or inference.
     """
     g = cfg["gate2"]
+    max_rescue_ratio = g["producer_max_rescue_capital_of_mcap"]
+    max_recovery_years = g["producer_max_recovery_years"]
+    if not 0.0 <= max_rescue_ratio <= 1.0:
+        raise ValueError("gate2.producer_max_rescue_capital_of_mcap must be in [0, 1]")
+    if max_recovery_years <= 0:
+        raise ValueError("gate2.producer_max_recovery_years must be positive")
     if stress_gold is None:
         stress_gold = anchor_gold * (1.0 - g["gold_drawdown"])
+    normal_gold = normal_gold if normal_gold is not None else anchor_gold
     horizon = g["horizon_years"]
-
-    if c.get("sleeve") == "developer":
-        return _gate2_developer(c, mcap_aud_m, cfg)
 
     prod = c.get("production_koz_yr")
     aisc = c.get("aisc_aud_oz")
     if prod is None or aisc is None:
-        return {"pass": None, "reason": "production or AISC unsourced — survival "
+        return {"pass": None, "reason": "production or AISC unsourced — health "
                                         "cannot be tested", "provisional": True}
 
     # AISC is defined to include sustaining capital, so margin x ounces is a fair
@@ -2384,13 +2652,22 @@ def gate2_survival(c: dict, anchor_gold: float, mcap_aud_m: float | None,
     # net_debt is negative when the company is in net cash.
     opening = -(c.get("net_debt_aud_m") or 0.0)
     undrawn = c.get("undrawn_facilities_aud_m") or 0.0
-    capex = c.get("committed_capex_aud_m")
-    capex_val = capex or 0.0
-
     ending_strict = opening + fcf_horizon - capex_val
     ending_full = ending_strict + (undrawn if g["count_undrawn_facilities"] else 0.0)
-
-    passed = ending_full >= 0.0
+    rescue_gap = max(0.0, -ending_full)
+    rescue_ratio = (rescue_gap / mcap_aud_m
+                    if mcap_aud_m is not None and mcap_aud_m > 0 else None)
+    normal_margin = normal_gold - aisc * (1.0 + infl)
+    normal_fcf = prod * 1_000 * normal_margin / 1e6
+    if normal_fcf > 0:
+        normal_fcf *= (1.0 - g["tax_rate"])
+    recovery_years = (rescue_gap / normal_fcf if rescue_gap and normal_fcf > 0
+                      else 0.0 if not rescue_gap else math.inf)
+    red = rescue_gap > 0 and (
+        rescue_ratio is None
+        or rescue_ratio > max_rescue_ratio
+        or recovery_years > max_recovery_years)
+    health = "RED" if red else "AMBER" if rescue_gap else "GREEN"
     detail = {
         "stress_gold_aud": round(stress_gold),
         "margin_aud_oz": round(margin),
@@ -2402,41 +2679,40 @@ def gate2_survival(c: dict, anchor_gold: float, mcap_aud_m: float | None,
         "ending_strict_aud_m": round(ending_strict, 1),
         "ending_with_facilities_aud_m": round(ending_full, 1),
         "survives_on_cash_alone": ending_strict >= 0.0,
+        "rescue_capital_aud_m": round(rescue_gap, 1),
+        "rescue_capital_of_mcap": (round(rescue_ratio, 3)
+                                    if rescue_ratio is not None else None),
+        "normal_gold_aud": round(normal_gold),
+        "normal_fcf_annual_aud_m": round(normal_fcf, 1),
+        "recovery_years": (round(recovery_years, 2)
+                            if math.isfinite(recovery_years) else None),
     }
-
-    if passed:
-        reason = (f"survives: A${ending_full:,.0f}m at A${stress_gold:,.0f}/oz over "
-                  f"{horizon:g}y" + ("" if detail["survives_on_cash_alone"]
-                                     else " — but ONLY by drawing facilities"))
+    if health == "GREEN":
+        reason = (f"GREEN — A${ending_full:,.0f}m headroom after {horizon:g}y at "
+                  f"A${stress_gold:,.0f}/oz")
     else:
-        reason = (f"FAILS: A${ending_full:,.0f}m shortfall at A${stress_gold:,.0f}/oz "
-                  f"over {horizon:g}y (margin A${margin:,.0f}/oz)")
-
-    return {"pass": passed, "reason": reason, "detail": detail,
-            "provisional": capex is None and passed}
+        years = (f"{recovery_years:.1f}y" if math.isfinite(recovery_years)
+                 else "no positive normalised cash flow")
+        ratio_text = (f"{rescue_ratio:.0%} of market cap"
+                      if rescue_ratio is not None else "market-cap burden unavailable")
+        reason = (f"{health} — A${rescue_gap:,.0f}m rescue capital, "
+                  f"{ratio_text}, recovery {years}")
+    return {"pass": not red, "health": health, "reason": reason,
+            "detail": detail, "provisional": False}
 
 
 def breaking_point(c: dict, spot_aud: float, cfg: dict,
+                   mcap_aud_m: float | None = None,
                    step: float = 0.01) -> float | None:
-    """Drawdown FROM SPOT at which a producer first fails Gate 2. Diagnostic.
+    """Drawdown FROM SPOT at which producer health first turns RED.
 
-    The gate is binary because the methodology requires it (§3), and binary is
-    right for a lexicographic architecture — nothing downstream may buy a name
-    past insolvency, and there is nothing downstream that could try.
-    But binary throws away the useful information.
-    The breaking point is what actually separates the cohort: Ora Banda fails
-    around 53%, Capricorn never fails inside a 95% drawdown.
-
-    Measured from SPOT deliberately, even though the gate itself now anchors to
-    a trailing average. "Breaks at 53%" is only meaningful to a reader against
-    the price on the screen; quoting it against an average would make the number
-    incomparable to the drawdown anyone is actually imagining.
-
-    Report both. The gate decides; this ranks.
+    The gate excludes only RED health. This diagnostic deepens the literal spot
+    shock until rescue capital exceeds a health threshold; it therefore ranks
+    the cushion without adding another construction rule.
     """
     dd = step
     while dd <= 0.95:
-        if gate2_survival(c, spot_aud, None, cfg,
+        if gate2_survival(c, spot_aud, mcap_aud_m, cfg,
                           stress_gold=spot_aud * (1.0 - dd)).get("pass") is False:
             return dd
         dd += step
@@ -2569,9 +2845,9 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
     ounces that its ounces represent, per dollar of enterprise value paid for
     them, and that is the entire statement of the strategy.
 
-    gold_aud is spot, used for the breaking-point diagnostic and the §9 NAV
-    report. anchor_gold is what Gate 2's drawdown is applied to and defaults to
-    spot only when no history was available to build the anchor from.
+    gold_aud is spot, used for Gate 2, the breaking-point diagnostic and the §9
+    NAV report. anchor_gold is the conservative reporting deck; it does not
+    affect eligibility or weights.
 
     `navs` is the §9 NAV model output. It is carried onto the rows for reporting
     and is never read by the weight — see nav_model.py.
@@ -2587,9 +2863,6 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
     # against the wall clock, so a build is reproducible: replaying today's data
     # in six months must reject what it rejected today.
     as_of = date.fromisoformat(as_of) if as_of else datetime.now(timezone.utc).date()
-    # Per-oz-of-annual-production, so the range transfers across the size range.
-    capex_range = cohort_range(constituents, "committed_capex_aud_m",
-                               "production_koz_yr")
     rows: list[dict] = []
     rejected: list[dict] = []
     floor = meta["gates"]["purity_floor_gold_nav_share"]
@@ -2653,8 +2926,8 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
 
         # §3 — a facility that lapses inside the stress window is not stress
         # liquidity. Applied to the record BEFORE the gate so that every probe
-        # downstream — the breaking point, the invariance sweeps, the
-        # continuation test — sees the same corrected liquidity.
+        # downstream — the breaking point and invariance sweeps — sees the same
+        # corrected liquidity.
         creditable, facility_note = creditable_undrawn(c, meta, as_of)
         if facility_note:
             c = {**c, "undrawn_facilities_aud_m": creditable}
@@ -2664,45 +2937,24 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
         # market cap to size the funding gap. Nothing downstream can buy a name
         # past a Gate 2 failure: a name that fails is rejected outright, never
         # weighted down.
-        g2 = gate2_survival(c, anchor_gold, mcap_aud_m, meta)
+        stress_basis = meta["gate2"]["stress_price_basis"]
+        if stress_basis != "spot":
+            raise ValueError(f"gate2.stress_price_basis is {stress_basis!r}; "
+                             "the health check implements a literal drawdown "
+                             "from spot")
+        g2 = gate2_survival(c, gold_aud, mcap_aud_m, meta)
         g2["facility_note"] = facility_note
         if g2["pass"] is not True:
             reject(f"GATE 2 — {g2['reason']}")
             continue
 
-        # estimation_policy: a Gate 2 pass obtained only because an input is
-        # missing is not a pass. Rather than fill the value in, ask whether the
-        # verdict survives the whole range the cohort reports.
-        if g2.get("provisional") and capex_range:
-            prod = c.get("production_koz_yr")
-            if prod:
-                ok, why = gate_input_invariant(
-                    c, "committed_capex_aud_m", capex_range[0] * prod,
-                    capex_range[1] * prod, anchor_gold, mcap_aud_m, meta)
-                g2["invariance"] = why
-                if not ok:
-                    reject(f"GATE 2 UNRESOLVED — {why}")
-                    continue
-
         # §3.2 — the same doctrine, for an input that IS present but was recorded
         # at the midpoint of a range the issuer published. Absence was already
         # caught above; a published range was not, and it is the same question.
         g2["range_invariance"] = gate2_range_invariance(
-            c, disclosed_ranges(c), anchor_gold, mcap_aud_m, meta)
+            c, disclosed_ranges(c), gold_aud, mcap_aud_m, meta)
         if not g2["range_invariance"]["ok"]:
             reject(f"GATE 2 UNRESOLVED — {g2['range_invariance']['reason']}")
-            continue
-
-        # §3.2 — whether the committed-capex figure spans the window it is
-        # charged against. The COVERAGE is reported and never gated: filling the
-        # shortfall would be the forbidden extrapolation, and gating on it would
-        # grade disclosure format rather than solvency. What gates is whether the
-        # shortfall could decide anything.
-        g2["horizon"] = gate2_horizon_coverage(c, meta)
-        g2["horizon_materiality"] = gate2_horizon_materiality(
-            c, meta, anchor_gold, mcap_aud_m, g2["horizon"])
-        if not g2["horizon_materiality"]["ok"]:
-            reject(f"GATE 2 UNRESOLVED — {g2['horizon_materiality']['reason']}")
             continue
 
         # ── GATE 3 (§4) — tradability, binary ────────────────────────────────
@@ -2763,7 +3015,7 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             "raw": oz / all_in_ev_aud_m,
             "shares_src": shares_src,
             "gate2": g2, "gate3": g3,
-            "breaking_point": breaking_point(c, gold_aud, meta),
+            "breaking_point": breaking_point(c, gold_aud, meta, mcap_aud_m),
             "reserve_price_aud": c.get("reserve_price_aud"),
             "resource_price_aud": c.get("resource_price_aud"),
             "mr_total_moz": c.get("mr_total_moz"),
@@ -3013,8 +3265,24 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
         return single_asset_cap if r.get("single_asset") is True else single
 
     caps = {r["ticker"]: ceiling(r) for r in rows}
+    producer_capacity = sum(caps[r["ticker"]] for r in rows
+                            if r["sleeve"] != "developer")
+    developer_capacity = min(
+        con["max_developer_sleeve"],
+        sum(caps[r["ticker"]] for r in rows if r["sleeve"] == "developer"),
+    )
+    feasible_capacity = producer_capacity + developer_capacity
+    if feasible_capacity < 1.0 - 1e-12:
+        raise ValueError(
+            "constraint set is infeasible for the surviving universe: name and "
+            f"sleeve caps provide only {feasible_capacity:.1%} total capacity")
     precap = {r["ticker"]: r["weight"] for r in rows}
     _cap_and_redistribute(rows, caps)
+    breaches = [r["ticker"] for r in rows
+                if r["weight"] > caps[r["ticker"]] + 1e-9]
+    if breaches:
+        raise AssertionError("cap redistribution left breaches: "
+                             + ", ".join(sorted(breaches)))
 
     bound = [r["ticker"] for r in rows
              if precap[r["ticker"]] > caps[r["ticker"]] + 1e-9]
@@ -3304,54 +3572,29 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
 
 
 def print_gate2_basis(rows: list[dict]) -> None:
-    """§3.2 — the two things Gate 2 knows about its own inputs and used not to say.
-
-    Both were invisible before 19 Aug 2026, and invisible in the direction that
-    flatters: a survival gate charged for one year of a two-year window, and a
-    survival gate settled by the midpoint of a range whose other end says the
-    opposite. The names that pass are printed with the basis they passed on.
-    """
+    """Print the evidence basis behind accepted Gate 2 verdicts."""
     dropped = [r for r in rows if (r.get("gate2") or {}).get("facility_note")]
-    partial = [(r, r["gate2"]["horizon"]) for r in rows
-               if (r.get("gate2") or {}).get("horizon", {}).get("state")
-               in ("partial", "unknown")]
+    intervals = [(r, r["gate2"]["capital_interval"]) for r in rows
+                 if (r.get("gate2") or {}).get("capital_interval")]
     strained = [r for r in rows
                 if (r.get("gate2") or {}).get("range_invariance", {}).get("strained")]
-    if not partial and not strained and not dropped:
+    if not intervals and not strained and not dropped:
         return
 
-    print("\nGATE 2 INPUT BASIS (§3.2) — reported, and the reason PNR is not in the book")
-    if partial:
-        print("  Committed capex is charged against a 2y stress window. These names are "
-              "charged for less,")
-        print("  and the COVER column is what decides them: headroom over the guided "
-              "annual leg")
-        print("  continued across the unsourced tail (§3.2, gate2.horizon_continuation_cover).")
-        for r, h in sorted(partial, key=lambda x: (x[0]["gate2"]["horizon_materiality"]
-                                                   .get("cover") or 1e9)):
-            m = r["gate2"]["horizon_materiality"]
-            span = ("period NOT ESTABLISHED" if h["state"] == "unknown"
-                    else f"{h['covered_years']:g}y of 2y")
-            cover = (f"{m['cover']:>5.1f}x" if m.get("cover") is not None
-                     else "UNTESTED")
-            leg = (f"leg A${m['annual_leg_aud_m']:,.0f}m" if m.get("annual_leg_aud_m")
-                   else "no annual leg to continue")
-            print(f"    {r['ticker']:<5} A${r['gate2']['detail']['committed_capex_aud_m']:>7,.0f}m  "
-                  f"{span:<22} {cover:>9}   {leg}")
-        print("  The shortfall is NOT filled — annualising a guided year into an unguided "
-              "one is")
-        print("  estimation_policy.forbidden. The probe behind COVER is a robustness test, "
-              "never a")
-        print("  recorded value. Gating on coverage itself was rejected: FY28 guidance does "
-              "not exist")
-        print("  a year ahead, so that rule would grade disclosure format rather than "
-              "solvency.")
-        if any(r["gate2"]["horizon_materiality"].get("state") == "UNTESTED"
-               for r, _ in partial):
-            print("  UNTESTED is not a pass: no established period means no leg to "
-                  "continue, and the")
-            print("  name is routed to the capital-state item, §12.2 item 6, with its own "
-                  "trigger date.")
+    print("\nGATE 2 INPUT BASIS (§3.2) — explicit project intervals")
+    for r, interval in intervals:
+        upper = interval.get("upper_aud_m")
+        span = (f"A${interval['lower_aud_m']:,.0f}m–A${upper:,.0f}m"
+                if upper is not None else
+                f"A${interval['lower_aud_m']:,.0f}m–unbounded")
+        coverage = ", ".join(
+            f"{p['project_id']}:{p['coverage_state'].lower()}"
+            for p in interval.get("projects", []))
+        print(f"    {r['ticker']:<5} {interval['state']:<13} {span:<24} {coverage}")
+    if intervals:
+        print("  A finite adverse upper edge is tested where sourced. Otherwise the known")
+        print("  lower edge is subtracted and the verdict is at least AMBER; incomplete")
+        print("  two-year guidance is disclosed, not invented and not itself exclusionary.")
     if dropped:
         print("  Undrawn facilities NOT credited — a facility that lapses inside the "
               "window is not")
@@ -3559,7 +3802,7 @@ def print_capacity(cap: dict, euraud: float) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Build the SJGV v1.0 index and optionally size a basket.")
+        description="Build the SJGV v1.7 index and optionally size a basket.")
     ap.add_argument("amount", nargs="?", type=float, default=None,
                     help="EUR amount to size the basket for (e.g. 1000000).")
     ap.add_argument("--euraud", type=float, default=None,
@@ -3690,20 +3933,19 @@ def main() -> int:
                   "numéraire and reads LOW for these names. Treat any β_gold "
                   "below the 1.4 floor as unproven until this resolves.")
 
-    # Gate 2 anchor (§3). Built from the same AUD gold series the regression
-    # uses, so the gate and the beta are measured in one numéraire.
+    # Trailing real reference for the reporting-only conservative NAV deck.
     aud_gold_series = [(d, g / fx) for d, g, fx
                        in _join(md["gold_history"], md.get("audusd_history") or [])
                        if fx > 0]
     anchor = gold_anchor(aud_gold_series, gold_aud, meta)
-    eff = anchor["effective_dd_from_spot"]
-    print(f"Gate 2 anchor A${anchor['anchor_aud']:,.0f}/oz — {anchor['basis']}")
-    print(f"  stress price A${anchor['stress_aud']:,.0f}/oz "
-          f"= {meta['gate2']['gold_drawdown']:.0%} off the anchor"
-          + (f", {eff:.0%} off spot" if eff is not None else ""))
+    print(f"Trailing real gold reference A${anchor['anchor_aud']:,.0f}/oz — "
+          f"{anchor['basis']} (reporting NAV deck)")
+    print(f"  Gate 2 health stress "
+          f"A${gold_aud * (1-meta['gate2']['gold_drawdown']):,.0f}/oz "
+          f"= {meta['gate2']['gold_drawdown']:.0%} off current spot")
     if anchor["degraded"]:
-        print("  WARNING: anchor is degraded — the gate is running against spot or "
-              "a short window, which is the LENIENT direction for a survival test.")
+        print("  WARNING: trailing NAV reference is degraded — using spot or a short "
+              "window. Gate 2 is unaffected because its stress starts at spot.")
 
     # ── §8 NAV model ─────────────────────────────────────────────────────────
     # Runs on every build whether or not its output is allowed to reach a
@@ -3748,9 +3990,10 @@ def main() -> int:
         for r in sorted(rejected, key=lambda x: x["ticker"]):
             print(f"  {r['ticker']:<6} {r['sleeve']:<14} {r['reason']}")
 
-    print(f"\nGATE 2 — SURVIVAL (§3): {meta['gate2']['gold_drawdown']:.0%} real gold "
-          f"drawdown off the {anchor['basis'].split(',')[0]}, "
-          f"A${anchor['stress_aud']:,.0f}/oz over "
+    gate2_stress = gold_aud * (1.0 - meta["gate2"]["gold_drawdown"])
+    print(f"\nGATE 2 — PRODUCER HEALTH (§3): "
+          f"{meta['gate2']['gold_drawdown']:.0%} AUD-gold drawdown off spot, "
+          f"A${gate2_stress:,.0f}/oz over "
           f"{meta['gate2']['horizon_years']:g}y, run unhedged. BREAKS is off spot.")
     print(f"  {'TICK':<6}{'MARGIN':>9}{'FCF/yr':>10}{'OPEN':>9}{'UNDRAWN':>9}"
           f"{'CAPEX':>8}{'ENDING':>10}{'BREAKS':>8}  VERDICT")
@@ -3759,15 +4002,14 @@ def main() -> int:
         d = (r.get("gate2") or {}).get("detail") or {}
         if not d or "margin_aud_oz" not in d:
             continue
-        flag = "" if d["survives_on_cash_alone"] else "  (facilities needed)"
-        if r["gate2"].get("provisional"):
-            flag += "  PROVISIONAL: committed capex unsourced"
+        health = (r.get("gate2") or {}).get("health") or "PASS"
+        flag = "" if d["survives_on_cash_alone"] else "  (financing needed)"
         bp = r.get("breaking_point")
         bp_s = f"{bp*100:.0f}%" if bp else ">95%"
         print(f"  {r['ticker']:<6}{d['margin_aud_oz']:>9,.0f}"
               f"{d['fcf_annual_aud_m']:>10,.0f}{d['opening_liquidity_aud_m']:>9,.0f}"
               f"{d['undrawn_aud_m']:>9,.0f}{d['committed_capex_aud_m']:>8,.0f}"
-              f"{d['ending_with_facilities_aud_m']:>10,.0f}{bp_s:>8}  pass{flag}")
+              f"{d['ending_with_facilities_aud_m']:>10,.0f}{bp_s:>8}  {health}{flag}")
     g2fails = [r for r in rejected if r["reason"].startswith("GATE 2")]
     for r in sorted(g2fails, key=lambda x: x["ticker"]):
         print(f"  {r['ticker']:<6}{'':>45}  FAIL — {r['reason'][8:][:70]}")
@@ -3784,13 +4026,15 @@ def main() -> int:
     prov = [r for r in rows if (r.get("gate2") or {}).get("provisional")]
     if prov:
         tickers = sorted(r["ticker"] for r in prov)
-        print(f"  Gate 2 passed on an ABSENT input for {len(prov)}: {', '.join(tickers)}")
-        print(f"    Per config.estimation_policy the value was NOT filled in. The gate was")
-        print(f"    re-run at both ends of the range the cohort reports and the verdict did")
-        print(f"    not change, so the missing number cannot decide the outcome:")
+        print(f"  Gate 2 AMBER on incomplete commitment evidence for {len(prov)}: "
+              f"{', '.join(tickers)}")
+        print("    Only the sourced unavoidable lower edge was subtracted. No future spend")
+        print("    was filled in or treated as zero; complete two-year guidance is not an")
+        print("    admission condition under the producer health check:")
         for r in sorted(prov, key=lambda x: x["ticker"]):
-            inv = (r.get("gate2") or {}).get("invariance")
-            print(f"      {r['ticker']}: {inv or 'range unavailable — fewer than 3 disclosures'}")
+            note = ((r.get("gate2") or {}).get("detail") or {}).get(
+                "capital_evidence_note", "commitment evidence incomplete")
+            print(f"      {r['ticker']}: {note}")
     untested3 = [r["ticker"] for r in rows if (r.get("gate3") or {}).get("pass") is None]
     if untested3:
         print(f"  Gate 3 NOT TESTED for {len(untested3)}/{len(rows)}: "
@@ -3849,7 +4093,7 @@ def main() -> int:
         "market_input": bundle,
         # The numéraire the regression ran in ("AUD" / "USD (fallback…)").
         "regressor_basis": bases,
-        "gate2_anchor": anchor,
+        "gold_reference": anchor,
         "resource_reconciliation": impute_notes,
         "reserve_deck_unsourced": no_deck,
         "stats": stats, "constraints": con,

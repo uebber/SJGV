@@ -83,11 +83,11 @@ FIELDS = {
                                           "P&P tranche — no weight moves",
                             "R&R statement, material assumptions / JORC Table 1", None),
     # Blocking, not degrading, for anything on the producer Gate 2 path: absent
-    # AISC makes survival untestable and the name is rejected. For a DEVELOPER it
+    # AISC makes producer health untestable and the name is rejected. For a DEVELOPER it
     # would only mute Channel 3 and degrade — no developer currently lacks it, so
     # that case is not modelled; add a separate entry if one ever does.
     "aisc_aud_oz":         ("blocking",  "Gate 2 cannot be tested without a cost base — "
-                                         "survival unknown, so the name is rejected",
+                                         "health unknown, so the name is rejected",
                             "quarterly activities report", PRODUCER_PATH),
     # Blocking. The hedge book is SUBTRACTED from the ounce ledger
     # (§6.3) rather than applied as a score multiplier, and an unknown short
@@ -108,12 +108,12 @@ FIELDS = {
     # why the audit read "blocked 2" while the engine was rejecting seven names
     # and flagging eight more as provisional. An auditor that under-reports is
     # worse than no auditor: it converts an open gap into a clean bill.
-    "production_koz_yr":   ("blocking",  "Gate 2 cannot be tested — survival is "
+    "production_koz_yr":   ("blocking",  "Gate 2 cannot be tested — producer health is "
                                          "unknown, so the name is rejected",
                             "quarterly activities report", PRODUCER_PATH),
     "committed_capex_aud_m": ("provisional",
-                            "Gate 2 passes with contracted spend treated as zero — "
-                            "absence makes a SURVIVAL test easier, not harder",
+                            "producer health is AMBER because unavoidable "
+                            "commitment evidence is incomplete",
                             "annual report, capital commitments note", PRODUCER_PATH),
     "undrawn_facilities_aud_m": ("degrading",
                             "treated as zero — conservative, makes Gate 2 harder",
@@ -264,6 +264,20 @@ def audit(companies: list[dict]) -> list[dict]:
             # longer runs.
             missing.append({"field": name, "severity": sev, "why": why, "where": where})
 
+        if c["sleeve"] in PRODUCER_PATH:
+            projects = c.get("execution_capital_projects") or []
+            states = {p.get("committed_capex_state") for p in projects
+                      if isinstance(p, dict)}
+            if not projects or states & {"LOWER_BOUND", "UNRESOLVED"}:
+                missing.append({
+                    "field": "execution_capital_projects",
+                    "severity": "provisional",
+                    "why": ("unavoidable commitment evidence has no finite "
+                            "adverse upper bound, so producer health is AMBER"),
+                    "where": ("project guidance or commitments disclosure with "
+                              "explicit coverage dates"),
+                })
+
         rows.append({
             "ticker": c["ticker"], "name": c["name"], "sleeve": c["sleeve"],
             "blocked": any(m["severity"] == "blocking" for m in missing),
@@ -322,7 +336,7 @@ def main() -> int:
               f"— no gate or score reads it, so no weight moves")
 
     for title, group in (("BLOCKED — cannot be weighted", blocked),
-                         ("PARTIAL — weights, but a score term is silent", partial)):
+                         ("PARTIAL — weighted with an explicit degraded input", partial)):
         if not group:
             continue
         print(f"\n{'═' * 100}\n{title}\n{'═' * 100}")

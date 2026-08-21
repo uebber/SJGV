@@ -113,6 +113,8 @@ def _capital_inputs(payload: dict) -> dict[str, dict]:
                 "note_sha256": _note_sha256(spec.get("note")),
             })
             captured[field] = item
+        captured[B.EXECUTION_CAPITAL_PROJECTS_KEY] = company.get(
+            B.EXECUTION_CAPITAL_PROJECTS_KEY)
         out[company["ticker"]] = captured
     return out
 
@@ -154,16 +156,14 @@ def _evaluate_gate2(companies: list[dict], cfg: dict, prices: dict[str, dict],
     captures BGL/OBM/PNR/BC8/AAR/AUC rather than preserving only their final
     prose reason.
     """
-    anchor = (actual.get("gate2_anchor") or {}).get("anchor_aud")
-    if anchor is None:
+    stress_reference = actual.get("gold_aud_oz")
+    if stress_reference is None:
         return {}
     try:
         as_of = date.fromisoformat(actual["data_sourced"])
     except (KeyError, TypeError, ValueError):
         return {}
 
-    capex_range = B.cohort_range(companies, "committed_capex_aud_m",
-                                 "production_koz_yr")
     accepted = {row["ticker"] for row in actual.get("weights", [])}
     rejected = {row["ticker"]: row["reason"]
                 for row in actual.get("rejected", [])}
@@ -181,35 +181,17 @@ def _evaluate_gate2(companies: list[dict], cfg: dict, prices: dict[str, dict],
         if facility_note:
             company["undrawn_facilities_aud_m"] = creditable
 
-        gate = B.gate2_survival(company, anchor, mcap, cfg)
+        gate = B.gate2_survival(company, stress_reference, mcap, cfg)
         gate["facility_note"] = facility_note
         stopped_at = "base"
 
         if gate.get("pass") is True:
-            if gate.get("provisional") and capex_range and company.get("production_koz_yr"):
-                production = company["production_koz_yr"]
-                ok, reason = B.gate_input_invariant(
-                    company, "committed_capex_aud_m",
-                    capex_range[0] * production, capex_range[1] * production,
-                    anchor, mcap, cfg)
-                gate["invariance"] = reason
-                if not ok:
-                    stopped_at = "absence_invariance"
-
-            if stopped_at == "base":
-                gate["range_invariance"] = B.gate2_range_invariance(
-                    company, B.disclosed_ranges(company), anchor, mcap, cfg)
-                if not gate["range_invariance"]["ok"]:
-                    stopped_at = "range_invariance"
-
-            if stopped_at == "base":
-                gate["horizon"] = B.gate2_horizon_coverage(company, cfg)
-                gate["horizon_materiality"] = B.gate2_horizon_materiality(
-                    company, cfg, anchor, mcap, gate["horizon"])
-                if not gate["horizon_materiality"]["ok"]:
-                    stopped_at = "horizon_materiality"
-                else:
-                    stopped_at = "passed_gate2"
+            gate["range_invariance"] = B.gate2_range_invariance(
+                company, B.disclosed_ranges(company), stress_reference, mcap, cfg)
+            stopped_at = ("passed_gate2" if gate["range_invariance"]["ok"]
+                          else "range_invariance")
+        elif gate.get("pass") is None and gate.get("capital_interval"):
+            stopped_at = "capital_interval"
 
         pipeline = ({"state": "included", "reason": None} if ticker in accepted
                     else {"state": "rejected", "reason": rejected.get(ticker)})
@@ -317,7 +299,9 @@ def capture(actual_path: Path) -> dict:
             "methodology": actual.get("methodology"),
             "engine_commit": (actual.get("market_input") or {}).get("engine_commit"),
             "constituents": len(actual.get("weights", [])),
-            "gate2_anchor": actual.get("gate2_anchor"),
+            "gate2_anchor": (
+                actual.get("gate2_anchor") or actual.get("gold_reference")
+            ),
             "gold_aud_oz": actual.get("gold_aud_oz"),
         },
         "source_hashes": {
