@@ -25,10 +25,11 @@ where the numerator is built by subtraction, never by scoring:
 
 and the denominator is what those ounces cost all-in:
 
-    FundedEV = market cap + net debt + residual funding gap
+    AllInEV = market cap + net debt + remaining execution capital
 
-The gap matters only for pre-production names, where EV alone prices a company
-that has not yet paid to unlock the ounces the ledger is counting.
+Remaining execution capital is an economic-cost input for every sleeve.  Project
+funding is kept separate and reduces only the residual funding gap used by the
+developer Gate 2 test; it never reduces the denominator.
 
 There is no scoring layer between that ledger and the
 weight: a five-channel convexity score, a purity multiplier, an inverse-σ_idio
@@ -373,6 +374,13 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
         "conditional", "§3.1 D3 — read only when a developer is in the universe"),
     "gate2.horizon_continuation_cover": (
         "engine", "§3.2 — build_index.gate2_horizon_materiality; how much headroom a pass needs against the guided annual leg continued across the unsourced tail of the window"),
+
+    "execution_capital.materiality_of_ev": (
+        "engine", "build_index.execution_capital_ledger — aggregate execution "
+                  "capital below this share of pre-capex EV is de minimis"),
+    "execution_capital.incumbent_max_carry_forward_months": (
+        "engine", "build_index.resolve_execution_capital — maximum age of an "
+                  "unchanged gross incumbent capital balance"),
     "constraints.max_single_name": ("engine", "§8.1 impairment cap"),
     "constraints.max_single_asset_name": (
         "engine", "§8.1 tighter cap for single-asset companies"),
@@ -535,7 +543,12 @@ KNOWN_FIELDS = {
     "aisc_aud_oz", "hedge_share_fwd24m", "net_debt_aud_m", "shares_out_m",
     # Gate 2 (§3) inputs
     "production_koz_yr", "undrawn_facilities_aud_m", "committed_capex_aud_m",
-    "study_stage", "approvals_land_secured", "remaining_capex_aud_m",
+    "study_stage", "approvals_land_secured",
+    # Economic capital is deliberately separate from financing capacity.  The
+    # former reaches every sleeve's denominator; the latter reaches developer
+    # Gate 2 only.  residual_funding_gap_aud_m is derived in the engine and is
+    # therefore intentionally not a data field.
+    "remaining_execution_capex_aud_m", "available_project_funding_aud_m",
     # §4.3 capacity (reported) and §8.1 single-asset concentration.
     #
     # `largest_asset_pp_share` is a float in [0, 1]: the share of the company's
@@ -553,6 +566,12 @@ KNOWN_FIELDS = {
     "advt_shares_m", "largest_asset_pp_share",
 }
 
+CAPITAL_EVIDENCE_STATES = {
+    "POINT", "UPPER_BOUND", "LOWER_BOUND", "CARRY_FORWARD", "UNRESOLVED",
+}
+EXECUTION_CAPITAL_FIELD = "remaining_execution_capex_aud_m"
+PROJECT_FUNDING_FIELD = "available_project_funding_aud_m"
+
 
 def _flatten(record: dict) -> dict:
     """Collapse the per-field provenance schema of data/companies.json into the
@@ -565,7 +584,7 @@ def _flatten(record: dict) -> dict:
     where any number came from. An omitted field stays omitted — the schema
     forbids guessed values, so absence here means genuinely unsourced.
 
-    Two optional sub-keys travel with the value and are flattened alongside it,
+    Optional sub-keys travel with the value and are flattened alongside it,
     because a gate has to be able to read them (§3.2):
 
       `range`          [lo, hi] — the span the ISSUER published, where `v` is
@@ -576,6 +595,10 @@ def _flatten(record: dict) -> dict:
                        the recurring guided portion inside the value, excluding
                        any finite build already spanning the window. Flattened
                        to `<field>_annual_leg_aud_m`.
+      `evidence_state` directional classification used by capital validation.
+      `as_of`           measurement date for an amount, including carry-forward.
+      `cost_base_date`, `accuracy_range`, `contingency_included`
+                       estimate-quality facts retained for capital reporting.
 
     Both are transcriptions of what a cited document already states. Neither may
     be inferred: an omitted `range` means the issuer published a point, and an
@@ -585,6 +608,7 @@ def _flatten(record: dict) -> dict:
     """
     flat = {k: v for k, v in record.items() if k not in ("fields", "documents")}
     flat["_docs"] = record.get("documents", {})
+    flat["_field_specs"] = record.get("fields", {})
     flat["_field_docs"] = {}
     for name, spec in record.get("fields", {}).items():
         flat[name] = spec.get("v")
@@ -596,8 +620,62 @@ def _flatten(record: dict) -> dict:
             flat[f"{name}_annual_leg_aud_m"] = spec["annual_leg_aud_m"]
         if spec.get("term_date") is not None:
             flat[f"{name}_term_date"] = spec["term_date"]
+        for key in ("evidence_state", "as_of", "cost_base_date",
+                    "accuracy_range", "contingency_included"):
+            if key in spec:
+                flat[f"{name}_{key}"] = spec[key]
         flat["_field_docs"][name] = {"doc": spec.get("doc"), "note": spec.get("note")}
     return flat
+
+
+def _validate_capital_schema(record: dict) -> list[str]:
+    """Validate directional capital evidence before it can reach a formula.
+
+    The two issue-3 fields always require an explicit state, including a
+    sourced ``UNRESOLVED`` shell.  Other capital fields are validated whenever
+    they opt into the state machine; issue 4 will make the Gate 2 project bridge
+    mandatory without weakening this validation in the meantime.
+    """
+    errors: list[str] = []
+    fields = record.get("fields", {})
+    ticker = record.get("ticker", "?")
+
+    if "remaining_capex_aud_m" in fields:
+        errors.append("remaining_capex_aud_m is retired; split economic capital "
+                      "from available project funding")
+    if "residual_funding_gap_aud_m" in fields:
+        errors.append("residual_funding_gap_aud_m is engine-derived and may not "
+                      "be stored")
+    if EXECUTION_CAPITAL_FIELD not in fields:
+        errors.append(f"{EXECUTION_CAPITAL_FIELD} missing")
+    if record.get("sleeve") == "developer" and PROJECT_FUNDING_FIELD not in fields:
+        errors.append(f"{PROJECT_FUNDING_FIELD} missing for developer")
+
+    for name, spec in fields.items():
+        if not isinstance(spec, dict):
+            continue
+        state = spec.get("evidence_state")
+        if name in (EXECUTION_CAPITAL_FIELD, PROJECT_FUNDING_FIELD) and state is None:
+            errors.append(f"{name} has no evidence_state")
+            continue
+        if state is None:
+            continue
+        if state not in CAPITAL_EVIDENCE_STATES:
+            errors.append(f"{name} has invalid evidence_state {state!r}")
+            continue
+        value = spec.get("v")
+        if state == "UNRESOLVED":
+            if value is not None:
+                errors.append(f"{name} is UNRESOLVED but carries value {value!r}")
+        elif not isinstance(value, (int, float)) or isinstance(value, bool):
+            errors.append(f"{name} state {state} requires a numeric value")
+        elif not math.isfinite(float(value)) or value < 0:
+            errors.append(f"{name} must be a finite non-negative amount")
+        doc = spec.get("doc")
+        if not doc or doc not in record.get("documents", {}):
+            errors.append(f"{name} evidence_state {state} has no valid document")
+
+    return [f"{ticker}: {error}" for error in errors]
 
 
 def reconcile_resource(c: dict) -> str | None:
@@ -705,11 +783,14 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
 
     companies, notes = [], []
     unknown: dict[str, set[str]] = {}
+    capital_schema_errors: list[str] = []
     for record in payload["companies"]:
         stray = set(record.get("fields", {})) - KNOWN_FIELDS
         if stray:
             unknown[record["ticker"]] = stray
+        capital_schema_errors.extend(_validate_capital_schema(record))
         c = _flatten(record)
+        c["_data_sourced"] = payload.get("_sourced")
         for check in (reconcile_resource, reconcile_eligibility):
             mismatch = check(c)
             if mismatch:
@@ -722,6 +803,10 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
             f"data/companies.json contains field names the engine does not read — "
             f"these would be silently ignored: {detail}. "
             f"Add them to KNOWN_FIELDS or fix the spelling.")
+
+    if capital_schema_errors:
+        raise ValueError("invalid capital evidence schema: "
+                         + "; ".join(capital_schema_errors))
 
     return cfg, companies, payload.get("excluded", []), market, notes
 
@@ -2083,6 +2168,155 @@ def creditable_undrawn(c: dict, cfg: dict, as_of: date) -> tuple[float, str | No
     return amt, None
 
 
+def _capital_as_of(c: dict, field: str) -> date | None:
+    """Return a capital field's explicit as-of date, then its document date."""
+    raw = c.get(f"{field}_as_of")
+    if raw:
+        try:
+            return date.fromisoformat(raw)
+        except (TypeError, ValueError):
+            return None
+    doc_key = (c.get("_field_docs", {}).get(field) or {}).get("doc")
+    raw = (c.get("_docs", {}).get(doc_key) or {}).get("date")
+    if raw:
+        try:
+            return date.fromisoformat(raw)
+        except (TypeError, ValueError):
+            return None
+    return None
+
+
+def _capital_evidence(c: dict, field: str, cfg: dict,
+                      as_of: date) -> dict:
+    """Resolve one directional amount without turning absence into zero."""
+    # Read on every resolution so config_audit can prove the declared consumer
+    # is live even when today's cross-section contains no execution-capital
+    # carry-forward.
+    max_months = cfg["execution_capital"]["incumbent_max_carry_forward_months"]
+    state = c.get(f"{field}_evidence_state")
+    value = c.get(field)
+    out = {"field": field, "state": state, "value_aud_m": value}
+    if state not in CAPITAL_EVIDENCE_STATES:
+        return {**out, "usable": False,
+                "reason": f"{field} evidence state is missing or invalid"}
+    if state == "UNRESOLVED":
+        return {**out, "usable": False,
+                "reason": f"{field} is UNRESOLVED"}
+    if value is None:
+        return {**out, "usable": False,
+                "reason": f"{field} state {state} has no amount"}
+    if state == "CARRY_FORWARD":
+        source_date = _capital_as_of(c, field)
+        if source_date is None:
+            return {**out, "usable": False,
+                    "reason": f"{field} CARRY_FORWARD has no valid as-of date"}
+        age_months = max(0.0, (as_of - source_date).days / DAYS_PER_MONTH)
+        out.update({"source_date": source_date.isoformat(),
+                    "age_months": round(age_months, 2),
+                    "max_age_months": max_months})
+        if age_months > max_months:
+            return {**out, "usable": False,
+                    "reason": (f"{field} CARRY_FORWARD is {age_months:.1f} months "
+                               f"old, above the {max_months:g}-month limit")}
+    return {**out, "usable": True, "reason": None}
+
+
+def _amount_interval(evidence: dict) -> tuple[float, float]:
+    """Convert a validated directional amount to a non-negative interval."""
+    if not evidence.get("usable"):
+        return 0.0, math.inf
+    value = float(evidence["value_aud_m"])
+    state = evidence["state"]
+    if state in ("POINT", "CARRY_FORWARD"):
+        return value, value
+    if state == "UPPER_BOUND":
+        return 0.0, value
+    if state == "LOWER_BOUND":
+        return value, math.inf
+    return 0.0, math.inf
+
+
+def derive_residual_funding_gap(c: dict, cfg: dict,
+                                as_of: date | None = None,
+                                ev_aud_m: float | None = None) -> dict:
+    """Derive the developer funding gap and preserve its direction.
+
+    ``gap = max(0, remaining execution capital - available project funding)``.
+    Intervals prevent a bound from being silently promoted to a point.  Gate 2
+    can therefore prove a pass at the adverse upper gap or a failure at the
+    lower gap; an interval straddling its threshold is unresolved.
+    """
+    if as_of is None:
+        raw = c.get("_data_sourced")
+        as_of = date.fromisoformat(raw) if raw else datetime.now(timezone.utc).date()
+    execution = _capital_evidence(c, EXECUTION_CAPITAL_FIELD, cfg, as_of)
+    funding = _capital_evidence(c, PROJECT_FUNDING_FIELD, cfg, as_of)
+    c_lo, c_hi = _amount_interval(execution)
+    f_lo, f_hi = _amount_interval(funding)
+    materiality = cfg["execution_capital"]["materiality_of_ev"]
+    de_minimis = (ev_aud_m is not None and ev_aud_m > 0
+                  and math.isfinite(c_hi) and c_hi / ev_aud_m < materiality)
+    if de_minimis:
+        c_lo, c_hi = 0.0, 0.0
+    lower = max(0.0, c_lo - f_hi) if math.isfinite(f_hi) else 0.0
+    upper = max(0.0, c_hi - f_lo) if math.isfinite(c_hi) else math.inf
+
+    if math.isfinite(upper) and math.isclose(lower, upper, abs_tol=1e-12):
+        state, amount = "POINT", lower
+    elif math.isfinite(upper):
+        state, amount = "UPPER_BOUND", upper
+    elif lower > 0:
+        state, amount = "LOWER_BOUND", lower
+    else:
+        state, amount = "UNRESOLVED", None
+    return {
+        "state": state,
+        "value_aud_m": amount,
+        "lower_aud_m": lower,
+        "upper_aud_m": upper if math.isfinite(upper) else None,
+        "execution_capital_de_minimis": de_minimis,
+        "execution_capital": execution,
+        "available_project_funding": funding,
+    }
+
+
+def resolve_execution_capital(c: dict, cfg: dict, as_of: date) -> dict:
+    """Admit only denominator-safe execution-capital evidence."""
+    evidence = _capital_evidence(c, EXECUTION_CAPITAL_FIELD, cfg, as_of)
+    if not evidence.get("usable"):
+        return {**evidence, "ok": False}
+    if evidence["state"] == "LOWER_BOUND":
+        return {**evidence, "ok": False,
+                "reason": (f"{EXECUTION_CAPITAL_FIELD} is a LOWER_BOUND; using it "
+                           "would shrink the denominator and raise the weight")}
+    return {**evidence, "ok": True}
+
+
+def execution_capital_ledger(c: dict, ev_aud_m: float, cfg: dict,
+                             as_of: date) -> dict:
+    """Resolve company execution capital and apply aggregate materiality."""
+    materiality = cfg["execution_capital"]["materiality_of_ev"]
+    resolved = resolve_execution_capital(c, cfg, as_of)
+    if not resolved.get("ok"):
+        return resolved
+    disclosed = float(resolved["value_aud_m"])
+    ratio = disclosed / ev_aud_m if ev_aud_m > 0 else math.inf
+    included = disclosed > 0 and ratio >= materiality
+    effective = disclosed if included else 0.0
+    return {
+        **resolved,
+        "ok": True,
+        "disclosed_aud_m": disclosed,
+        "effective_aud_m": effective,
+        "of_ev": ratio,
+        "materiality_of_ev": materiality,
+        "material": included,
+        "reason": (None if included else
+                   ("sourced zero" if disclosed == 0 else
+                    f"below {materiality:.1%} of pre-capex EV")),
+    }
+
+
 def gate2_survival(c: dict, anchor_gold: float, mcap_aud_m: float | None,
                    cfg: dict, stress_gold: float | None = None) -> dict:
     """Methodology §3 — binary survival gate. Never a tilt.
@@ -2115,7 +2349,7 @@ def gate2_survival(c: dict, anchor_gold: float, mcap_aud_m: float | None,
     horizon = g["horizon_years"]
 
     if c.get("sleeve") == "developer":
-        return _gate2_developer(c, mcap_aud_m, g)
+        return _gate2_developer(c, mcap_aud_m, cfg)
 
     prod = c.get("production_koz_yr")
     aisc = c.get("aisc_aud_oz")
@@ -2209,7 +2443,7 @@ def breaking_point(c: dict, spot_aud: float, cfg: dict,
     return None
 
 
-def _gate2_developer(c: dict, mcap_aud_m: float | None, g: dict) -> dict:
+def _gate2_developer(c: dict, mcap_aud_m: float | None, cfg: dict) -> dict:
     """Methodology §3.1 — developers cannot be tested on cash flow.
 
     D3 replaces a binary funded/unfunded test with a bounded-dilution test,
@@ -2217,7 +2451,8 @@ def _gate2_developer(c: dict, mcap_aud_m: float | None, g: dict) -> dict:
     same as a A$300m gap against a A$200m cap. The first is 12% dilution —
     bounded, knowable, priced. The second is a zombie.
     """
-    fails, detail = [], {}
+    g = cfg["gate2"]
+    fails, unresolved, detail = [], [], {}
 
     stage = c.get("study_stage")
     detail["study_stage"] = stage
@@ -2233,21 +2468,40 @@ def _gate2_developer(c: dict, mcap_aud_m: float | None, g: dict) -> dict:
     elif not land:
         fails.append("D2 approvals or land access not secured")
 
-    gap = c.get("remaining_capex_aud_m")
-    if gap is None:
-        fails.append("D3 residual funding gap unsourced")
-    elif mcap_aud_m and mcap_aud_m > 0:
-        ratio = gap / mcap_aud_m
-        detail["funding_gap_aud_m"] = gap
-        detail["funding_gap_of_mcap"] = round(ratio, 3)
-        if ratio > g["developer_max_funding_gap_of_mcap"]:
-            fails.append(f"D3 funding gap {ratio:.0%} of market cap, limit "
-                         f"{g['developer_max_funding_gap_of_mcap']:.0%}")
+    ev = ((mcap_aud_m + (c.get("net_debt_aud_m") or 0.0))
+          if mcap_aud_m is not None else None)
+    gap = derive_residual_funding_gap(c, cfg, ev_aud_m=ev)
+    detail["residual_funding_gap"] = gap
+    if mcap_aud_m and mcap_aud_m > 0:
+        limit_ratio = g["developer_max_funding_gap_of_mcap"]
+        limit = limit_ratio * mcap_aud_m
+        lower = gap["lower_aud_m"]
+        upper = gap["upper_aud_m"]
+        detail["funding_gap_aud_m"] = gap["value_aud_m"]
+        detail["funding_gap_state"] = gap["state"]
+        detail["funding_gap_lower_aud_m"] = lower
+        detail["funding_gap_upper_aud_m"] = upper
+        if upper is not None and upper <= limit:
+            detail["funding_gap_of_mcap"] = round(upper / mcap_aud_m, 3)
+        elif lower > limit:
+            ratio = lower / mcap_aud_m
+            detail["funding_gap_of_mcap"] = round(ratio, 3)
+            fails.append(f"D3 funding gap at least {ratio:.0%} of market cap, limit "
+                         f"{limit_ratio:.0%}")
+        else:
+            hi = "unbounded" if upper is None else f"A${upper:,.0f}m"
+            unresolved.append(
+                f"D3 residual funding gap spans A${lower:,.0f}m–{hi} around the "
+                f"A${limit:,.0f}m limit")
     else:
         fails.append("D3 market cap unavailable — gap cannot be sized")
 
     if fails:
-        return {"pass": False, "reason": "; ".join(fails), "detail": detail,
+        reason = "; ".join(fails + unresolved)
+        return {"pass": False, "reason": reason, "detail": detail,
+                "provisional": False}
+    if unresolved:
+        return {"pass": None, "reason": "; ".join(unresolved), "detail": detail,
                 "provisional": False}
     return {"pass": True, "reason": "passes D1 study stage, D2 approvals and land, "
                                     "D3 bounded dilution",
@@ -2307,7 +2561,7 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
                         navs: dict[str, dict] | None = None,
                         as_of: str | None = None,
                         ) -> tuple[list[dict], list[dict]]:
-    """Apply the §7 formula — claimed unhedged ounces ÷ funded EV. Returns
+    """Apply the §7 formula — claimed unhedged ounces ÷ all-in EV. Returns
     (weighted rows, rejected rows).
 
     There is nothing between the ledger and the weight. No score, no tilt, no
@@ -2458,23 +2712,18 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             continue
 
         # ── The all-in price of the claim (§7) ───────────────────────────────
-        # EV is what the market charges for the company TODAY. For a
-        # pre-production name it is not what the ounces cost, because the ledger
-        # counts ounces the company has not yet paid to unlock: the residual
-        # funding gap has to be spent before a single one of them is mined.
-        #
-        # Measured 18 Aug 2026 on the two developers Gate 2 currently rejects:
-        # AAR reads A$173/oz on EV and A$291/oz all-in, AUC A$320 and A$515.
-        # The discount roughly halves. Left uncorrected, the headline metric
-        # would rank an unfunded developer as the cheapest claim in the universe
-        # on the strength of capital it has not raised.
-        #
-        # A developer whose gap is unsourced never reaches this line — §3.1 D3
-        # rejects it — so absence here cannot silently read as zero for the one
-        # sleeve where that would flatter. For a producer the field is absent
-        # because there is no pre-production capital, and zero is correct.
-        funding_gap = c.get("remaining_capex_aud_m") or 0.0
-        funded_ev_aud_m = ev_aud_m + funding_gap
+        # Funding availability answers whether a developer can finance a build;
+        # it does not make that build free.  The denominator therefore adds the
+        # gross remaining execution cost once, for every sleeve.  Gate 2 alone
+        # consumes the separately derived residual funding gap.
+        execution = execution_capital_ledger(c, ev_aud_m, meta, as_of)
+        if not execution.get("ok"):
+            reject(f"EXECUTION CAPITAL — {execution['reason']}")
+            continue
+        execution_capital = execution["effective_aud_m"]
+        all_in_ev_aud_m = ev_aud_m + execution_capital
+        residual_gap = (g2.get("detail", {}).get("residual_funding_gap")
+                        if c.get("sleeve") == "developer" else None)
 
         # Risk stats are diagnostics now, so their absence no longer excludes a
         # name. Under the old formula σ_idio was the weight denominator, which
@@ -2489,9 +2738,20 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             "claimed_moz": oz, "ledger": ledger, "purity": purity,
             "statement_age_months": age_months,
             "ev_aud_m": ev_aud_m, "mcap_aud_m": mcap_aud_m, "price_aud": px,
-            "funding_gap_aud_m": funding_gap,
-            "funded_ev_aud_m": funded_ev_aud_m,
-            "aud_per_oz": funded_ev_aud_m / oz,
+            "remaining_execution_capex_aud_m": execution_capital,
+            "execution_capital": execution,
+            "residual_funding_gap_aud_m": (
+                residual_gap.get("value_aud_m") if residual_gap else None),
+            "residual_funding_gap_state": (
+                residual_gap.get("state") if residual_gap else None),
+            "all_in_ev_aud_m": all_in_ev_aud_m,
+            # Output aliases retained for consumers of pre-migration build JSON;
+            # neither is an input and neither restores the deleted data field.
+            "funded_ev_aud_m": all_in_ev_aud_m,
+            "funding_gap_aud_m": (
+                residual_gap.get("value_aud_m") if residual_gap else None),
+            "aud_per_oz": all_in_ev_aud_m / oz,
+            "aud_per_oz_ex_execution_capital": ev_aud_m / oz,
             "aud_per_oz_ex_gap": ev_aud_m / oz,
             "beta_gold": rstat.get("beta_gold"), "r2": rstat.get("r2"),
             "beta_contemporaneous": rstat.get("beta_contemporaneous"),
@@ -2500,7 +2760,7 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             "risk_error": rstat.get("error"),
             "spread_pct": g3.get("spread_pct"),
             "spread_p90_pct": g3.get("p90_pct"),
-            "raw": oz / funded_ev_aud_m,
+            "raw": oz / all_in_ev_aud_m,
             "shares_src": shares_src,
             "gate2": g2, "gate3": g3,
             "breaking_point": breaking_point(c, gold_aud, meta),
@@ -2826,7 +3086,7 @@ def portfolio_stats(rows: list[dict], meta: dict) -> dict:
     # The index's own price per ounce of claim: total EV bought per ounce
     # claimed, weighted as the book actually holds them. This is the headline
     # construction number.
-    oz_per_dollar = sum(r["weight"] * r["claimed_moz"] / r["funded_ev_aud_m"]
+    oz_per_dollar = sum(r["weight"] * r["claimed_moz"] / r["all_in_ev_aud_m"]
                         for r in rows)
 
     # The same names on market-cap weights, same formula. This is the only
@@ -2839,7 +3099,7 @@ def portfolio_stats(rows: list[dict], meta: dict) -> dict:
     # drift again.
     tot_mcap = sum(r["mcap_aud_m"] for r in rows if r.get("mcap_aud_m"))
     capw_oz_per_dollar = (
-        sum((r["mcap_aud_m"] / tot_mcap) * r["claimed_moz"] / r["funded_ev_aud_m"]
+        sum((r["mcap_aud_m"] / tot_mcap) * r["claimed_moz"] / r["all_in_ev_aud_m"]
             for r in rows if r.get("mcap_aud_m"))
         if tot_mcap > 0 else 0.0)
 
@@ -2979,7 +3239,7 @@ def size_basket(rows: list[dict], amount_eur: float, euraud: float,
 def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
     """The book. Weight, the claim behind it, and what was paid for it."""
     print(f"\n{'TICK':<6} {'SLEEVE':<14} {'WEIGHT':>8} {'CLAIM Moz':>10} "
-          f"{'A$/oz':>8} {'FUNDED EV':>10} {'β_Au':>6} {'R²':>6} {'SPREAD':>7}")
+          f"{'A$/oz':>8} {'ALL-IN EV':>10} {'β_Au':>6} {'R²':>6} {'SPREAD':>7}")
     print("─" * 88)
     for r in sorted(rows, key=lambda x: -x["weight"]):
         fmt = lambda v, p=2: f"{v:.{p}f}" if v is not None else "—"  # noqa: E731
@@ -2987,7 +3247,7 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
         sa = " ◆" if r.get("single_asset") is True else ""
         print(f"{r['ticker']:<6} {r['sleeve']:<14} {r['weight']*100:>7.2f}% "
               f"{r['claimed_moz']:>10.2f} {r['aud_per_oz']:>8,.0f} "
-              f"{r['funded_ev_aud_m']:>10,.0f} {fmt(r['beta_gold']):>6} "
+              f"{r['all_in_ev_aud_m']:>10,.0f} {fmt(r['beta_gold']):>6} "
               f"{fmt(r['r2']):>6} {spread:>7}{sa}")
 
     print("─" * 88)
@@ -3005,18 +3265,21 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
         print(f"  comparator the number above means anything against. Same names, "
               f"same day, same")
         print(f"  disclosed ounces; the entire difference is how the weights are set.")
-    gaps = [r for r in rows if r.get("funding_gap_aud_m")]
-    print("  FUNDED EV = market cap + net debt + residual funding gap (§7) — what "
-          "the ounces cost all-in,")
-    if gaps:
-        print("  including capital still to be spent before any of them is mined:")
-        for r in sorted(gaps, key=lambda x: -x["funding_gap_aud_m"]):
-            print(f"    {r['ticker']} +A${r['funding_gap_aud_m']:,.0f}m — "
-                  f"A${r['aud_per_oz_ex_gap']:,.0f}/oz on EV alone, "
-                  f"A${r['aud_per_oz']:,.0f}/oz once the build is paid for")
+    capital = [r for r in rows if r.get("remaining_execution_capex_aud_m")]
+    print("  ALL-IN EV = market cap + net debt + remaining execution capital — "
+          "what the ounces cost all-in.")
+    if capital:
+        print("  Financing does not reduce economic cost; project funding affects "
+              "developer Gate 2 only:")
+        for r in sorted(capital,
+                        key=lambda x: -x["remaining_execution_capex_aud_m"]):
+            print(f"    {r['ticker']} +A${r['remaining_execution_capex_aud_m']:,.0f}m "
+                  f"({r['execution_capital']['state']}) — "
+                  f"A${r['aud_per_oz_ex_execution_capital']:,.0f}/oz on EV alone, "
+                  f"A${r['aud_per_oz']:,.0f}/oz all-in")
     else:
-        print("  including capital still to be spent. No constituent carries a gap "
-              "today, so it equals EV.")
+        print("  No constituent carries material remaining execution capital, so it "
+              "equals EV.")
 
     beta = stats["portfolio_beta_gold"]
     lo, hi = stats["beta_target"]
@@ -3610,6 +3873,9 @@ def main() -> int:
     (HERE / "weights.json").write_text(json.dumps(out, indent=2, default=str))
     with (HERE / "weights.csv").open("w", newline="") as f:
         cols = ["ticker", "name", "sleeve", "weight", "claimed_moz", "aud_per_oz",
+                "aud_per_oz_ex_execution_capital", "all_in_ev_aud_m",
+                "remaining_execution_capex_aud_m", "residual_funding_gap_aud_m",
+                "residual_funding_gap_state",
                 "aud_per_oz_ex_gap", "funded_ev_aud_m", "funding_gap_aud_m",
                 "pp_moz", "mi_moz", "inferred_moz", "eligible_share", "hedged_moz",
                 "ev_aud_m", "price_aud", "beta_gold", "r2", "spread_pct",

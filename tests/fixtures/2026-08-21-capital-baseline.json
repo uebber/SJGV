@@ -1,0 +1,2046 @@
+{
+  "fixture_version": 1,
+  "purpose": "Issue 1 before-state for the execution-capital and Gate 2 migration",
+  "baseline": {
+    "generated_utc": "2026-08-21T12:03:47.436486+00:00",
+    "data_sourced": "2026-08-20",
+    "methodology": "SJGV v1.6",
+    "engine_commit": "476ccd75831e8af1fad6814520b5e74719d77137-dirty",
+    "constituents": 11,
+    "gate2_anchor": {
+      "anchor_aud": 4962.003938893214,
+      "stress_aud": 2977.202363335928,
+      "basis": "trailing 3y real average of AUD gold, 2023-09-18\u21922026-08-21, inflated to today at 3.0%/yr",
+      "n_obs": 756,
+      "years_available": 3.0,
+      "effective_dd_from_spot": 0.5356675888305147,
+      "degraded": false
+    },
+    "gold_aud_oz": 6411.790974998779
+  },
+  "source_hashes": {
+    "weights.json": "8b1a2bbf317575cfe379b704e9b7e2140f41c7e968bb734a837613f050907e21",
+    "data/companies.json": "c86b41dcb3930aa2e5e861888d681c2ce1495c5e774155780239aa92e72bc973",
+    "data/config.json": "606eb0a11f3c1cfe83e67d25a02490ca6fdcc2eef15490282017837a09dfd14f",
+    "market_bundle.json": "e2d41d0fe2b583aac28c2215e3581c202890f1da638bad80ef4d5d54c0cbaecb",
+    "market_bars.csv": "1aaa5788f266b9b941979d045714ed7ef147e01f79396bde1ddd67c7087dfe5f"
+  },
+  "market_inputs": {
+    "NST": {
+      "price": 23.83,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 44202785
+    },
+    "EVN": {
+      "price": 15.35,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 96616475
+    },
+    "CMM": {
+      "price": 17.58,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 221920910
+    },
+    "GGP": {
+      "price": 13.515,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 794335689
+    },
+    "GMD": {
+      "price": 8.26,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 45549471
+    },
+    "RMS": {
+      "price": 3.98,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 44205169
+    },
+    "RRL": {
+      "price": 8.58,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 47519420
+    },
+    "WGX": {
+      "price": 6.24,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 257776024
+    },
+    "VAU": {
+      "price": 6.72,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 732435627
+    },
+    "BGL": {
+      "price": 1.66,
+      "field": "marketPrice",
+      "market_data_type": "live",
+      "con_id": 327301423
+    },
+    "OBM": {
+      "price": 1.615,
+      "field": "marketPrice",
+      "market_data_type": "live",
+      "con_id": 372597050
+    },
+    "CYL": {
+      "price": 6.8,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 44188609
+    },
+    "PNR": {
+      "price": 2.68,
+      "field": "marketPrice",
+      "market_data_type": "live",
+      "con_id": 70715550
+    },
+    "BC8": {
+      "price": 1.165,
+      "field": "marketPrice",
+      "market_data_type": "live",
+      "con_id": 304949994
+    },
+    "RXL": {
+      "price": 0.56,
+      "field": "histDailyClose",
+      "market_data_type": "live",
+      "con_id": 44205439
+    },
+    "AAR": {
+      "price": 0.19,
+      "field": "marketPrice",
+      "market_data_type": "live",
+      "con_id": 14061890
+    },
+    "AUC": {
+      "price": 1.48,
+      "field": "marketPrice",
+      "market_data_type": "live",
+      "con_id": 70961940
+    }
+  },
+  "capital_inputs": {
+    "NST": {
+      "net_debt_aud_m": {
+        "v": -364,
+        "doc": "nst_q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "cd58e5d45b17f5864c351aa907da35b8a61a81f0c347def2d5b105a726375c5d"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 1750,
+        "term_date": "2030-03-01",
+        "doc": "nst_q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "c6c0c4edd30085a4b19750dcb742463f10cd25d07f9e686025af35016bb3b54b"
+      },
+      "committed_capex_aud_m": {
+        "v": 410.0,
+        "range": [
+          350.0,
+          470.0
+        ],
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 410.0,
+        "doc": "fy26_results_pres",
+        "source_type": "primary",
+        "document_date": "2026-08-20",
+        "note_sha256": "e8e245ce9ff63a05b70ea4b45de9e1e3894463496318f4baaab04cbbf361c3cc"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 1543,
+        "doc": "nst_q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "026f7bf4e2847096831b52a521374a7d4e1d666b02c69c2d2f0d5738fd73a40f"
+      },
+      "aisc_aud_oz": {
+        "v": 2698,
+        "doc": "nst_q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "d9f258af0cab35b4b5d25f96723f62b1f26ec6c59cd3ffde3fe440d3ef4363fc"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "EVN": {
+      "net_debt_aud_m": {
+        "v": -18.8,
+        "doc": "ar_fy26",
+        "source_type": "primary",
+        "document_date": "2026-08-20",
+        "note_sha256": "7a08b472bc287d5b307fbc3cf0b73e73cdad2d2620d2e6ee36a9c35bbdab848b"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 525.0,
+        "term_date": "2028-08-01",
+        "doc": "ar_fy26",
+        "source_type": "primary",
+        "document_date": "2026-08-20",
+        "note_sha256": "5962443d33d63f5219e73c58f9813a6d48fe162f8bfffdc4244e19de6bddcabc"
+      },
+      "committed_capex_aud_m": {
+        "v": 221.936,
+        "horizon_years": 2.0,
+        "doc": "ar_fy26",
+        "source_type": "primary",
+        "document_date": "2026-08-20",
+        "note_sha256": "d2fd9e834d2d960eccd8652e6c313315ac95363e98ecc5d5af26bb2ceb6c4fb1"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 693,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-15",
+        "note_sha256": "026cebf15ba51e29d3f965014bfe5a2af299d2d80f6ad8d9473d8c5e4832ae81"
+      },
+      "aisc_aud_oz": {
+        "v": 1717,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-15",
+        "note_sha256": "e1bb82f3d2c9b522312be0d0fcf2d577e100f7118117f99ace90ba47ee042ce8"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "CMM": {
+      "net_debt_aud_m": {
+        "v": -507.0,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "999efeefc59ace7f04522a4a9681e4eb17d08e31025551f18783df53d2b4ff08"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 0.0,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "773ee481790085e3f622e6caa1d124f7dbd28c8d3f85de566e674ec16d0d95f8"
+      },
+      "committed_capex_aud_m": {
+        "v": 551.5,
+        "range": [
+          425.5,
+          677.5
+        ],
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 77.5,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "17c18a0061e5d66bd32f925a6af32d084966cd72384f2c17c7e5fc67beb74f80"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 123.589,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "ba81aa500e927c052364154e6605874a514520df21d91957045febd73b23cfde"
+      },
+      "aisc_aud_oz": {
+        "v": 1629,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "7236465ac89164dfbbb3853cf718d2275eb2b3e547c6301627b84421b7f34fbf"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "GGP": {
+      "net_debt_aud_m": {
+        "v": -1289.0,
+        "doc": "ggp_fy27",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "04b37622e81c0d6dab42847fd87f202842addfafb16cba87400f7f948a9096b1"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 475.0,
+        "term_date": "2031-04-01",
+        "doc": "ggp_fy27",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "583d5d5b6ff3a6e3f37d33205140e7e2b237a7a40f6aa984f1981c97d03cc29c"
+      },
+      "committed_capex_aud_m": {
+        "v": 1390,
+        "range": [
+          1380,
+          1400
+        ],
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 325.0,
+        "doc": "ggp_fy27",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "384ffe4ffc8b8e6298ace317470922a22431798c5d4aa2abb8e2d519634b1996"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 329.0,
+        "doc": "ggp_fy27",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "2faeae8a1a124acb6c8100157b6e2da98f3ff69c460b029a2fcbdf115823c845"
+      },
+      "aisc_aud_oz": {
+        "v": 2179,
+        "doc": "ggp_fy27",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "c63bef911454798fe1e363022714e69972aeda35bf352b2048acf845fc62dfe1"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "GMD": {
+      "net_debt_aud_m": {
+        "v": -320.1,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "d3bb9024218a541651d246a13992b1bef32290f6b3902424ae4a248d19163cab"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 100,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "1c20bf9873c3a59b722242ad84c954b5b5bcf7772cca8c706c8fa3b7da50d3cc"
+      },
+      "committed_capex_aud_m": {
+        "v": 229,
+        "horizon_years": 2.0,
+        "doc": "gng_epc",
+        "source_type": "primary",
+        "document_date": "2026-05-21",
+        "note_sha256": "c914d191a055260ad54e214b8febe4876a6b36209660e8d7fcdc866004a34780"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 285,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "f7b0c316eb72e6132669f7ea5c8d00ba4e4045399cb054be5418e87bd140722d"
+      },
+      "aisc_aud_oz": {
+        "v": 2670,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "6eda3fcb0d6c86eed9d4a287a11c4a18dee000e1c375d48e2d95a0214b0e969f"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "RMS": {
+      "net_debt_aud_m": {
+        "v": -649.6,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "17ef30344febd1b4ef3bf3c139d82549dddd4e445716c5533e918466116c4418"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 500,
+        "doc": "q3fy26",
+        "source_type": "primary",
+        "document_date": "2026-04-29",
+        "note_sha256": "70f3fb04720d999d5a288a761e3832f5f2386e72f3c63b10e34653f8928bc259"
+      },
+      "committed_capex_aud_m": null,
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 192.182,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "b74bbd886d5b758483faebf3b39c9779d77a342c600e300a9e29c05d9b44b3b1"
+      },
+      "aisc_aud_oz": {
+        "v": 1983,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "ef2ce19d9f8e6c398d26e313bd95b320887848a5b5bb6e6477d5433fa8391489"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "RRL": {
+      "net_debt_aud_m": {
+        "v": -1184.0,
+        "doc": "fy27guid",
+        "source_type": "primary",
+        "document_date": "2026-07-17",
+        "note_sha256": "c8f9eb40a62cac2ab1f1e85c98245c6407319d4ff6a91085694c05a658d94909"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 300.0,
+        "term_date": "2028-02-03",
+        "doc": "ar_fy25",
+        "source_type": "primary",
+        "document_date": "2025-08-22",
+        "note_sha256": "e5f949f313b0bc89dd030b1c1aeb69ce5e07f44b4ac75d8da56b89c5861c92e7"
+      },
+      "committed_capex_aud_m": {
+        "v": 260.0,
+        "range": [
+          250,
+          270
+        ],
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 260.0,
+        "doc": "fy27guid",
+        "source_type": "primary",
+        "document_date": "2026-07-17",
+        "note_sha256": "0fcbc7d481208c994a20c90c14e76d66600b08750513882647b747e04a3dda6e"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 379,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-24",
+        "note_sha256": "750c3fff57e3b89b1e8481fd9d38d02e90c7ad4ee3adb2dbb9560b2ed65d002f"
+      },
+      "aisc_aud_oz": {
+        "v": 2945,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-24",
+        "note_sha256": "a89a340d961a21761f3727065fa6286fbc6f1251b314e965cd2eb97a04808698"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "WGX": {
+      "net_debt_aud_m": {
+        "v": -939.0,
+        "doc": "diggers_aug26",
+        "source_type": "primary",
+        "document_date": "2026-08-04",
+        "note_sha256": "9e925cf3c09300c3760a57f6801c7d2dff3a8e28c497b399b541362a966b3cfa"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 600,
+        "doc": "diggers_aug26",
+        "source_type": "primary",
+        "document_date": "2026-08-04",
+        "note_sha256": "29e5bb4858c8f7e37c6b2cb782d27a0ad27a220595b2b96203ff10f3dbc81013"
+      },
+      "committed_capex_aud_m": {
+        "v": 145,
+        "doc": "fletcher_or_aug26",
+        "source_type": "primary",
+        "document_date": "2026-08-18",
+        "note_sha256": "769a63b9380793192cc60f452ec5311cd64f0ee976f135aff9ba3c763b20c267"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 387,
+        "doc": "diggers_aug26",
+        "source_type": "primary",
+        "document_date": "2026-08-04",
+        "note_sha256": "0ee349cd77766a6f38d1f7f5dab1a705c7bee2072212483f6a0d1a6ba01902fb"
+      },
+      "aisc_aud_oz": {
+        "v": 2931,
+        "doc": "q3fy26",
+        "source_type": "primary",
+        "document_date": "2026-04",
+        "note_sha256": "00afb5e10131d2fb86f699581ffe4a26abc39bc5a8a9c55732a31452276b46bd"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "VAU": {
+      "net_debt_aud_m": {
+        "v": -841.6,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "f52fd29a1f3986519e0f1b989de07e497a7c1c0ade22d76c92ca76a3c66606af"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 0.0,
+        "doc": "ar_fy25",
+        "source_type": "primary",
+        "document_date": "2025-08-21",
+        "note_sha256": "ae5e87cad6cfcb8e132abc611f3ba2f78966d874057fc8b3a6449e66bd3d0216"
+      },
+      "committed_capex_aud_m": {
+        "v": 173,
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 173.0,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "3a7f46bcf0ed322f0096351766527098f106c93207b15fe4a56ed0a1660869bd"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 337,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "d566027b32bd0e51f5d24cecd9ebe8849b4f7fb876436aa1c561f73b013eb0b8"
+      },
+      "aisc_aud_oz": {
+        "v": 2924,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-29",
+        "note_sha256": "ab18d2c3c4762b452f58bd53533ba966ff4f70645cc14c96b474e679c894b974"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "BGL": {
+      "net_debt_aud_m": {
+        "v": -106.0,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "7f7a8f62f910dc906677d8ebdd23e9f9398fcfa6d208ed757e69aa8cb27bf8da"
+      },
+      "undrawn_facilities_aud_m": null,
+      "committed_capex_aud_m": {
+        "v": 95,
+        "range": [
+          90,
+          100
+        ],
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 95.0,
+        "doc": "bgl_fy27",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "14cf27fa918791de12f722accbf7c94840036135e3aba17caac4ad4474993a44"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 144,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "c5cb21f9ee9aba91964d806e24c72008ea1754c6ec298f053f4d25fd3fd8eaef"
+      },
+      "aisc_aud_oz": {
+        "v": 2827,
+        "doc": "q4fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-28",
+        "note_sha256": "47b40e300fd2a8bd4dba74f3d0b5d7ad92a270d285a967a6f97d7ef7755076f8"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "OBM": {
+      "net_debt_aud_m": {
+        "v": -267.7,
+        "doc": "q4fy26_asx",
+        "source_type": "primary",
+        "document_date": "2026-07-16",
+        "note_sha256": "1656b40ae880e45a1faa316200aa554a3a9ee16d6b786d2224f2a168072227e3"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 200,
+        "doc": "q4fy26_asx",
+        "source_type": "primary",
+        "document_date": "2026-07-16",
+        "note_sha256": "854fb6d0b30eb6d3723530ba9ff089123a82f34682f5f4ae4a2ff3d00d5140c2"
+      },
+      "committed_capex_aud_m": {
+        "v": 455,
+        "horizon_years": 2.0,
+        "doc": "pres_dd2026",
+        "source_type": "primary",
+        "document_date": "2026-08-03",
+        "note_sha256": "9c5b114dc84280e30bfa2443357f9bc30219d0e97e31f60c0cdd7dc059bdf4b9"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 141,
+        "doc": "q4fy26_asx",
+        "source_type": "primary",
+        "document_date": "2026-07-16",
+        "note_sha256": "3e6ee96511e268fec47daf0d3c5878ff7cb0a5c8d401a71175962c824e186e48"
+      },
+      "aisc_aud_oz": {
+        "v": 3496,
+        "doc": "q4fy26_asx",
+        "source_type": "primary",
+        "document_date": "2026-07-16",
+        "note_sha256": "8509dddb0d0975877b60d103b73398be993d3497f83fe757df44c0f1ca5abe18"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "CYL": {
+      "net_debt_aud_m": {
+        "v": -331.0,
+        "doc": "q4_fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "6ddf39f0c4c73594871ef65588e7da7ba8df0f745ea09642134e1d4eda0f9e84"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 100,
+        "doc": "q4_fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "63670975098242b0207c45000bd7a8870e71227109c31430fa0fbf993ff5a762"
+      },
+      "committed_capex_aud_m": {
+        "v": 22.0,
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 22.0,
+        "doc": "hy_dec2025",
+        "source_type": "primary",
+        "document_date": "2026-02-27",
+        "note_sha256": "901c3d6acde2f2107aa49e1ef966b1416a5e03a2da0ccfc83c73daeee5861565"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 103.8,
+        "doc": "q4_fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "5815fad68aa5386891485a2b1b8868dd7d7f241918f6985810f9c612b666d920"
+      },
+      "aisc_aud_oz": {
+        "v": 2738,
+        "doc": "q4_fy26",
+        "source_type": "primary",
+        "document_date": "2026-07-31",
+        "note_sha256": "315e65243f29a8bdbd831ea938dbf01d3357ae8b5986da5705e2c186e295d97d"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "PNR": {
+      "net_debt_aud_m": {
+        "v": -223.4,
+        "doc": "fy27_guidance",
+        "source_type": "primary",
+        "document_date": "2026-07-09",
+        "note_sha256": "84b3d15e82b6846478c5f5d9390ecede4b3dd6f56b8b0beaa8e7d5d849fbef34"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 0.0,
+        "doc": "ar_fy25",
+        "source_type": "primary",
+        "document_date": "2025-09-25",
+        "note_sha256": "86595eec204fd4ee3f6ceadac08a83e1793320451d27f7e8270947d86a7d637a"
+      },
+      "committed_capex_aud_m": {
+        "v": 101,
+        "horizon_years": 1.0,
+        "annual_leg_aud_m": 101.0,
+        "doc": "fy27_guidance",
+        "source_type": "primary",
+        "document_date": "2026-07-09",
+        "note_sha256": "6b849e9e8b5dbda9ffa9eaad0fe31b1d7a50b8e55810221ad2dfb7192f7549d0"
+      },
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 97.5,
+        "range": [
+          90,
+          105
+        ],
+        "doc": "fy27_guidance",
+        "source_type": "primary",
+        "document_date": "2026-07-09",
+        "note_sha256": "c0d2fdaa0363358f0b54bc79a9008459e563f29f2c0856ce144c11656131a0a3"
+      },
+      "aisc_aud_oz": {
+        "v": 3100,
+        "range": [
+          2800,
+          3400
+        ],
+        "doc": "fy27_guidance",
+        "source_type": "primary",
+        "document_date": "2026-07-09",
+        "note_sha256": "8b80a1f5425f0bda306d841e5a4f980d5e05be657fd2a405bfec711edd538fae"
+      },
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "BC8": {
+      "net_debt_aud_m": {
+        "v": -73.7,
+        "doc": "q4fy26_asx",
+        "source_type": "primary",
+        "document_date": "2026-07-30",
+        "note_sha256": "b2792b2fdcfd0c6cbc1f477cfe6226569b67e0b0a02e6f5ac0f598cb3731c0b1"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 30.0,
+        "doc": "q4fy26_asx",
+        "source_type": "primary",
+        "document_date": "2026-07-30",
+        "note_sha256": "7d9402803ccf599dba021a6ef4efcb1fd86423fd34c9c95abee1d0d73ede08c3"
+      },
+      "committed_capex_aud_m": null,
+      "remaining_capex_aud_m": null,
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 66.3,
+        "doc": "q4fy26_asx",
+        "source_type": "primary",
+        "document_date": "2026-07-30",
+        "note_sha256": "46ad5b50087c786d4d7c6d7507f360ace0cf4a738e10a125fe149db8577ca596"
+      },
+      "aisc_aud_oz": null,
+      "study_stage": null,
+      "approvals_land_secured": null
+    },
+    "RXL": {
+      "net_debt_aud_m": {
+        "v": -152.7,
+        "doc": "q4fy26_qtr",
+        "source_type": "primary",
+        "document_date": "2026-07-22",
+        "note_sha256": "eb35998468f98544673f0990b6952ecd068073d04dab848bff48d93daf937413"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 350.0,
+        "doc": "sfa_apr26",
+        "source_type": "primary",
+        "document_date": "2026-04-07",
+        "note_sha256": "84e61ff12fa6c37fb7fe58ce04774ac43fb72871eaa9bfab98efdc98d09c5fc2"
+      },
+      "committed_capex_aud_m": null,
+      "remaining_capex_aud_m": {
+        "v": 0.0,
+        "doc": "q4fy26_qtr",
+        "source_type": "primary",
+        "document_date": "2026-07-22",
+        "note_sha256": "d9b1efc3cb2eacd741d63feae5bb2ddefd96808b56aa3c7a368c155701d4eac8"
+      },
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 117,
+        "doc": "dfs_full",
+        "source_type": "primary",
+        "document_date": "2025-11-13",
+        "note_sha256": "555831e8fac0fd3658737fdef8cd77a3ae5291e860a4050c2015246c56b0c377"
+      },
+      "aisc_aud_oz": {
+        "v": 1978,
+        "doc": "dfs_full",
+        "source_type": "primary",
+        "document_date": "2025-11-13",
+        "note_sha256": "9b6296759981f321ba9a010862dde7911fd48987b5bda2d44e9821b6b07687e5"
+      },
+      "study_stage": {
+        "v": "DFS",
+        "doc": "dfs_full",
+        "source_type": "primary",
+        "document_date": "2025-11-13",
+        "note_sha256": "1f90b2822bddc24b38656c9f0ad13934a2eb8100d24e8c21e519709c3738da06"
+      },
+      "approvals_land_secured": {
+        "v": true,
+        "doc": "permit_jul26",
+        "source_type": "primary",
+        "document_date": "2026-07-13",
+        "note_sha256": "01892cfb22b1d6abbcb457714242268b3a19c55a1a54093edceaa6b458283f92"
+      }
+    },
+    "AAR": {
+      "net_debt_aud_m": {
+        "v": -65.115,
+        "doc": "q_jun2026",
+        "source_type": "primary",
+        "document_date": "2026-07-27",
+        "note_sha256": "88729aa4e129e899cddf755ca1e68c1213a8f8e09af636aa88be4d691f70cbd9"
+      },
+      "undrawn_facilities_aud_m": {
+        "v": 0.0,
+        "doc": "q_jun2026",
+        "source_type": "primary",
+        "document_date": "2026-07-27",
+        "note_sha256": "1ae9a5d0bd57a7396fecd5e023406ccf097b5e7c91902873b7b01d79915e9a4e"
+      },
+      "committed_capex_aud_m": null,
+      "remaining_capex_aud_m": {
+        "v": 162.0,
+        "doc": "dd2026_asx",
+        "source_type": "primary",
+        "document_date": "2026-08-04",
+        "note_sha256": "ceed80bd46b4a0d4ec7ebc3015ef0b97800056c017770b192592cf3ba60698e8"
+      },
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 95,
+        "doc": "dd2026_asx",
+        "source_type": "primary",
+        "document_date": "2026-08-04",
+        "note_sha256": "2dec0f17fd69c85cf9bc1b1c45200dda75af64af93c249c495dc996a638a6481"
+      },
+      "aisc_aud_oz": {
+        "v": 2085,
+        "doc": "dd2026_asx",
+        "source_type": "primary",
+        "document_date": "2026-08-04",
+        "note_sha256": "e99d5d37220139076d9572b9c59c9bd0a99573de0cdf9351a6ac950f434d9d7b"
+      },
+      "study_stage": {
+        "v": "PFS",
+        "doc": "dd2026_asx",
+        "source_type": "primary",
+        "document_date": "2026-08-04",
+        "note_sha256": "8ba34e3853684f5e2a7628fc29aee5d02b832ff10e9f3be807fa7671259e17bd"
+      },
+      "approvals_land_secured": {
+        "v": false,
+        "doc": "q_jun2026",
+        "source_type": "primary",
+        "document_date": "2026-07-27",
+        "note_sha256": "aec1e3491cce80500710f095cf8fa7c2c20bc0709166965cd693270fa4025241"
+      }
+    },
+    "AUC": {
+      "net_debt_aud_m": null,
+      "undrawn_facilities_aud_m": null,
+      "committed_capex_aud_m": null,
+      "remaining_capex_aud_m": {
+        "v": 354.0,
+        "doc": "dfs_dec2025",
+        "source_type": "primary",
+        "document_date": "2025-12-16",
+        "note_sha256": "d7d88737f81c083b90954138d1cde53c08f9a5910ca1d22535838e3d7460a84e"
+      },
+      "execution_capital_projects": null,
+      "remaining_execution_capex_aud_m": null,
+      "available_project_funding_aud_m": null,
+      "residual_funding_gap_aud_m": null,
+      "production_koz_yr": {
+        "v": 143,
+        "doc": "dfs_dec2025",
+        "source_type": "primary",
+        "document_date": "2025-12-16",
+        "note_sha256": "6e12ea2af8b2a3a7b07d02adf94164430356bad5d1926d4f1c1f71cedfd45be3"
+      },
+      "aisc_aud_oz": {
+        "v": 2265,
+        "doc": "dfs_dec2025",
+        "source_type": "primary",
+        "document_date": "2025-12-16",
+        "note_sha256": "11e64b8ef5f7c1908da0c4aff7c32e118bab5df19b33f21857ac03c98d526522"
+      },
+      "study_stage": {
+        "v": "DFS",
+        "doc": "dfs_dec2025",
+        "source_type": "primary",
+        "document_date": "2025-12-16",
+        "note_sha256": "2604532ca11748b3e0bfb5a19c1d25682940a5b2de7194c6eb1201e064b69085"
+      },
+      "approvals_land_secured": {
+        "v": false,
+        "doc": "aug2026",
+        "source_type": "secondary",
+        "document_date": "2026-08",
+        "note_sha256": "0d80a844ec93038f7628eb3b117cd988d5522e16668017575323c2123f3b73e6"
+      }
+    }
+  },
+  "gate2_bridges": {
+    "NST": {
+      "market_cap_aud_m": 33953.222299999994,
+      "reported_undrawn_aud_m": 1750,
+      "creditable_undrawn_aud_m": 1750,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$1,863m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 144,
+          "fcf_annual_aud_m": 222.7,
+          "fcf_horizon_aud_m": 158.7,
+          "opening_liquidity_aud_m": 364,
+          "undrawn_aud_m": 1750,
+          "committed_capex_aud_m": 410.0,
+          "ending_strict_aud_m": 112.7,
+          "ending_with_facilities_aud_m": 1862.7,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": null,
+        "range_invariance": {
+          "tested": [
+            "committed_capex_aud_m"
+          ],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "invariant across every published range"
+        },
+        "horizon": {
+          "state": "partial",
+          "covered_years": 1.0,
+          "shortfall_years": 1.0,
+          "note": "A$410m covers 1y of a 2y window \u2014 1y of committed spend is unsourced and charged as zero"
+        },
+        "horizon_materiality": {
+          "tested": true,
+          "annual_leg_aud_m": 410.0,
+          "shortfall_years": 1.0,
+          "continued_remainder_aud_m": 410.0,
+          "probe_capex_aud_m": 820.0,
+          "cover": 4.54,
+          "required_cover": 1.0,
+          "ok": true,
+          "reason": "survives the guided annual leg continued across the 1y shortfall \u2014 4.5\u00d7 cover"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "EVN": {
+      "market_cap_aud_m": 31177.231499999998,
+      "reported_undrawn_aud_m": 525.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$892m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 1174,
+          "fcf_annual_aud_m": 813.8,
+          "fcf_horizon_aud_m": 1095.6,
+          "opening_liquidity_aud_m": 18.8,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 221.936,
+          "ending_strict_aud_m": 892.5,
+          "ending_with_facilities_aud_m": 892.5,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": "A$525m of undrawn facilities NOT credited \u2014 the facility lapses 01 Aug 2028, inside a window running to 19 Aug 2028",
+        "range_invariance": {
+          "tested": [],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "no issuer-published range on a Gate 2 input"
+        },
+        "horizon": {
+          "state": "covered",
+          "covered_years": 2.0,
+          "shortfall_years": 0.0,
+          "note": "covers the full 2y window"
+        },
+        "horizon_materiality": {
+          "tested": false,
+          "ok": true,
+          "reason": "no shortfall to test"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "CMM": {
+      "market_cap_aud_m": 8030.3682,
+      "reported_undrawn_aud_m": 0.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$167m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 1267,
+          "fcf_annual_aud_m": 156.6,
+          "fcf_horizon_aud_m": 211.8,
+          "opening_liquidity_aud_m": 507.0,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 551.5,
+          "ending_strict_aud_m": 167.3,
+          "ending_with_facilities_aud_m": 167.3,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": null,
+        "range_invariance": {
+          "tested": [
+            "committed_capex_aud_m"
+          ],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "invariant across every published range"
+        },
+        "horizon": {
+          "state": "partial",
+          "covered_years": 1.0,
+          "shortfall_years": 1.0,
+          "note": "A$552m covers 1y of a 2y window \u2014 1y of committed spend is unsourced and charged as zero"
+        },
+        "horizon_materiality": {
+          "tested": true,
+          "annual_leg_aud_m": 77.5,
+          "shortfall_years": 1.0,
+          "continued_remainder_aud_m": 77.5,
+          "probe_capex_aud_m": 629.0,
+          "cover": 2.16,
+          "required_cover": 1.0,
+          "ok": true,
+          "reason": "survives the guided annual leg continued across the 1y shortfall \u2014 2.2\u00d7 cover"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "GGP": {
+      "market_cap_aud_m": 9118.16505,
+      "reported_undrawn_aud_m": 475.0,
+      "creditable_undrawn_aud_m": 475.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$665m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 689,
+          "fcf_annual_aud_m": 226.8,
+          "fcf_horizon_aud_m": 291.1,
+          "opening_liquidity_aud_m": 1289.0,
+          "undrawn_aud_m": 475.0,
+          "committed_capex_aud_m": 1390,
+          "ending_strict_aud_m": 190.1,
+          "ending_with_facilities_aud_m": 665.1,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": null,
+        "range_invariance": {
+          "tested": [
+            "committed_capex_aud_m"
+          ],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "invariant across every published range"
+        },
+        "horizon": {
+          "state": "partial",
+          "covered_years": 1.0,
+          "shortfall_years": 1.0,
+          "note": "A$1,390m covers 1y of a 2y window \u2014 1y of committed spend is unsourced and charged as zero"
+        },
+        "horizon_materiality": {
+          "tested": true,
+          "annual_leg_aud_m": 325.0,
+          "shortfall_years": 1.0,
+          "continued_remainder_aud_m": 325.0,
+          "probe_capex_aud_m": 1715.0,
+          "cover": 2.05,
+          "required_cover": 1.0,
+          "ok": true,
+          "reason": "survives the guided annual leg continued across the 1y shortfall \u2014 2.0\u00d7 cover"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "GMD": {
+      "market_cap_aud_m": 9691.540599999998,
+      "reported_undrawn_aud_m": 100,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$132m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 174,
+          "fcf_annual_aud_m": 49.5,
+          "fcf_horizon_aud_m": 41.3,
+          "opening_liquidity_aud_m": 320.1,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 229,
+          "ending_strict_aud_m": 132.4,
+          "ending_with_facilities_aud_m": 132.4,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": "A$100m of undrawn facilities NOT credited \u2014 no term date sourced, and an unverified facility cannot prove liquidity at Aug 2028",
+        "range_invariance": {
+          "tested": [],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "no issuer-published range on a Gate 2 input"
+        },
+        "horizon": {
+          "state": "covered",
+          "covered_years": 2.0,
+          "shortfall_years": 0.0,
+          "note": "covers the full 2y window"
+        },
+        "horizon_materiality": {
+          "tested": false,
+          "ok": true,
+          "reason": "no shortfall to test"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "RMS": {
+      "market_cap_aud_m": 7518.6578,
+      "reported_undrawn_aud_m": 500,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$876m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 895,
+          "fcf_annual_aud_m": 172.0,
+          "fcf_horizon_aud_m": 226.8,
+          "opening_liquidity_aud_m": 649.6,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 0.0,
+          "ending_strict_aud_m": 876.4,
+          "ending_with_facilities_aud_m": 876.4,
+          "survives_on_cash_alone": true
+        },
+        "provisional": true,
+        "facility_note": "A$500m of undrawn facilities NOT credited \u2014 no term date sourced, and an unverified facility cannot prove liquidity at Aug 2028",
+        "invariance": "committed_capex_aud_m absent, but Gate 2 is invariant across 41\u2013858 \u2014 the missing value cannot change the verdict",
+        "range_invariance": {
+          "tested": [],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "no issuer-published range on a Gate 2 input"
+        },
+        "horizon": {
+          "state": "absent",
+          "covered_years": null,
+          "shortfall_years": null,
+          "note": "no committed-capex figure \u2014 handled by the absent-input invariance sweep, not here"
+        },
+        "horizon_materiality": {
+          "tested": false,
+          "ok": true,
+          "reason": "no shortfall to test"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "RRL": {
+      "market_cap_aud_m": 6498.4062,
+      "reported_undrawn_aud_m": 300.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$778m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": -115,
+          "fcf_annual_aud_m": -43.6,
+          "fcf_horizon_aud_m": -145.8,
+          "opening_liquidity_aud_m": 1184.0,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 260.0,
+          "ending_strict_aud_m": 778.2,
+          "ending_with_facilities_aud_m": 778.2,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": "A$300m of undrawn facilities NOT credited \u2014 the facility lapses 03 Feb 2028, inside a window running to 19 Aug 2028",
+        "range_invariance": {
+          "tested": [
+            "committed_capex_aud_m"
+          ],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "invariant across every published range"
+        },
+        "horizon": {
+          "state": "partial",
+          "covered_years": 1.0,
+          "shortfall_years": 1.0,
+          "note": "A$260m covers 1y of a 2y window \u2014 1y of committed spend is unsourced and charged as zero"
+        },
+        "horizon_materiality": {
+          "tested": true,
+          "annual_leg_aud_m": 260.0,
+          "shortfall_years": 1.0,
+          "continued_remainder_aud_m": 260.0,
+          "probe_capex_aud_m": 520.0,
+          "cover": 2.99,
+          "required_cover": 1.0,
+          "ok": true,
+          "reason": "survives the guided annual leg continued across the 1y shortfall \u2014 3.0\u00d7 cover"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "WGX": {
+      "market_cap_aud_m": 5920.6368,
+      "reported_undrawn_aud_m": 600,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$657m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": -100,
+          "fcf_annual_aud_m": -38.8,
+          "fcf_horizon_aud_m": -137.2,
+          "opening_liquidity_aud_m": 939.0,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 145,
+          "ending_strict_aud_m": 656.8,
+          "ending_with_facilities_aud_m": 656.8,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": "A$600m of undrawn facilities NOT credited \u2014 no term date sourced, and an unverified facility cannot prove liquidity at Aug 2028",
+        "range_invariance": {
+          "tested": [],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "no issuer-published range on a Gate 2 input"
+        },
+        "horizon": {
+          "state": "unknown",
+          "covered_years": null,
+          "shortfall_years": null,
+          "note": "A$145m is charged against a 2y window and the record does not establish what period it covers"
+        },
+        "horizon_materiality": {
+          "tested": false,
+          "ok": true,
+          "state": "UNTESTED",
+          "reason": "no period established, so no annual leg to continue \u2014 routed to the capital-state item (\u00a712.2 item 6), not silently passed"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "VAU": {
+      "market_cap_aud_m": 6952.310399999999,
+      "reported_undrawn_aud_m": 0.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$554m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": -93,
+          "fcf_annual_aud_m": -31.3,
+          "fcf_horizon_aud_m": -114.4,
+          "opening_liquidity_aud_m": 841.6,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 173,
+          "ending_strict_aud_m": 554.2,
+          "ending_with_facilities_aud_m": 554.2,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": null,
+        "range_invariance": {
+          "tested": [],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "no issuer-published range on a Gate 2 input"
+        },
+        "horizon": {
+          "state": "partial",
+          "covered_years": 1.0,
+          "shortfall_years": 1.0,
+          "note": "A$173m covers 1y of a 2y window \u2014 1y of committed spend is unsourced and charged as zero"
+        },
+        "horizon_materiality": {
+          "tested": true,
+          "annual_leg_aud_m": 173.0,
+          "shortfall_years": 1.0,
+          "continued_remainder_aud_m": 173.0,
+          "probe_capex_aud_m": 346.0,
+          "cover": 3.2,
+          "required_cover": 1.0,
+          "ok": true,
+          "reason": "survives the guided annual leg continued across the 1y shortfall \u2014 3.2\u00d7 cover"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "BGL": {
+      "market_cap_aud_m": 2474.4956,
+      "reported_undrawn_aud_m": 0.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "base",
+      "evaluation": {
+        "pass": false,
+        "reason": "FAILS: A$-8m shortfall at A$2,977/oz over 2y (margin A$9/oz)",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 9,
+          "fcf_annual_aud_m": 1.3,
+          "fcf_horizon_aud_m": -18.8,
+          "opening_liquidity_aud_m": 106.0,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 95,
+          "ending_strict_aud_m": -7.8,
+          "ending_with_facilities_aud_m": -7.8,
+          "survives_on_cash_alone": false
+        },
+        "provisional": false,
+        "facility_note": null
+      },
+      "pipeline": {
+        "state": "rejected",
+        "reason": "GATE 2 \u2014 FAILS: A$-8m shortfall at A$2,977/oz over 2y (margin A$9/oz)"
+      }
+    },
+    "OBM": {
+      "market_cap_aud_m": 3123.41,
+      "reported_undrawn_aud_m": 200,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "base",
+      "evaluation": {
+        "pass": false,
+        "reason": "FAILS: A$-409m shortfall at A$2,977/oz over 2y (margin A$-694/oz)",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": -694,
+          "fcf_annual_aud_m": -97.8,
+          "fcf_horizon_aud_m": -221.5,
+          "opening_liquidity_aud_m": 267.7,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 455,
+          "ending_strict_aud_m": -408.8,
+          "ending_with_facilities_aud_m": -408.8,
+          "survives_on_cash_alone": false
+        },
+        "provisional": false,
+        "facility_note": "A$200m of undrawn facilities NOT credited \u2014 no term date sourced, and an unverified facility cannot prove liquidity at Aug 2028"
+      },
+      "pipeline": {
+        "state": "rejected",
+        "reason": "GATE 2 \u2014 FAILS: A$-409m shortfall at A$2,977/oz over 2y (margin A$-694/oz)"
+      }
+    },
+    "CYL": {
+      "market_cap_aud_m": 1792.9560000000001,
+      "reported_undrawn_aud_m": 100,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$313m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": 102,
+          "fcf_annual_aud_m": 10.6,
+          "fcf_horizon_aud_m": 4.4,
+          "opening_liquidity_aud_m": 331.0,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 22.0,
+          "ending_strict_aud_m": 313.4,
+          "ending_with_facilities_aud_m": 313.4,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": "A$100m of undrawn facilities NOT credited \u2014 no term date sourced, and an unverified facility cannot prove liquidity at Aug 2028",
+        "range_invariance": {
+          "tested": [],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "no issuer-published range on a Gate 2 input"
+        },
+        "horizon": {
+          "state": "partial",
+          "covered_years": 1.0,
+          "shortfall_years": 1.0,
+          "note": "A$22m covers 1y of a 2y window \u2014 1y of committed spend is unsourced and charged as zero"
+        },
+        "horizon_materiality": {
+          "tested": true,
+          "annual_leg_aud_m": 22.0,
+          "shortfall_years": 1.0,
+          "continued_remainder_aud_m": 22.0,
+          "probe_capex_aud_m": 44.0,
+          "cover": 14.25,
+          "required_cover": 1.0,
+          "ok": true,
+          "reason": "survives the guided annual leg continued across the 1y shortfall \u2014 14.2\u00d7 cover"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "PNR": {
+      "market_cap_aud_m": 1044.4496000000001,
+      "reported_undrawn_aud_m": 0.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "range_invariance",
+      "evaluation": {
+        "pass": true,
+        "reason": "survives: A$52m at A$2,977/oz over 2y",
+        "detail": {
+          "stress_gold_aud": 2977,
+          "margin_aud_oz": -278,
+          "fcf_annual_aud_m": -27.1,
+          "fcf_horizon_aud_m": -70.0,
+          "opening_liquidity_aud_m": 223.4,
+          "undrawn_aud_m": 0.0,
+          "committed_capex_aud_m": 101,
+          "ending_strict_aud_m": 52.4,
+          "ending_with_facilities_aud_m": 52.4,
+          "survives_on_cash_alone": true
+        },
+        "provisional": false,
+        "facility_note": null,
+        "range_invariance": {
+          "tested": [
+            "aisc_aud_oz",
+            "production_koz_yr"
+          ],
+          "flipped": [
+            "aisc_aud_oz 2,800\u20133,400"
+          ],
+          "strained": false,
+          "ok": false,
+          "reason": "Gate 2 is not invariant across the issuer's own published range for aisc_aud_oz 2,800\u20133,400 \u2014 the verdict is unknown, not favourable"
+        }
+      },
+      "pipeline": {
+        "state": "rejected",
+        "reason": "GATE 2 UNRESOLVED \u2014 Gate 2 is not invariant across the issuer's own published range for aisc_aud_oz 2,800\u20133,400 \u2014 the verdict is unknown, not favourable"
+      }
+    },
+    "BC8": {
+      "market_cap_aud_m": 849.20345,
+      "reported_undrawn_aud_m": 30.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "base",
+      "evaluation": {
+        "pass": null,
+        "reason": "production or AISC unsourced \u2014 survival cannot be tested",
+        "provisional": true,
+        "facility_note": "A$30m of undrawn facilities NOT credited \u2014 no term date sourced, and an unverified facility cannot prove liquidity at Aug 2028"
+      },
+      "pipeline": {
+        "state": "rejected",
+        "reason": "GATE 2 \u2014 production or AISC unsourced \u2014 survival cannot be tested"
+      }
+    },
+    "RXL": {
+      "market_cap_aud_m": 780.3992000000001,
+      "reported_undrawn_aud_m": 350.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "passed_gate2",
+      "evaluation": {
+        "pass": true,
+        "reason": "passes D1 study stage, D2 approvals and land, D3 bounded dilution",
+        "detail": {
+          "study_stage": "DFS",
+          "approvals_land_secured": true,
+          "funding_gap_aud_m": 0.0,
+          "funding_gap_of_mcap": 0.0
+        },
+        "provisional": false,
+        "facility_note": "A$350m of undrawn facilities NOT credited \u2014 no term date sourced, and an unverified facility cannot prove liquidity at Aug 2028",
+        "range_invariance": {
+          "tested": [],
+          "flipped": [],
+          "strained": false,
+          "ok": true,
+          "reason": "no issuer-published range on a Gate 2 input"
+        },
+        "horizon": {
+          "state": "absent",
+          "covered_years": null,
+          "shortfall_years": null,
+          "note": "no committed-capex figure \u2014 handled by the absent-input invariance sweep, not here"
+        },
+        "horizon_materiality": {
+          "tested": false,
+          "ok": true,
+          "reason": "no shortfall to test"
+        }
+      },
+      "pipeline": {
+        "state": "included",
+        "reason": null
+      }
+    },
+    "AAR": {
+      "market_cap_aud_m": 342.1995,
+      "reported_undrawn_aud_m": 0.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "base",
+      "evaluation": {
+        "pass": false,
+        "reason": "D2 approvals or land access not secured; D3 funding gap 47% of market cap, limit 30%",
+        "detail": {
+          "study_stage": "PFS",
+          "approvals_land_secured": false,
+          "funding_gap_aud_m": 162.0,
+          "funding_gap_of_mcap": 0.473
+        },
+        "provisional": false,
+        "facility_note": null
+      },
+      "pipeline": {
+        "state": "rejected",
+        "reason": "GATE 2 \u2014 D2 approvals or land access not secured; D3 funding gap 47% of market cap, limit 30%"
+      }
+    },
+    "AUC": {
+      "market_cap_aud_m": 813.5412000000001,
+      "reported_undrawn_aud_m": 0.0,
+      "creditable_undrawn_aud_m": 0.0,
+      "stopped_at": "base",
+      "evaluation": {
+        "pass": false,
+        "reason": "D2 approvals or land access not secured; D3 funding gap 44% of market cap, limit 30%",
+        "detail": {
+          "study_stage": "DFS",
+          "approvals_land_secured": false,
+          "funding_gap_aud_m": 354.0,
+          "funding_gap_of_mcap": 0.435
+        },
+        "provisional": false,
+        "facility_note": null
+      },
+      "pipeline": {
+        "state": "rejected",
+        "reason": "GATE 2 \u2014 D2 approvals or land access not secured; D3 funding gap 44% of market cap, limit 30%"
+      }
+    }
+  },
+  "weight_stages": {
+    "NST": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 42.844962470599995,
+      "price_aud": 23.83,
+      "market_cap_aud_m": 33953.222299999994,
+      "ev_aud_m": 33589.222299999994,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 33589.222299999994,
+      "aud_per_oz": 783.9713320568026,
+      "raw_score": 0.0012755568464173702,
+      "normalised_raw_weight": 0.09713848223392972,
+      "pre_name_cap_weight": 0.09713848223392972,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.01864792607266219,
+      "total_cap_effect": 0.01864792607266219,
+      "final_weight": 0.11578640830659191,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "EVN": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 15.43999678,
+      "price_aud": 15.35,
+      "market_cap_aud_m": 31177.231499999998,
+      "ev_aud_m": 31158.4315,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 31158.4315,
+      "aud_per_oz": 2018.0335490976702,
+      "raw_score": 0.0004955319005707973,
+      "normalised_raw_weight": 0.03773662997077567,
+      "pre_name_cap_weight": 0.03773662997077567,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.007244398612609088,
+      "total_cap_effect": 0.007244398612609088,
+      "final_weight": 0.044981028583384756,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "CMM": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 6.4769,
+      "price_aud": 17.58,
+      "market_cap_aud_m": 8030.3682,
+      "ev_aud_m": 7523.3682,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 7523.3682,
+      "aud_per_oz": 1161.5693001281477,
+      "raw_score": 0.0008609042954989229,
+      "normalised_raw_weight": 0.06556112089266514,
+      "pre_name_cap_weight": 0.06556112089266514,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.012585938214507653,
+      "total_cap_effect": 0.012585938214507653,
+      "final_weight": 0.07814705910717279,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "GGP": {
+      "sleeve": "producer",
+      "single_asset": true,
+      "claimed_moz": 7.94,
+      "price_aud": 13.515,
+      "market_cap_aud_m": 9118.16505,
+      "ev_aud_m": 7829.16505,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 7829.16505,
+      "aud_per_oz": 986.0409382871536,
+      "raw_score": 0.0010141566756214956,
+      "normalised_raw_weight": 0.0772318697469055,
+      "pre_name_cap_weight": 0.0772318697469055,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.014826402105248396,
+      "total_cap_effect": 0.014826402105248396,
+      "final_weight": 0.0920582718521539,
+      "cap_ceiling": 0.1,
+      "cap_bound": false
+    },
+    "GMD": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 10.017997,
+      "price_aud": 8.26,
+      "market_cap_aud_m": 9691.540599999998,
+      "ev_aud_m": 9371.440599999998,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 9371.440599999998,
+      "aud_per_oz": 935.4605117170627,
+      "raw_score": 0.001068992210226462,
+      "normalised_raw_weight": 0.08140780327662109,
+      "pre_name_cap_weight": 0.08140780327662109,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.015628066882745678,
+      "total_cap_effect": 0.015628066882745678,
+      "final_weight": 0.09703587015936677,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "RMS": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 7.137284087600001,
+      "price_aud": 3.98,
+      "market_cap_aud_m": 7518.6578,
+      "ev_aud_m": 6869.0578,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 6869.0578,
+      "aud_per_oz": 962.4189979958895,
+      "raw_score": 0.0010390484831267546,
+      "normalised_raw_weight": 0.0791274751116615,
+      "pre_name_cap_weight": 0.0791274751116615,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.015190306377705354,
+      "total_cap_effect": 0.015190306377705354,
+      "final_weight": 0.09431778148936686,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "RRL": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 5.5525,
+      "price_aud": 8.58,
+      "market_cap_aud_m": 6498.4062,
+      "ev_aud_m": 5314.4062,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 5314.4062,
+      "aud_per_oz": 957.1195317424584,
+      "raw_score": 0.0010448015810308215,
+      "normalised_raw_weight": 0.07956559529432045,
+      "pre_name_cap_weight": 0.07956559529432045,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.01527441344412514,
+      "total_cap_effect": 0.01527441344412514,
+      "final_weight": 0.09484000873844559,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "WGX": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 7.6034,
+      "price_aud": 6.24,
+      "market_cap_aud_m": 5920.6368,
+      "ev_aud_m": 4981.6368,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 4981.6368,
+      "aud_per_oz": 655.185417050267,
+      "raw_score": 0.0015262854971683202,
+      "normalised_raw_weight": 0.11623241807451169,
+      "pre_name_cap_weight": 0.11623241807451169,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.02231343839901144,
+      "total_cap_effect": 0.02231343839901144,
+      "final_weight": 0.13854585647352313,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "VAU": {
+      "sleeve": "producer",
+      "single_asset": false,
+      "claimed_moz": 6.3473003628,
+      "price_aud": 6.72,
+      "market_cap_aud_m": 6952.310399999999,
+      "ev_aud_m": 6110.710399999999,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 6110.710399999999,
+      "aud_per_oz": 962.7258914377838,
+      "raw_score": 0.0010387172599113847,
+      "normalised_raw_weight": 0.07910225121002823,
+      "pre_name_cap_weight": 0.07910225121002823,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": 0.015185464079966043,
+      "total_cap_effect": 0.015185464079966043,
+      "final_weight": 0.09428771528999427,
+      "cap_ceiling": 0.15,
+      "cap_bound": false
+    },
+    "CYL": {
+      "sleeve": "producer",
+      "single_asset": true,
+      "claimed_moz": 2.632198,
+      "price_aud": 6.8,
+      "market_cap_aud_m": 1792.9560000000001,
+      "ev_aud_m": 1461.9560000000001,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 1461.9560000000001,
+      "aud_per_oz": 555.4126247341576,
+      "raw_score": 0.001800463215035199,
+      "normalised_raw_weight": 0.13711208913798123,
+      "pre_name_cap_weight": 0.13711208913798123,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": -0.037112089137981225,
+      "total_cap_effect": -0.037112089137981225,
+      "final_weight": 0.1,
+      "cap_ceiling": 0.1,
+      "cap_bound": true
+    },
+    "RXL": {
+      "sleeve": "developer",
+      "single_asset": true,
+      "claimed_moz": 1.2346000000000001,
+      "price_aud": 0.56,
+      "market_cap_aud_m": 780.3992000000001,
+      "ev_aud_m": 627.6992,
+      "capital_denominator_input_aud_m": 0.0,
+      "residual_funding_gap_aud_m": 0.0,
+      "funded_ev_aud_m": 627.6992,
+      "aud_per_oz": 508.423132998542,
+      "raw_score": 0.001966865657945717,
+      "normalised_raw_weight": 0.14978426505059975,
+      "pre_name_cap_weight": 0.14978426505059975,
+      "sleeve_cap_effect": 0.0,
+      "name_cap_effect": -0.09978426505059974,
+      "total_cap_effect": -0.09978426505059974,
+      "final_weight": 0.05,
+      "cap_ceiling": 0.05,
+      "cap_bound": true
+    }
+  },
+  "single_asset_classifications": {
+    "NST": {
+      "largest_asset_pp_share": 0.576,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "EVN": {
+      "largest_asset_pp_share": 0.521,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "CMM": {
+      "largest_asset_pp_share": 0.7,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "GGP": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    },
+    "GMD": {
+      "largest_asset_pp_share": 0.66,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "RMS": {
+      "largest_asset_pp_share": 0.738,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "RRL": {
+      "largest_asset_pp_share": 0.49,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "WGX": {
+      "largest_asset_pp_share": 0.554,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "VAU": {
+      "largest_asset_pp_share": 0.772,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "BGL": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    },
+    "OBM": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    },
+    "CYL": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    },
+    "PNR": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    },
+    "BC8": {
+      "largest_asset_pp_share": 0.736,
+      "threshold": 0.8,
+      "classification": false
+    },
+    "RXL": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    },
+    "AAR": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    },
+    "AUC": {
+      "largest_asset_pp_share": 1.0,
+      "threshold": 0.8,
+      "classification": true
+    }
+  },
+  "rejected": [
+    {
+      "ticker": "BGL",
+      "name": "Bellevue Gold",
+      "sleeve": "producer",
+      "reason": "GATE 2 \u2014 FAILS: A$-8m shortfall at A$2,977/oz over 2y (margin A$9/oz)"
+    },
+    {
+      "ticker": "OBM",
+      "name": "Ora Banda Mining",
+      "sleeve": "producer",
+      "reason": "GATE 2 \u2014 FAILS: A$-409m shortfall at A$2,977/oz over 2y (margin A$-694/oz)"
+    },
+    {
+      "ticker": "PNR",
+      "name": "Pantoro Gold",
+      "sleeve": "producer",
+      "reason": "GATE 2 UNRESOLVED \u2014 Gate 2 is not invariant across the issuer's own published range for aisc_aud_oz 2,800\u20133,400 \u2014 the verdict is unknown, not favourable"
+    },
+    {
+      "ticker": "BC8",
+      "name": "Black Cat Syndicate",
+      "sleeve": "near_producer",
+      "reason": "GATE 2 \u2014 production or AISC unsourced \u2014 survival cannot be tested"
+    },
+    {
+      "ticker": "AAR",
+      "name": "Astral Resources",
+      "sleeve": "developer",
+      "reason": "GATE 2 \u2014 D2 approvals or land access not secured; D3 funding gap 47% of market cap, limit 30%"
+    },
+    {
+      "ticker": "AUC",
+      "name": "Ausgold",
+      "sleeve": "developer",
+      "reason": "GATE 2 \u2014 D2 approvals or land access not secured; D3 funding gap 44% of market cap, limit 30%"
+    }
+  ],
+  "pre_excluded": [
+    {
+      "ticker": "MEK",
+      "name": "Meeka Metals",
+      "gate": "Gate 3 Tradability",
+      "reason": "At A$0.10 the 0.5c ASX tick is a 5.0% structural minimum spread \u2014 cannot quote inside the 1.0% producer limit at any volume. Excluded on tick structure, not quality."
+    },
+    {
+      "ticker": "AZY",
+      "name": "Antipa Minerals",
+      "gate": "Gate 2 D1 and D3",
+      "reason": "Minyari Dome is scoping-study stage only (130 koz/yr, A$306m capex, AISC A$1,721). D1 requires PFS minimum. Also fails D3: A$36.5m cash against A$306m capex on a ~A$365m market cap."
+    },
+    {
+      "ticker": "BTR",
+      "name": "Brightstar Resources",
+      "gate": "Insufficient data",
+      "reason": "4 Moz resources, Laverton mill due mid-2027, ~A$350m cap (down 37% YTD). Study stage and funding gap not sourced. Not excluded on merit."
+    },
+    {
+      "ticker": "OGC",
+      "name": "OceanaGold",
+      "gate": "Gate 1 eligible ounce share",
+      "reason": "Haile (US, ~315 koz 2026) and Didipio (Philippines, 80%) dominate; Macraes and Waihi (NZ) are a minority. New Zealand passes Tier A on 3 of 4 tests but offers no eligible listed pure-play."
+    },
+    {
+      "ticker": "RUP",
+      "name": "Rupert Resources",
+      "gate": "Delisted",
+      "reason": "Agnico Eagle arrangement closed 16 Jun 2026, TSX delisting on close. Finland also fails Tier A on 3 of 4."
+    },
+    {
+      "ticker": "NEM",
+      "name": "Newmont",
+      "gate": "Gate 1 eligible ounce share",
+      "reason": "Australian assets a minority of a global portfolio."
+    },
+    {
+      "ticker": "AEM",
+      "name": "Agnico Eagle",
+      "gate": "Gate 1 Tier A",
+      "reason": "Canada fails Tier A on A2 (solvency) and that is the sole basis. \u00a712.2 item 4 CLOSED 19 Aug 2026 by amending A2 rather than by sourcing it, because the sourcing came back the other way: Canadian general government net debt is ~10-13% of GDP \u2014 below Australia's ~19% \u2014 and general government interest is 8.8% of revenue, so Canada PASSED A2 as v1.1 wrote it. A2 v1.2 measures the currency issuer and adds a gross-debt limb at 85% of GDP; Canada fails on gross (105-110%) and on federal interest (10.3% of revenue). This exclusion does not survive the v1.1 rule and the amendment record says so. The Foreign Exchange Control Act 1939-51 requisition precedent is retained as a disclosure and no longer fails A4, which is present-tense as of v1.1."
+    },
+    {
+      "ticker": "PRU/RSG/WAF/EMR",
+      "name": "Perseus / Resolute / West African / Emerald",
+      "gate": "Gate 1 Tier A",
+      "reason": "West Africa, Cambodia. No production in a Tier A jurisdiction."
+    }
+  ]
+}
+

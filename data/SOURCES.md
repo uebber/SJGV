@@ -514,8 +514,10 @@ across theirs, CMM including its disclosed ±25% no-contingency band.
 
 ### Values still deliberately absent
 
-- **RMS `committed_capex_aud_m`** — the only remaining provisional pass. The
-  invariance test clears it across A$41–870m.
+- **WGX `committed_capex_aud_m`** — `UNRESOLVED` after the 21 August refresh.
+  The former A$145m covers a stage now under review and omits larger uncosted
+  Higginsville and Murchison scopes; retaining it would preserve a favourable
+  lower bound. The next primary trigger is the early-September Strategic Outlook.
 - **PNR and RMS `reserve_price_aud`** — Channel 2a scores nothing for either.
 - **NST `net_debt_aud_m` on a fully-loaded basis.** Recorded at −364 on NST's *own*
   definition, which excludes A$520.2m of secured asset financing and A$390.9m of
@@ -741,6 +743,40 @@ anyway: `docs/grade-tonnage-survey.md`.
 
 ---
 
+## 4h. Load-bearing capital and facility refresh, 21 August 2026
+
+Four issue-2 records were re-read from primary filings. Evidence states are now
+stored beside accepted load-bearing values; the engine validation of those states
+belongs to issue 3.
+
+| Name | Primary evidence | Recorded result | State |
+|---|---|---|---|
+| RMS | Audited FY26 report, Note 27, p109 | A$79.218m capital commitments within one year | `POINT` for that coverage; no second year inferred |
+| NST | Audited FY26 Annual Report, pp31 and 68 | A$1.75bn undrawn in equal tranches maturing Mar-2030 and Mar-2031 | `POINT`; 1 Mar 2030 is the conservative earliest day |
+| GGP | 1 Jun facility execution announcement plus 29 Jul June quarterly | A$475m undrawn revolvers; five- and seven-year terms | `POINT`; shorter tranche conservatively dated from 1 Apr 2031 |
+| WGX | 18 Aug Fletcher filing and ASX announcement feed checked 21 Aug | No complete execution-capital amount or coverage period; A$600m facility limit not restated with tenor | capital `UNRESOLVED` and absent; facility `CARRY_FORWARD`, uncredited in Gate 2 |
+
+**RMS is two different capital facts, not one.** The A$79.218m commitments-note
+amount is exact over its disclosed one-year period and now closes the current
+`committed_capex_aud_m` gap. It does not reconcile spend to the October 2025
+A$381m Mt Magnet programme, so that separate execution-capital candidate remains
+an `UPPER_BOUND`, not a point balance.
+
+**WGX stays absent rather than estimated.** The former A$145m approved 2.6 Mtpa
+stage is a lower bound after Westgold disclosed that it is reviewing a larger
+4 Mtpa case and has committed or planned additional Murchison milling capacity
+without a total. The FY26 financial result and Strategic Outlook were not in the
+ASX feed on 21 August. FY26 non-sustaining spend is not a remaining-capital
+balance and was not substituted.
+
+**Facility dependency is now source-complete where it matters.** NST's shorter
+tranche and both GGP revolvers extend beyond the August 2028 Gate 2 horizon. The
+WGX facility still has no verified term date and is therefore credited at zero;
+WGX survives the current bridge on treasury alone, so that absence cannot favour
+its verdict.
+
+---
+
 ## 5. Open gap register
 
 Ordered by what blocks the build.
@@ -754,8 +790,8 @@ Ordered by what blocks the build.
 >
 > **What genuinely remains: three fields and one boundary case.** BC8's AISC (a
 > disclosure gap the company has declined to close, not a sourcing failure);
-> PNR's reserve deck, which reads 0.000pp because nothing consumes it; RMS's
-> committed capex, gate-invariant across the cohort range. Plus VAU's
+> PNR's reserve deck, which reads 0.000pp because nothing consumes it; WGX's
+> unresolved committed capital, which remains absent. Plus VAU's
 > `largest_asset_pp_share` at 0.772 against a 0.80 threshold — sourced, not a
 > gap, but the one classification a definitional argument could move.
 >
@@ -812,8 +848,11 @@ Ordered by what blocks the build.
 
 ## 6. Watch items
 
-- **RMS** reports FY26 on 21 August 2026. **NST** on 20 August. **EVN** on 19 August. Refresh after.
-- **WGX** FY26 resource and reserve statement pending alongside August results.
+- **RMS FY26 commitments and NST facility terms are closed** from their 20–21
+  August audited reports. RMS execution-capital spend allocation remains unavailable.
+- **WGX** FY26 financial result and Strategic Outlook were not filed at the
+  21 August check; the Strategic Outlook is expected in early September. Re-source
+  execution capital, coverage, facility tenor, AISC basis and treasury split then.
 - **PNR** and **CYL** resource/reserve updates due September 2026 quarter; CYL also guides FY27 then.
 - **GMD/VAU** scheme completion targeted November 2026, ACCC the open condition. Event-driven removal of VAU.
 - **EVN/Carnaby** scheme — will push gold NAV share toward the 0.75 floor.

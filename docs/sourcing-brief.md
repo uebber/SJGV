@@ -58,7 +58,8 @@ your ticker needs. Two categories:
 | `hedge_share_fwd24m` | Quarterly hedge book note — derive as hedged oz ÷ (2 × annual production) |
 | `committed_capex_aud_m` | **Contracted or board-approved builds only.** Exploration is deferrable and excluded. Pre-FID projects are excluded — say so explicitly if one exists |
 | `gold_nav_share`, `eligible_ounce_share`, `ineligible_nav_share` | Revenue by metal; ounces by jurisdiction |
-| `study_stage`, `approvals_land_secured`, `remaining_capex_aud_m` | Developers only — PFS/DFS announcement, approvals releases |
+| `study_stage`, `approvals_land_secured`, `available_project_funding_aud_m` | Developers only — PFS/DFS announcement, approvals releases, cash and executed funding |
+| `remaining_execution_capex_aud_m` | Every name — finite approved scope total remaining to completion; never net cash or facilities |
 
 ### Channels, in the order that has actually worked
 

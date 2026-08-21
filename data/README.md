@@ -43,7 +43,7 @@ filing without duplicating the citation on every line.
 A field value is normally a number. **One is a boolean:**
 `approvals_land_secured`.
 
-### Two optional sub-keys, and why a gate reads them
+### Optional evidence sub-keys, and why a gate reads them
 
 ```jsonc
 "aisc_aud_oz":          { "v": 3100, "range": [2800, 3400], "doc": "fy27_guidance" },
@@ -56,16 +56,47 @@ A field value is normally a number. **One is a boolean:**
 | `horizon_years` | How many years of the Gate 2 stress window the figure covers | Methodology §3.2. Sizes the shortfall. Coverage itself never gates. |
 | `annual_leg_aud_m` | The recurring guided portion inside the value, excluding any finite build that already spans the window | Methodology §3.2. Continued across the shortfall as a robustness probe; the pass must survive it at `gate2.horizon_continuation_cover`. |
 | `term_date` | ISO date a facility ends. On `undrawn_facilities_aud_m` only | Methodology §3. Credited only if it reaches the end of the Gate 2 window. **Absent means not credited** — an unverified facility cannot prove liquidity. Record the EARLIEST date the facility could lapse where the exact day is undisclosed. |
+| `evidence_state` | Directional classification: `POINT`, `UPPER_BOUND`, `LOWER_BOUND`, `CARRY_FORWARD`, or `UNRESOLVED` | Validated by the engine. A denominator accepts only `POINT`, `UPPER_BOUND`, or an unexpired `CARRY_FORWARD`; `LOWER_BOUND` and `UNRESOLVED` reject the name rather than shrinking economic cost. |
+| `as_of` | ISO measurement date for a capital amount | Dates a carry-forward and the common capital basis. If omitted, the cited document date is used. |
+| `cost_base_date` | ISO date on which a project estimate's prices are based | Kept distinct from the measurement date; an old cost base is never silently advanced. |
+| `accuracy_range` | Issuer-published estimate range | Records estimate quality; never create an analyst range. |
+| `contingency_included` | Whether the disclosed estimate includes contingency | `false` prevents a no-contingency base estimate being mislabeled as an exact point. |
 
-Both are **transcriptions of what the cited document already states**, and both
-are subject to the same rule as `v`: if the document does not establish it, the
-sub-key is omitted. Two omissions therefore mean different things and neither
-means "fine":
+These sub-keys are **transcriptions of what the cited document already states**
+or explicit classifications of that evidence, and are subject to the same rule
+as `v`: if the document does not establish a fact, it is omitted. Omissions
+therefore have specific meanings and none means "fine":
+
+Issue 3 permits a sourced `UNRESOLVED` field shell with no `v`. This is not a
+numeric zero: the engine rejects it before weighting. Every modeled company must
+carry an execution-capital field, including a sourced zero or an explicit
+unresolved state, so silence cannot become favourable.
+
+### Execution capital and developer funding
+
+Keep these three quantities separate:
+
+```text
+remaining_execution_capex_aud_m = economic spend still required to complete
+                                  finite approved scopes
+available_project_funding_aud_m = cash and committed cash-drawable funding
+                                  available to developer scopes
+residual_funding_gap_aud_m       = max(0, execution capital − project funding)
+```
+
+The first two are sourced fields. The third is engine-derived and must never be
+stored. All-in EV adds remaining execution capital once for producers and
+developers. Developer Gate 2 alone reads the residual funding gap. Producer
+`committed_capex_aud_m` remains the separate stress-window cash-burn input.
+
+Recurring annual growth guidance is not a remaining total to completion and
+therefore stays in Gate 2 rather than entering the denominator. A numeric zero
+must cite the filing that establishes why no finite material scope is included.
 
 - **No `range`** means the issuer published a point, not that the point is exact.
 - **No `horizon_years`** means the record does not establish the period. It does
   **not** mean the figure covers the window — the engine reads it as `unknown`
-  and prints it, which is how Westgold's one-line capex record surfaces.
+  and prints it rather than treating an unspecified period as full coverage.
 - **No `annual_leg_aud_m` on a short-covered figure** means there is nothing to
   continue, so the continuation probe reports `UNTESTED` and the name is routed
   to §12.2 item 6 as a capital-state question. `UNTESTED` is not a pass, and the
@@ -254,12 +285,11 @@ have been.
    report of it. Where only secondary is available, mark it and log the gap.
 2. **Date every field.** Gold equities restate reserves annually and guidance
    quarterly. A number without an `as_of` is unusable.
-3. **`remaining_capex_aud_m` is mandatory for a developer, twice over.** It gates
-   §3.1 D3 *and* it is added to EV to price the claim all-in (§7.1), because the
-   ledger counts ounces the company has not yet paid to unlock. A developer
-   without it is rejected at the gate, which is what stops absence reading as
-   zero in the denominator. Record it as a BOUND — remaining pre-production
-   capital less available funding, floored at zero — and say so in the note.
+3. **`remaining_execution_capex_aud_m` is mandatory for every modeled name.**
+   It is gross economic cost and is added once to EV for every sleeve.
+   Developers also require `available_project_funding_aud_m`; the engine derives
+   the residual gap and sends only that derived quantity to §3.1 D3. Never net
+   cash or facilities from execution capital, and never store the residual gap.
 4. **Reserve price assumptions are mandatory sourcing** — but reporting-only
    JORC Table 1 and NI 43-101 both require the price deck to be
    disclosed, and it says how under-booked a company's P&P tranche is, which is

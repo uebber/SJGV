@@ -1,15 +1,23 @@
 # Execution capital and optionality evidence — revised design proposal
 
-**Status:** **accepted as the design of record; not yet implemented.** Second revision — closes the four blockers raised on the first, against the sourced inventory in `docs/execution-capital-inventory.md`. Design only: no engine, data, gate, parameter or weight has changed, so **the defect described in §1 and §2 is still live in the build.**  
+**Status:** **accepted; capital-field split implemented 21 August 2026.** The
+company-level schema, directional validation, developer residual-gap derivation
+and all-sleeve denominator are implemented. The issue-4 per-project Gate 2
+interval records and the issue-5 coordinated replay remain open.
 **Decision taken:** implement the capital-field split for every constituent in one production change; defer the asset-evidence overlay.  
-**Progress:** Step 1 (sourcing inventory) is complete — `docs/execution-capital-inventory.md`. Step 2 (schema and engine change) is open. **CORRECTED 20 Aug 2026: it blocks on WGX, not EVN.** This status line contradicted §2.4 of this same document for a day; §2.4 was right. EVN's gross total is an admissible `UPPER_BOUND` under §3.5. Production decisions, including the CMM and GGP classifications this document got wrong, are in `docs/capital-gate2-production-decision.md`.
+**Progress:** Steps 1 and 2 are complete; activation replay is pending. WGX is
+recorded `UNRESOLVED` and cannot receive a favourable zero. **CORRECTED 20 Aug
+2026: it blocks on WGX, not EVN.** EVN's gross total is an admissible
+`UPPER_BOUND` under §3.5. Production decisions, including the CMM and GGP
+classifications this document got wrong, are in
+`docs/capital-gate2-production-decision.md`.
 
 ## 1. Revised decision
 
-The current denominator contains a live defect. It adds a developer's
+The pre-migration denominator contained a live defect. It added a developer's
 **residual funding gap** to enterprise value when the economic quantity required
-is **remaining execution capital**. One field, `remaining_capex_aud_m`, currently
-does both jobs even though the two quantities answer incompatible questions.
+was **remaining execution capital**. One field, `remaining_capex_aud_m`, did
+both jobs even though the two quantities answer incompatible questions.
 
 The production fix should:
 
@@ -131,7 +139,7 @@ with effective N unchanged at 11.2. GGP is the largest single move at −0.76pp.
 | GGP | 1,065 | `POINT` | Havieron to first gold on a **June 2025 cost base**, reaffirmed without escalation in the 29 July FY26 operating report. Held unchanged with the cost-base date recorded and no assumed spend-down; re-source at the audited result. A later filing may hold or raise it, and absence of an update may not lower it. |
 | EVN | 1,210 | `UPPER_BOUND` | Gross-as-remaining; spend-to-date undisclosed |
 | CMM | **593** | `UPPER_BOUND` | **CORRECTED 20 Aug 2026.** A$474m was classified `POINT` here while §3.5 of this same document says an estimate with no contingency is a `LOWER_BOUND` — which may not enter the denominator at all. The issuer's own ±25% band gives A$593m, an admissible upper bound that invents no escalation. Costs CMM about 0.3pp. |
-| RMS | 381 | `UPPER_BOUND` | Exact on the FY26 Commitments note, 21 Aug 2026 |
+| RMS | 381 | `UPPER_BOUND` | Gross approved Mt Magnet programme; FY26 spend cannot be apportioned. The 21 Aug Commitments note instead discloses A$79.218m within one year for Gate 2 and does not make this execution-capital total exact. |
 | NST | 385 | `POINT` | Three FY27 KCGM items; FY27 guidance 20 Aug 2026 |
 | RXL | 320 | `POINT` | A$382.6m rolled forward by A$62.877m of FY26 spend |
 | GMD | 280 | `UPPER_BOUND` | Issuer total, not the A$229m EPC sum; scheme risk (§4.8) |
@@ -583,7 +591,10 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 
 ### Step 1 — source and classify
 
-- Source RMS from a current primary filing.
+- ~~Source RMS from a current primary filing.~~ **Closed 21 Aug 2026:** Note 27
+  discloses A$79.218m within one year for Gate 2. It does not reconcile spend to
+  the A$381m programme, which remains an admissible `UPPER_BOUND` rather than a
+  `POINT` remaining balance.
 - For all selected constituents, identify unfinished material initial, restart
   and growth scopes.
 - Apply the 1% aggregate-of-EV materiality rule; list every sub-threshold scope
@@ -700,9 +711,10 @@ plan as the next production change. Preserve the same-market-data replay as a
 separate approval checkpoint before weights move.
 
 The sourcing is further along than the first revision assumed. Eleven of twelve
-constituents resolve to a `POINT` or a conservative `UPPER_BOUND` today, and two
-of those become exact within days — Northern Star's FY27 guidance on 20 August
-and Ramelius's FY26 Commitments note on 21 August. The initial switch blocks on
+constituents resolve to a `POINT` or a conservative `UPPER_BOUND` today. Northern
+Star's FY27 guidance landed on 20 August, and Ramelius's 21 August Commitments
+note supplied an exact A$79.218m one-year Gate 2 amount while leaving its A$381m
+execution-capital candidate an `UPPER_BOUND`. The initial switch blocks on
 Westgold alone, and on a disclosure the issuer has scheduled: a preliminary
 4 Mtpa assessment in its Strategic Outlook in early September 2026.
 

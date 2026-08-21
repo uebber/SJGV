@@ -20,7 +20,7 @@ part of the gold-equity proposition while making those failure modes explicit.
 > unit of enterprise value, in qualifying jurisdictions, while selecting
 > companies able to survive a severe gold drawdown without forced equity issuance.
 
-The current construction holds 11 ASX-listed companies at **A$743 of funded EV
+The frozen pre-migration construction holds 11 ASX-listed companies at **A$743 of funded EV
 per confidence-weighted claimed ounce**, versus **A$905 for the same companies
 at market-cap weights**. That is an 18% lower headline EV per
 claimed ounce, produced by portfolio construction alone. The claim is 59.0% Proven & Probable
@@ -160,32 +160,28 @@ grade, recovery, metallurgy, capital requirement or economic value.
 
 ### 3. Price the claim
 
-The current production denominator is:
+The engine denominator is:
 
 ```text
-Funded EV = market capitalisation + net debt + residual developer funding gap
+All-in EV = market capitalisation + net debt + remaining execution capital
 ```
 
-The developer adjustment prevents an unfunded project from looking cheap merely
-because the capital required to build it has not yet been raised.
+Remaining execution capital is gross economic cost and is applied identically
+to producers and developers. Available project funding is recorded separately;
+the engine derives `max(0, execution capital − available funding)` and uses that
+residual gap only in the developer Gate 2 dilution test. A fully funded project
+therefore keeps its construction cost in the denominator without failing Gate 2.
 
-This field is also the main open design issue, and it is recorded as such —
-§12.2 item 6 of the methodology, the only open item that moves weights rather
-than asking a question about them. Residual funding gap measures financing
-capacity, while remaining execution capital measures economic cost; they are not
-the same quantity, and one field currently carries both. Three conventions are
-live in the book at once: AUC gross, AAR net of cash, and RXL net of cash and
-drawable debt — which charges the full A$382.6m Youanmi pre-production capital
-to the denominator as zero. Producers are charged nothing at all for the same
-activity, so Havieron's A$1,065m and Mt Gibson's A$474m are absent from a
-denominator that does charge developers.
+Capital amounts carry directional evidence states. `POINT`, `UPPER_BOUND`, and
+an in-date `CARRY_FORWARD` may enter the denominator. A `LOWER_BOUND` or
+`UNRESOLVED` amount rejects the name rather than allowing missing cost to raise
+its weight.
 [`docs/asset-evidence-capital-proposal.md`](docs/asset-evidence-capital-proposal.md)
-is the accepted design for separating them and applying remaining execution
-capital consistently to producers and developers;
+is the design implemented by the engine;
 [`docs/execution-capital-inventory.md`](docs/execution-capital-inventory.md) is
-the completed per-constituent sourcing step. Until that migration ships, the
-headline A$/oz figure should be read as the current construction statistic, not
-as a complete look-through acquisition-and-build cost.
+the completed per-constituent sourcing step. The coordinated replay and formal
+methodology activation remain the later remediation steps; no snapshot is made
+for this implementation check.
 
 ### 4. Set raw weights
 
@@ -235,7 +231,7 @@ snapshot beside the data layer and the parameters.
 
 ---
 
-## Current construction
+## Frozen baseline construction
 
 **Market-data anchor:** 19 August 2026, spot A$6,347/oz  
 **Resource data sourced:** 17 August 2026, Westgold superseded 20 August 2026  
@@ -326,7 +322,8 @@ the strategy should—and should not—be expected to work.
 | `data/` | Provenance-tracked company, jurisdiction and parameter data |
 | [`data/README.md`](data/README.md) | Data schema and sourcing conventions |
 | `nav_model.py` | Reporting-only NAV and implied-deck model |
-| `tools/` | Provenance, gaps, sensitivity, configuration audit, snapshots and asymmetry diagnostics |
+| `tools/` | Provenance, gaps, sensitivity, regression, configuration audit, snapshots and asymmetry diagnostics |
+| `tests/fixtures/` | Frozen regression evidence used to decompose construction changes without creating a rebalance snapshot |
 | `snapshots/` | Frozen point-in-time inputs, outputs, parameters, raw TWS session and engine commit |
 | `docs/` | Supporting studies: grade-tonnage disclosure survey, sourcing brief, execution-capital inventory, and the accepted capital-denominator design |
 

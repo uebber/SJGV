@@ -152,13 +152,16 @@ FIELDS = {
     "approvals_land_secured": ("blocking", "D2 cannot be tested — approvals and "
                                            "land access unproven",
                             "approvals announcements, tenure register", DEVELOPER),
-    # Blocking twice over since 18 Aug 2026: it gates D3 AND it is added to EV
-    # to price the claim all-in (§7). A developer without it is rejected before
-    # the denominator is built, which is what stops absence reading as zero in
-    # the one sleeve where zero would flatter.
-    "remaining_capex_aud_m": ("blocking", "D3 cannot be tested and the claim cannot "
-                                          "be priced all-in — funding gap unsized",
-                            "PFS/DFS capital estimate less cash", DEVELOPER),
+    # Issue 3 separates economic cost from financing capacity. Execution
+    # capital is mandatory for every sleeve; project funding is additionally
+    # mandatory for developers so D3 can derive the residual gap.
+    "remaining_execution_capex_aud_m": (
+                            "blocking", "all-in EV cannot be computed without a "
+                                        "denominator-safe execution-capital state",
+                            "approved finite-scope total and current spend bridge", None),
+    "available_project_funding_aud_m": (
+                            "blocking", "D3 residual funding gap cannot be bounded",
+                            "cash plus committed cash-drawable project funding", DEVELOPER),
 }
 
 # Declared in the engine's KNOWN_FIELDS and carried for three names, but read by
@@ -227,10 +230,20 @@ def _blend(c: dict) -> float | None:
 def audit(companies: list[dict]) -> list[dict]:
     rows = []
     for c in companies:
-        present = set(c.get("fields", {}))
+        fields = c.get("fields", {})
+        present = set(fields)
         missing = []
         for name, (sev, why, where, sleeve) in FIELDS.items():
-            if name in present:
+            spec = fields.get(name) or {}
+            state = spec.get("evidence_state") if isinstance(spec, dict) else None
+            directional_gap = (
+                state == "UNRESOLVED"
+                or (name == "remaining_execution_capex_aud_m"
+                    and state == "LOWER_BOUND")
+                or (name == "available_project_funding_aud_m"
+                    and state in {"LOWER_BOUND", "UPPER_BOUND"})
+            )
+            if name in present and not directional_gap:
                 continue
             if sleeve is not None and c["sleeve"] not in sleeve:
                 continue  # not applicable to this sleeve — silence, not a gap

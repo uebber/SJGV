@@ -1,10 +1,13 @@
 # Execution capital — Step 1 sourcing inventory
 
-**Status:** inventory only. No engine, data, gate, parameter or weight changes.
+**Status:** inventory plus 21 August 2026 primary-source refresh. This document
+was the pre-implementation evidence record; issue 3 subsequently changed the
+schema, engine and parameters without replacing the frozen generated baseline.
 **Purpose:** establish, per constituent, what the disclosure regime actually supplies
 for `remaining_execution_capex_aud_m` and its Gate 2 within-horizon portion, before
 any definitional or schema decision is taken.
-**As-of:** data layer sourced 2026-08-17; EV from the frozen 2026-08-18 replay anchor.
+**As-of:** capital evidence refreshed 2026-08-21; EV remains from the frozen
+2026-08-18 replay anchor.
 
 This is Step 1 of the capital migration proposed in `asset-evidence-capital-proposal.md`.
 Two committee decisions were taken before it began:
@@ -15,8 +18,9 @@ Two committee decisions were taken before it began:
    discrete builds from recurring growth capital is adopted here; this document
    supplies the evidence for that decision.
 
-Nothing below is a new fetch. Every figure is already in `data/companies.json`,
-sourced to a primary document. Step 1's remaining fetch work is listed in §6.
+The original inventory used only figures already in `data/companies.json`.
+Section 6 now records the 21 August primary-source refresh and its remaining
+publication gaps.
 
 ---
 
@@ -24,22 +28,23 @@ sourced to a primary document. Step 1's remaining fetch work is listed in §6.
 
 | | Count | Names |
 |---|---|---|
-| Discrete build, project total disclosed | 6 | GGP, CMM, RXL, GMD, WGX, NST |
+| Discrete build, project total or admissible upper bound disclosed | 6 | GGP, CMM, RXL, GMD, RMS, NST |
 | Board-approved totals, spend-to-date undisclosed | 1 | EVN |
 | Recurring annual guidance, no project total | 4 | RRL, VAU, PNR, CYL |
-| Absent | 1 | RMS *(unblocks 21 Aug 2026)* |
+| Unresolved | 1 | WGX *(replacement scopes are larger or uncosted)* |
 
-**No constituent is de minimis at the proposed 1% threshold** (§5). The materiality
-parameter, as proposed, excludes nobody in the current book.
+**No constituent with admissible capital evidence is de minimis at the proposed
+1% threshold** (§5). WGX is unresolved before that test is reached.
 
-**One name blocks the switch on disclosure rather than effort: EVN.** Its four
-board-approved project totals are disclosed, but cumulative spend against them is
-not, and the note itself records that "a material but unquantified share of the
-A$1,210m is already spent". Remaining execution capital is therefore not derivable
-without apportionment, which `estimation_policy` forbids.
+**One name blocks the switch on disclosure rather than effort: WGX.** Its former
+A$145m scope is under review in favour of larger or additional uncosted scopes.
+EVN's four board-approved totals remain a poor but admissible `UPPER_BOUND`:
+treating the gross A$1,210m as remaining assumes no spend-down and can only run
+against the name.
 
-**RMS is sourceable today on the RXL convention**, contrary to its own gaps note —
-see §4.11. It becomes exact on 21 August 2026.
+**RMS remains sourceable on the RXL convention** as a A$381m `UPPER_BOUND` —
+see §4.11. Its 21 August commitments note makes the one-year Gate 2 amount exact,
+not the remaining execution-capital balance.
 
 ---
 
@@ -214,10 +219,11 @@ PP2 mill expansion A$50–75m correctly excluded as pre-FID. The FY27 plant back
 upgrade carries no disclosed figure. **Supersedes at the FY26 annual report.** At 1.58%
 of EV, CYL also drops out at a 2% materiality setting.
 
-### 4.11 RMS — sourceable today, contrary to its own gaps note
-The gaps note rejects every route to a number. That reasoning is correct **for Gate 2**,
-where it evaluated A$223m (the plant leg alone) and identified it as a *lower* bound
-running *for* the name. But the full board-approved and unconditional programme —
+### 4.11 RMS — exact Gate 2 commitment, bounded execution capital
+The former gaps note rejected every route to a number before the FY26 annual
+report. Its treatment of A$223m (the plant leg alone) was correct: that amount is
+a *lower* bound running *for* the name. But the full board-approved and
+unconditional programme —
 A$223m plant + A$76m Never Never pre-production development + A$82m site
 infrastructure = **A$381m**, struck October 2025 — taken as remaining on the
 assumption that nothing has been spent is an **upper** bound running *against* the
@@ -229,16 +235,26 @@ figure is conservative by an unquantified amount. Rebecca-Roe (A$340m) stays exc
 FID is conditional on Roe environmental permitting, unresolved as at the 29 Jul 2026
 quarterly.
 
-**RMS reports its FY26 result pre-market Friday 21 August 2026**, which will carry the
-Commitments note as at 30 June 2026 and make this exact.
+**REFRESHED 21 AUGUST 2026.** Note 27 of the audited FY26 report discloses
+A$79.218m of capital expenditure commitments within one year at 30 June 2026.
+That is entered as a `POINT` for its stated one-year Gate 2 coverage. It does not
+identify which Mt Magnet scopes the contracts serve and does not reconcile the
+A$163.3m group growth spend to the A$381m programme. The execution-capital
+candidate therefore remains A$381m `UPPER_BOUND`; it did not become exact.
 
 ### 4.12 WGX — thinnest record in the book
-`committed_capex_aud_m = 145`, and the entire note reads *"Approved Higginsville mill
-expansion, 1.6 to 2.6 Mtpa."* No scope decomposition, no completion date, no exclusions.
-Its source is the **March 2026** quarterly, dated to the month only (`2026-04`), while
-every other constituent runs off a June 2026 quarterly. `net_debt_aud_m` carries an
-**empty note**. The record's own flag says "FY26 statement pending alongside August
-full-year results."
+`committed_capex_aud_m` is now absent and explicitly `UNRESOLVED`. The former
+A$145m value covered the approved 2.6 Mtpa Higginsville stage, which the 18 August
+Fletcher filing places under review in favour of a larger, uncosted 4 Mtpa case.
+The same filing calls additional Murchison milling capacity committed or planned
+without giving an amount. Retaining A$145m would therefore retain a favourable
+`LOWER_BOUND`.
+
+The ASX feed was rechecked on 21 August. Neither the FY26 financial result nor
+the Strategic Outlook had been filed. The filing says a preliminary assessment
+will arrive in the Strategic Outlook expected in early September and that a
+definitive timeline is premature. The amount and coverage period remain absent;
+FY26 non-sustaining spend is not substituted for a remaining balance.
 
 This is a data-quality gap independent of the capital work, on a name that is the
 book's largest weight at 12.16% and is elsewhere described as "the most complete data
@@ -262,14 +278,14 @@ replayed. `Y` = included.
 | EVN | 28,194 | 281.9 | 1,210.0 | 4.29% | Y | Y | Y |
 | VAU | 5,500 | 55.0 | 173.0 | 3.15% | Y | Y | Y |
 | GMD | 8,480 | 84.8 | 265.0 | 3.13% | Y | Y | Y |
-| WGX | 4,676 | 46.8 | 145.0 | 3.10% | Y | Y | Y |
+| WGX | 4,676 | 46.8 | — | — | · | · | · |
 | CYL | 1,396 | 14.0 | 22.0 | 1.58% | Y | Y | · |
 | NST | 32,677 | 326.8 | 385.0 | 1.18% | Y | Y | · |
 
-**At the proposed 1%, the threshold excludes nobody.** Like the §6.4 statement-age
-bar, it would be adopted while binding on nothing — which is the honest moment to
-adopt it, but it should be stated rather than presented as a live filter. Only at 2%
-does it begin to work, dropping NST and CYL.
+**At the proposed 1%, the threshold excludes none of the names with admissible
+capital evidence.** WGX is unresolved before materiality is tested. Like the §6.4
+statement-age bar, the threshold would be adopted while binding on nothing. Only
+at 2% does it begin to work, dropping NST and CYL.
 
 ---
 
@@ -277,16 +293,16 @@ does it begin to work, dropping NST and CYL.
 
 | Name | Needed | Availability |
 |---|---|---|
-| RMS | FY26 Commitments note, capital contracted not provided for at 30 Jun 2026 | **21 Aug 2026**, confirmed in writing |
-| WGX | June 2026 quarterly / FY26 full-year result: Higginsville scope, completion date, net debt | August 2026, per the record's own flag |
+| RMS | FY26 Commitments note, capital expenditure commitments at 30 Jun 2026 | **Closed 21 Aug:** A$79.218m within one year; execution roll-forward still unavailable |
+| WGX | FY26 full-year result / Strategic Outlook: Higginsville and Murchison scope, completion date, funding and coverage | **Not filed at 21 Aug:** Strategic Outlook expected early September |
 | EVN | Cumulative spend to 30 Jun 2026 per project; phasing for E22, Bert, CPF | Unknown — may not be disclosed |
 | CYL | FY26 annual report Commitments note at 30 Jun 2026 | Pending |
-| NST | FY27 guidance, 20 Aug 2026: KCGM remaining works, the uncosted renewable energy item | **20 Aug 2026** |
-| GGP | Whether the June-2025 Havieron cost base has been escalated | Check FY26 result |
+| NST | FY27 guidance and audited facility terms | **Closed 20 Aug:** facility A$1.75bn undrawn; capital guidance refreshed separately |
+| GGP | Facility execution/availability; whether the June-2025 Havieron cost base has been escalated | **Facility closed:** A$475m undrawn through at least 1 Apr 2031; audited cost refresh still pending |
 | All | Confirmation that no other material unfinished scope exists — a sourced zero, not silence | Per name |
 
-Three of the seven resolve within days. EVN is the only one where the disclosure may
-simply not exist.
+RMS, NST and GGP are closed for the issue-2 questions. WGX remains absent because
+the named primary documents are not yet published; no substitute is inferred.
 
 ---
 

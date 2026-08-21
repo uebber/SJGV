@@ -44,7 +44,7 @@ GATE_FIELDS = {
     "undrawn_facilities_aud_m", "net_debt_aud_m", "gold_nav_share",
     "eligible_ounce_share", "eligible_pp_share", "eligible_mi_share",
     "eligible_inferred_share", "study_stage", "approvals_land_secured",
-    "remaining_capex_aud_m",
+    "remaining_execution_capex_aud_m", "available_project_funding_aud_m",
 }
 
 

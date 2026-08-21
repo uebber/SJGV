@@ -1,12 +1,12 @@
 # Capital denominator and Gate 2 horizon — production decision
 
 **Status:** **partly accepted, 20 August 2026.** The capital-denominator
-decisions in §3 are accepted as the design of record. **§1 decision 3 — making
+decisions in §3 were implemented on 21 August 2026. **§1 decision 3 — making
 horizon coverage a binding Gate 2 limb — is NOT accepted**, and the reason is
-in the box below. Neither the denominator nor the horizon limb is implemented in
-the engine by this document.
+in the box below. The explicit per-project interval evaluator remains issue 4;
+the frozen generated baseline remains unchanged pending the issue-5 replay.
 **Origin:** PR #5, `agent/capital-gate2-fail-unfavourably`.
-**Evidence cut-off:** 20 August 2026.
+**Evidence cut-off:** 21 August 2026.
 **Decision rule:** unavailable evidence may hold or reduce a constituent's
 weight; it may never increase it.
 
@@ -54,13 +54,6 @@ weight; it may never increase it.
 > §2's directional state machine stands as the design for the capital migration.
 > §4.1 still needs re-tabling across all eleven constituents before any
 > coverage-based version of it is revisited.
-
----
-
-implemented by this document.  
-**Evidence cut-off:** 20 August 2026.  
-**Decision rule:** unavailable evidence may hold or reduce a constituent's
-weight; it may never increase it.
 
 ## 1. Decision
 
@@ -157,7 +150,11 @@ as committed or planned without a disclosed total. A$145m is therefore a
 `LOWER_BOUND`, not a conservative carry-forward.
 
 The FY26 financial result and Strategic Outlook are event-driven sourcing
-triggers. Until they provide a complete total, WGX remains `UNRESOLVED`.
+triggers. The ASX feed was rechecked on 21 August 2026 and neither had been filed;
+the 18 August Fletcher announcement points to the Strategic Outlook in early
+September. The stale A$145m Gate 2 field has therefore been removed rather than
+carried as a favourable lower bound. Until the filings provide a complete total,
+funding and coverage, WGX remains `UNRESOLVED`.
 
 ## 4. Gate 2 horizon decision
 

@@ -90,6 +90,11 @@
   "anchor_note": "RESOLVED 2026-08-17. The drawdown is applied to a trailing anchor_years real average of AUD gold, NOT to spot. Rationale: anchoring a survival gate to spot makes it mechanically weakest exactly when spot is most extended — i.e. when survival risk is highest. At 40% off a A$6,170 spot the stress price was A$3,702 and every producer passed, so the gate filtered nothing. Against a trailing average the effective shock deepens automatically as spot runs ahead of the average, which removes the recalibration treadmill that re-picking a fixed number would recreate next cycle. Past prices are expressed in today's money at anchor_inflation_pa so the anchor is in the same money as the AISC path, which inflates at cost_inflation_pa; setting anchor_inflation_pa to 0 gives the nominal average, which is a LOWER anchor and therefore a harsher test. Falls back to spot, loudly flagged, when no gold history is available.",
   "superseded_calibration_warning": "OPEN: 40% may be too lenient. Spot is A$6,170/oz after a 64% gain in 2025 and +31% year on year; a 40% drawdown lands at A$3,702/oz, roughly where AUD gold traded in 2023. That is a normalisation, not a stress. A gold bear market is also typically risk-on, which strengthens AUD and AMPLIFIES the fall in AUD gold — a 40% USD drawdown could be 50%+ in AUD. At 40% every current producer passes. Committee should consider either raising the threshold or applying it to a trailing average rather than spot. The breaking-point diagnostic is reported per name meanwhile."
  },
+ "execution_capital": {
+  "materiality_of_ev": 0.01,
+  "incumbent_max_carry_forward_months": 6,
+  "ref": "Accepted execution-capital design §§3.2 and 4.3. Aggregate unfinished approved scopes before applying the 1% pre-capex-EV threshold. A carried gross balance is never spent down by assumption and expires after two light quarterly cycles."
+ },
  "constraints": {
   "max_single_name": 0.15,
   "max_single_asset_name": 0.1,

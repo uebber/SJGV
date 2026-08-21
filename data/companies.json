@@ -1,6 +1,6 @@
 {
  "_schema": "See data/README.md. Every field points at a document in the same record's `documents` map. Unknown values are OMITTED, never guessed.",
- "_sourced": "2026-08-20",
+ "_sourced": "2026-08-21",
  "_universe": "Gate 1 Tier A restricts to Australia. 17 candidates screened.",
  "companies": [
   {
@@ -56,9 +56,26 @@
      "asx_announcement": "03123137",
      "date": "2026-08-20",
      "type": "primary"
+    },
+    "ar_fy26": {
+     "title": "FY26 Annual Report — corporate bank facilities total A$1.75bn in two equal tranches maturing March 2030 and March 2031; both undrawn at 30 June 2026",
+     "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03123134-6A1339301",
+     "asx_announcement": "03123134",
+     "date": "2026-08-20",
+     "type": "primary"
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 470.0,
+     "evidence_state": "UPPER_BOUND",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2026-06-30",
+     "accuracy_range": [350.0, 470.0],
+     "contingency_included": null,
+     "doc": "fy26_results_pres",
+     "note": "UPPER_BOUND: the issuer's FY27 KCGM Mill Expansion and Readiness range is A$350-470m. The upper endpoint is used so the published range cannot reduce the denominator. Operational Growth Capital is recurring/deferrable and Hemi remains pre-FID, so neither is execution capital."
+    },
     "pp_moz": {
      "v": 28.419,
      "doc": "rr2026",
@@ -134,8 +151,9 @@
     "undrawn_facilities_aud_m": {
      "v": 1750,
      "term_date": "2030-03-01",
-     "doc": "nst_q4fy26",
-     "note": "Two equal tranches maturing March 2030 and March 2031, undrawn and available at quarter end, so the facility outlives the Gate 2 horizon. Value unchanged; citation moves from a newsletter to the lodged quarterly. NOT included: the A$50m and US$99.5m contingent-instrument facilities, which are drawn and are bank-guarantee lines rather than liquidity. TERM DATE RECORDED (§3): Two equal tranches maturing March 2030 and March 2031. The EARLIEST tranche date is recorded, which is the bound running against the name; both outlive a window ending August 2028."
+     "evidence_state": "POINT",
+     "doc": "ar_fy26",
+     "note": "EVIDENCE STATE POINT for amount and availability at 30 June 2026: the audited FY26 Annual Report states that two equal corporate-bank tranches total A$1.75bn, mature in March 2030 and March 2031, and remained undrawn at period end. TERM DATE is a conservative lower bound rather than an invented day: the issuer gives only the month, so 2030-03-01 records the earliest possible expiry of the shorter tranche. Both tranches outlive the Gate 2 window ending August 2028. NOT included: the A$50m and US$99.5m contingent-instrument facilities, which are drawn bank-guarantee lines rather than liquidity."
     },
     "committed_capex_aud_m": {
      "v": 410.0,
@@ -243,6 +261,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 1210.0,
+     "evidence_state": "UPPER_BOUND",
+     "as_of": "2026-06-30",
+     "cost_base_date": null,
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "evn_growth_asx",
+     "note": "UPPER_BOUND, gross-as-remaining: Northparkes E22 A$545m + Northparkes CPF A$75m + Ernest Henry Bert A$160m from this filing, plus Cowal Open Pit Continuation A$430m from `cowal_opc`, totals A$1,210m. Spend to date cannot be apportioned, so none is assumed. This is economic execution capital, not the audited contracted-capex Gate 2 amount."
+    },
     "pp_moz": {
      "v": 12.0,
      "doc": "rr2026",
@@ -405,6 +433,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 592.5,
+     "evidence_state": "UPPER_BOUND",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2026-06-30",
+     "accuracy_range": [355.5, 592.5],
+     "contingency_included": false,
+     "doc": "mggp_pfs_2026",
+     "note": "UPPER_BOUND: A$474m Mt Gibson pre-production capital at the issuer's disclosed +25% accuracy endpoint = A$592.5m. The base estimate expressly includes no contingency, so A$474m is not admitted to the denominator as a point. KGP annual growth guidance is recurring and remains in Gate 2 only."
+    },
     "pp_moz": {
      "v": 5.241,
      "doc": "rr_fy26",
@@ -549,9 +587,25 @@
      "url": "https://cdn-api.markitdigital.com/apiman-gateway/ASX/asx-research/1.0/file/2924-03115120-6A1335892",
      "date": "2026-07-29",
      "type": "primary"
+    },
+    "debt_facility_jun26": {
+     "title": "Execution of Corporate Debt Facilities and Havieron Approval — A$250m undrawn five-year revolver, A$225m undrawn seven-year revolver, and separate A$25m contingent-instrument facility",
+     "url": "https://app.sharelinktechnologies.com/announcement/asx/c9052f541801c16b0a618c617c6822d3",
+     "date": "2026-06-01",
+     "type": "primary"
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 1065.0,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2025-06-30",
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "ggp_fy27",
+     "note": "POINT for the disclosed scope: Havieron pre-production capital to first gold, approved at FID and reaffirmed in the June-quarter report. The June 2025 cost base remains explicit; no escalation or spend-down is invented. The separate A$673m post-first-gold expansion and recurring Telfer growth guidance are excluded."
+    },
     "pp_moz": {
      "v": 5.0,
      "doc": "rrtables",
@@ -622,8 +676,9 @@
     "undrawn_facilities_aud_m": {
      "v": 475.0,
      "term_date": "2031-04-01",
+     "evidence_state": "POINT",
      "doc": "ggp_fy27",
-     "note": "CORRECTED from 500. A$500m is the TOTAL facility package; only A$475m is undrawn drawable cash — Revolving Credit Facility A at A$250m on a five-year tenor plus Facility B at A$225m on a seven-year tenor, both fully undrawn at 30 June 2026. The remaining A$25m contingent instrument facility is both drawn to A$9m and restricted to issuing bank and performance guarantees. The issuer's own arithmetic settles it: 'Available liquidity refers to $1,289m net cash reported at 30 June 2026 plus the $475m in undrawn revolving Credit Facilities' = A$1,764m. The previous pair (-1290, 500) would have implied A$1,790m and overstated liquidity by A$26m. Again the secondary source was right and the entry was wrong. EARMARKING CORRECTED: the previous note said the facility was earmarked for Havieron; the executed documents say 'working capital and general corporate purposes including Havieron development', so it is general-purpose. Lenders ANZ, ING, HSBC, NAB and Westpac, with no mandatory hedging requirement. TERM DATE RECORDED (§3): Facility A A$250m on a five-year tenor and Facility B A$225m on a seven-year tenor, both undrawn, executed with the ANZ/ING/HSBC/NAB/Westpac syndicate DURING THE JUNE 2026 QUARTER per the 29 July quarterly. The exact execution day is not disclosed, so the term is recorded at the EARLIEST it could fall — the first day of that quarter plus the shorter five-year tenor. Facility B runs to at least April 2033. Both outlive a window ending August 2028 by years, so the bound is not load-bearing; it is recorded because GGP is the one name in the book whose Gate 2 pass depends on its facility."
+     "note": "EVIDENCE STATE POINT for amount and availability at 30 June 2026. A$500m is the TOTAL facility package; only A$475m is undrawn drawable cash — Revolving Credit Facility A at A$250m on a five-year tenor plus Facility B at A$225m on a seven-year tenor, both fully undrawn at 30 June 2026. The remaining A$25m contingent instrument facility was drawn to A$9m and is restricted to bank and performance guarantees. The June quarterly's own arithmetic settles availability: A$1,289m net cash + A$475m undrawn revolvers = A$1,764m liquidity. The 1 June 2026 execution announcement (`debt_facility_jun26`) confirms the five- and seven-year terms and general-purpose availability, including Havieron, with no mandatory hedging. TERM DATE remains a conservative lower bound: the quarterly says execution occurred during the June quarter but the sources do not state the contractual commencement day, so 1 April 2026 plus the shorter five-year tenor gives 1 April 2031. Facility B runs to at least April 2033. Both outlive the Gate 2 window ending August 2028."
     },
     "committed_capex_aud_m": {
      "v": 1390,
@@ -694,6 +749,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 280.0,
+     "evidence_state": "UPPER_BOUND",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2026-05-21",
+     "accuracy_range": [250.0, 280.0],
+     "contingency_included": null,
+     "doc": "q4fy26",
+     "note": "UPPER_BOUND: the issuer's A$250-280m total anticipated Tower Hill mill capital, including owner costs. The A$229m EPC contract is a lower bound and cannot enter the denominator. The project remains included until a primary source confirms cancellation following the proposed Vault scheme."
+    },
     "pp_moz": {
      "v": 4.4,
      "doc": "rr_may2026",
@@ -849,9 +914,25 @@
      "url": "https://RMS.irmau.com/pdf/ea47beaa-bcec-4fa0-8381-6bb3ec2c5dce/Platform/ListPage/2025-Annual-Report.pdf",
      "date": "2025-10-24",
      "type": "primary"
+    },
+    "ar_fy26": {
+     "title": "Appendix 4E and FY26 Annual Financial Report — Note 27 capital expenditure commitments of A$79.218m within one year at 30 June 2026",
+     "url": "https://RMS.irmau.com/pdf/75fea362-1282-48df-b3d2-42287294835d/Platform/ListPage/Appendix-4E-and-FY26-Annual-Financial-Report.pdf",
+     "date": "2026-08-21",
+     "type": "primary"
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 381.0,
+     "evidence_state": "UPPER_BOUND",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2025-10-28",
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "nn_pfs_oct25",
+     "note": "UPPER_BOUND, gross-as-remaining: A$223m Mt Magnet plant + A$76m Never Never pre-production development + A$82m site infrastructure. Group spend since approval cannot be apportioned, so no spend-down is assumed. The audited A$79.218m commitment is a separate one-year Gate 2 amount."
+    },
     "pp_moz": {
      "v": 4.2,
      "doc": "nn_pfs_oct25",
@@ -908,6 +989,13 @@
      "doc": "q3fy26",
      "note": "Credit facility, undrawn."
     },
+    "committed_capex_aud_m": {
+     "v": 79.218,
+     "horizon_years": 1.0,
+     "evidence_state": "POINT",
+     "doc": "ar_fy26",
+     "note": "EVIDENCE STATE POINT over the disclosed coverage only. Note 27 of the audited FY26 Annual Financial Report states A$79.218m of capital expenditure commitments within one year at 30 June 2026 (A$'000 table value 79,218). No amount beyond one year and no recurring annual leg are disclosed, so neither is inferred; the two-year Gate 2 continuation remains UNTESTED rather than zero. This is a commitments-note amount, not remaining execution capital. The October 2025 gross A$381m Mt Magnet programme remains a separate UPPER_BOUND candidate for the future execution-capital field because group spend since approval cannot be apportioned to its scopes."
+    },
     "reserve_price_aud": {
      "v": 3500,
      "doc": "rr2025",
@@ -930,11 +1018,10 @@
     }
    },
    "flags": [
-    "Reports FY26 result pre-market Friday 21 Aug 2026 — confirmed in writing 17 Aug. Refresh committed_capex_aud_m from the annual report's Commitments note (line: capital expenditure contracted but not provided for, within one year — Note 25 in FY25) as at 30 June 2026.",
+    "FY26 COMMITMENTS REFRESH CLOSED 21 AUGUST 2026: Note 27 discloses A$79.218m within one year. It does not publish a second-year amount or a recurring annual leg, so coverage beyond one year remains explicitly untested.",
     "Rebecca-Roe FID is CONDITIONAL and remains so. The 25 Jun 2026 EPA decision streamlined the pathway ('not required to be formally assessed', Part V works approval underway) but did NOT clear the condition: the 29 Jul 2026 quarterly, lodged after it, still reads 'subject to environmental permitting for Roe'. A$340m of Rebecca-Roe growth capital stays excluded as pre-FID until the permit is in hand."
    ],
    "gaps": [
-    "committed_capex_aud_m — ABSENT, and every route to a number today is a forbidden construction. The audited 'capital expenditure contracted but not provided for' note does not exist for FY26 yet (the FY25 figure of A$3,016k pre-dates the entire growth programme, and Ramelius publishes no capital commitments note at the interim). No FY27 capital guidance exists; the only FY27 figure given is exploration at A$90-110m, which is deferrable. Rebecca-Roe is pre-FID. Mt Magnet IS board-approved and unconditional at A$223m for the 5 Mtpa plant plus A$76m Never Never pre-production development and A$82m site infrastructure, but that is a GROSS programme total struck in October 2025 against which A$163.3m of group growth capital has since been spent across a mix of projects — converting gross-approved into remaining-committed requires apportioning that spend by judgement. A$223m alone is also a LOWER bound, which runs FOR the name and so does not qualify as a permitted bound either. Contracted but unpriced: a new ball mill and long-lead equipment ordered, a Stage 1 engineering contractor appointed; the Stage 2 EPC contract is 'targeted to be awarded in the September 2026 Quarter', i.e. not yet let. Gate 2 is invariant across the A$41-870m cohort range, so this cannot change the verdict. DUE 21 AUGUST 2026.",
     "resource_price_aud — not disclosed. JORC Table 1 Section 3 gives reporting cut-off grades only ('typically 0.5 - 2.0 g/t') and never states a gold price constraining the Mineral Resource. The A$3,250/oz references are pit-shell and cut-off generation prices at specific Rebecca-Roe deposits, not a group deck. Nothing in the engine reads this field."
    ]
   },
@@ -999,6 +1086,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 0.0,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "cost_base_date": null,
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "fy27guid",
+     "note": "SOURCED ZERO under the finite-scope rule. FY27 growth capital is a recurring annual run-rate rather than a disclosed remaining total to completion; McPhillamys remains pre-FID. The A$260m midpoint continues to be charged in Gate 2 and never enters the denominator."
+    },
     "pp_moz": {
      "v": 3.855,
      "doc": "q4fy26",
@@ -1153,6 +1250,12 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "evidence_state": "UNRESOLVED",
+     "as_of": "2026-08-18",
+     "doc": "fletcher_or_aug26",
+     "note": "UNRESOLVED: the approved 2.6 Mtpa Higginsville scope is under review in favour of a larger uncosted 4 Mtpa case, while additional Murchison capacity is described as committed or planned without a total. The former A$145m is a favourable lower bound and is not retained."
+    },
     "pp_moz": {
      "v": 4.068,
      "doc": "rr2026",
@@ -1219,13 +1322,9 @@
     },
     "undrawn_facilities_aud_m": {
      "v": 600,
-     "doc": "diggers_aug26",
-     "note": "Value unchanged; citation moves from the March 2026 quarterly to the August 2026 lodged presentation and is now corroborated by arithmetic rather than asserted. 'Debt free with >$1.5B in available liquidity at 30 June 2026' against a A$939m treasury implies A$561m+ of undrawn facility, consistent with the A$600m unsecured facility previously recorded. The presentation does not restate the limit or the tenor, so neither is confirmed as at 30 June 2026 — a tenor inside the Gate 2 horizon would make the strictly conservative value zero, on the OBM and GMD precedent. It decides nothing: WGX survives on cash alone."
-    },
-    "committed_capex_aud_m": {
-     "v": 145,
-     "doc": "fletcher_or_aug26",
-     "note": "VALUE UNCHANGED AT A$145m, BUT THE SCOPE IS NOW UNDER ISSUER REVIEW AND THE FIGURE SHOULD NOT BE TREATED AS SETTLED. A$145m is the Higginsville mill expansion from 1.6 to 2.6 Mtpa, approved March 2026. The 18 Aug 2026 Fletcher reserve announcement states that Westgold 'has accelerated definitive design work on a 4Mtpa expansion case and is reviewing the optimal timing and scope of the previously approved 2.6Mtpa stage', and that this 'may extend the period that Higginsville operates at its current 1.6Mtpa capacity'. So the approved scope may be deferred, resized or replaced by a larger uncosted one. This is the SECOND instance of conditional obsolescence in the book, after GMD's Tower Hill mill being 'obviated post completion of Vault merger' — see docs/execution-capital-inventory.md 7.3, which records that the schema has no state for a scope that is live today and contractually pointless on a foreseeable event. The 4 Mtpa case carries no disclosed capital figure, so nothing can replace the A$145m yet. Held unchanged because 4.3 removes capital only on a primary source and elapsed time is not evidence. FY26 non-sustaining capital actually spent was A$142m (Diggers presentation footnote 1), which is a spend rate, not a remaining balance, and is not substituted."
+     "evidence_state": "CARRY_FORWARD",
+     "doc": "q3fy26",
+     "note": "EVIDENCE STATE CARRY_FORWARD. The March 2026 quarterly is the last primary filing that states the A$600m unsecured facility limit. The 4 August lodged presentation corroborates it directionally with debt-free treasury of A$939m and more than A$1.5bn of available liquidity at 30 June 2026, but does not restate the exact limit or tenor. No `term_date` is recorded, so the engine credits zero facility liquidity in Gate 2. This decides nothing because WGX survives on cash alone. Re-source the exact amount, availability and tenor from the FY26 result when filed."
     },
     "advt_shares_m": {
      "v": 3.4937,
@@ -1241,10 +1340,11 @@
    "flags": [
     "FY26 GROUP RESOURCE AND RESERVE LEDGER CLOSED 20 AUGUST 2026, from the lodged statement read page by page. This supersedes the FY25 group figures and the 18 Aug Fletcher-only indication TOGETHER, and it lands BELOW that indication: claimed ounces move 7.770 -> 7.603 Moz (-2.14%), where a Fletcher-only splice would have implied 8.86 Moz (+14%). The gap is depletion and the divestment of five non-core assets, and it is the case for the rule that forbade the splice.",
     "Most complete data record in the universe: full resource split, explicit reserve deck, confirmed unhedged. Use as the QA benchmark for the others. THIS CLAIM IS WITHDRAWN as of 19 Aug 2026 — it was true of the resource split and false of everything else. Six fields ran off a March 2026 quarterly dated to the month only while the cohort ran off June quarterlies, and net_debt_aud_m carried an empty note.",
-    "STILL OUTSTANDING after the 20 Aug statement: the FY26 financial result, FY27 guidance and the dividend. The resource ledger is closed; the AISC basis, the cash/bullion/investments split behind the A$939m treasury figure, and the Higginsville and Murchison capital scopes are not. WGX remains the book's largest weight and the name with the most unresolved inputs.",
+    "PRIMARY-DISCLOSURE CHECK 21 AUGUST 2026: the ASX feed still contains no FY26 financial result or Strategic Outlook. The 18 August Fletcher filing says the preliminary 4 Mtpa timing and sequence will be in the Strategic Outlook expected in early September 2026, while definitive design completes toward the end of FY27. The resource ledger is closed; the AISC basis, cash/bullion/investments split, facility tenor, and Higginsville and Murchison capital scopes are not.",
     "NON-GOLD WATCH ITEM: Table 3 of the FY26 statement carries a Beta Hunt NICKEL Mineral Resource of 1,248 kt at 2.8% Ni for 35 kt of contained nickel. It is reported separately from the gold tables and no gold-equivalent figure is used anywhere, so nothing enters the gold ledger. gold_nav_share stays 1.0 on a TTM revenue basis. Re-test if nickel is ever brought into production."
    ],
    "gaps": [
+    "committed_capex_aud_m — UNRESOLVED and therefore ABSENT. The A$145m approved 2.6 Mtpa Higginsville expansion is under review in favour of a larger, uncosted 4 Mtpa case and cannot be retained as a favourable LOWER_BOUND. The 18 August 2026 Fletcher filing also says Murchison milling capacity is committed or planned without disclosing an amount. It gives no complete project total or Gate 2 coverage period, says a definitive timeline is premature, and points to a preliminary assessment in the Strategic Outlook expected in early September 2026. FY26 non-sustaining capital spent of A$142m is a spend rate, not remaining capital, and is not substituted. The FY26 financial result and Strategic Outlook were not present in the ASX feed when rechecked on 21 August 2026.",
     "aisc_aud_oz — the recorded A$2,931/oz is the MARCH 2026 quarter on an OWN-ORE basis. The 4 Aug 2026 presentation gives FY26 full-year AISC of A$2,841/oz but does not state whether that is group or own-ore, and Westgold reports both. NOT UPDATED: the change would lower the cost base by A$90/oz and make Gate 2 easier, which is the one direction that must not move on an unstated basis. Close from the FY26 annual report, which states the basis.",
     "net_debt_aud_m — cash/bullion/liquid-investments split at 30 Jun 2026 is not disclosed; see the field note.",
     "q3fy26 document date is recorded to the month only ('2026-04'). It backs no ledger tranche, so it does not reach the 6.4 statement-currency gate, but it cannot be tested at day resolution either."
@@ -1311,6 +1411,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 96.0,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2026-06-30",
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "q4fy26",
+     "note": "POINT for the bounded Sugar Zone pre-production scope. FY27 guidance incorporates all Sugar Zone site expenditure and production commences in Q1 FY28. The other A$77m of annual group growth guidance is recurring rather than a finite completion balance. Sugar Zone capital remains included even though Ontario ounces are Gate 1 ineligible, because EV is whole-company."
+    },
     "pp_moz": {
      "v": 3.608,
      "doc": "rr2025tbl",
@@ -1453,6 +1563,12 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "evidence_state": "UNRESOLVED",
+     "as_of": "2026-06-30",
+     "doc": "bgl_fy27",
+     "note": "UNRESOLVED: the A$35-40m paste-plant figure is disclosed inside one year of non-sustaining guidance, not as remaining spend to completion. The paused mill expansion is excluded, and the annual figure is not promoted to a project total. BGL remains rejected by Gate 2 on the current data."
+    },
     "pp_moz": {
      "v": 1.29,
      "doc": "rr_fy26",
@@ -1598,6 +1714,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 465.0,
+     "evidence_state": "UPPER_BOUND",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2026-05-18",
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "drive300",
+     "note": "UPPER_BOUND, gross-as-remaining: the board-approved A$375m processing plant plus A$90m Waihi Underground scope. No spend-down is assumed. Pending-FID and deferrable exploration scopes are excluded. OBM remains rejected by Gate 2 on the current data."
+    },
     "pp_moz": {
      "v": 0.61,
      "doc": "rr_fy26",
@@ -1764,6 +1890,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 0.0,
+     "evidence_state": "POINT",
+     "as_of": "2025-12-31",
+     "cost_base_date": null,
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "hy_dec2025",
+     "note": "SOURCED ZERO under the finite-scope rule. The A$21.969m commitments-note amount covers contracts within one year but does not establish a finite approved project total to completion; it remains a Gate 2 input. The PP2 expansion is pre-FID."
+    },
     "pp_moz": {
      "v": 1.542,
      "doc": "rr_fy25",
@@ -1902,6 +2038,16 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 0.0,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "cost_base_date": null,
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "fy27_guidance",
+     "note": "SOURCED ZERO under the finite-scope rule. A$101m is one year of recurring major-project and growth guidance, not a remaining completion total; it stays in Gate 2 only. Exploration is deferrable and no pre-FID scope is included."
+    },
     "pp_moz": {
      "v": 0.859,
      "doc": "dd_pres_aug26",
@@ -2034,6 +2180,12 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "evidence_state": "UNRESOLVED",
+     "as_of": "2026-06-30",
+     "doc": "q4fy26_asx",
+     "note": "UNRESOLVED: Lakewood expansion long-lead items are ordered but no total is disclosed and timing remains conditional on ramp-up. Coyote and Mt Clement are pre-FID. Historical FY26 spend is not a remaining balance and is not annualised. BC8 is already blocked on AISC."
+    },
     "pp_moz": {
      "v": 0.33,
      "doc": "q4fy26_asx",
@@ -2190,6 +2342,23 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 319.723,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2026-06-30",
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "q4fy26_qtr",
+     "note": "DERIVED POINT: A$382.6m Youanmi DFS pre-production capital from `dfs_full` less A$47.089m of FY26 PP&E and A$15.788m of assets under construction from this Appendix 5B = A$319.723m remaining. Single-project roll-forward; no financing is netted."
+    },
+    "available_project_funding_aud_m": {
+     "v": 472.666,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "doc": "q4fy26_qtr",
+     "note": "DERIVED: A$152.666m cash plus A$320m cash-drawable committed facilities under `sfa_apr26`; the A$30m bank-guarantee facility is excluded. Funding is consumed only by developer Gate 2 and does not reduce economic execution capital."
+    },
     "pp_moz": {
      "v": 0.674,
      "doc": "dfs_full",
@@ -2255,11 +2424,6 @@
      "doc": "permit_jul26",
      "note": "'Rox has received the last major environmental approval for the Youanmi Gold Mine following granting of the Works Approval for the processing plant, tailings storage facility, wastewater treatment facility, power station and associated infrastructure. With this milestone achieved, Rox is now fully permitted to execute its mine plan.' Corroborated by the June 2026 quarterly and by the March 2026 MDCP amendment approval. Tenure 100% owned (M57/165-167). Re-sourced from a kalkine.com.au article to the lodged announcement."
     },
-    "remaining_capex_aud_m": {
-     "v": 0.0,
-     "doc": "q4fy26_qtr",
-     "note": "BOUND: max(0, remaining pre-production capital less available funding). Remaining pre-production capital is taken at the full DFS Table 30 figure of A$382.6m, i.e. assuming NOTHING has been spent, which is the conservative end. Available funding is cash A$152.666m plus A$320m of cash-drawable debt (the A$30m bank guarantee facility is excluded as not cash) = A$472.7m, a A$90.1m surplus. THE PREVIOUS NOTE'S ARITHMETIC WAS WRONG AND IS REPLACED: it summed 'A$200m placement + A$18m SPP + A$350m debt + A$152.7m cash', double-counting the December 2025 equity, which is already inside the 30 June cash balance — overstating funding by A$218m. SENSITIVITY, because the gate is not unconditional: Appendix 5B items 7.4 and 7.5 report NIL facilities at 30 June 2026 pending financial close. Disregarding the executed A$350m entirely gives A$229.9m, which is 32.3% of a A$710.7m market cap and would FAIL the 30% D3 limit by 2.3pp — but that also assumes zero capital spent, which is false, since FY26 Appendix 5B shows A$47.089m of PP&E plus A$15.788m of assets under construction. Netting only that gives A$167.0m = 23.5%, which passes with no debt credit at all. D3 passes on every treatment except the single most punitive and internally inconsistent one."
-    },
     "shares_out_m": {
      "v": 1393.57,
      "doc": "asx_api",
@@ -2289,7 +2453,7 @@
    "developer_gate": {
     "D1_study_stage": "PASS — DFS completed Nov 2025 (requirement is PFS minimum).",
     "D2_approvals_and_land": "PASS — final regulatory approval received; plant construction and underground development commenced.",
-    "D3_bounded_dilution": "PASS — funding gap zero. A$200m equity + A$18m SPP raised, A$350m debt documented, A$152.7m cash at 30 Jun 2026.",
+    "D3_bounded_dilution": "PASS — engine-derived residual gap is zero: A$319.723m remaining execution capital is covered by A$152.666m cash plus A$320m of cash-drawable committed facilities. The A$30m bank-guarantee line is excluded.",
     "verdict": "THE ONLY DEVELOPER PASSING ALL THREE TESTS."
    },
    "flags": [
@@ -2339,6 +2503,23 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 227.1,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "cost_base_date": "2026-06-30",
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "dd2026_asx",
+     "note": "DERIVED POINT: A$180.4m Mandilla pre-production capital plus A$46.7m pre-production costs = A$227.1m. Appendix 1 independently reconciles the two legs inside A$307m LOM capital. Sustaining capital and the Think Big JV are excluded."
+    },
+    "available_project_funding_aud_m": {
+     "v": 65.115,
+     "evidence_state": "POINT",
+     "as_of": "2026-06-30",
+     "doc": "q_jun2026",
+     "note": "POINT: A$65.115m cash and nil financing facilities at quarter end. The debt process is prospective and the MMS Think Big arrangement does not fund Mandilla, so neither is credited."
+    },
     "pp_moz": {
      "v": 1.082,
      "doc": "rr_aug2026",
@@ -2399,11 +2580,6 @@
      "doc": "q_jun2026",
      "note": "'The Mandilla DFS is forecast for completion during the March Quarter 2027, with the projected timing reliant on receiving the necessary consents under the Mineral Rights Agreement and the completion of native title heritage surveys.' The same document records that site layouts are only on track to be finalised in the September quarter, 'paving the way for the Native Vegetation Clearing Permit, Mine Development & Closure Plan and the Works Approval to be submitted thereafter' — so the three principal Mandilla approvals have not yet been lodged. Partial offsets, all disclosed and none sufficient: an LUA executed with the Marlinyu Ghoorlie native title claim group; Think Big tenement M26/846 granted with its NVCP and MDCP submitted; and the Mandilla Homestead freehold settled around 10 August 2026. A BINARY GATE NOW RESTS ON FILINGS RATHER THAN ON A CONFERENCE TRANSCRIPT."
     },
-    "remaining_capex_aud_m": {
-     "v": 162.0,
-     "doc": "dd2026_asx",
-     "note": "DERIVED: pre-production capital A$180.4m plus pre-production costs A$46.7m = A$227.1m, less cash A$65.1m at 30 June 2026 = A$162.0m. The A$227.1m is confirmed additively by Appendix 1 of the same deck, where A$180m + A$47m + A$80m sustaining = A$307m LOM capital, so the two pre-production lines are separate components and not double-counted. CORRECTED FROM 112.0: THE A$50m MMS JV CREDIT IS UNSOURCED AND MISCHARACTERISED AND HAS BEEN REMOVED. What the lodged quarterly actually describes is that 'MMS will fund 100% of the development costs for Think Big, which will be recovered from initial project cash flows. Following cost recovery, profits will be shared, with MMS to receive between 30% and 50%.' MMS funds Think Big's own development costs — not Mandilla's capex — recovers them first, and Think Big is ~32,000 oz. It also remains only a Letter of Intent, 'subject to finalising commercial terms', nine months after the 20 October 2025 LOI. Removing an unsourced credit that ran in the name's favour moves D3 from 41% to 60.0% of a A$270.2m market cap against a 30% limit — the verdict was already FAIL, but the margin is roughly double what was recorded."
-    },
     "shares_out_m": {
      "v": 1801.05,
      "doc": "asx_api",
@@ -2443,7 +2619,7 @@
    "developer_gate": {
     "D1_study_stage": "PASS — PFS complete (June 2025). DFS now guided to Mar-qtr 2027.",
     "D2_approvals_and_land": "FAIL — DFS delayed by split tenure rights and consent requirements tied to the underlying tenement owner. D2 requires land access secured, not just permits.",
-    "D3_bounded_dilution": "FAIL — ~A$227m capex against A$65m cash + A$50m MMS JV commitment = ~A$112m gap. Against a market cap of ~A$261-333m that is 34-43%, above the 30% limit.",
+    "D3_bounded_dilution": "FAIL — engine-derived residual gap is A$161.985m: A$227.1m remaining execution capital less A$65.115m cash. The MMS arrangement funds Think Big, not Mandilla, and is not credited.",
     "verdict": "EXCLUDED. Fails D2 and D3."
    },
    "correction": "An earlier secondary source (Stockhead, 'Aussie gold developers look ripe for the picking') described Astral as fully funded to first gold in the Jun-qtr 2027 via a A$193m equity raising and US$120m bond, with all approvals received. That description does not match Astral's own disclosure and appears to conflate Astral with Rox Resources (A$200m placement + A$18m SPP + A$350m debt, all approvals, first gold mid-2027). The Astral figures here come from the company's Diggers & Dealers presentation.",
@@ -2492,6 +2668,23 @@
     }
    },
    "fields": {
+    "remaining_execution_capex_aud_m": {
+     "v": 354.0,
+     "evidence_state": "POINT",
+     "as_of": "2025-12-16",
+     "cost_base_date": "2025-12-16",
+     "accuracy_range": null,
+     "contingency_included": null,
+     "doc": "dfs_dec2025",
+     "note": "POINT for the Updated DFS pre-production scope. No financing is netted from the economic amount."
+    },
+    "available_project_funding_aud_m": {
+     "v": 0.0,
+     "evidence_state": "LOWER_BOUND",
+     "as_of": "2025-12-16",
+     "doc": "dfs_dec2025",
+     "note": "LOWER_BOUND running against the developer: no committed project financing is disclosed, while cash is unsourced. Zero is therefore only a floor on available funding, never an exact point; the derived residual gap remains directional."
+    },
     "pp_moz": {
      "v": 1.33,
      "doc": "dfs_dec2025"
@@ -2555,11 +2748,6 @@
      "doc": "aug2026",
      "note": "WA EPA information submitted but approvals incomplete; one landholder compensation negotiation outstanding."
     },
-    "remaining_capex_aud_m": {
-     "v": 354.0,
-     "doc": "dfs_dec2025",
-     "note": "Full pre-production capital — no committed project financing. Cash position unsourced, so this is the upper bound."
-    },
     "shares_out_m": {
      "v": 549.69,
      "doc": "asx_api",
@@ -2579,8 +2767,8 @@
    "developer_gate": {
     "D1_study_stage": "PASS — updated DFS, December 2025.",
     "D2_approvals_and_land": "MARGINAL — WA EPA information submitted, approvals not yet complete. One landholder compensation negotiation outstanding, covering a small area scheduled late in the mine plan. Less severe than initially characterised.",
-    "D3_bounded_dilution": "FAIL — A$354m pre-production capital against a market cap of roughly A$450-590m and no committed project finance. Gap materially above 30% of market cap on any reading.",
-    "verdict": "EXCLUDED on D3. Re-test after FID and project financing, targeted end-2026."
+    "D3_bounded_dilution": "UNRESOLVED — A$354m remaining execution capital is sourced, but cash is not. The recorded A$0 available funding is a LOWER_BOUND, so the residual gap spans A$0-354m and cannot prove a pass or failure.",
+    "verdict": "EXCLUDED on D2; D3 is unresolved. Re-test after approvals, FID and project financing, targeted end-2026."
    },
    "gaps": [
     "share count — sources conflict badly (ADVFN 2.296bn appears to be a stale pre-consolidation figure; quoted caps of A$381-591m imply roughly 450-650m shares)",
