@@ -43,7 +43,7 @@ notional weight impact.
 CAP inputs are the third kind, added 18 Aug 2026 with largest_asset_pp_share.
 They are continuous in the data and discontinuous in the weight: nothing happens
 until the share crosses §8.1's threshold, at which point one name's ceiling
-drops from 15% to 10% and the excess redistributes across everyone else. They
+drops from 15% to 7.5% and the excess redistributes across everyone else. They
 get their own section, and — unlike the other two — that section reports every
 name rather than only the unsourced ones. A cap input that is fully sourced
 still MOVES weight, and a register that fell silent the moment it was sourced
@@ -149,7 +149,7 @@ def build_ranges(flat: list[dict]) -> dict:
     # §8.1 cap input. Behaves like neither of the two kinds above: it is
     # continuous in the data and DISCONTINUOUS in the weight, because nothing
     # happens until the share crosses the threshold and the ceiling drops from
-    # 15% to 10%. Perturbing it across the observed cross-section is still the
+    # 15% to 7.5%. Perturbing it across the observed cross-section is still the
     # right bound — the endpoints straddle the threshold by construction, since
     # the cohort runs from 0.49 to 1.00.
     la = vals("largest_asset_pp_share")
@@ -521,9 +521,9 @@ def main() -> int:
     print("was the worst open gap here at 0.59pp and it closed by deletion.")
     print("\nWhat remains genuinely perturbable is the §6 ounce ledger and EV:")
     print("how many ounces, and what was paid for them. Note also that PNR and CYL")
-    print("both sit AT the 10% single-asset cap, so ledger inputs on those names")
+    print("both sit AT the 7.5% single-asset cap, so ledger inputs on those names")
     print("cannot move their weights either — a cap doing its job, not a gap being")
-    print("closed. That is three of twelve names pinned by a ceiling rather than")
+    print("closed. That is three of fourteen names pinned by a ceiling rather than")
     print("priced by their ounces, up from one; read the PRE-CAP column in the")
     print("build's concentration table to see what the ounces alone would have said.")
     print("\nNever read 0.000pp as \"known\".")

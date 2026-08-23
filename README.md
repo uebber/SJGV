@@ -23,9 +23,10 @@ part of the gold-equity proposition while making those failure modes explicit.
 
 The latest frozen v1.7 snapshot holds 12 ASX-listed companies at **A$826 of
 all-in EV per confidence-weighted claimed ounce**. The v1.8 methodology-only
-replay admits WGX and BGL and reads approximately **A$780/oz**; see
+replay admits WGX and BGL and reads approximately **A$780/oz**; v1.9 tightens
+the single-asset cap from 10% to 7.5% pending its first fresh build. See
 [`docs/producer-execution-capital-impact-2026-08-23.md`](docs/producer-execution-capital-impact-2026-08-23.md).
-No v1.8 snapshot has been created.
+No v1.8 or v1.9 snapshot has been created.
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.
@@ -208,7 +209,7 @@ the cheapest claim to its cap before buying the next one.
 | Constraint | Limit |
 |---|---:|
 | Single company | 15% |
-| Company with ≥80% of eligible P&P at one asset | 10% |
+| Company with ≥80% of eligible P&P at one asset | 7.5% |
 | Developer sleeve | 15% |
 | Single developer | 5% |
 | Ineligible-jurisdiction NAV per constituent | 25% |
@@ -288,15 +289,16 @@ The claim mix is published to one decimal deliberately. The M&I share sat within
 between 29 and 30 on a move that is not a move — and this is the statistic the
 methodology nominates as the one to watch over time.
 
-Northern Star is the largest position at 11.82%. CYL and PNR are capped at 10%
-as single-asset companies; RXL is capped at 5% as a developer. The live build
+Under v1.9, CYL and PNR are capped at 7.5% as single-asset companies; RXL remains
+capped at 5% as a developer. The live build
 writes the complete constituent table and cap effects to
 snapshots/2026-08-21-v1.7-health rather than asking this README to serve as a
 second output file.
 
 Pantoro's v1.3 exclusion exposed a real weakness in the former binary test: the
 verdict flipped across the issuer's own AISC range. Under v1.7 both ends remain
-inside AMBER health, so PNR returns at its 10% single-asset cap. Ora Banda also
+inside AMBER health, so PNR returns; v1.9 limits it to the 7.5% single-asset
+cap. Ora Banda also
 enters: after the 40% spot shock it needs about A$167m of rescue capital, only
 5.3% of current market capitalisation and 0.61 normal cash-generation years.
 That is damage, but not the existential or multi-year setback Gate 2 exists to

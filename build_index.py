@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SJGV v1.8 — index construction and basket sizing.
+SJGV v1.9 — index construction and basket sizing.
 
 Computes the basket from the data layer rather than from a hardcoded list, and
 May-2026 weights (including RUP, delisted 16 Jun 2026 into Agnico Eagle).
@@ -3383,7 +3383,7 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
     """§8.1 — three caps, all derived from P(permanent impairment) ≈ 0.
 
         max_single_name             15%   no one company is the index
-        max_single_asset_name       10%   tighter where one mine is the company
+        max_single_asset_name      7.5%   tighter where one mine is the company
         max_developer_sleeve        15%   pre-production names can fail outright
         max_developer_single_name    5%
 
@@ -3998,7 +3998,7 @@ def print_capacity(cap: dict, euraud: float) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Build the SJGV v1.8 index and optionally size a basket.")
+        description="Build the SJGV v1.9 index and optionally size a basket.")
     ap.add_argument("amount", nargs="?", type=float, default=None,
                     help="EUR amount to size the basket for (e.g. 1000000).")
     ap.add_argument("--euraud", type=float, default=None,

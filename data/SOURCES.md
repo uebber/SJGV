@@ -626,8 +626,9 @@ across nine deposits (Plutonic UG 817, Trident 397, Old Highway UG 101, Cinnamon
 65, Hermes 62, Old Highway OP 39, Plutonic East 34, K2 20, Trident West 6), all
 spokes of a hub-and-spoke plan whose stated rationale is "the latent processing
 capacity at the Plutonic processing plant". Bendigo carries 163 koz of resource
-and **zero reserve**. Catalyst was the second-largest position in the book at
-12.52% and is now capped at 10%.
+and **zero reserve**. Catalyst was a cap-bound position in the book at
+12.52%, was capped at 10% when the rule was adopted, and is capped at 7.5%
+under v1.9.
 
 **GGP is single-asset and it is the case the asset rule decides.** Deposit names
 give Havieron 3.3 Moz of 5.0 = 66%. One plant gives 100%. The issuer's own

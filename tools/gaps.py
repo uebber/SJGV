@@ -132,7 +132,7 @@ FIELDS = {
                             "volumeAverage)", None),
     # "degrading", not "disclosure". An asset-level cap
     # (20%) sat ABOVE the 15% name cap, so it could not bind on one company and
-    # sourcing its input was cosmetic. max_single_asset_name (10%) sits BELOW it
+    # sourcing its input was cosmetic. max_single_asset_name (7.5%) sits BELOW it
     # and binds directly, so an absent share now lets a one-mine company run at
     # the full 15%. Sourced for all 17 on 18 Aug 2026; it bound on PNR and CYL.
     #
