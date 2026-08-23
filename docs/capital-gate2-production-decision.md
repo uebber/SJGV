@@ -1,7 +1,11 @@
 # Capital denominator and Gate 2 horizon — production decision
 
-**Status:** **superseded in part by methodology v1.7, 21 August 2026.** The capital-denominator
-decisions in §3 were implemented on 21 August 2026. **§1 decision 3 — making
+**Status:** **historical; denominator policy superseded by methodology v1.8,
+23 August 2026.** Established producers now use standard EV; only
+near-producers and developers require gross execution capital. The earlier
+all-sleeve denominator below is retained as decision history, not current
+policy. The capital-denominator decisions in §3 were implemented on 21 August
+2026 and then narrowed by amendment 10. **§1 decision 3 — making
 horizon coverage a binding Gate 2 limb — is NOT accepted**, and the reason is
 in the box below. The explicit per-project interval evaluator remains issue 4;
 it was implemented before the issue-5 replay and remains as the v1.7 evidence
@@ -12,6 +16,10 @@ layer. The activated result is frozen in
 **Decision rule:** unavailable evidence may hold or reduce a constituent's
 weight; it may never increase it.
 
+> **v1.8 correction.** Directional execution-capital evidence remains binding
+> only for near-producer and developer denominators. Producer project intervals
+> continue to support Gate 2 commitments, where incomplete coverage is AMBER.
+>
 > **v1.7 outcome.** The three-name interval replay demonstrated that complete
 > two-year capital coverage was functioning as a disclosure gate rather than a
 > health check. Directional evidence remains binding in the economic
@@ -66,11 +74,12 @@ weight; it may never increase it.
 
 ## 1. Decision
 
-Ship the execution-capital denominator and the Gate 2 horizon correction as one
-production change.
+The following was the 21 August decision and is superseded for established
+producers by methodology amendment 10:
 
-1. Replace `EV + residual funding gap` with
-   `EV + remaining execution capital` for every sleeve.
+1. Historical decision: replace `EV + residual funding gap` with
+   `EV + remaining execution capital` for every sleeve. Amendment 10 later
+   limited this denominator to near-producers and developers.
 2. Keep residual funding gap only in the developer survival test.
 3. Make horizon coverage a Gate 2 evidence limb, not a report-only warning.
 4. Interpret capital evidence by direction. A conservative upper bound can

@@ -1,8 +1,8 @@
-# Index Methodology — SJGV v1.7
+# Index Methodology — SJGV v1.8
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.7
-**Date:** 21 August 2026
+**Version:** 1.8
+**Date:** 23 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
 **Simulation AUM:** €1,000,000 (≈ A$1.64M)
@@ -16,6 +16,9 @@
 
 | # | Date | Change |
 |---|------|--------|
+| 10 | 23 Aug 2026 | **Producer execution-capital denominator corrected; version 1.7 → 1.8.** Established producers now use standard enterprise value (`market capitalisation + net debt`). Their execution-capital records remain provenance/reporting data but are neither required nor added to the denominator, because a complete company-wide remaining-cost-to-completion schedule is not normally available from ASX producers. Near-producers and developers still require and add gross remaining execution capital; developer funding and the derived residual gap remain separate. Producer Gate 2 is unchanged in substance: it tests sourced unavoidable commitments, incomplete coverage is eligible **AMBER**, and missing production, AISC, net debt or market capitalisation is **UNTESTED**. WGX and BGL are no longer excluded for unresolved producer execution capital; BC8 remains excluded on its missing AISC before its required near-producer execution capital is reached. |
+| 9 | 22 Aug 2026 | **Parallel Gate 1 cap-weighted variant limited to ten positions; v1.0 → v1.1.** After Gate 1 and complete market-cap inputs, eligible companies are ranked by full issued market capitalisation. The largest ten are retained and normalised to 100%; if fewer than ten qualify, all qualifying companies are retained. Primary SJGV remains v1.7. See §14. |
+| 8 | 22 Aug 2026 | **Parallel Gate 1 cap-weighted variant adopted at v1.0; SJGV remains v1.7.** The variant uses the same candidate universe, applies only Gate 1, and weights each survivor by full issued market capitalisation. It deliberately omits Gate 2, Gate 3, statement currency, the ounce ledger, funded-EV weighting and §8 caps. Mixed-jurisdiction companies must satisfy the existing 25% ineligible-NAV entity limit; their admitted market capitalisation is not haircutted by eligible-ounce share. See §14. |
 | 7 | 21 Aug 2026 | **Gate 2 restored to a health check; version 1.6 → 1.7.** The unactivated capital-interval replay left only three names and could not satisfy the §8.1 caps. That was not evidence of three solvent companies: ten names were rejected because they did not publish a complete two-year capital upper bound. Producer Gate 2 now applies the stated 40% shock literally to current AUD spot, subtracts sourced unavoidable commitments, and classifies damage **GREEN / AMBER / RED**. A manageable recapitalisation is allowed: RED requires rescue capital above 30% of market cap or more than two normal-price cash-generation years to repair. Incomplete commitment coverage is AMBER, not a fabricated zero or an exclusion. Only RED is rejected. Gross execution capital remains in the denominator. The engine now also rejects an infeasible post-gate universe instead of renormalising through the name caps. |
 | 6 | 20 Aug 2026 | **§3 undrawn facilities must outlive the stress window; version 1.5 → 1.6. No weight moves.** Gate 2 credited undrawn credit for the full horizon without reading its term date. Evolution's audited FY26 report proved the assumption wrong — Revolving Credit Facility A terms **1 Aug 2028**, nineteen days inside the window — and Regis's A$300m lapses **3 Feb 2028**. Both were counted in full. A facility is now credited only if its sourced term date reaches the end of the horizon; an **absent** term date is not credited either, because crediting an unverified facility makes a survival test easier. Refinancing is not assumed. Seven constituents lose their credit (EVN and RRL on date, WGX/CYL/GMD/RMS/RXL for want of one) and **all seven still pass on cash and cash flow alone**; only NST and GGP keep theirs, which matters because they are the two that hold their pass on a revolver. New sourced sub-key `term_date`. |
 | 5 | 20 Aug 2026 | **§3.2 horizon limb resolved on materiality; version 1.4 → 1.5. No weight moves today, and that is the point.** The v1.3 shortfall report is retained and now carries a gate. **Binding on coverage was rejected**: the missing figure is FY28 guidance, Australian miners guide one year ahead, so the rule could not be satisfied by diligence and would grade disclosure format — OBM publishes an FY27+FY28 phasing table and RRL publishes one year, identical solvency, opposite verdicts. PR #5 proposed it; applied as its own §2 states rather than as its §4.1 tabulates it would have left **four constituents at an effective 3.6 and a 30% top weight the §8.1 caps cannot hold**, breaking the objective's own `P(permanent impairment) ≈ 0` to enforce a survival test nothing was failing. What gates instead is whether the shortfall could decide anything: the guided annual leg is continued across the unsourced remainder and the pass must survive it, at `gate2.horizon_continuation_cover` = 1.0. Cover runs 2.0× (GGP) to 18.8× (CYL), so it binds on nobody today — the §6.4 discipline — and it would have caught PNR independently at 0.51×. WGX has no established period and therefore no leg to continue: reported **UNTESTED** and routed to §12.2 item 6, whose trigger is the early-September Strategic Outlook. New sourced field `annual_leg_aud_m`; new parameter `gate2.horizon_continuation_cover`. |
@@ -434,8 +437,10 @@ inside the horizon until a maturity ledger exists.
 | **RED** | Rescue capital exceeds 30% of market cap, or more than two normal-price cash-generation years are needed to repair it | Excluded |
 
 Only contracted or genuinely non-deferrable commitments belong in the health
-cash burn. Discretionary growth can be stopped in a crisis. Gross remaining
-execution capital remains in the §7 denominator, where it measures asset cost.
+cash burn. Discretionary growth can be stopped in a crisis. For established
+producers, remaining execution capital is retained only as reporting evidence;
+it is neither required nor added to §7. Near-producers and developers continue
+to require gross remaining execution capital in their §7 denominator.
 
 The literal spot shock replaces the trailing-anchor shock, which had become
 roughly a 52% fall from the price on screen while still being described as 40%.
@@ -533,14 +538,16 @@ A finite upper edge of sourced unavoidable commitments is tested because it is
 conservative. Where only a lower edge is sourced, the engine subtracts that
 known obligation and reports **AMBER**; it neither extrapolates a second year nor
 calls the evidence complete. An unresolved amount also forces AMBER unless the
-sourced evidence already demonstrates RED. Missing production or AISC still
-makes the health test untestable and excludes the name.
+sourced evidence already demonstrates RED.
 
 Issuer-published ranges are swept at both ends. A RED result at either end
 excludes; variation between GREEN and AMBER is reported but does not reject.
-Project interval records remain required for provenance and reconciliation with
-the economic-capital denominator; complete two-year project guidance is not an
-admission condition.
+Missing production, AISC, net debt or market capitalisation makes producer
+health **UNTESTED** and excludes the name. Project interval records remain
+required for producer-path Gate 2 commitment
+provenance. Producer execution-capital amounts may be retained and reconciled
+as reporting data, but complete company-wide execution capital and complete
+two-year commitment guidance are not admission conditions.
 
 ### Historical v1.3–v1.6 input-basis rules — superseded
 
@@ -898,21 +905,28 @@ stale is no more current for a reserve ounce than for an inferred one.
 
 That is the entire formula.
 
-### 7.1 Funded EV — what the ounces actually cost
+### 7.1 Sleeve-specific denominator — what the ounces actually cost
 
 ```
-FundedEV = market capitalisation + net debt + residual funding gap
+ProducerEV = market capitalisation + net debt
+
+NearProducerOrDeveloperEV
+           = market capitalisation + net debt + gross remaining execution capital
 ```
 
-**Enterprise value** is the standard part: debt is a prior claim on the same
-ounces, so buying an ounce through a levered balance sheet costs the equity
-holder more than the share price suggests.
+**Established producers use standard enterprise value.** Debt is a prior claim
+on the same ounces, so buying an ounce through a levered balance sheet costs the
+equity holder more than the share price suggests. A complete company-wide
+remaining-cost-to-completion schedule is not normally published by established
+ASX producers. Requiring it would make issuer disclosure format, rather than
+economic substance, decide eligibility and weight. Producer execution-capital
+records remain reportable provenance but never enter this denominator.
 
-**The residual funding gap is the correction added 18 August 2026**, and it
-matters for one sleeve. EV prices a company as it stands today. For a
-pre-production name the §6 ledger is counting ounces the company **has not yet
-paid to unlock** — the gap has to be spent before a single one of them is mined.
-Leaving it out prices the claim on capital that has not been raised.
+**Near-producers and developers add gross remaining execution capital.** Their
+ledger counts ounces whose initial build or ramp is not yet complete, so that
+capital must still be paid to unlock the claim. Available project funding is a
+separate financing fact. It is subtracted only to derive the developer D3
+residual funding gap and never reduces gross economic cost.
 
 Measured on the two developers Gate 2 currently rejects:
 
@@ -927,11 +941,12 @@ an unfunded developer as the cheapest claim in the universe on the strength of
 money it has not got. **RXL is fully funded, so today's book does not move** —
 which is why this was a safe moment to change it.
 
-Note what makes the correction safe rather than another silent default: **a
-developer whose gap is unsourced never reaches the denominator**, because §3.1
-D3 rejects it first. So absence cannot read as zero in the one sleeve where zero
-would flatter. For a producer the field is absent because there is no
-pre-production capital, and zero is right.
+Note what makes the correction safe rather than another silent default: a
+developer whose gap is unsourced never reaches the denominator because §3.1 D3
+rejects it first, and a near-producer with unresolved gross execution capital is
+rejected before weighting. For an established producer, an absent or unresolved
+amount is reported as absent or unresolved — never changed to zero — and the
+standard-EV formula simply does not read it.
 
 **Market capitalisation is not a weight driver.** It enters only as the equity
 component of EV, and as an input to the reported capacity number. Cap weighting
@@ -1345,8 +1360,9 @@ the A4 amendment: items 4 and 5. **Item 6 opened on 19 August 2026** and is the
 only one of the three that is a defect in the live build rather than a question
 about it. **Item 4 closed on 19 August 2026**, by an A2 amendment rather than by
 the sourcing it asked for — the sourcing came back the other way. **Item 6
-closed on 21 August 2026** with the capital-field split, all-sleeve denominator,
-and v1.7 health test. Item 5 is the only open item.
+closed on 21 August 2026** with the capital-field split and v1.7 health test;
+the all-sleeve denominator was corrected by amendment 10 on 23 August 2026.
+Item 5 is the only open item.
 
 | # | Item | Outcome |
 |---|------|---------|
@@ -1355,7 +1371,7 @@ and v1.7 health test. Item 5 is the only open item.
 | 3 | **Jurisdiction B1 / B3 verification.** | **CLOSED — verified.** B1 verified from statutory instruments for every exposed jurisdiction: WA 2.5% flat, VIC 2.75% flat, NSW **4.0% flat** (confirming a claim §2.3 was making ahead of its data), QLD a **price-linked 2.5–5.0% scale saturated at its 5% ceiling**, TAS profit-based capped at 5.35% and **no longer an exposure** (Henty sold May 2025). WA **B3 verified**, and it reframed the test: no statutory determination periods, 42.4% on-time against an 80% target. `jurisdictions.json` records the statutory instrument for each. Remaining unverified: B1 for SA, NT and NZ (nil exposure), and B2/B3/B4 outside WA. |
 | 4 | **Canada's A2, now load-bearing alone.** | **CLOSED 19 Aug 2026 — sourced, and then the rule was changed. Read both halves.** Sourced first, as the item asked: Canadian general government net debt is **~10–13% of GDP — below Australia's ~19%** — and general government interest is **8.8% of revenue** against a 10% limit. **Canada passed A2 as v1.1 wrote it.** Recording FAIL anyway would have repeated the v1.0 A4 defect one amendment after fixing it. So A2 was rewritten instead (§2.1, amendment 2): measured on the **currency issuer**, with a third limb at **gross debt ≤ 85% of GDP**. Canada fails on gross (105–110%) and on federal interest (**10.3%** of revenue, PBO projecting 13.1% by 2030-31); the net-debt limb still passes and is not the basis. **Zero weight change** — Canada stays out, so no `eligible_ounce_share` moves, and no engine code reads `data/sovereign.json`. What the closure leaves behind is recorded in §2.2: the exclusion does not survive the old rule, and Canada's A4 dormant-power register remains uncompiled by decision. |
 | 5 | **Does s51(xxxi) reach the control limbs of Banking Act Part IV?** | **OPEN — opened 18 Aug 2026 by the A4 amendment.** Australian counsel, and the one question in this file a search engine genuinely cannot answer. s 44 compensates only gold delivered under s 42, and s 40(2) permits partial activation, so the export ban (s 41), the monopsony (s 45) and the prohibition on working gold (s 46) can operate with no statutory compensation. Whether the just-terms guarantee reaches them turns on the acquisition-versus-regulation distinction. **This does not gate** — A4 is present-tense and Part IV is not in operation — but it sizes the residual risk in §11.1, which is currently unpriced. |
-| 6 | **`remaining_capex_aud_m` does two incompatible jobs, and the §7.1 denominator gets the wrong one.** | **CLOSED 21 Aug 2026.** The field was replaced by gross `remaining_execution_capex_aud_m`, developer `available_project_funding_aud_m`, and the engine-derived residual gap. Every sleeve now pays gross execution capital in the denominator; only developer D3 reads the residual funding gap. WGX, BGL and BC8 remain excluded where no denominator-safe execution-capital value exists. Producer Gate 2 separately reads sourced unavoidable commitments under amendment 7 and no longer requires complete two-year project guidance. |
+| 6 | **`remaining_capex_aud_m` does two incompatible jobs, and the §7.1 denominator gets the wrong one.** | **CLOSED 21 Aug 2026; denominator scope corrected 23 Aug 2026 by amendment 10.** The field split remains: gross `remaining_execution_capex_aud_m`, developer `available_project_funding_aud_m`, and an engine-derived residual gap. Gross execution capital is weight-bearing only for near-producers and developers; established producers use standard EV. WGX and BGL therefore are not excluded on this reporting gap. BC8 remains a near-producer and still requires execution capital, independently of its missing AISC. Producer Gate 2 separately reads sourced unavoidable commitments under amendment 7. |
 
 Three things the closures leave behind, none of them a reopening:
 
@@ -1457,7 +1473,7 @@ ours, is durable, and is reachable.
 | `gate2.anchor` · `anchor_years` · `anchor_inflation_pa` | Trailing real reference (legacy namespace) | Retained solely for the conservative reporting NAV deck; it no longer sets the Gate 2 stress price. | reporting only |
 | `study_stage` · `gate2.developer_min_study_stage` | PFS minimum, DFS preferred | **Scoping-study economics move too much to weight a portfolio on.** A pre-PFS ounce count is a geologist's estimate, not a claim. | **5.00pp** |
 | `approvals_land_secured` | Permits *and* land access | A permitting checkbox with unresolved native title or freehold access is not access. This is Gate 1 risk arriving at the project level. | **5.00pp** |
-| `remaining_execution_capex_aud_m` · `available_project_funding_aud_m` · `gate2.developer_max_funding_gap_of_mcap` = 0.30 | Gross economic build cost and residual funding gap | Gross execution capital enters the denominator for every sleeve. Developer D3 separately subtracts sourced available project funding and gates only on the residual gap, so financing never makes construction economically free. | 0.00pp *(RXL's residual gap is 0)* |
+| `remaining_execution_capex_aud_m` · `available_project_funding_aud_m` · `gate2.developer_max_funding_gap_of_mcap` = 0.30 | Gross economic build cost and residual funding gap | Gross execution capital enters near-producer and developer denominators. Developer D3 separately subtracts sourced available project funding and gates only on the residual gap, so financing never makes construction economically free. Producer records are reporting-only. | live |
 | **spread history** · `gates.producer_max_spread_pct` = 1.0 · `developer_max_spread_pct` = 4.0 | Median RTH time-weighted quoted spread | **A claim that cannot be exited is not a position.** Spread rather than market cap, because cap is a proxy and spread is the thing itself. Developers get a wider limit because they are bought once and held to first pour. | **5.00pp** |
 | `gates.spread_window` = 3M | Measurement window | Long enough that one disorderly session cannot decide a gate. | live |
 | `gates.spread_measure` | Assertion, not a threshold | Halts the run if config claims to measure something the code does not. The gate ran on post-close quotes once and would have dropped 8 of 14 names on an artefact. | assertion |
@@ -1516,4 +1532,57 @@ those words for the same reason.
 
 ---
 
-*SJGV v1.6 — 20 August 2026. The sole methodology in force.*
+## 14. Parallel variant — Gate 1 Cap-Weighted
+
+**Name:** SJGV Gate 1 Cap-Weighted
+
+**Version:** 1.1
+
+**Adopted:** 22 August 2026
+
+This is a separate construction, not a replacement for SJGV v1.8. It uses the
+same candidate records in `data/companies.json`, the same sourced share counts,
+and prices from the same recorded market session. Its complete sequence is:
+
+```text
+shared candidate universe
+  → Gate 1 eligible_ounce_share > 0
+  → Gate 1 ineligible_nav_share ≤ 25%
+  → MarketCap_i = shares_outstanding_i × price_i
+  → rank eligible companies by MarketCap_i, descending
+  → retain the largest 10
+  → Weight_i = MarketCap_i / Σ MarketCap of the retained companies
+```
+
+Ten is a maximum, not a minimum. If fewer than ten companies pass Gate 1 with
+complete positive share-count and price inputs, every qualifying company is
+retained; no missing input is defaulted and no constituent is invented. Equal
+market capitalisations are ordered by ticker solely to make the cutoff
+deterministic.
+
+There is no Gate 2 health test, Gate 3 tradability test, §5 purity test, §6.4
+statement-currency test, ounce ledger, hedge adjustment, confidence weighting,
+enterprise-value denominator, developer sleeve, or §8 name/asset cap. A field
+used only by one of those omitted stages cannot change this variant's weight.
+
+Gate 1 remains asset-aware at admission. A company with no Tier A ounces is
+excluded, and the entity-level jurisdictional hook in §2.4 still excludes a
+company with more than 25% of NAV in ineligible jurisdictions. If a mixed
+company passes, its full market capitalisation is used. Scaling market cap by
+`eligible_ounce_share` would no longer be market-cap weighting and is therefore
+not done.
+
+This is **full issued market capitalisation**, using the sourced
+`shares_out_m`. It is not called free-float adjusted: no sourced free-float or
+foreign-inclusion factor exists in the data layer, and the derive-or-fail rule
+forbids substituting an estimate. A future free-float version requires a new
+sourced field and an explicit amendment.
+
+The authoritative outputs are `gate1_cap_weights.json` and the corresponding
+dated snapshot. `gate1_cap_weights.csv` is the flat constituent export. A sized
+run also emits `gate1_cap_basket.json` and `.csv`. These files share the primary
+build's market bundle, so both variants use identical point-in-time prices.
+
+---
+
+*SJGV v1.8 and SJGV Gate 1 Cap-Weighted v1.1 — 23 August 2026.*

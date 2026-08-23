@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SJGV v1.7 — index construction and basket sizing.
+SJGV v1.8 — index construction and basket sizing.
 
 Computes the basket from the data layer rather than from a hardcoded list, and
 May-2026 weights (including RUP, delisted 16 Jun 2026 into Agnico Eagle).
@@ -23,13 +23,17 @@ where the numerator is built by subtraction, never by scoring:
                                   what a forward is delivered from
       = the claim
 
-and the denominator is what those ounces cost all-in:
+and the denominator is sleeve-specific:
 
-    AllInEV = market cap + net debt + remaining execution capital
+    producer:                EV = market cap + net debt
+    near-producer/developer: AllInEV = EV + remaining execution capital
 
-Remaining execution capital is an economic-cost input for every sleeve.  Project
-funding is kept separate and reduces only the residual funding gap used by the
-developer Gate 2 test; it never reduces the denominator.
+Established producers use standard enterprise value because issuers do not
+normally publish a complete company-wide cost-to-completion schedule.  Their
+sourced execution-capital records remain reporting evidence, not weight inputs.
+Near-producers and developers still pay gross remaining execution capital;
+developer project funding stays separate and reduces only the residual funding
+gap used by developer Gate 2, never the denominator.
 
 There is no scoring layer between that ledger and the
 weight: a five-channel convexity score, a purity multiplier, an inverse-σ_idio
@@ -103,12 +107,13 @@ Run
     python build_index.py --nav-detail         # per-name §8 NAV, P/NAV, implied deck
     python build_index.py --gold-aud 6170 --euraud 1.636   # offline overrides
 
-Outputs weights.csv/json and, when sized, basket.csv/json. Every run also writes
-market_bundle.json + market_bars.csv — the raw TWS session that produced the
-prices, spreads and beta: request parameters, contract identifiers, per-quote
-market-data type, timestamps at both ends of every call, and the engine commit.
-That is the market leg's source document, and tools/snapshot.py freezes it with
-the rest. Then:
+Outputs weights.csv/json for SJGV and gate1_cap_weights.csv/json for the parallel
+Gate-1-only market-cap variant. When sized, it likewise writes basket.csv/json
+and gate1_cap_basket.csv/json. Every run also writes market_bundle.json +
+market_bars.csv — the raw TWS session shared by both variants: request
+parameters, contract identifiers, per-quote market-data type, timestamps at
+both ends of every call, and the engine commit. That is the market leg's source
+document, and tools/snapshot.py freezes it with the rest. Then:
 
     python tools/config_audit.py --strict         # after any config edit
     python tools/snapshot.py                      # after any rebalance
@@ -416,6 +421,15 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "reporting.numeraire_primary": ("engine", "§10.1 — labels the sizing output"),
     "reporting.numeraire_secondary": ("engine", "§10.1 — labels the sizing output"),
     "reporting.headline_kpi": ("tools/asymmetry.py", "§10.2 names the KPI it measures"),
+
+    "variants.gate1_cap.methodology": (
+        "engine", "§14 name and version for the Gate-1-only cap-weighted variant"),
+    "variants.gate1_cap.adoption_date": (
+        "engine", "§14 adoption date for the Gate-1-only cap-weighted variant"),
+    "variants.gate1_cap.weighting": (
+        "engine", "§14 assertion that the variant uses full market capitalisation"),
+    "variants.gate1_cap.max_constituents": (
+        "engine", "§14 number of largest eligible companies retained"),
 }
 
 # Keys carrying prose rather than parameters. Rationale — the reason a number is
@@ -547,10 +561,10 @@ KNOWN_FIELDS = {
     # Gate 2 (§3) inputs
     "production_koz_yr", "undrawn_facilities_aud_m", "committed_capex_aud_m",
     "study_stage", "approvals_land_secured",
-    # Economic capital is deliberately separate from financing capacity.  The
-    # former reaches every sleeve's denominator; the latter reaches developer
-    # Gate 2 only.  residual_funding_gap_aud_m is derived in the engine and is
-    # therefore intentionally not a data field.
+    # Economic capital is deliberately separate from financing capacity.  It
+    # reaches near-producer and developer denominators; producer records are
+    # retained for reporting only.  Funding reaches developer Gate 2 only.
+    # residual_funding_gap_aud_m is derived and is not a data field.
     "remaining_execution_capex_aud_m", "available_project_funding_aud_m",
     # §4.3 capacity (reported) and §8.1 single-asset concentration.
     #
@@ -688,10 +702,10 @@ def _flatten(record: dict) -> dict:
 def _validate_capital_schema(record: dict) -> list[str]:
     """Validate directional capital evidence before it can reach a formula.
 
-    The two issue-3 fields always require an explicit state, including a
-    sourced ``UNRESOLVED`` shell.  Issue 4 additionally requires every producer
-    path to carry project records that put execution capital and Gate 2 burn on
-    one scope, with explicit horizon and evidence-coverage dates.
+    Near-producers and developers require denominator-safe execution-capital
+    evidence.  Producer execution capital is optional reporting data, but when
+    supplied it is still validated.  Every producer-health path also requires
+    project records for Gate 2 commitments and their coverage dates.
     """
     errors: list[str] = []
     fields = record.get("fields", {})
@@ -703,8 +717,10 @@ def _validate_capital_schema(record: dict) -> list[str]:
     if "residual_funding_gap_aud_m" in fields:
         errors.append("residual_funding_gap_aud_m is engine-derived and may not "
                       "be stored")
-    if EXECUTION_CAPITAL_FIELD not in fields:
-        errors.append(f"{EXECUTION_CAPITAL_FIELD} missing")
+    sleeve = record.get("sleeve")
+    execution_required = sleeve in {"developer", "near_producer"}
+    if execution_required and EXECUTION_CAPITAL_FIELD not in fields:
+        errors.append(f"{EXECUTION_CAPITAL_FIELD} missing for {sleeve}")
     if record.get("sleeve") == "developer" and PROJECT_FUNDING_FIELD not in fields:
         errors.append(f"{PROJECT_FUNDING_FIELD} missing for developer")
 
@@ -732,18 +748,21 @@ def _validate_capital_schema(record: dict) -> list[str]:
         if not doc or doc not in record.get("documents", {}):
             errors.append(f"{name} evidence_state {state} has no valid document")
 
-    if record.get("sleeve") != "developer":
+    if sleeve != "developer":
         projects = record.get(EXECUTION_CAPITAL_PROJECTS_KEY)
         if not isinstance(projects, list) or not projects:
             errors.append(f"{EXECUTION_CAPITAL_PROJECTS_KEY} missing or empty")
         else:
-            errors.extend(_validate_execution_capital_projects(record, projects))
+            errors.extend(_validate_execution_capital_projects(
+                record, projects, require_execution_capital=execution_required))
 
     return [f"{ticker}: {error}" for error in errors]
 
 
 def _validate_execution_capital_projects(record: dict,
-                                     projects: list[object]) -> list[str]:
+                                     projects: list[object],
+                                     require_execution_capital: bool = True
+                                     ) -> list[str]:
     """Validate and reconcile the per-project issue-4 capital bridge."""
     errors: list[str] = []
     documents = record.get("documents", {})
@@ -851,27 +870,31 @@ def _validate_execution_capital_projects(record: dict,
             elif over and committed_state != "UPPER_BOUND":
                 errors.append(f"{project_id}: over-coverage requires UPPER_BOUND")
 
-        execution_state = project.get("execution_capital_state")
-        execution_value = project.get(EXECUTION_CAPITAL_FIELD)
-        execution_range = project.get("execution_capital_range_aud_m")
-        execution_interval = _directional_interval(
-            execution_value, execution_state, execution_range)
-        if execution_interval is None:
-            errors.append(f"{project_id}: invalid execution-capital amount/state/range")
-        else:
-            execution_lower += execution_interval[0]
-            execution_upper = (execution_upper + execution_interval[1]
-                               if math.isfinite(execution_upper)
-                               and math.isfinite(execution_interval[1])
-                               else math.inf)
-        if execution_state == "UNRESOLVED":
-            any_execution_unresolved = True
-            if execution_value is not None:
-                errors.append(f"{project_id}: UNRESOLVED execution capital carries a value")
-        elif isinstance(execution_value, (int, float)) and not isinstance(execution_value, bool):
-            execution_values.append(float(execution_value))
-        if project.get("execution_capital_doc") not in documents:
-            errors.append(f"{project_id}: execution_capital_doc is not a valid document key")
+        execution_present = any(key in project for key in (
+            EXECUTION_CAPITAL_FIELD, "execution_capital_range_aud_m",
+            "execution_capital_state", "execution_capital_doc"))
+        if require_execution_capital or execution_present:
+            execution_state = project.get("execution_capital_state")
+            execution_value = project.get(EXECUTION_CAPITAL_FIELD)
+            execution_range = project.get("execution_capital_range_aud_m")
+            execution_interval = _directional_interval(
+                execution_value, execution_state, execution_range)
+            if execution_interval is None:
+                errors.append(f"{project_id}: invalid execution-capital amount/state/range")
+            else:
+                execution_lower += execution_interval[0]
+                execution_upper = (execution_upper + execution_interval[1]
+                                   if math.isfinite(execution_upper)
+                                   and math.isfinite(execution_interval[1])
+                                   else math.inf)
+            if execution_state == "UNRESOLVED":
+                any_execution_unresolved = True
+                if execution_value is not None:
+                    errors.append(f"{project_id}: UNRESOLVED execution capital carries a value")
+            elif isinstance(execution_value, (int, float)) and not isinstance(execution_value, bool):
+                execution_values.append(float(execution_value))
+            if project.get("execution_capital_doc") not in documents:
+                errors.append(f"{project_id}: execution_capital_doc is not a valid document key")
 
     committed = fields.get("committed_capex_aud_m") or {}
     committed_value = committed.get("v") if isinstance(committed, dict) else None
@@ -891,25 +914,27 @@ def _validate_execution_capital_projects(record: dict,
                                     sum(committed_range_highs), abs_tol=1e-6)):
             errors.append("project committed ranges do not reconcile to committed_capex_aud_m")
 
-    execution = fields.get(EXECUTION_CAPITAL_FIELD) or {}
-    execution_value = execution.get("v") if isinstance(execution, dict) else None
-    if any_execution_unresolved:
-        if execution_value is not None:
-            errors.append(f"aggregate {EXECUTION_CAPITAL_FIELD} carries a value while a project is UNRESOLVED")
-    elif not isinstance(execution_value, (int, float)) or isinstance(execution_value, bool):
-        errors.append(f"aggregate {EXECUTION_CAPITAL_FIELD} missing despite resolved projects")
-    elif not math.isclose(float(execution_value), sum(execution_values), abs_tol=1e-6):
-        errors.append(f"project execution capital does not reconcile to {EXECUTION_CAPITAL_FIELD}")
-    aggregate_execution_interval = _directional_interval(
-        execution.get("v"), execution.get("evidence_state"),
-        execution.get("accuracy_range"))
-    if aggregate_execution_interval is not None:
-        agg_lo, agg_hi = aggregate_execution_interval
-        same_upper = ((math.isinf(agg_hi) and math.isinf(execution_upper))
-                      or math.isclose(agg_hi, execution_upper, abs_tol=1e-6))
-        if (not math.isclose(agg_lo, execution_lower, abs_tol=1e-6)
-                or not same_upper):
-            errors.append(f"project execution-capital interval does not reconcile to {EXECUTION_CAPITAL_FIELD}")
+    execution = fields.get(EXECUTION_CAPITAL_FIELD)
+    if require_execution_capital or execution is not None:
+        execution = execution or {}
+        execution_value = execution.get("v") if isinstance(execution, dict) else None
+        if any_execution_unresolved:
+            if execution_value is not None:
+                errors.append(f"aggregate {EXECUTION_CAPITAL_FIELD} carries a value while a project is UNRESOLVED")
+        elif not isinstance(execution_value, (int, float)) or isinstance(execution_value, bool):
+            errors.append(f"aggregate {EXECUTION_CAPITAL_FIELD} missing despite resolved projects")
+        elif not math.isclose(float(execution_value), sum(execution_values), abs_tol=1e-6):
+            errors.append(f"project execution capital does not reconcile to {EXECUTION_CAPITAL_FIELD}")
+        aggregate_execution_interval = _directional_interval(
+            execution.get("v"), execution.get("evidence_state"),
+            execution.get("accuracy_range"))
+        if aggregate_execution_interval is not None:
+            agg_lo, agg_hi = aggregate_execution_interval
+            same_upper = ((math.isinf(agg_hi) and math.isinf(execution_upper))
+                          or math.isclose(agg_hi, execution_upper, abs_tol=1e-6))
+            if (not math.isclose(agg_lo, execution_lower, abs_tol=1e-6)
+                    or not same_upper):
+                errors.append(f"project execution-capital interval does not reconcile to {EXECUTION_CAPITAL_FIELD}")
     return errors
 
 
@@ -2619,11 +2644,24 @@ def _gate2_producer_at_capex(c: dict, anchor_gold: float, cfg: dict,
     normal_gold = normal_gold if normal_gold is not None else anchor_gold
     horizon = g["horizon_years"]
 
-    prod = c.get("production_koz_yr")
-    aisc = c.get("aisc_aud_oz")
-    if prod is None or aisc is None:
-        return {"pass": None, "reason": "production or AISC unsourced — health "
-                                        "cannot be tested", "provisional": True}
+    core = {
+        "production": c.get("production_koz_yr"),
+        "AISC": c.get("aisc_aud_oz"),
+        "net debt": c.get("net_debt_aud_m"),
+        "market capitalisation": mcap_aud_m,
+    }
+    missing_core = [name for name, value in core.items()
+                    if value is None or (name == "market capitalisation" and value <= 0)]
+    if missing_core:
+        return {
+            "pass": None,
+            "health": "UNTESTED",
+            "reason": (f"{', '.join(missing_core)} unsourced — producer health "
+                       "cannot be tested"),
+            "provisional": True,
+        }
+    prod = core["production"]
+    aisc = core["AISC"]
 
     # AISC is defined to include sustaining capital, so margin x ounces is a fair
     # pre-tax, pre-growth free cash flow proxy.
@@ -2650,7 +2688,7 @@ def _gate2_producer_at_capex(c: dict, anchor_gold: float, cfg: dict,
         fcf_horizon *= (1.0 - g["tax_rate"])
 
     # net_debt is negative when the company is in net cash.
-    opening = -(c.get("net_debt_aud_m") or 0.0)
+    opening = -core["net debt"]
     undrawn = c.get("undrawn_facilities_aud_m") or 0.0
     ending_strict = opening + fcf_horizon - capex_val
     ending_full = ending_strict + (undrawn if g["count_undrawn_facilities"] else 0.0)
@@ -2830,6 +2868,124 @@ def gate3_tradability(c: dict, spread: dict | None, cfg: dict) -> dict:
 # Weighting
 # ──────────────────────────────────────────────────────────────────────────
 
+def compute_gate1_cap_weights(constituents: list[dict], prices: dict,
+                              meta: dict) -> tuple[list[dict], list[dict]]:
+    """Build the §14 variant: Gate 1, top-N selection, then cap weighting.
+
+    This branch deliberately stops before every later SJGV rule. It does not
+    read Gate 2, Gate 3, statement currency, the ounce ledger, enterprise value,
+    or the §8 caps. The largest configured number of eligible companies are
+    retained by full market capitalisation and renormalised. A mixed-jurisdiction
+    company may survive under §2.4's entity-level limit; once admitted, its
+    *full* equity market capitalisation is used. Multiplying market cap by the
+    eligible-ounce share would create an undocumented fundamental tilt rather
+    than a market-cap index.
+
+    ``shares_out_m`` is total issued shares, so this is full market-cap
+    weighting. It is not described as free-float adjusted: the data layer has no
+    sourced foreign-inclusion/free-float factor, and derive-or-fail forbids
+    manufacturing one.
+    """
+    variant = meta["variants"]["gate1_cap"]
+    if variant["weighting"] != "full_market_cap":
+        raise ValueError(
+            f"variants.gate1_cap.weighting is {variant['weighting']!r}; "
+            "the §14 implementation supports 'full_market_cap' and nothing else")
+    max_constituents = variant["max_constituents"]
+    if (not isinstance(max_constituents, int) or isinstance(max_constituents, bool)
+            or max_constituents <= 0):
+        raise ValueError(
+            "variants.gate1_cap.max_constituents must be a positive integer")
+
+    max_ineligible = meta["gates"]["max_ineligible_nav_share"]
+    rows: list[dict] = []
+    rejected: list[dict] = []
+
+    for c in constituents:
+        ticker = c["ticker"]
+
+        def reject(reason: str) -> None:
+            rejected.append({
+                "ticker": ticker,
+                "name": c["name"],
+                "sleeve": c["sleeve"],
+                "reason": reason,
+            })
+
+        eligible_share = c.get("eligible_ounce_share")
+        if eligible_share is None:
+            reject("GATE 1 — eligible_ounce_share missing")
+            continue
+        if not 0.0 <= eligible_share <= 1.0:
+            reject(f"GATE 1 — eligible_ounce_share {eligible_share!r} outside [0, 1]")
+            continue
+        if eligible_share == 0.0:
+            reject("GATE 1 — no ounces in a Tier A jurisdiction")
+            continue
+
+        ineligible_nav_share = c.get("ineligible_nav_share")
+        if ineligible_nav_share is None:
+            reject("GATE 1 — ineligible_nav_share missing; entity cap is untested")
+            continue
+        if not 0.0 <= ineligible_nav_share <= 1.0:
+            reject(f"GATE 1 — ineligible_nav_share {ineligible_nav_share!r} outside [0, 1]")
+            continue
+        if ineligible_nav_share > max_ineligible:
+            reject(
+                f"GATE 1 — ineligible NAV {ineligible_nav_share:.0%} above "
+                f"{max_ineligible:.0%} entity cap (§2.4)")
+            continue
+
+        price = (prices.get(ticker) or {}).get("price")
+        shares = c.get("shares_out_m")
+        if not shares or not price:
+            missing = "share count" if not shares else "market price"
+            reject(f"{missing} unavailable — market capitalisation cannot be derived")
+            continue
+        market_cap = shares * price
+        if market_cap <= 0:
+            reject(f"non-positive market capitalisation (A${market_cap:,.0f}m)")
+            continue
+
+        rows.append({
+            "ticker": ticker,
+            "name": c["name"],
+            "sleeve": c["sleeve"],
+            "weight": 0.0,
+            "market_cap_aud_m": market_cap,
+            "mcap_aud_m": market_cap,
+            "price_aud": price,
+            "shares_out_m": shares,
+            "eligible_ounce_share": eligible_share,
+            "ineligible_nav_share": ineligible_nav_share,
+            "shares_src": "data",
+        })
+
+    rows.sort(key=lambda row: (-row["market_cap_aud_m"], row["ticker"]))
+    for rank, row in enumerate(rows, start=1):
+        row["market_cap_rank"] = rank
+    omitted = rows[max_constituents:]
+    rows = rows[:max_constituents]
+    for row in omitted:
+        rejected.append({
+            "ticker": row["ticker"],
+            "name": row["name"],
+            "sleeve": row["sleeve"],
+            "market_cap_aud_m": row["market_cap_aud_m"],
+            "market_cap_rank": row["market_cap_rank"],
+            "reason": (
+                f"CONSTITUENT LIMIT — market-cap rank {row['market_cap_rank']} "
+                "is outside the "
+                f"largest {max_constituents} Gate-1-eligible companies"),
+        })
+
+    total_market_cap = sum(r["market_cap_aud_m"] for r in rows)
+    if total_market_cap > 0:
+        for row in rows:
+            row["weight"] = row["market_cap_aud_m"] / total_market_cap
+    return rows, rejected
+
+
 def compute_raw_weights(constituents: list[dict], prices: dict,
                         risk: dict, gold_aud: float, meta: dict,
                         anchor_gold: float | None = None,
@@ -2919,7 +3075,15 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
                    f"(no API source since TWS 10.47; needs sourcing from filings)")
             continue
         mcap_aud_m = shares * px
-        ev_aud_m = mcap_aud_m + (c.get("net_debt_aud_m") or 0.0)
+        net_debt = c.get("net_debt_aud_m")
+        if net_debt is None and c.get("sleeve") != "developer":
+            reject("GATE 2 — net debt unsourced — producer health cannot be tested")
+            continue
+        # Preserve the developer path: D3's directional funding evidence, not a
+        # newly introduced net-debt rule, decides its current exclusions.
+        if net_debt is None:
+            net_debt = 0.0
+        ev_aud_m = mcap_aud_m + net_debt
         if ev_aud_m <= 0:
             reject(f"non-positive EV (A${ev_aud_m:,.0f}m) — net cash exceeds market cap")
             continue
@@ -2963,17 +3127,24 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             reject(f"GATE 3 — {g3['reason']}")
             continue
 
-        # ── The all-in price of the claim (§7) ───────────────────────────────
-        # Funding availability answers whether a developer can finance a build;
-        # it does not make that build free.  The denominator therefore adds the
-        # gross remaining execution cost once, for every sleeve.  Gate 2 alone
-        # consumes the separately derived residual funding gap.
-        execution = execution_capital_ledger(c, ev_aud_m, meta, as_of)
-        if not execution.get("ok"):
-            reject(f"EXECUTION CAPITAL — {execution['reason']}")
-            continue
-        execution_capital = execution["effective_aud_m"]
-        all_in_ev_aud_m = ev_aud_m + execution_capital
+        # ── The price of the claim (§7) ──────────────────────────────────────
+        # Established producers use standard EV. Their execution-capital data
+        # remains visible as provenance/reporting but is neither required nor
+        # added. Near-producers and developers still require and add gross
+        # remaining execution capital; funding never reduces that denominator.
+        if c.get("sleeve") == "producer":
+            execution = _capital_evidence(c, EXECUTION_CAPITAL_FIELD, meta, as_of)
+            reported_execution_capital = c.get(EXECUTION_CAPITAL_FIELD)
+            denominator_execution_capital = None
+            all_in_ev_aud_m = ev_aud_m
+        else:
+            execution = execution_capital_ledger(c, ev_aud_m, meta, as_of)
+            if not execution.get("ok"):
+                reject(f"EXECUTION CAPITAL — {execution['reason']}")
+                continue
+            reported_execution_capital = execution["effective_aud_m"]
+            denominator_execution_capital = execution["effective_aud_m"]
+            all_in_ev_aud_m = ev_aud_m + denominator_execution_capital
         residual_gap = (g2.get("detail", {}).get("residual_funding_gap")
                         if c.get("sleeve") == "developer" else None)
 
@@ -2990,7 +3161,8 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             "claimed_moz": oz, "ledger": ledger, "purity": purity,
             "statement_age_months": age_months,
             "ev_aud_m": ev_aud_m, "mcap_aud_m": mcap_aud_m, "price_aud": px,
-            "remaining_execution_capex_aud_m": execution_capital,
+            "remaining_execution_capex_aud_m": reported_execution_capital,
+            "execution_capital_in_denominator_aud_m": denominator_execution_capital,
             "execution_capital": execution,
             "residual_funding_gap_aud_m": (
                 residual_gap.get("value_aud_m") if residual_gap else None),
@@ -3504,6 +3676,29 @@ def size_basket(rows: list[dict], amount_eur: float, euraud: float,
 # Reporting
 # ──────────────────────────────────────────────────────────────────────────
 
+def print_gate1_cap_weights(rows: list[dict], rejected: list[dict],
+                            methodology: str) -> None:
+    """Print the parallel §14 book without implying that later SJGV gates ran."""
+    print(f"\n{methodology.upper()} (§14) — GATE 1, THEN TOP-N FULL MARKET CAP")
+    print(f"  {'TICK':<6}{'WEIGHT':>10}{'MARKET CAP A$m':>17}{'PRICE A$':>11}"
+          f"{'ELIG OZ':>10}{'INELIG NAV':>12}")
+    print("  " + "─" * 66)
+    for row in sorted(rows, key=lambda item: -item["weight"]):
+        print(f"  {row['ticker']:<6}{row['weight']*100:>9.2f}%"
+              f"{row['market_cap_aud_m']:>17,.0f}{row['price_aud']:>11.3f}"
+              f"{row['eligible_ounce_share']:>10.1%}"
+              f"{row['ineligible_nav_share']:>12.1%}")
+    print("    Full issued market cap = sourced shares outstanding × market price; "
+          "no free-float factor is available.")
+    print("    Gate 2, Gate 3, statement currency, ounce logic and §8 caps do not "
+          "reach this variant.")
+    if rejected:
+        print(f"    Not included after Gate 1, cap-input and top-N selection "
+              f"({len(rejected)}):")
+        for row in sorted(rejected, key=lambda item: item["ticker"]):
+            print(f"      {row['ticker']}: {row['reason']}")
+
+
 def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
     """The book. Weight, the claim behind it, and what was paid for it."""
     print(f"\n{'TICK':<6} {'SLEEVE':<14} {'WEIGHT':>8} {'CLAIM Moz':>10} "
@@ -3533,21 +3728,22 @@ def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
         print(f"  comparator the number above means anything against. Same names, "
               f"same day, same")
         print(f"  disclosed ounces; the entire difference is how the weights are set.")
-    capital = [r for r in rows if r.get("remaining_execution_capex_aud_m")]
-    print("  ALL-IN EV = market cap + net debt + remaining execution capital — "
-          "what the ounces cost all-in.")
+    capital = [r for r in rows
+               if r.get("execution_capital_in_denominator_aud_m")]
+    print("  DENOMINATOR: producers use standard EV; near-producers and developers "
+          "add gross remaining execution capital.")
     if capital:
         print("  Financing does not reduce economic cost; project funding affects "
               "developer Gate 2 only:")
         for r in sorted(capital,
-                        key=lambda x: -x["remaining_execution_capex_aud_m"]):
-            print(f"    {r['ticker']} +A${r['remaining_execution_capex_aud_m']:,.0f}m "
+                        key=lambda x: -x["execution_capital_in_denominator_aud_m"]):
+            print(f"    {r['ticker']} +A${r['execution_capital_in_denominator_aud_m']:,.0f}m "
                   f"({r['execution_capital']['state']}) — "
                   f"A${r['aud_per_oz_ex_execution_capital']:,.0f}/oz on EV alone, "
                   f"A${r['aud_per_oz']:,.0f}/oz all-in")
     else:
-        print("  No constituent carries material remaining execution capital, so it "
-              "equals EV.")
+        print("  No near-producer or developer constituent carries material remaining "
+              "execution capital, so every constituent denominator equals EV.")
 
     beta = stats["portfolio_beta_gold"]
     lo, hi = stats["beta_target"]
@@ -3802,7 +3998,7 @@ def print_capacity(cap: dict, euraud: float) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Build the SJGV v1.7 index and optionally size a basket.")
+        description="Build the SJGV v1.8 index and optionally size a basket.")
     ap.add_argument("amount", nargs="?", type=float, default=None,
                     help="EUR amount to size the basket for (e.g. 1000000).")
     ap.add_argument("--euraud", type=float, default=None,
@@ -3910,6 +4106,22 @@ def main() -> int:
     print(f"\nGold  A${gold_aud:,.0f}/oz [{gold_src}]"
           + (f"  (US${fx['xauusd']:,.2f})" if fx.get("xauusd") else ""))
     print(f"EURAUD {euraud:.4f} [{fx_src}]")
+
+    # Parallel §14 variant. It shares the candidate data and the exact price
+    # observations from this session, then deliberately stops after Gate 1.
+    # Computing it here keeps it independent of every later SJGV gate and of
+    # the ounce/EV model while still pinning both books to one market record.
+    gate1_cap_cfg = meta["variants"]["gate1_cap"]
+    gate1_cap_methodology = gate1_cap_cfg["methodology"]
+    gate1_cap_adopted = gate1_cap_cfg["adoption_date"]
+    gate1_cap_rows, gate1_cap_rejected = compute_gate1_cap_weights(
+        constituents, md["prices"], meta)
+    if not gate1_cap_rows:
+        print("\nERROR: no constituent passed Gate 1 with complete market-cap data.",
+              file=sys.stderr)
+        for row in gate1_cap_rejected:
+            print(f"  {row['ticker']:<6} {row['reason']}", file=sys.stderr)
+        return 2
 
     risk = compute_risk_stats(md["history"], md["gold_history"],
                               md.get("audusd_history"), meta)
@@ -4066,6 +4278,8 @@ def main() -> int:
 
     cap = capacity(rows, (args.amount or 0.0) * euraud, meta)
     print_capacity(cap, euraud)
+    print_gate1_cap_weights(gate1_cap_rows, gate1_cap_rejected,
+                            gate1_cap_methodology)
 
     # Declared-but-unread is the defect this build is closing; the run reports
     # its own instance of it rather than waiting for the auditor to be invoked.
@@ -4081,8 +4295,9 @@ def main() -> int:
               f"config.json does not define, so a hardcoded default decided the "
               f"answer: {', '.join(sorted(CONFIG_MISSES))}")
 
+    generated_utc = datetime.now(timezone.utc).isoformat()
     out = {
-        "generated_utc": datetime.now(timezone.utc).isoformat(),
+        "generated_utc": generated_utc,
         "methodology": meta["methodology"],
         "data_sourced": market["_ledger_sourced"],
         "gold_aud_oz": gold_aud, "gold_source": gold_src,
@@ -4118,7 +4333,9 @@ def main() -> int:
     with (HERE / "weights.csv").open("w", newline="") as f:
         cols = ["ticker", "name", "sleeve", "weight", "claimed_moz", "aud_per_oz",
                 "aud_per_oz_ex_execution_capital", "all_in_ev_aud_m",
-                "remaining_execution_capex_aud_m", "residual_funding_gap_aud_m",
+                "remaining_execution_capex_aud_m",
+                "execution_capital_in_denominator_aud_m",
+                "residual_funding_gap_aud_m",
                 "residual_funding_gap_state",
                 "aud_per_oz_ex_gap", "funded_ev_aud_m", "funding_gap_aud_m",
                 "pp_moz", "mi_moz", "inferred_moz", "eligible_share", "hedged_moz",
@@ -4128,7 +4345,73 @@ def main() -> int:
         wr.writeheader()
         wr.writerows({**r, **r["ledger"]}
                      for r in sorted(rows, key=lambda x: -x["weight"]))
-    print("\nWrote → weights.csv, weights.json")
+
+    selected_market_cap = sum(
+        row["market_cap_aud_m"] for row in gate1_cap_rows)
+    omitted_market_cap = sum(
+        row.get("market_cap_aud_m", 0.0) for row in gate1_cap_rejected)
+    eligible_market_cap = selected_market_cap + omitted_market_cap
+    gate1_cap_stats = {
+        "n_constituents": len(gate1_cap_rows),
+        "max_constituents": gate1_cap_cfg["max_constituents"],
+        "total_market_cap_aud_m": selected_market_cap,
+        "selected_market_cap_aud_m": selected_market_cap,
+        "eligible_market_cap_aud_m": eligible_market_cap,
+        "eligible_market_cap_coverage": (
+            selected_market_cap / eligible_market_cap
+            if eligible_market_cap > 0 else None),
+        "effective_n": effective_n(gate1_cap_rows),
+        "top_weight": max(row["weight"] for row in gate1_cap_rows),
+    }
+    gate1_cap_out = {
+        "generated_utc": generated_utc,
+        "methodology": gate1_cap_methodology,
+        "adopted": gate1_cap_adopted,
+        "data_sourced": market["_ledger_sourced"],
+        "construction": {
+            "universe": "shared data/companies.json candidate universe",
+            "eligibility": "Gate 1 only",
+            "selection": (
+                f"largest {gate1_cap_cfg['max_constituents']} eligible companies "
+                "by full market capitalisation"),
+            "weighting": "full_market_cap",
+            "formula": "shares_out_m * price_aud / total_market_cap_aud_m",
+            "not_applied": [
+                "Gate 2", "Gate 3", "resource-statement currency",
+                "ounce ledger", "enterprise-value weighting", "section 8 caps",
+            ],
+        },
+        "gate1": {
+            "max_ineligible_nav_share": meta["gates"]["max_ineligible_nav_share"],
+            "mixed_jurisdiction_treatment": (
+                "admit the whole company when the entity cap passes; do not "
+                "haircut market capitalisation by eligible-ounce share"),
+        },
+        "market_input": bundle,
+        "stats": gate1_cap_stats,
+        "weights": gate1_cap_rows,
+        "rejected": gate1_cap_rejected,
+        "outside_shared_candidate_records": {
+            "records": excluded,
+            "note": (
+                "Carried for universe audit only. These records are outside the "
+                "shared data/companies.json candidate set and were not tested "
+                "or excluded by this variant's post-selection rules."),
+        },
+        "config_reads_observed": sorted(CONFIG_READS),
+        "config_keys_missing": sorted(CONFIG_MISSES),
+    }
+    (HERE / "gate1_cap_weights.json").write_text(
+        json.dumps(gate1_cap_out, indent=2, default=str))
+    with (HERE / "gate1_cap_weights.csv").open("w", newline="") as f:
+        cols = ["market_cap_rank", "ticker", "name", "sleeve", "weight",
+                "market_cap_aud_m", "price_aud", "shares_out_m",
+                "eligible_ounce_share", "ineligible_nav_share", "shares_src"]
+        wr = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
+        wr.writeheader()
+        wr.writerows(sorted(gate1_cap_rows, key=lambda row: -row["weight"]))
+    print("\nWrote → weights.csv, weights.json, gate1_cap_weights.csv, "
+          "gate1_cap_weights.json")
 
     if args.amount is None:
         return 0
@@ -4172,6 +4455,26 @@ def main() -> int:
          "ounces_deployed": total["spend_eur"] / gold_eur,
          "commission_pct": args.commission, "basket": basket}, indent=2, default=str))
     print("Wrote → basket.csv, basket.json")
+
+    gate1_cap_basket = size_basket(
+        gate1_cap_rows, args.amount, euraud, commission_rate)
+    gate1_cap_total = gate1_cap_basket[-1]
+    with (HERE / "gate1_cap_basket.csv").open("w", newline="") as f:
+        wr = csv.DictWriter(f, fieldnames=list(gate1_cap_basket[0].keys()),
+                            extrasaction="ignore")
+        wr.writeheader()
+        wr.writerows(gate1_cap_basket)
+    (HERE / "gate1_cap_basket.json").write_text(json.dumps({
+        "methodology": gate1_cap_methodology,
+        "amount_eur": args.amount,
+        "euraud": euraud,
+        "commission_pct": args.commission,
+        "basket": gate1_cap_basket,
+    }, indent=2, default=str))
+    print(f"\nGate 1 cap-weighted sizing: €{args.amount:,.2f}, "
+          f"{len(gate1_cap_basket) - 1} holdings, "
+          f"€{gate1_cap_total['spend_eur']:,.2f} deployed")
+    print("Wrote → gate1_cap_basket.csv, gate1_cap_basket.json")
     return 0
 
 

@@ -1,7 +1,10 @@
 # Major issues remediation plan
 
 **Created:** 21 August 2026  
-**Status:** complete — issues 1–6 completed 21 August 2026. The issue-5
+**Status:** historical — issues 1–6 completed 21 August 2026. The all-sleeve
+execution-capital denominator described below was superseded for established
+producers by methodology v1.8 on 23 August 2026; near-producer and developer
+protections remain. The issue-5
 three-name replay triggered the approved v1.7 producer-health correction; the
 fresh build has twelve constituents and satisfies its caps.
 
@@ -61,8 +64,9 @@ The approved target design is recorded in
 3. **Implement the capital-field split — COMPLETE (21 August 2026).**
    - Add schema and engine support for remaining execution capital, available
      project funding, and derived residual funding gap.
-   - Use `EV + remaining execution capital` in the weight denominator for both
-     producers and developers.
+   - Historical implementation: use `EV + remaining execution capital` in the
+     weight denominator for both producers and developers. Methodology v1.8
+     later limited this to near-producers and developers.
    - Use residual funding gap only in the developer Gate 2 test.
    - Validate `POINT`, `UPPER_BOUND`, `LOWER_BOUND`, `CARRY_FORWARD`, and
      `UNRESOLVED` evidence states. A lower bound must never reduce a

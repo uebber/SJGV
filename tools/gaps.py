@@ -152,13 +152,15 @@ FIELDS = {
     "approvals_land_secured": ("blocking", "D2 cannot be tested — approvals and "
                                            "land access unproven",
                             "approvals announcements, tenure register", DEVELOPER),
-    # Issue 3 separates economic cost from financing capacity. Execution
-    # capital is mandatory for every sleeve; project funding is additionally
-    # mandatory for developers so D3 can derive the residual gap.
+    # Execution capital is weight-bearing for near-producers and developers.
+    # Established producer records are optional reporting/provenance data and
+    # their absence or unresolved state is not a gap. Project funding is
+    # additionally mandatory for developers so D3 can derive the residual gap.
     "remaining_execution_capex_aud_m": (
                             "blocking", "all-in EV cannot be computed without a "
                                         "denominator-safe execution-capital state",
-                            "approved finite-scope total and current spend bridge", None),
+                            "approved finite-scope total and current spend bridge",
+                            frozenset({"near_producer", "developer"})),
     "available_project_funding_aud_m": (
                             "blocking", "D3 residual funding gap cannot be bounded",
                             "cash plus committed cash-drawable project funding", DEVELOPER),

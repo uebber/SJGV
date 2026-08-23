@@ -34,7 +34,8 @@ class ExecutionCapitalTest(unittest.TestCase):
             fields = company["fields"]
             self.assertNotIn("remaining_capex_aud_m", fields)
             self.assertNotIn("residual_funding_gap_aud_m", fields)
-            self.assertIn("remaining_execution_capex_aud_m", fields)
+            if company["sleeve"] in {"near_producer", "developer"}:
+                self.assertIn("remaining_execution_capex_aud_m", fields)
 
     def test_fully_funded_project_keeps_positive_economic_capital(self) -> None:
         rox = self.companies["RXL"]
@@ -124,29 +125,101 @@ class ExecutionCapitalTest(unittest.TestCase):
         self.assertFalse(verdict["pass"])  # D2 fails; D3 is explicitly unresolved.
         self.assertIn("D3 residual funding gap spans", verdict["reason"])
 
-    def test_weight_pipeline_adds_execution_capital_for_both_sleeves(self) -> None:
-        for ticker in ("GMD", "RXL"):
+    def test_producer_uses_standard_ev_and_keeps_capital_reporting_only(self) -> None:
+        rows, rejected = B.compute_raw_weights(
+            [self.companies["GMD"]], self.prices, {}, self.gold, self.cfg,
+            anchor_gold=self.anchor, as_of=self.as_of,
+        )
+        self.assertEqual(rejected, [])
+        row = rows[0]
+        self.assertEqual(row["remaining_execution_capex_aud_m"], 280.0)
+        self.assertIsNone(row["execution_capital_in_denominator_aud_m"])
+        self.assertEqual(row["all_in_ev_aud_m"], row["ev_aud_m"])
+
+    def test_producer_execution_capital_may_be_absent_without_zero_imputation(self) -> None:
+        payload = json.loads((ROOT / "data/companies.json").read_text())
+        record = copy.deepcopy(next(c for c in payload["companies"]
+                                    if c["ticker"] == "GMD"))
+        record["fields"].pop(B.EXECUTION_CAPITAL_FIELD)
+        for project in record["execution_capital_projects"]:
+            for key in (B.EXECUTION_CAPITAL_FIELD,
+                        "execution_capital_range_aud_m",
+                        "execution_capital_state", "execution_capital_doc"):
+                project.pop(key, None)
+        self.assertEqual(B._validate_capital_schema(record), [])
+
+        company = B._flatten(record)
+        rows, rejected = B.compute_raw_weights(
+            [company], self.prices, {}, self.gold, self.cfg,
+            anchor_gold=self.anchor, as_of=self.as_of,
+        )
+        self.assertEqual(rejected, [])
+        self.assertIsNone(rows[0]["remaining_execution_capex_aud_m"])
+        self.assertIsNone(rows[0]["execution_capital_in_denominator_aud_m"])
+        self.assertEqual(rows[0]["all_in_ev_aud_m"], rows[0]["ev_aud_m"])
+
+    def test_near_producer_still_requires_and_adds_execution_capital(self) -> None:
+        company = copy.deepcopy(self.companies["RXL"])
+        company["sleeve"] = "near_producer"
+        rows, rejected = B.compute_raw_weights(
+            [company], self.prices, {}, self.gold, self.cfg,
+            anchor_gold=self.anchor, as_of=self.as_of,
+        )
+        self.assertEqual(rejected, [])
+        row = rows[0]
+        self.assertAlmostEqual(row["execution_capital_in_denominator_aud_m"], 319.723)
+        self.assertAlmostEqual(row["all_in_ev_aud_m"], row["ev_aud_m"] + 319.723)
+
+    def test_developer_still_requires_gross_capital_despite_full_funding(self) -> None:
+        rows, rejected = B.compute_raw_weights(
+            [self.companies["RXL"]], self.prices, {}, self.gold, self.cfg,
+            anchor_gold=self.anchor, as_of=self.as_of,
+        )
+        self.assertEqual(rejected, [])
+        row = rows[0]
+        self.assertEqual(row["residual_funding_gap_aud_m"], 0.0)
+        self.assertAlmostEqual(row["execution_capital_in_denominator_aud_m"], 319.723)
+        self.assertAlmostEqual(row["all_in_ev_aud_m"], row["ev_aud_m"] + 319.723)
+
+    def test_unresolved_producer_capital_does_not_reject_wgx_or_bgl(self) -> None:
+        for ticker in ("WGX", "BGL"):
             rows, rejected = B.compute_raw_weights(
                 [self.companies[ticker]], self.prices, {}, self.gold, self.cfg,
                 anchor_gold=self.anchor, as_of=self.as_of,
             )
             self.assertEqual(rejected, [])
-            self.assertEqual(len(rows), 1)
-            row = rows[0]
-            self.assertAlmostEqual(
-                row["all_in_ev_aud_m"],
-                row["ev_aud_m"] + row["remaining_execution_capex_aud_m"],
-            )
-        self.assertEqual(rows[0]["residual_funding_gap_aud_m"], 0.0)
+            self.assertEqual(rows[0]["gate2"]["health"], "AMBER")
+            self.assertIsNone(rows[0]["remaining_execution_capex_aud_m"])
+            self.assertEqual(rows[0]["all_in_ev_aud_m"], rows[0]["ev_aud_m"])
 
-    def test_unresolved_execution_capital_rejects_instead_of_defaulting_zero(self) -> None:
+    def test_unresolved_near_producer_capital_still_rejects(self) -> None:
+        company = copy.deepcopy(self.companies["RXL"])
+        company["sleeve"] = "near_producer"
+        company[B.EXECUTION_CAPITAL_FIELD] = None
+        company[f"{B.EXECUTION_CAPITAL_FIELD}_evidence_state"] = "UNRESOLVED"
         rows, rejected = B.compute_raw_weights(
-            [self.companies["WGX"]], self.prices, {}, self.gold, self.cfg,
+            [company], self.prices, {}, self.gold, self.cfg,
             anchor_gold=self.anchor, as_of=self.as_of,
         )
         self.assertEqual(rows, [])
         self.assertIn("EXECUTION CAPITAL", rejected[0]["reason"])
         self.assertIn("UNRESOLVED", rejected[0]["reason"])
+
+    def test_missing_producer_net_debt_is_gate2_untested(self) -> None:
+        company = copy.deepcopy(self.companies["GMD"])
+        company["net_debt_aud_m"] = None
+        verdict = B.gate2_survival(company, self.gold, 1_000.0, self.cfg)
+        self.assertIsNone(verdict["pass"])
+        self.assertEqual(verdict["health"], "UNTESTED")
+        self.assertIn("net debt", verdict["reason"])
+
+    def test_bc8_remains_excluded_on_missing_aisc(self) -> None:
+        rows, rejected = B.compute_raw_weights(
+            [self.companies["BC8"]], self.prices, {}, self.gold, self.cfg,
+            anchor_gold=self.anchor, as_of=self.as_of,
+        )
+        self.assertEqual(rows, [])
+        self.assertIn("AISC unsourced", rejected[0]["reason"])
 
     def test_project_capital_reconciles_to_company_records(self) -> None:
         payload = json.loads((ROOT / "data/companies.json").read_text())

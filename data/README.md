@@ -16,6 +16,16 @@ data/
 └── market.json        gold price, FX, and reference decks
 ```
 
+The parallel **SJGV Gate 1 Cap-Weighted** variant reads the same company
+records. Its weight path uses only `eligible_ounce_share`,
+`ineligible_nav_share`, `shares_out_m`, and the common-session market price.
+After Gate 1 it retains at most the `variants.gate1_cap.max_constituents`
+largest eligible companies by full market capitalisation and normalises their
+weights to 100%. All other company fields belong to later SJGV stages and
+cannot affect that variant. `shares_out_m` is total issued shares; no free-float
+factor is stored, so the variant is full market-cap weighted rather than
+free-float adjusted.
+
 ## Provenance schema
 
 Every company carries a `documents` map and a `fields` map. Each field points at
@@ -56,7 +66,7 @@ A field value is normally a number. **One is a boolean:**
 | `horizon_years` | Legacy summary of how many years the aggregate figure covered | Retained for the issue-1 fixture; live Gate 2 coverage comes from dated project records below. |
 | `annual_leg_aud_m` | Legacy recurring-guidance split | Retained for historical comparison; it is not extrapolated or consumed by the interval evaluator. |
 | `term_date` | ISO date a facility ends. On `undrawn_facilities_aud_m` only | Methodology §3. Credited only if it reaches the end of the Gate 2 window. **Absent means not credited** — an unverified facility cannot prove liquidity. Record the EARLIEST date the facility could lapse where the exact day is undisclosed. |
-| `evidence_state` | Directional classification: `POINT`, `UPPER_BOUND`, `LOWER_BOUND`, `CARRY_FORWARD`, or `UNRESOLVED` | Validated by the engine. A denominator accepts only `POINT`, `UPPER_BOUND`, or an unexpired `CARRY_FORWARD`; `LOWER_BOUND` and `UNRESOLVED` reject the name rather than shrinking economic cost. |
+| `evidence_state` | Directional classification: `POINT`, `UPPER_BOUND`, `LOWER_BOUND`, `CARRY_FORWARD`, or `UNRESOLVED` | Validated by the engine. A weight-bearing near-producer or developer denominator accepts only `POINT`, `UPPER_BOUND`, or an unexpired `CARRY_FORWARD`; `LOWER_BOUND` and `UNRESOLVED` reject the name rather than shrinking economic cost. Producer execution-capital states are reporting-only. |
 | `as_of` | ISO measurement date for a capital amount | Dates a carry-forward and the common capital basis. If omitted, the cited document date is used. |
 | `cost_base_date` | ISO date on which a project estimate's prices are based | Kept distinct from the measurement date; an old cost base is never silently advanced. |
 | `accuracy_range` | Issuer-published estimate range | Records estimate quality; never create an analyst range. |
@@ -68,9 +78,9 @@ as `v`: if the document does not establish a fact, it is omitted. Omissions
 therefore have specific meanings and none means "fine":
 
 Issue 3 permits a sourced `UNRESOLVED` field shell with no `v`. This is not a
-numeric zero: the engine rejects it before weighting. Every modeled company must
-carry an execution-capital field, including a sourced zero or an explicit
-unresolved state, so silence cannot become favourable.
+numeric zero. The engine rejects it before weighting for near-producers and
+developers. Established-producer execution capital is optional reporting data;
+when retained, its unresolved state remains explicit and is not read as zero.
 
 ### Execution capital and developer funding
 
@@ -85,9 +95,11 @@ residual_funding_gap_aud_m       = max(0, execution capital − project funding)
 ```
 
 The first two are sourced fields. The third is engine-derived and must never be
-stored. All-in EV adds remaining execution capital once for producers and
-developers. Developer Gate 2 alone reads the residual funding gap. Producer
-`committed_capex_aud_m` remains the separate stress-window cash-burn input.
+stored. Near-producer and developer denominators add remaining execution capital
+once. Established producers use standard EV; their execution-capital records
+are optional provenance/reporting data. Developer Gate 2 alone reads the
+residual funding gap. Producer `committed_capex_aud_m` remains the separate
+stress-window cash-burn input.
 
 Every producer-path company (`producer` and `near_producer`) also carries a
 top-level `execution_capital_projects` list. Each record joins the economic project
@@ -136,8 +148,9 @@ must cite the filing that establishes why no finite material scope is included.
 
 - **No `range`** means the issuer published a point, not that the point is exact.
 - **No coverage dates** means the commitment evidence is incomplete; it never
-  means full coverage. Producer health is at least AMBER, while the economic
-  denominator continues to require a safe execution-capital value.
+  means full coverage. Producer health is at least AMBER. This does not create
+  an execution-capital value: established producers do not require one, while
+  near-producers and developers still require denominator-safe evidence.
 - Gate 2 tests a finite adverse upper edge where one exists. Otherwise it uses
   only the sourced unavoidable lower edge and reports AMBER; it does not
   annualise guidance or invent future discretionary spend. Sourced evidence
@@ -321,11 +334,14 @@ have been.
    report of it. Where only secondary is available, mark it and log the gap.
 2. **Date every field.** Gold equities restate reserves annually and guidance
    quarterly. A number without an `as_of` is unusable.
-3. **`remaining_execution_capex_aud_m` is mandatory for every modeled name.**
-   It is gross economic cost and is added once to EV for every sleeve.
-   Developers also require `available_project_funding_aud_m`; the engine derives
-   the residual gap and sends only that derived quantity to §3.1 D3. Never net
-   cash or facilities from execution capital, and never store the residual gap.
+3. **`remaining_execution_capex_aud_m` is mandatory for near-producers and
+   developers, not established producers.** It is gross economic cost and is
+   added once to EV for those two sleeves. Producer records may be retained for
+   provenance/reporting but do not affect eligibility or weight. Developers
+   also require `available_project_funding_aud_m`; the engine derives the
+   residual gap and sends only that derived quantity to §3.1 D3. Never net cash
+   or facilities from execution capital, never store the residual gap, and
+   never turn an absent producer amount into zero.
 4. **Reserve price assumptions are mandatory sourcing** — but reporting-only
    JORC Table 1 and NI 43-101 both require the price deck to be
    disclosed, and it says how under-booked a company's P&P tranche is, which is

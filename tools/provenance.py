@@ -48,6 +48,12 @@ GATE_FIELDS = {
 }
 
 
+def _is_load_bearing(company: dict, field: str) -> bool:
+    """Producer execution capital is retained evidence, not a live input."""
+    return not (field == "remaining_execution_capex_aud_m"
+                and company.get("sleeve") == "producer")
+
+
 def load():
     companies = json.loads((ROOT / "data" / "companies.json").read_text())["companies"]
     weights = {}
@@ -79,7 +85,7 @@ def main() -> int:
                 rows.append({
                     "ticker": c["ticker"], "field": f, "type": t,
                     "weight": weights.get(c["ticker"]),
-                    "gate": f in GATE_FIELDS,
+                    "gate": f in GATE_FIELDS and _is_load_bearing(c, f),
                     "url": docs.get(v.get("doc"), {}).get("url", ""),
                 })
         for project in c.get("execution_capital_projects", []):
@@ -100,7 +106,9 @@ def main() -> int:
                     rows.append({
                         "ticker": c["ticker"], "field": field,
                         "type": source_type, "weight": weights.get(c["ticker"]),
-                        "gate": True, "url": doc.get("url", ""),
+                        "gate": (suffix != "execution"
+                                 or c.get("sleeve") != "producer"),
+                        "url": doc.get("url", ""),
                     })
 
     total = sum(tally.values()) or 1

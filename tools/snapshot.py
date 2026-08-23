@@ -31,7 +31,9 @@ recomputed from it:
     config.json      the parameters as they stood; a weight change caused by a
                      committee decision must be separable from one caused by the
                      market, and only this makes that possible
-    weights.json  the output, including gate verdicts and NAV detail
+    weights.json  the primary output, including gate verdicts and NAV detail
+    gate1_cap_weights.json  the parallel Gate-1-only market-cap variant
+    gate1_cap_basket.json   its sized basket, when the build was sized
     market_bundle.json  the raw TWS session behind the prices, spreads and beta:
                      request parameters, contract identifiers, quote fields,
                      market-data type, timestamps and the engine commit
@@ -72,7 +74,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOTS = ROOT / "snapshots"
 ARTEFACTS = ("data/companies.json", "data/config.json", "weights.json",
-             "basket.json", "market_bundle.json", "market_bars.csv")
+             "basket.json", "gate1_cap_weights.json", "gate1_cap_basket.json",
+             "market_bundle.json", "market_bars.csv")
 
 
 def git_commit() -> str | None:
@@ -163,6 +166,15 @@ def take(tag: str | None) -> Path:
                          "snapshot of the data layer without the weights it "
                          "produced explains nothing.")
     weights = json.loads(weights_path.read_text())
+    gate1_cap_path = ROOT / "gate1_cap_weights.json"
+    if not gate1_cap_path.exists():
+        raise SystemExit("No gate1_cap_weights.json — run build_index.py with the "
+                         "current engine before freezing both index variants.")
+    gate1_cap = json.loads(gate1_cap_path.read_text())
+    if gate1_cap.get("generated_utc") != weights.get("generated_utc"):
+        raise SystemExit(
+            "weights.json and gate1_cap_weights.json came from different builds; "
+            "run build_index.py again before snapshotting.")
 
     # The build's own timestamp, not the wall clock. A snapshot taken an hour
     # after the build belongs to the build.
@@ -185,6 +197,7 @@ def take(tag: str | None) -> Path:
 
     rows = weights.get("weights") or []
     market = weights.get("market_input") or {}
+    gate1_cap_rows = gate1_cap.get("weights") or []
     manifest = {
         "snapshot": name,
         "tag": tag,
@@ -208,6 +221,16 @@ def take(tag: str | None) -> Path:
         "effective_n": (weights.get("stats") or {}).get("effective_n"),
         "portfolio_beta_gold": (weights.get("stats") or {}).get("portfolio_beta_gold"),
         "weights": {r["ticker"]: round(r["weight"], 6) for r in rows},
+        "variants": {
+            "gate1_cap": {
+                "methodology": gate1_cap.get("methodology"),
+                "n_constituents": len(gate1_cap_rows),
+                "weights": {
+                    r["ticker"]: round(r["weight"], 6)
+                    for r in gate1_cap_rows
+                },
+            }
+        },
         "artefacts": copied,
     }
     (dest / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

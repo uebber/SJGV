@@ -86,6 +86,11 @@ def main() -> int:
     if not rows:
         raise SystemExit("replay produced no constituents")
     constraints = B.apply_constraints(rows, meta)
+    gate1_cap_rows, gate1_cap_rejected = B.compute_gate1_cap_weights(
+        constituents, md["prices"], meta)
+    if not gate1_cap_rows:
+        raise SystemExit("replay produced no Gate 1 cap-weighted constituents")
+    gate1_cap_cfg = meta["variants"]["gate1_cap"]
 
     output = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -102,6 +107,16 @@ def main() -> int:
         "gold_reference": anchor, "constraints": constraints, "weights": rows,
         "rejected": rejected, "pre_excluded": excluded,
         "resource_reconciliation": impute_notes,
+        "variants": {
+            "gate1_cap": {
+                "methodology": gate1_cap_cfg["methodology"],
+                "adopted": gate1_cap_cfg["adoption_date"],
+                "weighting": gate1_cap_cfg["weighting"],
+                "max_constituents": gate1_cap_cfg["max_constituents"],
+                "weights": gate1_cap_rows,
+                "rejected": gate1_cap_rejected,
+            }
+        },
         "config_reads_observed": sorted(B.CONFIG_READS),
         "config_keys_missing": sorted(B.CONFIG_MISSES),
     }

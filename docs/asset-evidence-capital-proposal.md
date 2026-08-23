@@ -1,8 +1,10 @@
 # Execution capital and optionality evidence — revised design proposal
 
-**Status:** **accepted; capital-field split implemented 21 August 2026.** The
-company-level schema, directional validation, developer residual-gap derivation
-and all-sleeve denominator are implemented. The issue-4 per-project Gate 2
+**Status:** **historical; denominator scope superseded by methodology v1.8 on
+23 August 2026.** The company-level schema, directional validation and developer
+residual-gap derivation remain. The proposed all-sleeve denominator below no
+longer applies to established producers, which use standard EV; near-producers
+and developers retain the gross execution-capital requirement. The issue-4 per-project Gate 2
 interval records and the issue-5 coordinated replay remain open.
 **Decision taken:** implement the capital-field split for every constituent in one production change; defer the asset-evidence overlay.  
 **Progress:** Steps 1 and 2 are complete; activation replay is pending. WGX is
@@ -23,8 +25,9 @@ The production fix should:
 
 1. split remaining execution capital from available project funding;
 2. derive residual funding gap only for the developer Gate 2 test;
-3. use `EV + remaining execution capital` as the denominator for producers and
-   developers under the same rule;
+3. ~~use `EV + remaining execution capital` as the denominator for producers and
+   developers under the same rule;~~ **Superseded:** apply it only to
+   near-producers and developers; established producers use standard EV;
 4. source and classify the capital legs for every constituent before switching
    the formula;
 5. require complete data for the initial switch, then use the bounded incumbent
@@ -234,7 +237,7 @@ Add or rename fields as follows:
 | Field | Role | Weight effect |
 |---|---|---|
 | `execution_capital_projects` | Structured per-project scope, as-of date, remaining total, stress-horizon committed portion, exclusions and sources | Feeds both capital totals and their reconciliation |
-| `remaining_execution_capex_aud_m` | Engine-derived sum of included project records | Added once to EV for all sleeves |
+| `remaining_execution_capex_aud_m` | Engine-derived sum of included project records | Historical proposal: add once to EV for all sleeves. Current policy adds it only for near-producers and developers. |
 | `available_project_funding_aud_m` | Cash, cash-drawable committed facilities and contracted funding available for those scopes | Developer Gate 2 only |
 | `residual_funding_gap_aud_m` | Engine-derived difference between the two fields | Developer Gate 2 and reporting only |
 | `committed_capex_aud_m` | Contracted/non-deferrable cash burn inside the stress horizon | Existing producer Gate 2 survival input; unchanged |
@@ -627,7 +630,8 @@ geographical area” explanation appears in Guidance Note 31, not in the rule.
 - For the initial switch, require a `POINT`, an `UPPER_BOUND`, or a sourced de
   minimis zero for every selected constituent. `LOWER_BOUND` and `UNRESOLVED`
   both block. On today's data that means WGX alone (§2.4 of this proposal).
-- Apply `EV + remaining execution capital` to every sleeve in the same build.
+- Historical activation step: apply `EV + remaining execution capital` to every
+  sleeve in the same build. Superseded for established producers by v1.8.
 - Publish old and new denominators, raw weights, cap effects and final weights in
   the transition report.
 - After activation, apply the six-month incumbent carry-forward and scheduled

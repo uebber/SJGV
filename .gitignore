@@ -9,10 +9,27 @@
 /.cache/
 /weights.csv
 /weights.json
+/gate1_cap_weights.csv
+/gate1_cap_weights.json
 /basket.csv
 /basket.json
+/gate1_cap_basket.csv
+/gate1_cap_basket.json
 /market_bundle.json
 /market_bars.csv
 __pycache__/
 /asymmetry.json
 /asx_quotes.json
+
+# Knowledge-base blobs. The registries (documents.jsonl, claims.jsonl,
+# quarantine.jsonl, availability.jsonl) and the generated views ARE committed —
+# they are the audit trail, and with them every content hash, every full
+# retrieval URL and the channel it was reached through, which is what makes the
+# bytes re-obtainable on another machine. The objects are ~1.3 GB of lodged PDFs
+# and this repository has no LFS remote, so every document record carries
+# `storage_state: "local"` and the audit reports the gap rather than pretending
+# the store is portable. This arrangement is explicitly permitted by
+# source-knowledge-base.md §6.4; promoting it to `durable` is a separate,
+# reviewed decision.
+/knowledge/objects/
+/knowledge/extracted/

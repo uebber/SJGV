@@ -1,7 +1,7 @@
 {
- "_schema": "Methodology parameters. These are committee decisions, not observations — index-methodology.md is the source of truth and every entry cites its section. Observations live in the other files in this directory. There is no scoring layer, and every survivor is either a gate threshold, an ounce-category discount, or an impairment cap. Not one is a scoring coefficient. The test a parameter must now pass to exist: does it change how many ounces are claimed, or what was paid for them?",
- "methodology": "SJGV v1.7",
- "adopted": "2026-08-21",
+ "_schema": "Methodology parameters. These are committee decisions, not observations — index-methodology.md is the source of truth and every entry cites its section. Observations live in the other files in this directory. For primary SJGV there is no scoring layer, and every survivor is either a gate threshold, an ounce-category discount, or an impairment cap. Not one is a scoring coefficient. The variants block declares parallel constructions separately. The test a primary-SJGV parameter must now pass to exist: does it change how many ounces are claimed, or what was paid for them?",
+ "methodology": "SJGV v1.8",
+ "adopted": "2026-08-23",
  "objective": {
   "beta_target": [
    1.4,
@@ -88,7 +88,7 @@
   "ref": "§3 and §3.1. Producer Gate 2 is a health check, not a proof of fully funded survival. It applies a literal 40% drawdown from current AUD spot for two years. A deficit is manageable when rescue capital is no more than 30% of market capitalisation and normalised cash generation repairs it within two years; only RED is excluded.",
   "unhedged_note": "The test is run UNHEDGED (§3). Revenue is computed at the stress price on all production and any hedge gain is disregarded. Otherwise a company passes survival on the strength of the very forward sales that penalise it under §6 purity — Catalyst's 30 koz sold at A$6,075 would pay off handsomely in exactly this scenario.",
   "cost_note": "AISC is inflated at cost_inflation_pa, compounding annually over the horizon. Holding it FLAT is also an assumption and it is the optimistic one: in 2013 costs did not fall with the price, which is exactly why so much of the industry went cash-negative. 5% is set below the 8-12% nominal the sector is currently reporting, on the view that some of that is activity-driven and would ease in a downturn.",
-  "capex_note": "Gate 2 subtracts sourced contracted or non-deferrable commitments. It does not assume that discretionary growth programmes continue through a crisis. A finite upper interval edge is conservative; a lower or unresolved edge produces AMBER disclosure rather than a fabricated second-year amount. Gross remaining execution capital remains in the weight denominator.",
+  "capex_note": "Gate 2 subtracts sourced contracted or non-deferrable commitments. It does not assume that discretionary growth programmes continue through a crisis. A finite upper interval edge is conservative; a lower or unresolved edge produces AMBER disclosure rather than a fabricated second-year amount. Established producers use standard EV; gross remaining execution capital remains required in near-producer and developer weight denominators.",
   "anchor_note": "The trailing real average remains the conservative NAV deck and a reported reference. Gate 2 now uses stress_price_basis=spot because its stated scenario is a literal unforeseen 40% fall from the price currently available to the company. A gate need not exclude a name merely to prove that it ran.",
   "health_note": "GREEN needs no rescue capital. AMBER may need a bounded recapitalisation or has incomplete commitment evidence but remains eligible. RED means rescue capital exceeds producer_max_rescue_capital_of_mcap or would take more than producer_max_recovery_years of normal-price cash generation to repair; only RED is excluded."
  },
@@ -140,6 +140,15 @@
   "headline_kpi": "aud_per_claimed_ounce",
   "ref": "§10. PRIMARY: the index's price per claimed ounce, A$ of EV per ounce in the §6 ledger. It is computed from the same numbers as the weights, carries no history, and cannot be survivorship- or look-ahead-biased. The realised asymmetry ratio (tools/asymmetry.py) is still reported and is still NOT a backtest. In ounce terms the index only rises if it outperforms gold; that is the demanding measure and the right one.",
   "asymmetry_note": "§10.3 is measured TWO ways and the primary one changed on 18 Aug 2026. CONVEXITY = beta_up/beta_dn from r_p = alpha + beta_up*g+ + beta_dn*g- + e, which is drift-free because the intercept absorbs it. The classical compounded capture ratio is still printed as 'raw' but is approximately 97% a realised-return measure — per name it correlated +0.97 with total return over the window, because drift raises up-capture and cushions down-capture at once. It was the headline until 17 Aug and it misled: a -0.09 gap against cap-weighting was reported as a finding and has a 95% interval of about +/-2.5. Every figure now ships with a 2000-draw bootstrap interval over periods, and tools/asymmetry.py refuses the piecewise fit below 24 periods with 8 in each state. No config parameter controls any of this: it is a reporting choice, and no parameter is added for a report."
+ },
+ "variants": {
+  "gate1_cap": {
+   "methodology": "SJGV Gate 1 Cap-Weighted v1.1",
+   "adoption_date": "2026-08-22",
+   "weighting": "full_market_cap",
+   "max_constituents": 10,
+   "ref": "§14 — the shared candidate universe passes only Gate 1, retains the ten largest eligible companies, then weights each by sourced shares outstanding times the common-session market price."
+  }
  },
  "_resource_split_imputation_deleted": "NOT A PARAMETER. Sixteen of the file's 72 parameter leaves belonged to a rule that had already been disabled under DERIVE OR FAIL. It invented mi_non_reserve_moz and inferred_moz from a cohort-calibrated split; the first calibration used 58% M&I from two observations that both sat at the bottom of the true range, understating M&I non-reserve ounces by 26-65% per name in the weight numerator. The nine observed producer splits it was recalibrated on are preserved in data/SOURCES.md as evidence. The same three disclosed numbers are now used the other way round: build_index.reconcile_resource checks that P&P + M&I non-reserve + Inferred adds back to disclosed total Mineral Resources, and reports the gap."
 }

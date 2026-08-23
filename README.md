@@ -21,12 +21,11 @@ part of the gold-equity proposition while making those failure modes explicit.
 > companies whose survival and operating plans are not endangered by a severe
 > gold drawdown.
 
-The activated v1.7 construction holds 12 ASX-listed companies at **A$826 of
-all-in EV per confidence-weighted claimed ounce**, versus **A$1,071 for the same
-companies at market-cap weights**. That is a 23% lower headline EV per claimed
-ounce, produced by portfolio construction alone. The claim is 59.1% Proven &
-Probable reserves, 28.7% Measured & Indicated non-reserve material and 12.2%
-Inferred material.
+The latest frozen v1.7 snapshot holds 12 ASX-listed companies at **A$826 of
+all-in EV per confidence-weighted claimed ounce**. The v1.8 methodology-only
+replay admits WGX and BGL and reads approximately **A$780/oz**; see
+[`docs/producer-execution-capital-impact-2026-08-23.md`](docs/producer-execution-capital-impact-2026-08-23.md).
+No v1.8 snapshot has been created.
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.
@@ -164,22 +163,27 @@ grade, recovery, metallurgy, capital requirement or economic value.
 
 ### 3. Price the claim
 
-The engine denominator is:
+The engine denominator is sleeve-specific:
 
 ```text
-All-in EV = market capitalisation + net debt + remaining execution capital
+producer EV = market capitalisation + net debt
+near-producer/developer all-in EV = producer EV + remaining execution capital
 ```
 
-Remaining execution capital is gross economic cost and is applied identically
-to producers and developers. Available project funding is recorded separately;
-the engine derives `max(0, execution capital − available funding)` and uses that
-residual gap only in the developer Gate 2 dilution test. A fully funded project
-therefore keeps its construction cost in the denominator without failing Gate 2.
+Established producers use standard EV because complete company-wide remaining
+cost-to-completion schedules are not normally published. Any producer execution-
+capital records remain provenance/reporting data and do not affect eligibility
+or weight. Near-producers and developers continue to add gross remaining
+execution capital. Available project funding is recorded separately; the engine
+derives `max(0, execution capital − available funding)` and uses that residual
+gap only in the developer Gate 2 dilution test. A fully funded project therefore
+keeps its construction cost in the denominator without failing Gate 2.
 
-Capital amounts carry directional evidence states. `POINT`, `UPPER_BOUND`, and
-an in-date `CARRY_FORWARD` may enter the denominator. A `LOWER_BOUND` or
-`UNRESOLVED` amount rejects the name rather than allowing missing cost to raise
-its weight.
+Weight-bearing capital amounts carry directional evidence states. `POINT`,
+`UPPER_BOUND`, and an in-date `CARRY_FORWARD` may enter a near-producer or
+developer denominator. A `LOWER_BOUND` or `UNRESOLVED` amount rejects those
+names rather than allowing missing cost to raise weight. For a producer the
+same states are retained only as reporting evidence; absence stays absent.
 [`docs/asset-evidence-capital-proposal.md`](docs/asset-evidence-capital-proposal.md)
 is the design implemented by the engine;
 [`docs/execution-capital-inventory.md`](docs/execution-capital-inventory.md) is
@@ -233,9 +237,36 @@ historical bar the session returned. The market leg was the one input to a
 weight that carried no source document, and it carries one now — frozen into the
 snapshot beside the data layer and the parameters.
 
+## Gate 1 cap-weighted variant
+
+The same build also produces **SJGV Gate 1 Cap-Weighted v1.1**, a deliberately
+simple parallel index. It begins with the same candidate universe (currently 17
+companies), applies only Gate 1, ranks the survivors by full issued market
+capitalisation, retains the largest ten, and then weights those constituents by:
+
+```text
+MarketCap_i = sourced shares outstanding_i × common-session price_i
+Weight_i    = MarketCap_i ÷ Σ MarketCap of the selected top ten
+```
+
+It does not apply Gate 2, Gate 3, the 18-month resource-statement bar, the ounce
+ledger, enterprise-value weighting, or the §8 concentration caps. For a
+mixed-jurisdiction company, Gate 1's 25% ineligible-NAV entity limit still must
+pass; once admitted, the company's full market capitalisation enters the
+ranking and weight. The eligible-ounce share is not turned into an undocumented
+haircut. If fewer than ten companies pass Gate 1 with complete market-cap
+inputs, the variant holds every survivor rather than inventing a constituent.
+
+This is full issued market-cap weighting, not free-float-adjusted MSCI
+weighting. The repository has sourced shares outstanding but no sourced
+free-float inclusion factor, so it does not invent one. Builds write
+`gate1_cap_weights.json` and `gate1_cap_weights.csv`; sized builds also write
+`gate1_cap_basket.json` and `gate1_cap_basket.csv`. Both variants use the same
+recorded market session and are frozen together by `tools/snapshot.py`.
+
 ---
 
-## Current v1.7 snapshot
+## Latest frozen snapshot — v1.7
 
 - **Market session:** 21 August 2026, spot A$6,444/oz
 - **Resource data sourced:** 21 August 2026

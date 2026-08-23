@@ -10,6 +10,8 @@ sensitivity analysis, and snapshot management.
 Read the relevant source of truth before changing behavior:
 
 - `index-methodology.md` is the binding index methodology and amendment record.
+- `source-knowledge-base.md` is the binding design for source retention,
+  authority tiers, factual claims, and conflict resolution.
 - `data/README.md` defines the data schema and sourcing protocol.
 - `README.md` explains the investment objective, construction, and repository.
 - `docs/` records supporting research and accepted or pending design decisions.
@@ -38,6 +40,59 @@ outputs and the latest dated snapshot are authoritative for a particular build.
    fallback provenance and degraded/untested states explicit.
 
 ## Fetching regulatory and issuer information
+
+Apply `source-knowledge-base.md` before discovery or network access. The store
+is `knowledge/` and `tools/kb.py` is its only write path — never hand-edit a
+registry or a generated view. A claim you establish by reading a source is
+registered with `kb.py register-claim`, which demands the complete §6.2 record
+(archived artifact, exact locator, verbatim excerpt, as-of kept apart from the
+publication date), runs the §5.1 precedence sequence for the claim key, and
+refuses rather than guesses. The legacy migration exceptions grandfather the
+unchanged projection only; they do not apply to anything you register. Look up the retained artifact there first
+(`kb.py plan` lists what is missing in tier order; `views/by_ticker.json`,
+`views/url_aliases.json`, `views/source_ids.json` and `views/asx_lodgements.json`
+answer most questions without a request), then during migration search
+`data/companies.json`, `data/SOURCES.md`, `tools/sources.json`, and `.cache/`.
+`docs/knowledge-store-initialization-2026-08-23.md` records what the store
+already holds, the corrections applied to it, and its open gaps. The objects are
+gitignored by decision, so a fresh clone holds every record but no bytes.
+Re-fetch only for a missing admissible source, an expired field-specific
+freshness rule, a relevant event, a failed integrity check, or an explicit
+refresh request. A URL is an access route, not a document identity.
+
+Seven rules the store enforces, which also govern how you write about a source:
+
+- **A filename is not provenance.** What a local file is called records what
+  somebody believed they were saving. Never turn it into a URL, an alias, or a
+  verified identifier; archive with `kb.py ingest-file` and let
+  `kb.py verify-inferred` test the address it implies.
+- **A file with no tested route is unclassified.** A ticker read out of a
+  document says what it is about, not who served it, so it earns no tier.
+  `kb.py route-local` tests a bare artifact against the archived exchange index
+  and records what came back; until then the record stays T4 and says so.
+- **An index proves a negative only over the interval it swept.** A sweep taken
+  today cannot show that nothing will be lodged in December. Quote the
+  `coverage` block, not the calendar year.
+- **A URL can serve different bytes later.** Each set is its own artifact
+  version, kept and ordered; `latest` in a view means most recently retrieved,
+  not correct.
+- **A title is the publisher's name for the document.** Your reading of it goes
+  in a note, a claim, or a field's source note — never in `title`. Not even a
+  short tail after a dash: "— Note 17 Borrowings" is where you looked, not what
+  the document is called.
+- **A market session is primary for its own observations and nothing else.** It
+  can never be re-fetched, so it carries its provenance in `market_session`;
+  the tickers it quotes are its subject, not its publisher.
+- **A refusal books a retry date.** `plan` and `acquire` honour it; do not work
+  around a booked date by fetching by hand. `acquire --retry-now` is the
+  override and records itself in the fetch reason.
+
+The authority tiers and conflict barrier in `source-knowledge-base.md` are
+binding. A lower-tier assertion that conflicts with an applicable higher-tier
+claim must not enter `data/companies.json`, a derivation, or an accepted
+summary. Retain the raw artifact for audit, quarantine the candidate, and seek
+a correction or newer source at the controlling tier. An exact verified mirror
+inherits the original document's tier; its host does not determine authority.
 
 Codex CLI has no interactive browser. Use its hosted live search for discovery,
 then download and inspect the exact primary document before accepting a value:
@@ -82,16 +137,19 @@ from a spend rate, search result, or narrative description.
 ## Working and validation
 
 Use the repository interpreter (`.venv/bin/python`, currently Python 3.12).
-There is no dependency manifest or automated test suite. `build_index.py`
-requires `ib_insync` and normally a local TWS/IB Gateway session.
+There is no dependency manifest, and the tests are plain `unittest` with no
+runner dependency. `build_index.py` requires `ib_insync` and normally a local
+TWS/IB Gateway session.
 
 Useful checks:
 
 ```sh
 .venv/bin/python -m compileall -q build_index.py nav_model.py tools
+.venv/bin/python -m unittest discover -s tests -t .
 .venv/bin/python tools/gaps.py
 .venv/bin/python tools/provenance.py
 .venv/bin/python tools/config_audit.py --strict
+.venv/bin/python tools/kb.py audit --strict        # evidence plane; --deep re-hashes
 ```
 
 Run `tools/config_audit.py --strict` after any configuration change and after a

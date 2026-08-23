@@ -1,0 +1,337 @@
+{
+ "generated": "2026-08-23T16:09:21+00:00",
+ "held_urls": 438,
+ "queued": 13,
+ "items": [
+  {
+   "url": "https://resources.vic.gov.au/legislation-and-regulations/legislation/fees-and-charges/Royalty-Information-Sheet-gold.pdf",
+   "authority_tier": "T1",
+   "authority_domains": [
+    "royalty.vic",
+    "tenure.vic"
+   ],
+   "publisher": "Earth Resources Regulation (Vic)",
+   "tier_kind": "regulator",
+   "tier_note": "state minerals regulator",
+   "title": null,
+   "date": null,
+   "subjects": [
+    "AU-VIC"
+   ],
+   "citations": [
+    {
+     "file": "data/jurisdictions.json",
+     "json_path": "$.jurisdictions[2].B1.url"
+    }
+   ],
+   "next_retry_at": "2026-08-30",
+   "last_result": "BLOCKED",
+   "last_checked_at": "2026-08-23T15:52:53+00:00",
+   "last_diagnosis": "HTTP 403",
+   "deferred": "BLOCKED on 2026-08-23; not retried before 2026-08-30"
+  },
+  {
+   "url": "https://bc8.com.au/resources-and-reserves/",
+   "authority_tier": "T2",
+   "authority_domains": [
+    "issuer.BC8"
+   ],
+   "publisher": "BC8",
+   "tier_kind": "issuer",
+   "tier_note": "issuer-hosted; not verified as the lodged document",
+   "title": null,
+   "date": null,
+   "subjects": [
+    "AU-WA",
+    "BC8"
+   ],
+   "citations": [
+    {
+     "file": "data/jurisdictions.json",
+     "json_path": "$.jurisdictions[0].B1.url"
+    },
+    {
+     "file": "tools/sources.json",
+     "json_path": "$.targets[3].documents[0].url"
+    }
+   ],
+   "next_retry_at": "2026-09-22",
+   "last_result": "LINK_DEAD",
+   "last_checked_at": "2026-08-23T15:52:56+00:00",
+   "last_diagnosis": "HTTP 404",
+   "deferred": "LINK_DEAD on 2026-08-23; not retried before 2026-09-22"
+  },
+  {
+   "url": "https://orabandamining.com.au/investors/asx-announcements/",
+   "authority_tier": "T2",
+   "authority_domains": [
+    "issuer.OBM"
+   ],
+   "publisher": "OBM",
+   "tier_kind": "issuer",
+   "tier_note": "issuer-hosted; not verified as the lodged document",
+   "title": null,
+   "date": null,
+   "subjects": [
+    "OBM"
+   ],
+   "citations": [
+    {
+     "file": "tools/sources.json",
+     "json_path": "$.targets[7].documents[0].url"
+    }
+   ],
+   "next_retry_at": "2026-09-22",
+   "last_result": "LINK_DEAD",
+   "last_checked_at": "2026-08-23T15:53:00+00:00",
+   "last_diagnosis": "HTTP 404",
+   "deferred": "LINK_DEAD on 2026-08-23; not retried before 2026-09-22"
+  },
+  {
+   "url": "https://pantoro.com.au/resources-and-reserves/",
+   "authority_tier": "T2",
+   "authority_domains": [
+    "issuer.PNR"
+   ],
+   "publisher": "PNR",
+   "tier_kind": "issuer",
+   "tier_note": "issuer-hosted; not verified as the lodged document",
+   "title": null,
+   "date": null,
+   "subjects": [
+    "PNR"
+   ],
+   "citations": [
+    {
+     "file": "tools/sources.json",
+     "json_path": "$.targets[2].documents[0].url"
+    }
+   ],
+   "next_retry_at": "2026-09-22",
+   "last_result": "LINK_DEAD",
+   "last_checked_at": "2026-08-23T15:53:03+00:00",
+   "last_diagnosis": "HTTP 404",
+   "deferred": "LINK_DEAD on 2026-08-23; not retried before 2026-09-22"
+  },
+  {
+   "url": "https://www.imf.org/en/publications/fm/issues/2026/04/15/fiscal-monitor-april-2026",
+   "authority_tier": "T2",
+   "authority_domains": [
+    "macro.fiscal.global"
+   ],
+   "publisher": "International Monetary Fund",
+   "tier_kind": "agency",
+   "tier_note": "official IGO publication",
+   "title": null,
+   "date": null,
+   "subjects": [],
+   "citations": [
+    {
+     "file": "data/sovereign.json",
+     "json_path": "$.countries[4].A2.url"
+    }
+   ],
+   "next_retry_at": "2026-08-30",
+   "last_result": "BLOCKED",
+   "last_checked_at": "2026-08-23T12:48:52+00:00",
+   "last_diagnosis": "imf.org refuses automated retrieval",
+   "deferred": "BLOCKED on 2026-08-23; not retried before 2026-08-30"
+  },
+  {
+   "url": "https://www.nsrltd.com/investor-centre/asx-announcements/",
+   "authority_tier": "T2",
+   "authority_domains": [
+    "issuer.NST"
+   ],
+   "publisher": "NST",
+   "tier_kind": "issuer",
+   "tier_note": "issuer-hosted; not verified as the lodged document",
+   "title": null,
+   "date": null,
+   "subjects": [
+    "NST"
+   ],
+   "citations": [
+    {
+     "file": "tools/sources.json",
+     "json_path": "$.targets[11].documents[1].url"
+    }
+   ],
+   "next_retry_at": "2026-09-22",
+   "last_result": "LINK_DEAD",
+   "last_checked_at": "2026-08-23T15:53:05+00:00",
+   "last_diagnosis": "HTTP 404",
+   "deferred": "LINK_DEAD on 2026-08-23; not retried before 2026-09-22"
+  },
+  {
+   "url": "https://www.pbo.gov.au/sites/default/files/2026-07/PBO%202026-27%20Medium-Term%20Budget%20Outlook.pdf",
+   "authority_tier": "T2",
+   "authority_domains": [
+    "macro.fiscal.au"
+   ],
+   "publisher": "Parliamentary Budget Office",
+   "tier_kind": "agency",
+   "tier_note": "statutory analytical publication, not a controlling instrument",
+   "title": null,
+   "date": "2026-07",
+   "subjects": [],
+   "citations": [
+    {
+     "file": "data/sovereign.json",
+     "json_path": "$.countries[0].A2.source"
+    }
+   ],
+   "next_retry_at": "2026-08-30",
+   "last_result": "MISSING_OBJECT",
+   "last_checked_at": "2026-08-23T12:48:52+00:00",
+   "last_diagnosis": "no bytes received over HTTP/1.1 or HTTP/2 after 240s; host unreachable from this network",
+   "deferred": "MISSING_OBJECT on 2026-08-23; not retried before 2026-08-30"
+  },
+  {
+   "url": "https://www.westgold.com.au/pdf/b012b7f6-f8ec-46c7-aa2c-99ccc7288015/2025-Mineral-Resource-Estimate-and-Ore-Reserves.pdf",
+   "authority_tier": "T2",
+   "authority_domains": [
+    "issuer.WGX"
+   ],
+   "publisher": "WGX",
+   "tier_kind": "issuer",
+   "tier_note": "issuer-hosted; not verified as the lodged document",
+   "title": "2025 Mineral Resource Estimate and Ore Reserves (as at 30 Jun 2025) \u2014 MR 16.3 Moz (M&I 9.2, Inferred 7.1), OR 3.5 Moz at max A$3,800/oz",
+   "date": "2025-09-02",
+   "subjects": [
+    "WGX"
+   ],
+   "citations": [
+    {
+     "file": "data/companies.json",
+     "ticker": "WGX",
+     "doc_key": "rr2025",
+     "fields": []
+    }
+   ],
+   "next_retry_at": "2026-09-22",
+   "last_result": "LINK_DEAD",
+   "last_checked_at": "2026-08-23T15:53:07+00:00",
+   "last_diagnosis": "HTTP 404",
+   "deferred": "LINK_DEAD on 2026-08-23; not retried before 2026-09-22"
+  },
+  {
+   "url": "https://classic.austlii.edu.au/au/legis/qld/num_reg/mrr2025400/sch1.html",
+   "authority_tier": "T3",
+   "authority_domains": [
+    "law.qld"
+   ],
+   "publisher": "AustLII",
+   "tier_kind": "secondary",
+   "tier_note": "unofficial reproduction of legislation; replace with the official consolidated instrument",
+   "title": null,
+   "date": null,
+   "subjects": [
+    "AU-QLD"
+   ],
+   "citations": [
+    {
+     "file": "data/jurisdictions.json",
+     "json_path": "$.jurisdictions[3].B1.url_secondary"
+    }
+   ],
+   "next_retry_at": "2026-08-30",
+   "last_result": "BLOCKED",
+   "last_checked_at": "2026-08-23T15:53:08+00:00",
+   "last_diagnosis": "HTTP 403",
+   "deferred": "BLOCKED on 2026-08-23; not retried before 2026-08-30"
+  },
+  {
+   "url": "https://data-api.marketindex.com.au/api/v1/announcements/XASX:AAR:6A1321217/pdf/inline/mineral-resource-increased-to-207-million-ounces",
+   "authority_tier": "T3",
+   "authority_domains": [
+    "issuer.announcement"
+   ],
+   "publisher": "Market Index",
+   "tier_kind": "secondary",
+   "tier_note": "aggregator; announcement copy not verified against the lodgement",
+   "title": null,
+   "date": null,
+   "subjects": [
+    "AAR"
+   ],
+   "citations": [
+    {
+     "file": "tools/sources.json",
+     "json_path": "$.targets[5].documents[0].url"
+    }
+   ],
+   "next_retry_at": "2026-08-30",
+   "last_result": "BLOCKED",
+   "last_checked_at": "2026-08-23T15:53:10+00:00",
+   "last_diagnosis": "HTTP 403",
+   "deferred": "BLOCKED on 2026-08-23; not retried before 2026-08-30"
+  },
+  {
+   "url": "https://finance.yahoo.com/quote/AUDUSD=X/",
+   "authority_tier": "T4",
+   "authority_domains": [
+    "market.price"
+   ],
+   "publisher": "Yahoo Finance",
+   "tier_kind": "discovery",
+   "tier_note": "aggregated market data \u2014 discovery only",
+   "title": null,
+   "date": "2026-08-16",
+   "subjects": [],
+   "citations": [
+    {
+     "file": "data/market.json",
+     "json_path": "$.fx.aud_usd.source"
+    }
+   ],
+   "deferred": "discovery-only tier \u2014 never an accepted or provisional claim"
+  },
+  {
+   "url": "https://kalkine.com.au/news/general-news/ausgold-asxauc-pushes-katanning-gold-project-toward-late-2026-investment-decision-as-approvals-and-early-works-advance",
+   "authority_tier": "T4",
+   "authority_domains": [
+    "news"
+   ],
+   "publisher": "Kalkine",
+   "tier_kind": "discovery",
+   "tier_note": "unattributed commentary \u2014 discovery only",
+   "title": "FID targeted end-2026, first gold mid-2028; early works agreements with Lycopodium and CrossBoundary Energy; all additional WA EPA information submitted; one landholder compensation negotiation outstanding",
+   "date": "2026-08",
+   "subjects": [
+    "AUC"
+   ],
+   "citations": [
+    {
+     "file": "data/companies.json",
+     "ticker": "AUC",
+     "doc_key": "aug2026",
+     "fields": [
+      "approvals_land_secured"
+     ]
+    }
+   ],
+   "deferred": "discovery-only tier \u2014 never an accepted or provisional claim"
+  },
+  {
+   "url": "https://tradingeconomics.com/commodity/gold",
+   "authority_tier": "T4",
+   "authority_domains": [
+    "market.price"
+   ],
+   "publisher": "Trading Economics",
+   "tier_kind": "discovery",
+   "tier_note": "aggregated market data without a traceable primary basis \u2014 discovery only",
+   "title": null,
+   "date": "2026-08-16",
+   "subjects": [],
+   "citations": [
+    {
+     "file": "data/market.json",
+     "json_path": "$.gold.xau_usd.source"
+    }
+   ],
+   "deferred": "discovery-only tier \u2014 never an accepted or provisional claim"
+  }
+ ]
+}

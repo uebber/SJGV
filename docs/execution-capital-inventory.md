@@ -1,8 +1,10 @@
 # Execution capital — Step 1 sourcing inventory
 
-**Status:** inventory plus 21 August 2026 primary-source refresh. This document
-was the pre-implementation evidence record; issue 3 subsequently changed the
-schema, engine and parameters without replacing the frozen generated baseline.
+**Status:** historical inventory plus 21 August 2026 primary-source refresh.
+Methodology v1.8 (23 August 2026) made producer execution capital optional,
+reporting-only data while retaining it as required denominator evidence for
+near-producers and developers. This document remains provenance for the records
+that were sourced; its all-sleeve premise is no longer current policy.
 **Purpose:** establish, per constituent, what the disclosure regime actually supplies
 for `remaining_execution_capex_aud_m` and its Gate 2 within-horizon portion, before
 any definitional or schema decision is taken.

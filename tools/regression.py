@@ -232,7 +232,9 @@ def _weight_stages(actual: dict, cfg: dict) -> dict[str, dict]:
             "market_cap_aud_m": row.get("mcap_aud_m"),
             "ev_aud_m": row.get("ev_aud_m"),
             "capital_denominator_input_aud_m": row.get(
-                "remaining_execution_capex_aud_m", row.get("funding_gap_aud_m")),
+                "execution_capital_in_denominator_aud_m",
+                row.get("remaining_execution_capex_aud_m",
+                        row.get("funding_gap_aud_m"))),
             "residual_funding_gap_aud_m": row.get(
                 "residual_funding_gap_aud_m", row.get("funding_gap_aud_m")),
             "funded_ev_aud_m": row.get("all_in_ev_aud_m",
