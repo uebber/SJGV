@@ -178,6 +178,11 @@ def take(tag: str | None) -> Path:
             "weights.json and gate1_cap_weights.json came from different builds; "
             "run build_index.py again before snapshotting.")
 
+    # Capture the source-tree state before creating the snapshot directory.
+    # Otherwise the snapshot marks itself as an untracked change and every
+    # manifest misleadingly records an otherwise clean release as "-dirty".
+    tree_commit = git_commit()
+
     # The build's own timestamp, not the wall clock. A snapshot taken an hour
     # after the build belongs to the build.
     stamp = (weights.get("generated_utc") or
@@ -205,7 +210,7 @@ def take(tag: str | None) -> Path:
         "tag": tag,
         "taken_utc": datetime.now(timezone.utc).isoformat(),
         "build_generated_utc": weights.get("generated_utc"),
-        "git_commit": git_commit(),
+        "git_commit": tree_commit,
         # The commit the BUILD ran from, which is the one that produced these
         # numbers. git_commit above is the tree at snapshot time; they differ
         # the moment anything is edited between the run and the freeze, and

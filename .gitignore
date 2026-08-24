@@ -7,6 +7,7 @@
 # reconstruct — and it fails silently, which is the worst direction. Found
 # 2026-08-18, before the first snapshot was ever committed.
 /.cache/
+.DS_Store
 /weights.csv
 /weights.json
 /gate1_cap_weights.csv
