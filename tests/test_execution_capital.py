@@ -181,16 +181,21 @@ class ExecutionCapitalTest(unittest.TestCase):
         self.assertAlmostEqual(row["execution_capital_in_denominator_aud_m"], 319.723)
         self.assertAlmostEqual(row["all_in_ev_aud_m"], row["ev_aud_m"] + 319.723)
 
-    def test_unresolved_producer_capital_does_not_reject_wgx_or_bgl(self) -> None:
-        for ticker in ("WGX", "BGL"):
-            rows, rejected = B.compute_raw_weights(
-                [self.companies[ticker]], self.prices, {}, self.gold, self.cfg,
-                anchor_gold=self.anchor, as_of=self.as_of,
-            )
-            self.assertEqual(rejected, [])
-            self.assertEqual(rows[0]["gate2"]["health"], "AMBER")
-            self.assertIsNone(rows[0]["remaining_execution_capex_aud_m"])
-            self.assertEqual(rows[0]["all_in_ev_aud_m"], rows[0]["ev_aud_m"])
+    def test_unresolved_producer_capital_does_not_reject_wgx(self) -> None:
+        rows, rejected = B.compute_raw_weights(
+            [self.companies["WGX"]], self.prices, {}, self.gold, self.cfg,
+            anchor_gold=self.anchor, as_of=self.as_of,
+        )
+        self.assertEqual(rejected, [])
+        self.assertEqual(rows[0]["gate2"]["health"], "AMBER")
+        self.assertIsNone(rows[0]["remaining_execution_capex_aud_m"])
+        self.assertEqual(rows[0]["all_in_ev_aud_m"], rows[0]["ev_aud_m"])
+
+        _, bgl_rejected = B.compute_raw_weights(
+            [self.companies["BGL"]], self.prices, {}, self.gold, self.cfg,
+            anchor_gold=self.anchor, as_of=self.as_of,
+        )
+        self.assertIn("EXECUTION DELIVERY — HARD FAIL", bgl_rejected[0]["reason"])
 
     def test_unresolved_near_producer_capital_still_rejects(self) -> None:
         company = copy.deepcopy(self.companies["RXL"])
@@ -213,13 +218,13 @@ class ExecutionCapitalTest(unittest.TestCase):
         self.assertEqual(verdict["health"], "UNTESTED")
         self.assertIn("net debt", verdict["reason"])
 
-    def test_bc8_remains_excluded_on_missing_aisc(self) -> None:
+    def test_bc8_is_excluded_on_delivery_hard_fail(self) -> None:
         rows, rejected = B.compute_raw_weights(
             [self.companies["BC8"]], self.prices, {}, self.gold, self.cfg,
             anchor_gold=self.anchor, as_of=self.as_of,
         )
         self.assertEqual(rows, [])
-        self.assertIn("AISC unsourced", rejected[0]["reason"])
+        self.assertIn("EXECUTION DELIVERY — HARD FAIL", rejected[0]["reason"])
 
     def test_project_capital_reconciles_to_company_records(self) -> None:
         payload = json.loads((ROOT / "data/companies.json").read_text())

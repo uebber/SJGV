@@ -98,9 +98,9 @@ December year-ends.
 | COMPARABLE | 53 | boolean miss/no-miss determinable on both original and final guidance |
 | MISSING_GUIDANCE | 9 | no formal full-year guidance was ever issued (or, for WAF CY2025, one limb of it) |
 | INSUFFICIENT_HISTORY | 5 | company or the relevant operation had not completed a first full year of guided production |
-| NOT_COMPARABLE | 2 | scope changed (M&A) between guidance and actual with no issuer reconciliation |
+| NOT_COMPARABLE | 1 | scope changed (M&A) between guidance and actual with no issuer reconciliation |
 
-**Coverage count: 53 / 69 comparable company-years (76.8%).**
+**Coverage count: 54 / 69 comparable company-years (78.3%).**
 
 Full detail, company by company, is in §3. The precise reason for every
 non-comparable company-year is in §6.
@@ -415,17 +415,18 @@ $1,470); CY2025's original-guidance AISC miss is a $5.50/oz margin.
 
 | FY | Status | Orig. production guid. | Final production guid. | Orig. AISC guid. | Final AISC guid. | Revisions | Prod. actual (koz) | AISC actual | Miss (orig) | Miss (final) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| FY2024 | NOT_COMPARABLE | 195-215koz | 195-215koz | 1850-2100/AUD | 1850-2100/AUD | 0 | 223.498 | 2043 AUD | NOT_COMPARABLE | NOT_COMPARABLE |
+| FY2024 | COMPARABLE | 195-215koz | 195-215koz | 1850-2100/AUD | 1850-2100/AUD | 0 | 210.940 | 2043 AUD | no | no |
 | FY2025 | COMPARABLE | 390-430koz | 390-410koz | 2250-2450/AUD | 2250-2450/AUD | 2 | 385.232 | 2422 AUD | no | no |
 | FY2026 | COMPARABLE | 332-360koz | 332-360koz | 2650-2850/AUD | 2650-2850/AUD | 0 | 336.54 | 2924 AUD | no | no |
 
-**3-year miss count:** original=—, final=—. **Candidate-rule trigger:** original=False, final=False (both provably false: even a worst-case FY2024 miss caps the total at 1, below the 2-year threshold).
+**3-year miss count:** original=0, final=0. **Candidate-rule trigger:** original=False, final=False.
 
-FY2024 guidance was issued by Red 5 Limited pre-merger (single-asset, King of
-the Hills); the statutory FY2024 group actual reflects ~12 days of the merged
-Silver Lake business (the merger completed 19 June 2024, not the 31 August
-2023 date assumed in the working brief — no primary source supports that
-earlier date), with no issuer reconciliation to the pre-merger guided basis.
+**Correction (2026-08-24):** FY2024 guidance was issued for King of the Hills,
+and the lodged June quarterly reports the matching full-year asset actual of
+210,940oz produced at A$2,043/oz AISC. Both are inside the raw guidance ranges.
+The earlier analysis incorrectly selected the later statutory group-sales
+figure, which included a 12-day Silver Lake stub after the 19 June merger. Once
+the already-published scope-matched actual is used, no reconciliation is needed.
 
 ### WAF — West African Resources
 
@@ -484,6 +485,43 @@ This is not a data artifact — it is what the rule, applied literally, would
 measure. A future amendment must decide explicitly which vintage of guidance
 it targets, because the two choices produce materially different cohorts.
 
+### 4.1 Disclosure-failure overlay
+
+**Committee interpretation adopted in SJGV v2.0 on 24 August 2026:** failure to
+publish the required full-year production or AISC guidance for a producing
+period is one failure on both the original and revised bases. A year counts
+once. Genuine pre-production history remains outside the denominator. Where a
+company has fewer than three producing years, a 100% original-basis failure
+rate is a hard fail; a first producing year with no guidance is therefore 1/1,
+not 1/3 and not a provisional pass. A repository acquisition gap is never
+charged to the issuer.
+
+This is not a failed-fetch proxy. For BC8, BTR, CYL, MEK, PNR and WAF, the
+knowledge store retains complete, unfiltered ASX announcement indexes for each
+full calendar year from 2023 through 2025 and year-to-date indexes through
+23 August 2026. The relevant annual reports, quarterlies, guidance releases and
+presentations were then inspected. The strongest cases are affirmative issuer
+statements: BC8 said AISC was "not presented" and repeatedly deferred annual
+guidance; PNR said it was "not providing full year guidance for FY 2024" and
+did not publish a full-year AISC actual in the window; WAF marked Group AISC
+"not guided". BTR's complete lodgement sweep contains no annual guidance in
+three operating years, despite a stated intention to publish maiden CY25
+guidance. Bellevue's FY2024 producing period carried production guidance but no
+required AISC guidance. CYL's gap is confined to FY2024. MEK failed to publish
+bounded annual guidance in its sole completed producing year.
+
+| Treatment | Companies |
+|---|---|
+| **Hard fail — exclude** | BC8, BGL, BTR, EMR, MEK, OBM, PNR, RSG |
+| **At least 5% cap; unresolved upward** | CYL, NEM |
+| **5% cap** | WAF, WGX |
+| **Pass, complete evidence** | AEM, CMM, EVN, GMD, NST, PRU, RMS, RRL, VAU |
+| **Limited-history pass (0/2)** | GGP |
+| **Unresolved repository evidence; no issuer penalty** | OGC |
+
+For the live book, BGL, OBM and PNR are excluded; CYL and WGX are capped at 5%.
+The complete machine-readable classification is `data/guidance_delivery.json`.
+
 ## 5. Sensitivity table
 
 Miss-year determination recomputed at three materiality thresholds against
@@ -538,15 +576,12 @@ bounded full-year figure was ever issued for the missing limb:
   AISC "not guided"; production guidance for the same year is fully
   comparable.
 
-**NOT_COMPARABLE (2 company-years)** — guidance and actual span a scope change
+**NOT_COMPARABLE (1 company-year)** — guidance and actual span a scope change
 with no issuer reconciliation:
 
 - NEM CY2023 — the Newcrest merger (completed 6 Nov 2023) added ~2 months of
   Newcrest production/cost to a guidance figure set on a standalone
   pre-merger basis.
-- VAU FY2024 — the Red 5/Silver Lake merger (completed 19 June 2024) added
-  ~12 days of Silver Lake to a guidance figure issued by pre-merger Red 5.
-
 **Additional structural AISC-actual gaps inside otherwise-comparable years**
 (recorded as MISSING_ACTUAL for that limb, not folded into the counts above):
 PNR has never published a single full-year AISC actual in any primary source
@@ -574,17 +609,17 @@ carries `"projectable": false` with `"decision.code":
 
 ## 8. Coverage count and determinability
 
-- **Comparable company-years (status tag): 53 / 69 required (76.8%).**
+- **Comparable company-years (status tag): 54 / 69 required (78.3%).**
   **Correction (2026-08-24):** this status-tag count is not the same as the
   number of years with a clean Boolean result, and the original text
-  conflated them. Two of the 53 `COMPARABLE`-tagged years are only partially
+  conflated them. Two of the 54 `COMPARABLE`-tagged years are only partially
   boolean: **CYL FY2026** is comparable on final guidance but `NOT_COMPARABLE`
   on original guidance (a scope break — the original guidance included the
   since-divested Henty mine), and **PNR FY2025** is comparable on production
   but `MISSING_ACTUAL` on AISC (Pantoro has never published a full-year AISC
-  actual). Recomputed directly from the appendix: **51 / 69** company-years
+  actual). Recomputed directly from the appendix: **52 / 69** company-years
   have an actual Boolean `miss_year` result on *both* the original and final
-  guidance bases, and **50 / 69** have all four limbs (original production,
+  guidance bases, and **51 / 69** have all four limbs (original production,
   original AISC, final production, final AISC) as determined values rather
   than a non-comparable/missing state on at least one of them. Neither
   correction changes any candidate-rule trigger in §4/§7 — CYL and PNR were

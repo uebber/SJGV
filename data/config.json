@@ -1,6 +1,6 @@
 {
  "_schema": "Methodology parameters. These are committee decisions, not observations — index-methodology.md is the source of truth and every entry cites its section. Observations live in the other files in this directory. For primary SJGV there is no scoring layer, and every survivor is either a gate threshold, an ounce-category discount, or an impairment cap. Not one is a scoring coefficient. The variants block declares parallel constructions separately. The test a primary-SJGV parameter must now pass to exist: does it change how many ounces are claimed, or what was paid for them?",
- "methodology": "SJGV v1.9",
+ "methodology": "SJGV v2.0",
  "adopted": "2026-08-24",
  "objective": {
   "beta_target": [
@@ -100,11 +100,13 @@
  "constraints": {
   "max_single_name": 0.15,
   "max_single_asset_name": 0.075,
+  "max_guidance_delivery_name": 0.05,
   "single_asset_pp_share_threshold": 0.8,
   "max_developer_sleeve": 0.15,
   "max_developer_single_name": 0.05,
   "ref": "§8.1 — every cap here answers ONE question, and it is a question the objective asks: how much of the claim can a single uncorrelated operational failure destroy permanently? §0 already contains P(permanent impairment) ~ 0.",
   "single_asset_note": "max_single_asset_name replaces an asset-level cap (20%, against an unsourced {asset: share} map). The old cap sat ABOVE the 15% name cap, so by arithmetic it could only bind where two constituents shared one asset — no pair did, and it never ran once. Adopted at 10% in v1.3 and tightened to 7.5% in v1.9, the cap applies where one mine IS the company and binds directly.",
+  "guidance_delivery_note": "§8.2. A HARD_FAIL is excluded. A CAP or CAP_MINIMUM rating is limited to 5%. The ratings and claim-level evidence live in data/guidance_delivery.json and docs/guidance-delivery-candidates-2026-08-24.json; missing guidance counts only after a complete disclosure sweep establishes issuer non-publication rather than a repository acquisition gap.",
   "single_asset_pp_share_threshold_note": "SOURCED AND WIRED 2026-08-18. The engine no longer reads a hand-set `single_asset` boolean. It DERIVES it: single_asset = largest_asset_pp_share >= this threshold, where largest_asset_pp_share is a sourced float in [0,1] — the share of a company's attributable, Gate-1-ELIGIBLE Proven & Probable Ore Reserves held at its single largest asset (§8.1 defines the asset unit). Seventeen hand-set booleans would have been seventeen unrecorded judgement calls; one declared threshold over seventeen sourced shares is one judgement call that can be argued with and perturbed. 0.80 is set where the cross-section leaves a gap: the sourced shares run 0.490 (RRL) / 0.521 (EVN) / 0.576 (NST) / 0.660 (GMD) / 0.687 (WGX) / 0.700 (CMM) / 0.736 (BC8) / 0.738 (RMS) / 0.772 (VAU), then jump to 1.000 for eight names. Nothing sits between 0.773 and 0.999, so the threshold is not knife-edge anywhere; VAU at 0.772 is the nearest miss and the only name a move to 0.75 would newly flag. TRI-STATE, and this is not optional: an ABSENT share must derive None (UNTESTED), never False. A missing value that read as 0.0 would derive False, silently restore the looser 15% cap, and report it as a test that passed. build_index.derive_single_asset() enforces it and _assert_single_asset_tristate() asserts it on every build.",
   "withdrawn_note": "NOT A PARAMETER: max_idio_variance_contribution (0.15) and min_effective_n (8.0). The idio cap moved PNR 14.96% -> 9.23%, five times the entire cross-sectional influence of the convexity score it sat beside, on a criterion found nowhere in the objective; it pinned three names at 30.5% of the book so their weights came from a variance estimate rather than from their ounces. min_effective_n ratcheted the name cap down until a diversification statistic cleared a floor — a UCITS instinct in a vehicle whose own §8.1 opens by saying no regulatory regime applies. Eff N is still REPORTED. It is an observation about the book, not a target the book is bent to hit."
  },

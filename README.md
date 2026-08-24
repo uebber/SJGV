@@ -22,11 +22,12 @@ part of the gold-equity proposition while making those failure modes explicit.
 > gold drawdown.
 
 The latest frozen v1.7 snapshot holds 12 ASX-listed companies at **A$826 of
-all-in EV per confidence-weighted claimed ounce**. The v1.8 methodology-only
-replay admits WGX and BGL and reads approximately **A$780/oz**; v1.9 tightens
-the single-asset cap from 10% to 7.5% pending its first fresh build. See
-[`docs/producer-execution-capital-impact-2026-08-23.md`](docs/producer-execution-capital-impact-2026-08-23.md).
-No v1.8 or v1.9 snapshot has been created.
+all-in EV per confidence-weighted claimed ounce**. On identical recorded market
+inputs, v1.9 held 14 names at A$818/oz; the v2.0 execution-delivery amendment
+holds 11 at approximately **A$902/oz**, excluding BGL, OBM and PNR and capping
+CYL and WGX at 5%. This is a deterministic activation replay, not a fresh market
+session or a frozen rebalance snapshot. See
+[`docs/guidance-delivery-study-2026-08-24.md`](docs/guidance-delivery-study-2026-08-24.md).
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.

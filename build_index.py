@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SJGV v1.9 — index construction and basket sizing.
+SJGV v2.0 — index construction and basket sizing.
 
 Computes the basket from the data layer rather than from a hardcoded list, and
 May-2026 weights (including RUP, delisted 16 Jun 2026 into Agnico Eagle).
@@ -391,6 +391,8 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "constraints.max_single_name": ("engine", "§8.1 impairment cap"),
     "constraints.max_single_asset_name": (
         "engine", "§8.1 tighter cap for single-asset companies"),
+    "constraints.max_guidance_delivery_name": (
+        "engine", "§8.2 cap for names with a delivery CAP rating"),
     "constraints.single_asset_pp_share_threshold": (
         "engine", "§8.1 — largest_asset_pp_share at or above this derives "
                   "single_asset; see derive_single_asset()"),
@@ -1026,6 +1028,8 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
             f"is rationale rather than a parameter, rename it to end in _note.")
 
     payload = json.loads((DATA_DIR / "companies.json").read_text())
+    delivery = json.loads((DATA_DIR / "guidance_delivery.json").read_text())
+    delivery_ratings = delivery.get("ratings", {})
     market = json.loads((DATA_DIR / "market.json").read_text())
 
     # §6.4 measures a resource statement's age against the date the LEDGER was
@@ -1050,6 +1054,7 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
             unknown[record["ticker"]] = stray
         capital_schema_errors.extend(_validate_capital_schema(record))
         c = _flatten(record)
+        c["_guidance_delivery"] = delivery_ratings.get(c["ticker"])
         c["_data_sourced"] = payload.get("_sourced")
         for check in (reconcile_resource, reconcile_eligibility):
             mismatch = check(c)
@@ -1067,6 +1072,13 @@ def load_data() -> tuple[dict, list[dict], list[dict], dict, list[str]]:
     if capital_schema_errors:
         raise ValueError("invalid capital evidence schema: "
                          + "; ".join(capital_schema_errors))
+
+    unrated = [c["ticker"] for c in companies
+               if c.get("sleeve") in {"producer", "near_producer"}
+               and c.get("_guidance_delivery") is None]
+    if unrated:
+        raise ValueError("producer guidance-delivery rating absent: "
+                         + ", ".join(sorted(unrated)))
 
     return cfg, companies, payload.get("excluded", []), market, notes
 
@@ -3029,6 +3041,14 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
         reject = lambda why: rejected.append(  # noqa: E731
             {"ticker": sym, "name": c["name"], "sleeve": c["sleeve"], "reason": why})
 
+        delivery = c.get("_guidance_delivery")
+        if delivery and delivery.get("portfolio_treatment") == "EXCLUDE":
+            reject(f"EXECUTION DELIVERY — HARD FAIL ({delivery.get('original_failures')}/"
+                   f"{delivery.get('rated_years')} original, "
+                   f"{delivery.get('revised_failures')}/"
+                   f"{delivery.get('rated_years')} revised)")
+            continue
+
         # §5 purity is a GATE and only a gate. The continuous ×gold-share
         # multiplier that used to sit beside it moved the book by 0.22pp on
         # average and is deleted: either these are gold ounces or they are not.
@@ -3205,6 +3225,7 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             # §8.1. Sourced quantity, derived judgement — never a hand-set flag.
             "largest_asset_pp_share": c.get("largest_asset_pp_share"),
             "single_asset": derive_single_asset(c, meta),
+            "guidance_delivery": delivery,
         })
 
     total = sum(r["raw"] for r in rows)
@@ -3384,6 +3405,7 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
 
         max_single_name             15%   no one company is the index
         max_single_asset_name      7.5%   tighter where one mine is the company
+        max_guidance_delivery_name   5%   repeated delivery weakness
         max_developer_sleeve        15%   pre-production names can fail outright
         max_developer_single_name    5%
 
@@ -3409,6 +3431,7 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
     notes: list[str] = []
     single = con["max_single_name"]
     single_asset_cap = con["max_single_asset_name"]
+    delivery_cap = con["max_guidance_delivery_name"]
     flagged, untested = single_asset_names(rows)
 
     if not rows:
@@ -3434,7 +3457,10 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
     def ceiling(r: dict) -> float:
         if r["sleeve"] == "developer":
             return min(single, con["max_developer_single_name"])
-        return single_asset_cap if r.get("single_asset") is True else single
+        cap = single_asset_cap if r.get("single_asset") is True else single
+        if (r.get("guidance_delivery") or {}).get("portfolio_treatment") == "CAP":
+            cap = min(cap, delivery_cap)
+        return cap
 
     caps = {r["ticker"]: ceiling(r) for r in rows}
     producer_capacity = sum(caps[r["ticker"]] for r in rows
@@ -3461,7 +3487,7 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
     if bound:
         detail = ", ".join(
             f"{t} {precap[t]:.1%}→{caps[t]:.0%}" for t in sorted(bound))
-        notes.append(f"name caps bound on {len(bound)}: {detail} (§8.1)")
+        notes.append(f"name caps bound on {len(bound)}: {detail} (§8.1/§8.2)")
 
     if flagged:
         th = con["single_asset_pp_share_threshold"]
@@ -3499,6 +3525,7 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
 
     return {"effective_n": effective_n(rows), "notes": notes,
             "single_name_cap": single, "single_asset_cap": single_asset_cap,
+            "guidance_delivery_cap": delivery_cap,
             "single_asset_names": flagged, "single_asset_untested": untested,
             "precap_weights": precap}
 
@@ -3998,7 +4025,7 @@ def print_capacity(cap: dict, euraud: float) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Build the SJGV v1.9 index and optionally size a basket.")
+        description="Build the SJGV v2.0 index and optionally size a basket.")
     ap.add_argument("amount", nargs="?", type=float, default=None,
                     help="EUR amount to size the basket for (e.g. 1000000).")
     ap.add_argument("--euraud", type=float, default=None,

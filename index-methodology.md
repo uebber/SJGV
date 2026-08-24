@@ -1,7 +1,7 @@
-# Index Methodology — SJGV v1.9
+# Index Methodology — SJGV v2.0
 
 **Index Name:** Stable Jurisdiction Gold Value (SJGV)
-**Version:** 1.9
+**Version:** 2.0
 **Date:** 24 August 2026
 **Status:** In force.
 **Structure:** Private vehicle. Not UCITS, not RIC, not 40 Act. No regulatory diversification constraints apply.
@@ -16,6 +16,7 @@
 
 | # | Date | Change |
 |---|------|--------|
+| 12 | 24 Aug 2026 | **Execution-delivery discipline adopted; version 1.9 → 2.0.** The last three completed producing periods are tested against original and final annual production/AISC guidance with a 5% tolerance. Verified issuer non-publication is a failure; genuine pre-production is outside the denominator; a repository acquisition gap is never charged to the issuer. A 100% original-basis failure rate, or at least two original failures with any revised-basis failure, is a hard fail and excludes the name. Two original failures with none revised, or one original plus one revised failure, impose a 5% cap. BGL, OBM and PNR leave the recorded live book; CYL and WGX are capped at 5%. On identical 24 August TWS inputs this produces **26.18% one-way turnover**, reduces 14 names to 11 and raises the headline from **A$820 to A$922 per claimed ounce**; effective N falls from 13.0 to 9.7. VAU FY2024 is a pass after correcting the study to use its already-published scope-matched King of the Hills actual rather than mixed-scope group sales. See §8.2. |
 | 11 | 24 Aug 2026 | **Single-asset cap tightened; version 1.8 → 1.9.** The maximum for a company whose largest eligible asset holds at least 80% of P&P reserves falls from 10% to 7.5%. On the recorded 23 August session this moves PNR and CYL from 10% to 7.5%, produces 5.00% one-way turnover and raises the headline cost from A$785 to A$818 per claimed ounce. The parallel v1.8b quality experiment is withdrawn: its surviving useful control is this cap. A proposed 5% cap for repeated guidance misses is not yet adopted because a comparable three-year delivery record has not been sourced for the cohort; see §12.2 item 7. |
 | 10 | 23 Aug 2026 | **Producer execution-capital denominator corrected; version 1.7 → 1.8.** Established producers now use standard enterprise value (`market capitalisation + net debt`). Their execution-capital records remain provenance/reporting data but are neither required nor added to the denominator, because a complete company-wide remaining-cost-to-completion schedule is not normally available from ASX producers. Near-producers and developers still require and add gross remaining execution capital; developer funding and the derived residual gap remain separate. Producer Gate 2 is unchanged in substance: it tests sourced unavoidable commitments, incomplete coverage is eligible **AMBER**, and missing production, AISC, net debt or market capitalisation is **UNTESTED**. WGX and BGL are no longer excluded for unresolved producer execution capital; BC8 remains excluded on its missing AISC before its required near-producer execution capital is reached. |
 | 9 | 22 Aug 2026 | **Parallel Gate 1 cap-weighted variant limited to ten positions; v1.0 → v1.1.** After Gate 1 and complete market-cap inputs, eligible companies are ranked by full issued market capitalisation. The largest ten are retained and normalised to 100%; if fewer than ten qualify, all qualifying companies are retained. Primary SJGV remains v1.7. See §14. |
@@ -1082,6 +1083,34 @@ raises the headline from A$785 to A$818 per claimed ounce, or 4.2%. Single-asset
 exposure falls from 40.85% to 36.91%. This is the measured price of reducing the
 maximum loss from one mine; it is not presented as a forecast return improvement.
 
+### 8.2 Execution-delivery exclusion and cap
+
+The latest three completed producing periods are assessed against the earliest
+formal annual production and AISC guidance and, separately, the final revised
+guidance. Production fails below 95% of the guided lower bound; AISC fails above
+105% of the guided upper bound. A year fails once if either limb fails.
+
+A failure to publish required annual guidance in a producing period is a
+failure on both bases, but only after a complete disclosure sweep establishes
+issuer non-publication rather than a repository acquisition failure. Genuine
+pre-production is outside the denominator. Where fewer than three producing
+periods exist, a 100% original-basis failure rate is a hard fail, including a
+1/1 record.
+
+| Record | Treatment |
+|---|---|
+| 100% original-basis failure rate, or at least 2/3 original failures with any revised failure | **Hard fail — excluded** |
+| 2/3 original failures and zero revised failures | **5% cap** |
+| 1/3 original failure and 1/3 revised failure | **5% cap** |
+| Evidence proves the cap but cannot yet distinguish cap from hard fail | **5% cap pending resolution** |
+| Anything else, with complete evidence | Pass |
+
+The source record is `data/guidance_delivery.json`, derived from the claim-level
+appendix `docs/guidance-delivery-candidates-2026-08-24.json`. Hard-fail names do
+not enter the raw-weight pool. A cap-rated survivor receives the lower of the
+ordinary §8.1 ceiling and 5%, with excess redistributed by the existing cap
+algorithm. Delivery history is refreshed at the annual deep rebalance.
+
 ## 9. The NAV Model — reporting only
 
 `nav_model.py`. Internal, rules-based, applied uniformly. Not broker consensus.
@@ -1376,7 +1405,7 @@ Items 5 and 7 are open.
 | 4 | **Canada's A2, now load-bearing alone.** | **CLOSED 19 Aug 2026 — sourced, and then the rule was changed. Read both halves.** Sourced first, as the item asked: Canadian general government net debt is **~10–13% of GDP — below Australia's ~19%** — and general government interest is **8.8% of revenue** against a 10% limit. **Canada passed A2 as v1.1 wrote it.** Recording FAIL anyway would have repeated the v1.0 A4 defect one amendment after fixing it. So A2 was rewritten instead (§2.1, amendment 2): measured on the **currency issuer**, with a third limb at **gross debt ≤ 85% of GDP**. Canada fails on gross (105–110%) and on federal interest (**10.3%** of revenue, PBO projecting 13.1% by 2030-31); the net-debt limb still passes and is not the basis. **Zero weight change** — Canada stays out, so no `eligible_ounce_share` moves, and no engine code reads `data/sovereign.json`. What the closure leaves behind is recorded in §2.2: the exclusion does not survive the old rule, and Canada's A4 dormant-power register remains uncompiled by decision. |
 | 5 | **Does s51(xxxi) reach the control limbs of Banking Act Part IV?** | **OPEN — opened 18 Aug 2026 by the A4 amendment.** Australian counsel, and the one question in this file a search engine genuinely cannot answer. s 44 compensates only gold delivered under s 42, and s 40(2) permits partial activation, so the export ban (s 41), the monopsony (s 45) and the prohibition on working gold (s 46) can operate with no statutory compensation. Whether the just-terms guarantee reaches them turns on the acquisition-versus-regulation distinction. **This does not gate** — A4 is present-tense and Part IV is not in operation — but it sizes the residual risk in §11.1, which is currently unpriced. |
 | 6 | **`remaining_capex_aud_m` does two incompatible jobs, and the §7.1 denominator gets the wrong one.** | **CLOSED 21 Aug 2026; denominator scope corrected 23 Aug 2026 by amendment 10.** The field split remains: gross `remaining_execution_capex_aud_m`, developer `available_project_funding_aud_m`, and an engine-derived residual gap. Gross execution capital is weight-bearing only for near-producers and developers; established producers use standard EV. WGX and BGL therefore are not excluded on this reporting gap. BC8 remains a near-producer and still requires execution capital, independently of its missing AISC. Producer Gate 2 separately reads sourced unavoidable commitments under amendment 7. |
-| 7 | **Three-year producer guidance-delivery record.** | **OPEN — research prerequisite for a possible execution-risk cap.** For every producer, retain original annual production and AISC guidance and the corresponding actual outcome on a comparable group and unit basis for each of the last three completed financial years. The proposed rule is a 5% cap after two material miss-years, where a year counts once if production is more than 5% below the original lower bound or AISC is more than 5% above the original upper bound. It is not in force: the repository currently establishes only one such year for PNR, and missing cohort history cannot be treated as a pass. |
+| 7 | **Three-year producer guidance-delivery record.** | **CLOSED 24 Aug 2026 — sourced and adopted in v2.0 (§8.2).** Claim-level original, revised and actual observations cover the producer/near-producer cohort. Verified failure to publish required guidance is a failure rather than a pass; pre-production is excluded; repository acquisition gaps are not charged to issuers. The adopted ratings are in `data/guidance_delivery.json`. |
 
 Three things the closures leave behind, none of them a reopening:
 
@@ -1498,7 +1527,8 @@ claim down — it removes it.
 | `constraints.max_developer_sleeve` = 0.15 | Pre-production sleeve cap | Bounds the aggregate of that failure mode. Sized to what qualifies, never forced to fill. | 0.00pp *(per-name cap binds first)* |
 | `largest_asset_pp_share` | Share of eligible P&P reserves at one asset | Where there is no second asset, there is nothing to absorb the failure. **Sourced for all 17 on 18 Aug 2026** from per-asset Ore Reserve tables. Replaces the `single_asset` boolean, which was a hand-set judgement seventeen times over; the judgement now sits in one config threshold where the audit can see it. | **5.00pp** *(on PNR)* |
 | `constraints.single_asset_pp_share_threshold` = 0.80 | Where the derived boolean flips | The only judgement in the classification, and it is declared rather than baked into the data. Set where the cross-section has a gap: nothing sits between 0.773 and 0.999. Tri-state — an absent share derives `None`, asserted on every build. | **3.30pp** *(on CYL; 1.70pp latent on WGX)* |
-| `constraints.max_single_asset_name` = 0.075 | Tighter cap for one-mine companies | Derived from the objective, unlike the variance cap it replaced, which was calibrated on daily price noise and appeared nowhere in the mandate. Under v1.9 it binds on PNR and CYL; RXL is separately bound by the 5% developer cap. | **2.50pp versus v1.8** |
+| `constraints.max_single_asset_name` = 0.075 | Tighter cap for one-mine companies | Derived from the objective, unlike the variance cap it replaced, which was calibrated on daily price noise and appeared nowhere in the mandate. Under v1.9 it bound on PNR and CYL; RXL is separately bound by the 5% developer cap. | **2.50pp versus v1.8** |
+| `constraints.max_guidance_delivery_name` = 0.05 | Caps a company whose delivery record meets §8.2 | Original guidance preserves accountability for goalpost-moving; the separate final-guidance limb distinguishes a recoverable reset from repeated failure. Hard fails are excluded before weighting. | live |
 | `sleeve` | producer / near-producer / developer | Not a number — a classification that **routes three tests at once**: the Gate 2 variant, the Gate 3 spread limit, and the developer caps. | routing |
 
 ### 13.5 Read, printed, and structurally unable to reach a weight
@@ -1545,7 +1575,7 @@ those words for the same reason.
 
 **Adopted:** 22 August 2026
 
-This is a separate construction, not a replacement for SJGV v1.9. It uses the
+This is a separate construction, not a replacement for SJGV v2.0. It uses the
 same candidate records in `data/companies.json`, the same sourced share counts,
 and prices from the same recorded market session. Its complete sequence is:
 
@@ -1590,4 +1620,4 @@ build's market bundle, so both variants use identical point-in-time prices.
 
 ---
 
-*SJGV v1.9 and SJGV Gate 1 Cap-Weighted v1.1 — 24 August 2026.*
+*SJGV v2.0 and SJGV Gate 1 Cap-Weighted v1.1 — 24 August 2026.*

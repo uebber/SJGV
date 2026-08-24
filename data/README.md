@@ -11,6 +11,7 @@ data/
 ├── README.md          this file — schema and sourcing protocol
 ├── SOURCES.md         master source log, one section per company
 ├── companies.json     constituent fundamentals with per-field provenance
+├── guidance_delivery.json  adopted execution-delivery ratings and treatments
 ├── jurisdictions.json Gate 1 Tier B — sub-national fiscal and tenure data
 ├── sovereign.json     Gate 1 Tier A — national tests
 └── market.json        gold price, FX, and reference decks
@@ -27,6 +28,14 @@ factor is stored, so the variant is full market-cap weighted rather than
 free-float adjusted.
 
 ## Provenance schema
+
+`guidance_delivery.json` is the derived, weight-bearing classification plane for
+§8.2. Its source is the claim-level historical appendix named in the file. It
+contains no invented company input: `EXCLUDE` and `CAP` are deterministic
+committee treatments of the retained original/final guidance observations.
+Missing guidance counts only after the complete disclosure sweep proves issuer
+non-publication; a repository acquisition gap remains `UNRESOLVED` and cannot be
+converted into a company failure.
 
 Every company carries a `documents` map and a `fields` map. Each field points at
 the document it came from, so any number in the index can be traced to a primary

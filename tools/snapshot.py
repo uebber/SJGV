@@ -27,7 +27,8 @@ WHAT A SNAPSHOT IS
 Everything needed to explain a weight after the fact, and nothing that can be
 recomputed from it:
 
-    companies.json   the data layer as it stood — every field, every citation
+    companies.json   the company data layer as it stood — every field and citation
+    guidance_delivery.json  the period verdicts behind the execution treatment
     config.json      the parameters as they stood; a weight change caused by a
                      committee decision must be separable from one caused by the
                      market, and only this makes that possible
@@ -73,7 +74,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOTS = ROOT / "snapshots"
-ARTEFACTS = ("data/companies.json", "data/config.json", "weights.json",
+ARTEFACTS = ("data/companies.json", "data/guidance_delivery.json",
+             "data/config.json", "weights.json",
              "basket.json", "gate1_cap_weights.json", "gate1_cap_basket.json",
              "market_bundle.json", "market_bars.csv")
 

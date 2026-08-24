@@ -2052,7 +2052,7 @@
           "fy_label": "CY2023",
           "period_start": "2023-01-01",
           "period_end": "2023-12-31",
-          "coverage_status": "NOT_COMPARABLE",
+          "coverage_status": "COMPARABLE",
           "scope_basis": {
             "entity_level": "group (global, all attributable operations)",
             "ounce_basis": "gold",
@@ -4070,12 +4070,12 @@
           "period_end": "2024-06-30",
           "coverage_status": "NOT_COMPARABLE",
           "scope_basis": {
-            "entity_level": "single-asset (King of the Hills / Leonora, Red 5 Limited standalone) for the original guidance and for ~354 of 366 days of the year; group actual (Red 5 + Silver Lake's Deflector and Mount Monger) applies only to the final 12 days post-merger-implementation (19-30 June 2024)",
+            "entity_level": "King of the Hills / Leonora on both guidance and actual; the post-merger statutory group result is not used",
             "ounce_basis": "gold",
-            "production_basis": "produced (original guidance); statutory group actual reported on a sold basis",
+            "production_basis": "produced on both guidance and actual",
             "operations_basis": "continuing",
-            "byproduct_treatment": "not applicable at King of the Hills (no material by-product); Deflector copper by-product only enters the numbers for the 12-day stub period",
-            "notes": "Original and all reaffirmed FY24 guidance (195,000-215,000oz production, A$1,850-2,100/oz AISC) were issued by Red 5 Limited pre-merger for King of the Hills only. The Red 5/Silver Lake 'merger of equals' was implemented 19 June 2024, 12 days before FY24 period end. Red 5/Vault never issued a single combined-group FY24 guidance figure (the first combined-group guidance issued was FY25 guidance, released 29 August 2024). The audited/statutory FY24 group actual (223,498oz gold SALES: 211,939oz from King of the Hills for the full year + 11,559oz from the legacy Silver Lake assets for the 12-day stub) is a different scope (group, mixed ownership period, sales basis) from the original guidance (single-asset, produced basis) and is therefore NOT_COMPARABLE. For transparency: King of the Hills standalone actual production for the full FY24 was disclosed by Red 5 as 210,940oz (within the 195-215koz original guidance range) at an AISC of A$2,043/oz (within the A$1,850-2,100/oz original guidance range) -- see production_actual/aisc_actual fields, which report the true (mixed-scope) company-level actual as filed, with the KOTH-only figures noted for context only. No group-level AISC actual for FY24 was disclosed in the primary documents reviewed."
+            "byproduct_treatment": "not applicable at King of the Hills (no material by-product)",
+            "notes": "Corrected 2026-08-24: original and reaffirmed FY24 guidance (195,000-215,000oz production, A$1,850-2,100/oz AISC) was for King of the Hills. The issuer's lodged June 2024 quarterly reports the matching full-year King of the Hills actual: 210,940oz produced and A$2,043/oz AISC. Both are inside the raw guidance ranges. The earlier analysis incorrectly selected the post-merger statutory group sales figure of 223,498oz, which includes a 12-day Silver Lake stub and is irrelevant once the matching asset-level actual is used."
           },
           "production_guidance_claims": [
             {
@@ -4100,10 +4100,10 @@
             }
           ],
           "production_actual_claim": {
-            "claim_id": "claim:sha256:a4c95c6295e40e4165c22e10d9b6ca62fc17b98d9af0567cdaaaf306dbab7583",
-            "value": 223.498,
-            "document_id": "sha256:62509f3fa10d705cb24394ca62f8a5f5a68139f858ba77878ee747a38bae5347",
-            "document_title": "FY24 Financial Results and FY25 Outlook"
+            "claim_id": "claim:sha256:9175d7ca401bb398a28951ee8acdac872f08b996af4896266560eaaf7b669f60",
+            "value": 210.94,
+            "document_id": "sha256:c0b4c0eb6946c840b2eaece277f6dd0e8d98f02bd2ab96c1bdadf7160a0ba6e5",
+            "document_title": "Quarterly Activities Report"
           },
           "aisc_actual_claim": {
             "claim_id": "claim:sha256:3e6a14e93aadd61447adbedaaa4dedebef07c9a5e89d06854176fb145d25119f",
@@ -4111,12 +4111,12 @@
             "document_id": "sha256:62509f3fa10d705cb24394ca62f8a5f5a68139f858ba77878ee747a38bae5347",
             "document_title": "FY24 Financial Results and FY25 Outlook"
           },
-          "production_miss_original": "NOT_COMPARABLE",
-          "aisc_miss_original": "NOT_COMPARABLE",
-          "miss_year_original": "NOT_COMPARABLE",
-          "production_miss_final": "NOT_COMPARABLE",
-          "aisc_miss_final": "NOT_COMPARABLE",
-          "miss_year_final": "NOT_COMPARABLE"
+          "production_miss_original": false,
+          "aisc_miss_original": false,
+          "miss_year_original": false,
+          "production_miss_final": false,
+          "aisc_miss_final": false,
+          "miss_year_final": false
         },
         {
           "fy_label": "FY2025",
@@ -4245,18 +4245,14 @@
           "miss_year_final": false
         }
       ],
-      "three_year_miss_count_original": null,
-      "three_year_miss_count_final": null,
+      "three_year_miss_count_original": 0,
+      "three_year_miss_count_final": 0,
       "candidate_rule_trigger_original": false,
       "candidate_rule_trigger_final": false,
-      "gaps": [
-        "FY2024 (year ended 30 June 2024): coverage_status = NOT_COMPARABLE. Original guidance (195-215koz production, single-asset King of the Hills, Red 5 Limited pre-merger) is not on the same scope as the statutory group actual (223,498oz gold sales, includes a 12-day Silver Lake stub post the 19 June 2024 merger implementation); no combined-group FY24 guidance was ever issued by the issuer to reconcile the two.",
-        "FY2024: no group-level AISC actual was found in the primary documents reviewed (only the King of the Hills segment AISC of A$2,043/oz was disclosed); this reinforces the NOT_COMPARABLE call rather than creating a separate MISSING_ACTUAL state, since the entity-level actual is unusable for comparison regardless.",
-        "three_year_miss_count_original / _final: left null because FY2024's true miss/non-miss status cannot be determined (NOT_COMPARABLE). Only 2 of the 3 required years (FY2025, FY2026) are fully comparable; both are confirmed non-miss years under both the original and final guidance."
-      ],
+      "gaps": [],
       "open_questions": [
         "The task brief asserted the Red5/Silver Lake merger completed 31 August 2023. No primary document located in this research supports that date. All primary ASX announcements reviewed (Red 5's June 2024 Quarterly Report, ids 02834032, lodged 31 July 2024; FY24 Financial Results and FY25 Outlook, ids 02845912, lodged 29 August 2024) state the scheme was implemented/the merger completed on 19 June 2024, with the renamed 'Vault Minerals Limited' / ASX code VAU effective from around 30 September 2024 (ASIC recorded the name change 26 September 2024, per ids 02858793). This discrepancy should be confirmed with whoever provided the task brief; it materially changes which FY is affected by the merger transition (FY2024, not FY2023 or FY2025 under Vault's 30 June fiscal year).",
-        "Because the three-year-miss count for VAU cannot be exactly established (FY2024 is NOT_COMPARABLE), the candidate rule trigger (>=2 miss-years among the last 3 years) is reported as false rather than left indeterminate, because even in the worst case (if FY2024 were counted as a miss) the maximum possible miss count across the three years is 1 (FY2025 and FY2026 are both confirmed non-miss years under both original and final guidance), which is below the >=2 threshold required to trigger the candidate rule. This is a logical deduction that does not require assuming FY2024's actual classification, not an inference substituting for missing evidence.",
+        "FY2024 was corrected from NOT_COMPARABLE to COMPARABLE on 2026-08-24. The lodged June quarterly supplies King of the Hills production of 210,940oz and AISC of A$2,043/oz on the same asset and produced-ounce basis as the original guidance; selecting the later mixed-scope statutory group sales figure was an analysis error, not an evidence gap.",
         "Whether Vault's headline FY26 AISC actual (A$2,924/oz) is computed on a produced-ounce or sold-ounce denominator was not explicitly disclosed in the documents reviewed; the comparison against FY26 guidance was taken at face value from the issuer's own direct statement ('AISC marginally above the upper end of the guided range'), consistent with the brief's allowance for an issuer-published direct comparison."
       ]
     },
@@ -4668,5 +4664,22 @@
         "Whether the ~11-month (vs 12-month) Southern Goldfields ownership period in FY25, and the mid-year Lakewood divestment, would be considered a scope break requiring NOT_COMPARABLE treatment under a stricter reading of the brief; this record treats FY25 as COMPARABLE because guidance (issued after the merger closed) and the actual are on the same Group basis throughout FY25 itself, per the issuer's own consistent presentation."
       ]
     }
+  },
+  "disclosure_failure_overlay": {
+    "recorded_on": "2026-08-24",
+    "status": "ADOPTED_SJGV_V2.0",
+    "policy": "Missing required guidance in a producing period is a failure on both bases once a complete disclosure sweep proves issuer non-publication. Genuine pre-production is excluded. A 100% original-basis failure rate over the available producing history is a hard fail, including 1/1. Repository acquisition gaps are not charged to the issuer.",
+    "fetch_failure_check": {
+      "result": "NOT_A_FETCH_FAILURE_FOR_THE_RATED_CASES",
+      "basis": "Complete unfiltered ASX announcement indexes for calendar years 2023-2025 and year-to-date indexes through 2026-08-23 were retained for BC8, BGL, BTR, CYL, MEK, PNR and WAF; relevant annual reports, quarterlies, guidance releases and presentations were inspected. OGC's unresolved revised-guidance route is explicitly treated as a repository evidence gap, not issuer non-publication."
+    },
+    "rating_source": "data/guidance_delivery.json",
+    "hard_fail_exclude": ["BC8", "BGL", "BTR", "EMR", "MEK", "OBM", "PNR", "RSG"],
+    "cap_5_percent": ["CYL", "NEM", "WAF", "WGX"],
+    "pass": ["AEM", "CMM", "EVN", "GMD", "NST", "PRU", "RMS", "RRL", "VAU"],
+    "limited_history_pass": ["GGP"],
+    "unresolved_repository_evidence": ["OGC"],
+    "live_book_exclude": ["BGL", "OBM", "PNR"],
+    "live_book_cap_5_percent": ["CYL", "WGX"]
   }
 }
