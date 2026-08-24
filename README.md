@@ -4,8 +4,9 @@
 
 # SJGV — Stable Jurisdiction Gold Value
 
-> A rules-based index for owning more credible, unhedged gold per dollar—without
-> mistaking cheapness for safety.
+> The debasement trade, amplified through gold miners: a rules-based index that
+> weights credible, unhedged ounces against the full cost of owning and funding
+> them.
 
 Gold is simple. A gold-mining company is not.
 
