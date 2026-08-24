@@ -3440,7 +3440,7 @@ def cmd_acquire(args) -> int:
 # ASX exchange channel. The research API is capped at five items, so the legacy
 # statistics endpoint is the only complete, unfiltered index — and completeness
 # is what lets an absence be recorded as NOT_PUBLISHED instead of "not found"
-# (§6.3). See docs/primary-document-fetching-strategy.md §1.1.
+# (§6.3). See docs/primary-source-operations.md.
 # ─────────────────────────────────────────────────────────────────────────────
 
 ROW_RE = re.compile(r"<tr>(.*?)</tr>", re.S)

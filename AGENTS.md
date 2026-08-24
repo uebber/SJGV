@@ -9,7 +9,8 @@ sensitivity analysis, and snapshot management.
 
 Read the relevant source of truth before changing behavior:
 
-- `index-methodology.md` is the binding index methodology and amendment record.
+- `index-methodology.md` is the binding current index methodology; prior
+  versions remain recoverable from Git rather than in the active specification.
 - `source-knowledge-base.md` is the binding design for source retention,
   authority tiers, factual claims, and conflict resolution.
 - `data/README.md` defines the data schema and sourcing protocol.
@@ -53,8 +54,8 @@ unchanged projection only; they do not apply to anything you register. Look up t
 `views/url_aliases.json`, `views/source_ids.json` and `views/asx_lodgements.json`
 answer most questions without a request), then during migration search
 `data/companies.json`, `data/SOURCES.md`, `tools/sources.json`, and `.cache/`.
-`docs/knowledge-store-initialization-2026-08-23.md` records what the store
-already holds, the corrections applied to it, and its open gaps. The objects are
+`docs/knowledge-store-status.md` records the implemented controls and current
+operating boundary; `kb.py plan` is the live gap register. The objects are
 gitignored by decision, so a fresh clone holds every record but no bytes.
 Re-fetch only for a missing admissible source, an expired field-specific
 freshness rule, a relevant event, a failed integrity check, or an explicit

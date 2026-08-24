@@ -1,335 +1,393 @@
-# SJGV — Stable Jurisdiction Gold Value Index
+# SJGV — Stable Jurisdiction Gold Value
 
-SJGV is a rules-based gold-equity index built for a specific investment regime:
-**gold is repriced materially higher, the value of future mineable inventory
-rises with it, and the path is volatile enough that dilution and sovereign risk
-matter.** Instead of giving the largest weight to the companies the market
-already values most highly, SJGV asks a more direct question: *how much eligible,
-unhedged gold in the ground do I control for each dollar of enterprise value?*
+> A rules-based index for owning more credible, unhedged gold per dollar—without
+> mistaking cheapness for safety.
 
-That question is the reason the index exists. Physical gold gives clean exposure
-to the metal, but not to the expansion of economic mine inventory or to industry
-consolidation. Gold miners can provide both, but conventional miner indices are
-usually market-cap weighted: as a company's ounces become more expensive, the
-index owns more of them. Simple EV-per-ounce screens have the opposite problem.
-They can make weak resources, sold-forward production, unfunded projects and
-fragile balance sheets look deceptively cheap. SJGV is designed to keep the useful
-part of the gold-equity proposition while making those failure modes explicit.
+Gold is simple. A gold-mining company is not.
 
-> **The mandate:** own the largest sourceable claim on future unhedged gold per
-> unit of enterprise value, in qualifying jurisdictions, while selecting
-> companies whose survival and operating plans are not endangered by a severe
-> gold drawdown.
+An ounce of bullion has no management team, no mine to flood, no project to
+finance and no government deciding where it may be sold. A reported ounce in
+the ground arrives with all of those things attached. It may sit inside a
+working mine plan or at the edge of geological knowledge. It may belong to a
+company with ample cash or to one that must issue shares at precisely the wrong
+moment. Its upside may still be open, or it may already have been sold forward.
 
-The current release is **SJGV v2.0**. Its frozen 24 August 2026 TWS build holds
-11 ASX-listed companies at **A$922 of all-in EV per confidence-weighted claimed
-ounce**. See [`snapshots/2026-08-24-v2.0`](snapshots/2026-08-24-v2.0) for the
-complete inputs, market session, weights, and €1m basket.
+That difference is where SJGV begins.
 
-This is not a forecast and it is not a backtest. It is a transparent statement
-of what the portfolio owns today.
+SJGV—Stable Jurisdiction Gold Value—is a transparent index of gold companies
+listed on the Australian Securities Exchange. It is built for an investor who
+wants more sensitivity to a substantial rise in gold than bullion alone can
+offer, but who does not want to buy every corporate and financial hazard that
+comes with a mine. The index gives greater weight to companies offering more
+documented, unsold gold for the capital required to own and fund them. Before
+price is allowed to matter, however, the company, the jurisdiction and the
+claim itself must survive a series of explicit tests.
 
----
+An index is only a published recipe for a basket of securities and the weight
+assigned to each. SJGV is not, by itself, a fund or an investment account. Its
+purpose is narrower: to turn an investment idea into a set of rules that can be
+read, reproduced and challenged.
 
-## The investment case
+## The question behind the index
 
-SJGV is optimized for a gold revaluation in which the optionality embedded in
-mineral inventory becomes economically important.
+Most familiar share indices weight companies by market capitalisation: the
+share price multiplied by the number of shares. This is a sensible way to
+represent the market, and it usually produces a liquid portfolio. But it answers
+the question, “Which companies does the market value most highly?” It does not
+answer, “How much gold do I receive for the price I pay?” Indeed, if a miner's
+share price rises while its disclosed gold inventory does not change, a
+market-cap-weighted index buys more of the now dearer claim.
 
-At higher gold prices, lower cut-off grades can become economic, mine lives can
-extend and already-defined material can support new or larger mine plans. That
-does **not** upgrade geological confidence by itself—Inferred material still
-requires further work before it can become Measured or Indicated—but it can make
-more of a known resource commercially relevant. A reserves-only portfolio owns
-the ounces already admitted to the mine plan. SJGV also owns a discounted claim
-on what may enter later.
+SJGV asks a different question:
 
-The index can be rewarded in three distinct ways:
+> How much sourceable, unhedged gold does this company offer for each dollar
+> needed to own and fund the business?
 
-1. **Gold rises and future inventory becomes more valuable.** The portfolio owns
-   non-reserve material before it enters a reserve or production plan.
-2. **The valuation gap closes.** The present book controls more claimed gold per
-   unit of enterprise value than the same names at market-cap weights. Gold need
-   not rise for that relative discount to narrow.
-3. **The sector consolidates.** A portfolio selected for attributable ounces and
-   valuation naturally owns assets relevant to reserve replacement and corporate
-   transactions.
+“Sourceable” is important. An ounce enters the calculation only when the
+company has disclosed it in an admissible document, with its category,
+ownership basis and reporting date intact. “Unhedged” matters because gold sold
+forward no longer carries the same upside. And “funded” means that debt and, for
+an unfinished mine, the remaining cost of construction do not disappear merely
+because an investor buys the shares.
 
-The design is equally explicit about the path. A miner needing a modest capital
-raise at the bottom of a cycle is damaged, not necessarily destroyed. Gate 2
-therefore applies a literal two-year, 40% AUD-gold drawdown and asks whether the
-rescue burden is manageable: no more than 30% of market capitalisation and no
-more than two normal cash-generation years to repair. The goal is not to avoid
-mark-to-market losses or every issuance; it is to avoid turning a cyclical loss
-into permanent impairment or a multi-year operational setback.
+The resulting measure is simple:
 
-### Where it should work—and where it should not
+```text
+claimed unhedged ounces / funded enterprise value
+```
 
-| Scenario | Expected behaviour |
+Read from the other direction, it is the capital paid for each claimed ounce.
+All else equal, more credible ounces for the same capital earn more weight.
+
+## Why own the mine rather than only the metal?
+
+Bullion is the cleaner exposure. A mining share is the more complicated one,
+but that complication can contain useful leverage. When gold rises faster than
+the cost of mining it, operating margins can expand. Material outside today's
+mine plan can become worth drilling, studying and developing. Deposits that can
+replace another producer's dwindling reserves can become strategically
+valuable.
+
+Those possibilities are the reason to consider gold equities. They are also
+why a crude “ounces divided by price” screen is dangerous. It can make a weak
+resource look equivalent to a reserve, an unfunded project look complete, or a
+company on the verge of a distressed capital raising look attractively cheap.
+Low price is sometimes opportunity; sometimes it is warning.
+
+SJGV therefore separates the source of return from the controls on ruin. Value
+determines the relative weight only after eligibility has been established.
+The construction can be remembered in five verbs:
+
+```text
+qualify → count → price → weight → cap
+```
+
+That order is the architecture of the index. A failed gate cannot be redeemed
+by apparent cheapness, and a fashionable company cannot receive more weight
+unless its ounces or its purchase price justify it.
+
+## First, qualify the claim
+
+The index starts with a maintained universe of ASX-listed gold companies. It
+then asks whether each candidate belongs in the comparison at all.
+
+A qualifying company must derive at least 75% of trailing revenue from gold.
+The ounces counted must lie in jurisdictions that meet the published monetary,
+fiscal and gold-control tests. The underlying reserve and resource statements
+must be current. The shares must be tradeable at a tolerable quoted spread. A
+producer must be able to endure a severe two-year fall in the Australian-dollar
+gold price without requiring a rescue so large that existing owners lose much
+of the eventual recovery. A developer must have advanced studies, the necessary
+approvals and land access, a sourceable cost to completion, and a bounded
+funding gap.
+
+The index also asks a plainer question: did management deliver what it told
+shareholders to expect? For the latest completed producing periods, actual
+production and all-in sustaining cost—the industry's broad measure of the
+continuing cost of producing gold—are compared with both the original annual
+guidance and the final revision. A target cut late in the year does not
+erase the original promise. Repeated material failures lead to a 5% cap or to
+exclusion; a gap in the repository's research is never charged to the company
+as if the company had failed to publish.
+
+These are rules, not impressions of management “quality.” They decide whether a
+claim may enter and how large it may become. They do not add an opaque quality
+score to the valuation signal.
+
+### The qualification rules, precisely
+
+The rules distinguish a **producer**, which operates one or more mines; a
+**near-producer**, which is entering production but still has material
+construction capital to fund; and a **developer**, which has not yet reached
+production. The distinction matters because an operating business can be
+stress-tested from mine cash flow, while an unfinished one must be tested from
+its studies, approvals and funding requirement.
+
+| Test | Requirement |
 |---|---|
-| **Sharp, sustained gold revaluation** | The design case. Resource optionality, operating leverage and reserve replacement become more valuable. |
-| **Sector consolidation** | The ounce-and-value discipline should favour companies whose ounces can replenish an acquirer's reserve base. |
-| **Flat gold, valuation mean reversion** | The portfolio can benefit if cheap claims re-rate toward the sector. |
-| **Gold drawdown** | The index will lose money. The health gate is intended to screen out permanent impairment and multi-year operational setbacks, not hedge the decline or prohibit every recapitalisation. |
-| **Bull market led by expensive large-cap “quality”** | The structural weak case. SJGV underweights ounces the market already prices richly and sells into price strength when the disclosed claim does not change. |
+| Gold focus | At least 75% of trailing revenue must come from gold. |
+| National jurisdiction | The asset must be in a country with its own freely floating currency, neither a global reserve currency nor part of a currency union; currency-issuer net debt must be no more than 60% of GDP, gross debt no more than 85%, and interest expense no more than 10% of government revenue; no gold-confiscation, compulsory-delivery, government-only buying or gold-export prohibition may be in operation. |
+| Regional jurisdiction | In the preceding ten years, the relevant state or province must not have used specified retroactive revocation, executive withdrawal, output requisition, export licensing or forced domestic sale against the mining interest. |
+| Mixed jurisdictions | Ounces in a failing jurisdiction do not count. A company is excluded when more than 25% of its estimated net asset value lies in ineligible jurisdictions. |
+| Producer resilience | The company is tested against a 40% fall in Australian-dollar gold for two years, mining-cost inflation of 5% a year and tax of 30%. It is excluded if the required rescue exceeds 30% of market capitalisation or two normal-price years of cash generation. |
+| Near-production funding | A near-producer follows the producer test where operating guidance is required and must disclose denominator-safe gross remaining execution capital. |
+| Developer readiness | A developer needs at least a pre-feasibility study, all principal approvals and land access, a complete sourceable remaining construction cost, and a residual funding gap—gross remaining cost less available funding—no greater than 30% of market capitalisation. |
+| Tradability | The trailing three-month median quoted spread may not exceed 1% for a producer or near-producer and 4% for a developer. |
+| Current evidence | No reserve or resource portion counted by the index may rely on a statement more than 18 months old. |
 
----
+Missing information never produces a pass. Depending on the rule, it leaves an
+explicit unresolved state, forces treatment adverse to the company, or excludes
+the name.
 
-## Why SJGV is different
+Management delivery is assessed over the latest three completed producing
+periods. Production fails below 95% of the guided lower bound; all-in sustaining
+cost fails above 105% of the guided upper bound. A year fails once if either
+limb fails.
 
-### It weights the asset, not the market's opinion of the asset
-
-The raw signal is claimed unhedged ounces divided by funded enterprise value.
-There is no composite score, factor blend or discretionary quality overlay. A
-term may affect a weight only if it changes either the amount of gold claimed or
-the capital paid for that claim.
-
-### It separates return drivers from ruin controls
-
-Cheapness cannot compensate for a failed jurisdiction, RED health under the
-stress case or an untradeable security. Those are gates applied before
-weighting. Concentration limits are applied afterwards. The investment signal is
-therefore not diluted by turning every risk into another score.
-
-### It treats optionality explicitly
-
-P&P reserves, M&I non-reserve material and Inferred material are not treated as
-equivalent. They enter the ledger at 1.0, 0.5 and 0.2 respectively. The resulting
-ledger makes the optionality exposure visible instead of hiding it in a narrative
-or a proprietary valuation model.
-
-### Missing data cannot improve a company
-
-Every live input points to a source document. Values are derived only when the
-arithmetic is reproducible from that document. An absent value is a gap, a
-provisional gate result or a rejection—never a convenient zero. The repository's
-working rule is **derive or fail**.
-
-### It is designed to be falsifiable
-
-The methodology publishes its gates, parameters, source notes, cap effects and
-point-in-time snapshots. Reporting models may describe the portfolio, but they
-cannot silently influence a weight. There is deliberately no simulated history:
-the point-in-time resource statements and assumptions needed for an honest
-historical reconstruction do not exist.
-
----
-
-## How the index works
-
-The full rules are in [`index-methodology.md`](index-methodology.md). The engine
-follows a simple order: **qualify, count, price, weight, cap**.
-
-### 1. Qualify the company
-
-The starting universe is a defined set of ASX-listed gold companies. A company
-must first satisfy the gold-purity requirement, then pass three gates:
-
-| Gate | Question |
+| Delivery record | Treatment |
 |---|---|
-| **Jurisdiction** | Are the counted ounces in a country with its own floating currency, acceptable sovereign finances and no gold-control regime currently operating? |
-| **Producer health** | Would a literal two-year, 40% AUD-gold drawdown require rescue capital too large to raise or take more than two normal years to repair? |
-| **Tradability** | Is the security's regular-hours quoted spread inside the sleeve limit? |
+| Every observed period missed original guidance | Exclude |
+| At least two original-guidance misses and any revised-guidance miss | Exclude |
+| Two original-guidance misses but no revised-guidance miss | Maximum 5% weight |
+| One original-guidance miss and one revised-guidance miss | Maximum 5% weight |
+| Evidence proves at least a cap but cannot yet resolve possible exclusion | Maximum 5% weight while unresolved |
+| Complete evidence without one of those patterns | Pass |
 
-Resource and reserve statements supporting the ledger must also be no more than
-18 months old. Mixed-jurisdiction companies receive category-specific eligibility
-shares for P&P, M&I non-reserve and Inferred ounces; one blended jurisdiction
-share is not reused across all three categories.
+A verified failure to publish required annual production or cost guidance
+counts as a miss. “Verified” requires a complete search of the company's
+disclosures; absence from the dataset is not proof of absence in the world.
 
-Gate 1 reduces risk; it does not make confiscation impossible. Australia is the
-only current national pass and dormant Part IV powers in the *Banking Act 1959*
-remain an explicit, unpriced common risk. The methodology records that exposure
-rather than claiming it has been eliminated.
+## Then, count the gold
 
-### 2. Build the ounce ledger
-
-For each survivor:
-
-```text
-Claimed ounces
-    = 1.0 × eligible Proven & Probable
-    + 0.5 × eligible Measured & Indicated outside reserves
-    + 0.2 × eligible Inferred
-    − ounces sold forward over the hedge horizon
-```
-
-Hedged ounces are subtracted from P&P first. A bought put does not reduce the
-claim; a forward sale does, because its upside has already been sold.
-
-The 1.0 / 0.5 / 0.2 values are policy discounts for confidence and development
-distance. They do not assert that every ounce within a category has the same
-grade, recovery, metallurgy, capital requirement or economic value.
-
-### 3. Price the claim
-
-The engine denominator is sleeve-specific:
+An ounce mentioned in a geological report is not necessarily an ounce in a mine
+plan. SJGV keeps the industry's disclosure categories separate and discounts
+them according to their maturity:
 
 ```text
-producer EV = market capitalisation + net debt
-near-producer/developer all-in EV = producer EV + remaining execution capital
+claimed unhedged ounces
+  = 1.0 × eligible Proven & Probable reserves
+  + 0.5 × eligible Measured & Indicated resources outside reserves
+  + 0.2 × eligible Inferred resources
+  − forward-sold ounces over the next 24 months
 ```
 
-Established producers use standard EV because complete company-wide remaining
-cost-to-completion schedules are not normally published. Any producer execution-
-capital records remain provenance/reporting data and do not affect eligibility
-or weight. Near-producers and developers continue to add gross remaining
-execution capital. Available project funding is recorded separately; the engine
-derives `max(0, execution capital − available funding)` and uses that residual
-gap only in the developer Gate 2 dilution test. A fully funded project therefore
-keeps its construction cost in the denominator without failing Gate 2.
+Proven and Probable reserves have passed the studies and modifying factors
+needed to enter an economic mine plan, so they count in full. Measured and
+Indicated resources outside reserves are geologically better defined but less
+mature, and count at half weight. Inferred resources carry the least geological
+confidence of the three groups and count at one fifth.
 
-Weight-bearing capital amounts carry directional evidence states. `POINT`,
-`UPPER_BOUND`, and an in-date `CARRY_FORWARD` may enter a near-producer or
-developer denominator. A `LOWER_BOUND` or `UNRESOLVED` amount rejects those
-names rather than allowing missing cost to raise weight. For a producer the
-same states are retained only as reporting evidence; absence stays absent.
-[`docs/asset-evidence-capital-proposal.md`](docs/asset-evidence-capital-proposal.md)
-is the design implemented by the engine;
-[`docs/execution-capital-inventory.md`](docs/execution-capital-inventory.md) is
-the completed per-constituent sourcing step. The coordinated replay and formal
-methodology activation remain the later remediation steps; no snapshot is made
-for this implementation check.
+The factors 1.0, 0.5 and 0.2 are visible policy choices, not fitted
+probabilities. They do not claim that two ounces in the same category have the
+same grade, recovery, cost or economic value. Nor does a higher gold price
+upgrade a geological classification by itself. The ledger simply gives
+less-developed inventory a smaller voice without pretending it has no value.
 
-### 4. Set raw weights
+Forward sales over the next 24 months are removed from eligible reserves first:
+their gold-price upside has already been transferred. Protective put options
+remain because they preserve the upside. The final number is called a
+**claimed ounce** deliberately. It is a unit for comparing disclosed economic
+exposure, not a promise that every ounce will be mined.
+
+## Then, price what remains
+
+Equity value alone is an incomplete purchase price. Creditors have a prior
+claim on the same assets, so SJGV uses enterprise value: market capitalisation
+plus debt, less cash and bullion. For an unfinished operation, it also includes
+the disclosed capital still required to build the mine.
 
 ```text
-                         ClaimedUnhedgedOunces_i
-Raw weight_i   ∝         ───────────────────────
-                               FundedEV_i
+producer funded EV
+  = market capitalisation + net debt
+
+near-producer/developer funded EV
+  = market capitalisation + net debt
+  + gross remaining execution capital
+
+raw weight
+  ∝ claimed unhedged ounces / funded EV
 ```
 
-Proportional signal weighting spreads the resource-value exposure across all
-qualifying names. It is not the solution to a literal optimization that fills
-the cheapest claim to its cap before buying the next one.
+Available project finance may reduce a developer's dilution risk, but it does
+not make the plant free; that is why the denominator uses the gross remaining
+cost. Established producers use ordinary enterprise value because complete,
+company-wide cost-to-completion schedules are not normally published on a
+comparable basis.
 
-### 5. Apply impairment caps
+There is no composite score, optimiser or discretionary adjustment. A term may
+change a raw weight only by changing the gold claimed or the capital paid for
+it. Estimated net asset value, share-price sensitivity to gold and other risk
+statistics are reported for context. They cannot feed back into the weights.
 
-| Constraint | Limit |
+## Finally, limit what one failure can destroy
+
+Raw weights are normalised to 100%, then excess weight is redistributed among
+uncapped companies in proportion to their raw weights. The tightest applicable
+limit governs:
+
+| Exposure | Maximum weight |
 |---|---:|
-| Single company | 15% |
-| Company with ≥80% of eligible P&P at one asset | 7.5% |
-| Developer sleeve | 15% |
-| Single developer | 5% |
-| Ineligible-jurisdiction NAV per constituent | 25% |
+| Any company | 15% |
+| Company with at least 80% of eligible reserves in one operating asset | 7.5% |
+| Company whose delivery record requires a cap | 5% |
+| Any developer | 5% |
+| All developers together | 15% |
 
-These limits address permanent, company-specific loss: a plant failure, flood,
-geotechnical event, tenure dispute or failed development project can remove a
-claim rather than merely mark it down.
+These limits acknowledge that mining loss can be discontinuous. A flood,
+geotechnical failure, failed development or tenure event can remove an asset,
+not merely make it a little less valuable. The caps therefore sit after the
+value calculation: they contain the consequence of being wrong without
+quietly redefining what “value” means.
 
-### 6. Rebalance from current disclosure
+## What the current release says
 
-- **Annual deep rebalance:** rebuild the resource, reserve and jurisdiction data.
-- **Quarterly light rebalance:** update quarterly-disclosed financial and market
-  inputs.
-- **Event driven:** act on corporate transactions, jurisdiction events and gate
-  breaches when they occur.
+The current release is **SJGV v2.0**, effective 24 August 2026. Its
+[frozen release record](snapshots/2026-08-24-v2.0) preserves the accepted
+company data, market session, calculation engine, target weights and generated
+basket. For that build:
 
-Market prices, spreads, gold history and risk statistics are obtained through a
-local IBKR TWS session. The repository does not fabricate replacements when that
-connection is unavailable.
+| Measure | Result | What it tells us |
+|---|---:|---|
+| Companies held | 11 | The full sequence of gates and caps left a usable but concentrated portfolio. |
+| Funded value per claimed ounce | A$922.23 | The aggregate purchase price of one confidence-weighted claimed ounce. |
+| Gate-1 cap-weighted comparison | A$1,027.57/oz | The ten largest jurisdiction-qualified companies, weighted by market value on the same market session, offered fewer claimed ounces per dollar. |
+| Ledger mix | 59.4% / 28.6% / 11.9% | The confidence-weighted claim comprised P&P / M&I outside reserves / Inferred ounces. |
+| Gold beta | 1.72 | The measured shares had greater historical sensitivity to gold; this is an estimate, not a forecast. |
+| Effective number of holdings | 9.66 | Concentration resembled roughly 9.66 equally weighted positions. |
+| Largest company weight | 14.50% | The general company limit was respected. |
+| Total developer weight | 5.00% | Pre-production exposure remained bounded. |
 
-That session now leaves a record. Every build writes `market_bundle.json` and
-`market_bars.csv`: the request parameters, the contract identifiers IBKR
-resolved, every quote field, the market-data type, the TWS error channel, the
-UTC instants on either side of each call, the engine commit, and every
-historical bar the session returned. The market leg was the one input to a
-weight that carried no source document, and it carries one now — frozen into the
-snapshot beside the data layer and the parameters.
+The lower price per claimed ounce shows that the weighting rule did what it was
+designed to do on that date. It does not prove that A$922 was intrinsically
+cheap, that the confidence discounts are optimal, or that SJGV will outperform
+the comparison. The market may have sound reasons to value one ounce above
+another; the index makes its own trade explicit rather than claiming those
+differences do not exist.
 
-## Gate 1 cap-weighted variant
+There is also one conspicuous absence: no historical backtest is claimed. An
+honest reconstruction would require the reserve statements, category splits,
+hedge books, balance sheets and states of knowledge that existed at every past
+rebalance. The repository does not possess that point-in-time history. Applying
+today's disclosures to yesterday's prices would produce precision without
+truth. The record therefore begins prospectively, with frozen releases.
 
-The same build also produces **SJGV Gate 1 Cap-Weighted v1.1**, a deliberately
-simple parallel index. It begins with the same candidate universe (currently 17
-companies), applies only Gate 1, ranks the survivors by full issued market
-capitalisation, retains the largest ten, and then weights those constituents by:
+The detailed [investment case](docs/investment-case.md) explains where the
+construction should and should not work. The [release validation](docs/validation.md)
+records what v2.0 establishes and what remains unproven.
+
+## How to read the risks
+
+SJGV is designed for a particular proposition: that gold may be materially
+repriced, and that mine inventory, operating leverage and reserve replacement
+may then become more valuable. The design can also benefit if inexpensive gold
+claims merely re-rate toward the sector or become acquisition targets. It is
+structurally less likely to lead when a bull market rewards already expensive
+large companies without a corresponding change in their disclosed gold.
+
+More importantly, the safeguards do not turn mining shares into bullion:
+
+- a fall in gold can still cause a much larger fall in the portfolio;
+- cost inflation can consume the benefit of a higher metal price;
+- grade, recovery, mine life, royalties and capital needs differ even within
+  the same disclosure category;
+- a resilient company can still suffer dilution, operational failure or a bad
+  acquisition;
+- the current eligible ounces are overwhelmingly Australian, so company
+  diversification does not remove an Australia-wide sovereign or statutory
+  event; and
+- the lowest-priced claim need not become the best investment.
+
+The gates are not a promise of safety. They are an attempt to refuse the most
+visible ways in which shareholders can lose the future they thought they had
+bought.
+
+## Evidence before confidence
+
+The calculation is only as defensible as the facts admitted to it. Every
+accepted company field must cite a document. A value may be copied from that
+source, derived arithmetically from sourced values with the formula recorded,
+or entered as an explicitly labelled conservative bound adverse to the
+company. Otherwise it remains absent. The repository's rule is short:
+**derive or fail**.
+
+The evidence system follows one chain:
 
 ```text
-MarketCap_i = sourced shares outstanding_i × common-session price_i
-Weight_i    = MarketCap_i ÷ Σ MarketCap of the selected top ten
+retained source → scoped factual claim → precedence decision → accepted input
+                 → calculation → frozen release
 ```
 
-It does not apply Gate 2, Gate 3, the 18-month resource-statement bar, the ounce
-ledger, enterprise-value weighting, or the §8 concentration caps. For a
-mixed-jurisdiction company, Gate 1's 25% ineligible-NAV entity limit still must
-pass; once admitted, the company's full market capitalisation enters the
-ranking and weight. The eligible-ounce share is not turned into an undocumented
-haircut. If fewer than ten companies pass Gate 1 with complete market-cap
-inputs, the variant holds every survivor rather than inventing a constituent.
+Issuer filings, exchange records and official publications outrank convenient
+summaries. Conflicting lower-authority assertions cannot be averaged into a
+number that no source reported. A URL is treated as a route to a document, not
+as the document's identity. Missing evidence can degrade or reject a company;
+it can never become a favourable zero.
 
-This is full issued market-cap weighting, not free-float-adjusted MSCI
-weighting. The repository has sourced shares outstanding but no sourced
-free-float inclusion factor, so it does not invent one. Builds write
-`gate1_cap_weights.json` and `gate1_cap_weights.csv`; sized builds also write
-`gate1_cap_basket.json` and `gate1_cap_basket.csv`. Both variants use the same
-recorded market session and are frozen together by `tools/snapshot.py`.
+This discipline is part of the investment construction, not clerical
+housekeeping. It makes disagreement useful: a reader can locate the source,
+inspect the passage, challenge the interpretation and see which output would
+change.
 
----
+## From reader to maintainer
 
-## Latest frozen snapshot — v2.0
+The documents are arranged so that each deeper question has a controlling
+answer:
 
-- **Market session:** 24 August 2026, spot A$6,524/oz, TWS returned live data
-- **Resource data sourced:** 21 August 2026
-- **Constituents:** 11
-- **Headline all-in EV / claimed ounce:** A$922
-- **Same names, market-cap weighted:** A$1,028 — a 10% discount
-- **Claim mix:** 59.4% P&P / 28.6% M&I non-reserve / 11.9% Inferred
-- **Reported gold beta:** 1.72
-- **Effective number of holdings:** 9.7
-- **€1m basket:** €999,998.95 deployed after 0.10% commission assumptions
-
-The immutable release record is
-[`snapshots/2026-08-24-v2.0`](snapshots/2026-08-24-v2.0). The methodology change
-and source-level delivery evidence are documented in
-[`docs/guidance-delivery-study-2026-08-24.md`](docs/guidance-delivery-study-2026-08-24.md).
-
----
-
-## What the index does not promise
-
-- **It is not a hedge.** A gold drawdown will hurt, and high-cost ounces can lose
-  value quickly.
-- **It does not prove convexity.** The 57.8 / 29.5 / 12.7 ledger mix demonstrates
-  exposure to resource optionality. The current fixed-plan NAV model is linear
-  in gold price, and the realised up/down sample is too weak to establish more.
-- **It does not make ounces economically identical.** Category discounts do not
-  normalize grade, recovery, strip ratio, metallurgy, mine timing, royalties or
-  future capital.
-- **It will lag expensive quality when expensive quality leads.** That is the
-  predictable cost of refusing to chase a re-rating unsupported by more ounces.
-- **It is currently an Australian portfolio.** Name caps diversify operational
-  failures, not the common legal, fiscal, labour or currency risks of one country.
-- **It has no honest historical backtest.** Current disclosures are preserved as
-  snapshots so a prospective record can be built from here.
-
-These are not footnotes to the strategy. They define the conditions under which
-the strategy should—and should not—be expected to work.
-
----
-
-## Repository map
-
-| Path | Purpose |
+| If you want to understand… | Read… |
 |---|---|
-| [`index-methodology.md`](index-methodology.md) | Binding methodology and amendment record |
-| `build_index.py` | Gates, ledger construction, weighting, caps and basket output |
-| `data/` | Provenance-tracked company, jurisdiction and parameter data |
-| [`data/README.md`](data/README.md) | Data schema and sourcing conventions |
-| `nav_model.py` | Reporting-only NAV and implied-deck model |
-| `tools/` | Provenance, gaps, sensitivity, regression, configuration audit, snapshots and asymmetry diagnostics |
-| `tests/fixtures/` | Frozen regression evidence used to decompose construction changes without creating a rebalance snapshot |
-| `snapshots/` | Frozen point-in-time inputs, outputs, parameters, raw TWS session and engine commit |
-| `docs/` | Supporting studies: grade-tonnage disclosure survey, sourcing brief, execution-capital inventory, and the accepted capital-denominator design |
+| the investment idea and its limitations | [the investment case](docs/investment-case.md) |
+| the binding eligibility and weighting rules | [the index methodology](index-methodology.md) |
+| the frozen v2.0 inputs and outputs | [the release snapshot](snapshots/2026-08-24-v2.0) |
+| what the release proves | [the validation record](docs/validation.md) |
+| the meaning and acceptance rules for each input | [the data specification](data/README.md) |
+| which sources prevail and how conflicts are handled | [the source knowledge base](source-knowledge-base.md) |
 
-Two rules govern every production change:
+`build_index.py` is the production engine. `nav_model.py` is reporting-only:
+its discounted-cash-flow estimates never affect eligibility or weight. The
+accepted inputs and their provenance live under `data/`; audits, sourcing
+helpers, sensitivity analysis and snapshot management live under `tools/`.
+For any particular calculation, generated outputs and the latest dated
+snapshot—not narrative prose—are authoritative.
 
-1. **Derive or fail.** A sourceable value may be derived; an invented value may
-   not enter the index.
-2. **Every parameter names a consumer.** A declared rule that the engine does not
-   read is a defect, not documentation.
+Use the repository's Python 3.12 environment for validation:
 
----
+```sh
+.venv/bin/python -m compileall -q build_index.py nav_model.py tools
+.venv/bin/python -m unittest discover -s tests -t .
+.venv/bin/python tools/gaps.py
+.venv/bin/python tools/provenance.py
+.venv/bin/python tools/config_audit.py --strict
+.venv/bin/python tools/kb.py audit --strict
+```
 
-## Licence and disclaimer
+A new live calculation requires an Interactive Brokers TWS or Gateway session:
 
-Provided for informational and educational purposes. Nothing in this repository
-is investment advice, an offer, or a recommendation to buy or sell a security.
+```sh
+.venv/bin/python build_index.py
+.venv/bin/python build_index.py 1000000 --commission 0.1
+```
+
+If the market session is unavailable, the engine does not invent prices or
+silently substitute another provider. Builds rewrite ignored output files at
+the repository root. A successful build is frozen with `tools/snapshot.py` only
+for an actual reviewed rebalance, never merely to make a code check look like a
+release.
+
+## Stewardship
+
+An annual deep review re-sources company gates, reserve and resource statements,
+the delivery record and the ounce ledger. Quarterly reviews update newly
+reported financial and market inputs. Corporate actions, delistings,
+jurisdiction events and gate failures trigger review when they occur; a known
+failure is not deferred to the next convenient date.
+
+A methodology change requires a new version and effective date. A factual
+correction does not rewrite history: its source, date and effect remain visible
+in the evidence trail and subsequent release.
+
+## Disclaimer
+
+SJGV is research software for a private rules-based portfolio. It is not an
+offer, investment advice or a regulated public index. Mining equities can lose
+substantially more than bullion during operational, financing or jurisdictional
+stress.

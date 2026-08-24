@@ -45,7 +45,8 @@ numerator (c2b == eligible_cw_moz / pp_moz, so the resource inventory entered
 the weight SQUARED), and σ_idio at +0.77 with ounces/EV cancelled the very
 signal the numerator exists to express. Deleting all of it left the same twelve
 constituents, the same delta, and a book holding MORE ounces per dollar:
-A$642/oz of EV against A$682/oz. See docs/design-rationale.md §A.2.
+A$642/oz of EV against A$682/oz. The current design principle is documented in
+docs/investment-case.md §2.
 
 The rule that replaced them: a term enters the weight only if it changes how
 many ounces are claimed, or what was paid for them. Nothing else is a weight.

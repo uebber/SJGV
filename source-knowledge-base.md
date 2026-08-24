@@ -385,7 +385,7 @@ migration source, not a canonical authority.
 ### 7.2 When acquiring a document
 
 1. Discover through the highest-quality available channel described in
-   `docs/primary-document-fetching-strategy.md`.
+   `docs/primary-source-operations.md`.
 2. Download once and save raw bytes before transformation.
 3. Sniff content, compute the full SHA-256 hash, and deduplicate by hash.
 4. Verify issuer, title, publication date, reporting date, units, currency,
@@ -455,7 +455,7 @@ The migration is additive and must not refetch material already held locally.
 | `data/companies.json` fields | `claims.jsonl` and generated projection | Backfill exact evidence locators; do not change values during storage-only migration |
 | `data/SOURCES.md` | decision, supersession, and quarantine history | Preserve rationale; narrative alternatives do not become active claims |
 | `tools/sources.json` | acquisition queue/view | A requested URL or expected field is a lead, not evidence |
-| `docs/primary-document-fetching-strategy.md` | retrieval adapters and operating guidance | Retrieval order does not set factual authority |
+| `docs/primary-source-operations.md` | retrieval operations | Retrieval order does not set factual authority |
 
 Migration order:
 

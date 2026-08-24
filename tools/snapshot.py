@@ -10,17 +10,10 @@ Freeze the state of a rebalance so that a point-in-time series can start.
 
 WHY
 ---
-Nothing in this project has ever been rebalanced. One snapshot exists — today's —
-so there is no turnover, no realised trading cost and no constituent transition
-in the record. That is the single largest gap between "a methodology" and "an
-index", and unlike the others it cannot be closed by working harder: the history
-does not exist and cannot be reconstructed, because point-in-time reserves and
-price decks are not published anywhere, so the gates cannot be re-run on a past
-date.
-
-What CAN be done is start accumulating from now, which costs one command per
-rebalance. Every cycle that goes by without this is a cycle of history
-permanently lost.
+Point-in-time reserves, hedge books, balance sheets and disclosure states cannot
+be reconstructed reliably after the fact. Each reviewed rebalance is therefore
+frozen when it occurs. The resulting series can measure transitions from its
+first snapshot onward without pretending to supply an earlier backtest.
 
 WHAT A SNAPSHOT IS
 ------------------
@@ -55,10 +48,9 @@ changed — and the record could not tell those apart. Now it can.
 WHAT --diff MEASURES
 --------------------
 One-way turnover (½Σ|Δw|), entries, exits, and — because a weight change is only
-interesting once you know why — which of the underlying fields moved between the
-two dates. §11.3 asks for turnover and realised trading cost in basis points;
-this gives the first, and the second follows once the spread at each rebalance is
-applied to the turnover it caused.
+interesting once you know why — which underlying fields moved between the two
+dates. Trading-cost analysis can then apply each rebalance's recorded spread to
+the turnover it caused.
 """
 
 from __future__ import annotations

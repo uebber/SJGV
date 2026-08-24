@@ -204,7 +204,8 @@ in `README.md`: below five observations, reject rather than impute.
 
 ## 4b. Third sourcing pass — the six rejected names, 17 August 2026
 
-Six parallel research agents, one per ticker, briefed with `docs/sourcing-brief.md`.
+Six parallel research agents, one per ticker, used the source protocol now
+consolidated in `data/README.md` and `docs/primary-source-operations.md`.
 Agents proposed JSON only; every value was merged, arbitrated and written here.
 **All six M/I/Inferred splits are now sourced**, which is what §12's DERIVE OR FAIL
 rejection was waiting on. The book went 9 → 12 constituents, Eff N 8.4 → 10.5, and
@@ -498,8 +499,8 @@ is charged against. It often does not. `committed_capex_aud_m` now carries
 `horizon_years`, and seven constituents turn out to charge one guided year against the
 two-year stress window — RRL, VAU, CMM, NST, PNR, CYL and BGL — while WGX's record
 establishes no period at all. GGP and EVN run past the window and over-charge, which is
-safe; `docs/execution-capital-inventory.md` §3 generalised from those two to "direction
-is safe" and that conclusion is now withdrawn. The shortfall is **printed, not filled**:
+safe; an earlier capital inventory generalised from those two to "direction is
+safe" and that conclusion was withdrawn. The shortfall is **printed, not filled**:
 annualising a guided year is forbidden above, and a cohort rate on an unguided period is
 the same invention in a peer group's clothes.
 
@@ -739,8 +740,9 @@ allowing the scenario which produced the highest margin … to be identified. Th
 **selected** cut-off grades used in the Study are shown in Table 10." Issuers run
 the curve and publish its argmax.
 
-Full per-name table and the three findings that would have blocked Phase 2
-anyway: `docs/grade-tonnage-survey.md`.
+The current conclusion and its investment consequence are consolidated in
+`docs/investment-case.md` §3; the underlying source record remains here and in
+the knowledge store.
 
 ---
 

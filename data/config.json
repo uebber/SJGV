@@ -1,24 +1,17 @@
 {
- "_schema": "Methodology parameters. These are committee decisions, not observations — index-methodology.md is the source of truth and every entry cites its section. Observations live in the other files in this directory. For primary SJGV there is no scoring layer, and every survivor is either a gate threshold, an ounce-category discount, or an impairment cap. Not one is a scoring coefficient. The variants block declares parallel constructions separately. The test a primary-SJGV parameter must now pass to exist: does it change how many ounces are claimed, or what was paid for them?",
+ "_schema": "SJGV v2.0 parameters. index-methodology.md is binding; current rationale is in docs/. Keys ending in _note or named ref/rule/why are documentation, not parameters.",
  "methodology": "SJGV v2.0",
  "adopted": "2026-08-24",
  "objective": {
-  "beta_target": [
-   1.4,
-   1.8
-  ],
-  "ref": "§0.1 — a CHECK, not an input. Nothing is optimised toward it and no weight reads it; the engine reports portfolio beta and flags the band. Adopted 1.4-1.8 convex; a 2.0+ linear target was considered and rejected because in ounce terms it bleeds through cycles.",
-  "beta_basis_withdrawn": "NOT A PARAMETER. It selected regressed vs modelled delta as the mandate basis and was interlocked with nav_model.parameters_adopted. Both are gone: the NAV model is reporting-only by decision, so there is no adoption switch left to interlock with, and both numbers simply print.",
-  "min_r2_gold_withdrawn": "REMOVED 2026-08-17. Declared 0.6 and read by no code. Zero of twelve constituents clear it and the observed range is 0.10-0.29, so enforcing it as written would empty the index. Gold equities do not track gold that tightly at daily frequency. The parameter was wrong, not the universe."
+  "beta_target": [1.4, 1.8],
+  "ref": "Methodology §10. Diagnostic only; no risk statistic affects a weight."
  },
  "risk": {
   "beta_estimator": "dimson",
   "dimson_lags": 1,
   "regression_window": "2 Y",
-  "ref": "§7 — DIAGNOSTIC ONLY. No risk statistic reaches a weight.",
-  "sigma_idio_withdrawn": "NOT A PARAMETER along with sigma_idio_basis and shrinkage_lambda. sigma_idio was the denominator of every weight. Measured on 17 Aug it ran +0.77 log-correlated with ounces/EV, so the denominator was cancelling the numerator; -0.76 against P/NAV, so it underweighted the cheapest names hardest; and -0.62 against EV, so it was a size tilt toward majors, which §7 explicitly does not want. No variance term appears anywhere in the §0 objective and none was ever argued for. The old §13 item 7 asked which of daily, weekly or cohort-shrunk was the right way to estimate it; the answer was that it should not be in the formula. sigma_idio is still computed and printed as a column.",
-  "numeraire_note": "Regressed against gold in AUD, not USD. The cost base is AUD, so USD gold is the wrong regressor: AUD weakness in a risk-off gold rally is a margin tailwind the USD series does not carry. Requires an AUDUSD daily series; falls back to USD with a loud flag.",
-  "dimson_note": "Dimson (1979) sum-of-lags, +/- dimson_lags days. NOT optional cosmetics. The ASX closes ~06:00 UTC; the XAUUSD daily bar for the same date closes ~21:00 UTC, so a given gold bar is not priced by the ASX until the NEXT session. Measured 2026-08-17 over 2Y: every one of 17 names showed a higher beta AND higher R-squared against gold at t-1 than at t. Regressing contemporaneously halves the estimate: portfolio beta read 0.69 against a Dimson range of 1.48-2.22 per name. It decides no weight now, but it still decides whether the §0 band is reported as met."
+  "ref": "Reporting only. AUD gold is the preferred regressor for AUD-cost companies.",
+  "dimson_note": "The ASX closes before the same-date XAUUSD daily bar. The lagged estimator addresses this non-synchronous trading; a USD fallback is flagged."
  },
  "estimation_policy": {
   "rule": "DERIVE OR FAIL. No field value may be invented.",
@@ -29,25 +22,23 @@
    "bound": "a conservative limit that runs AGAINST the name, stated as such. Not an estimate of the true value, a value the true one cannot be worse than."
   },
   "forbidden": [
-   "calibrated or cohort-median imputation of a value the issuer has not published",
-   "run-rate annualisation or extrapolation of a disclosed period into an undisclosed one",
-   "apportioning a multi-year programme across a shorter window by judgement",
-   "midpoints of ranges the analyst constructed rather than the issuer published",
-   "any figure whose note cannot name the arithmetic that produced it"
+   "cohort or calibrated imputation",
+   "run-rate extrapolation into an undisclosed period",
+   "judgemental allocation of a multi-year programme",
+   "midpoint of an analyst-created range",
+   "a figure without recorded arithmetic"
   ],
-  "on_absence": "A field that cannot be sourced or derived stays ABSENT. It is never filled. The engine then does one of two things. For a GATE input, it tests whether the gate outcome is invariant across the full empirical range the cohort reports: invariant means the missing value cannot change the answer, so the name proceeds with a warning; not invariant means the answer is unknown and the name FAILS. For a SCORE input, absence mutes the term, which understates the name and is reported.",
+  "on_absence": "Remain absent; the engine reports, degrades or rejects according to the binding field rule.",
   "materiality_bar_pp": 0.2,
-  "materiality_note": "A warning rather than a failure is permitted only where the unresolved input cannot move any final weight by more than materiality_bar_pp. tools/sensitivity.py measures this; it is not asserted.",
-  "why": "Written after a session in which invented inputs repeatedly produced confident wrong answers. An A$800m apportionment of Evolution's approved capital was recorded and then withdrawn on the realisation that a judgement call was deciding a binary gate — the same figure at the company's own stated run-rate fails Gate 2 by A$573m. The resource-split imputation had already understated M&I non-reserve ounces by 26-65% per name because it was calibrated on two unrepresentative observations. In both cases an absent value would have been visibly absent; the invented one looked like data. An estimate that is wrong is worse than a gap that is known, because a gap stops the pipeline and an estimate propagates through it."
+  "materiality_note": "tools/sensitivity.py measures whether an unresolved reporting gap could move any final weight by more than 0.2 percentage points."
  },
  "confidence_weights": {
   "proven_probable": 1.0,
   "measured_indicated_non_reserve": 0.5,
   "inferred": 0.2,
   "hedge_horizon_years": 2.0,
-  "ref": "§6 — the ounce ledger. These four numbers and EV are the entire weighting model.",
-  "categories_note": "P&P 1.0 / M&I non-reserve 0.5 / Inferred 0.2 are the ONLY judgement left in the weight, and they sit in the numerator where they belong: they decide how many ounces are claimed, not how a claim is scored. They are a JORC-category discount, not a fitted coefficient — nothing about them is calibrated on this cohort or on any price history. The mix they produce IS the convexity position: M&I non-reserve and Inferred are ounces that are waste at a low gold price and ore at a high one, and the index is paid to hold them at half and a fifth of a reserve ounce.",
-  "hedge_horizon_note": "hedge_horizon_years converts hedge_share_fwd24m (a share of forward production) into ounces: sold_moz = share x production_koz_yr / 1000 x hedge_horizon_years. It is 2.0 because the disclosed field is a 24-month book, so this is a unit conversion, not a parameter to tune — change it only if the underlying disclosure horizon changes. Sold ounces come off the P&P tranche first, because a forward is delivered from reserves. Multiplying a whole claim by (1 - sold_share) instead which charged a 24-month forward book against a thirty-year reserve life: NST's 25.5% hedge cost it 25.5% of its entire claim rather than the 0.79 Moz it has actually sold."
+  "ref": "Methodology §6. Policy discounts for category confidence and development distance.",
+  "hedge_horizon_note": "Converts the disclosed 24-month forward-production share into ounces; sold ounces are removed from P&P first."
  },
  "gates": {
   "purity_floor_gold_nav_share": 0.75,
@@ -59,13 +50,10 @@
   "capacity_max_days_advt": 5.0,
   "capacity_max_participation": 0.2,
   "max_resource_statement_age_months": 18,
-  "ref": "§2.4, §3.1, §4, §5, §6.4",
-  "statement_age_note": "§6.4, adopted 18 Aug 2026 from SJGV PR#2, where it gated optionality only; here it gates the whole ledger, because a stale statement is no more current for a reserve than for an inferred ounce. A reserve and resource statement is an annual obligation, so 18 months is one full reporting cycle plus six months of issuer timing. It is measured against the document behind EVERY counted tranche, not one nominated statement — RRL reads P&P off a July quarterly and Inferred off an April resource release, and the older of the two dates the claim. It binds on NOBODY today: the oldest ledger document in the book is Rox's July 2025 MRE at 12.9 months, and the median constituent is at 3.6. That is the point of adopting it now rather than after it would have caught something. Rox is the name to watch — its Interceptor and Commonwealth resource updates are flagged for H2 2026, and without them it crosses the bar in January 2027 and is rejected outright, not discounted.",
-  "duplicate_removed_note": "gates.developer_max_funding_gap_of_mcap was deleted 17 Aug 2026. It was a second copy of gate2.developer_max_funding_gap_of_mcap, which is the one §3.1 defines and the only one the engine reads. Two copies of a threshold is a defect waiting to happen: whichever is edited, the other keeps the old value and nothing reports the disagreement.",
-  "capacity_note": "REPORTED, NOT ENFORCED. §4.3: a target position must be buildable within capacity_max_days_advt days at capacity_max_participation of median daily volume. ADVT is the ASX's own 90-session average volume priced at the build-time market price. Measured ceiling is A$21m, bound by the developer. It spent a day as a live constraint and generated a proposal to shrink the developer sleeve — the highest-claim-per-dollar part of the book — to protect a fund size twenty times the actual one. At EUR 1m this is a fact about the future, not an input to today's weights.",
-  "spread_note": "IMPLEMENTED 2026-08-17. Gate 3 had never run: producer_max_spread_pct and developer_max_spread_pct had been in this file since the methodology was written and no code read them. The input is the MEDIAN daily time-weighted quoted spread over spread_window of REGULAR TRADING HOURS, from IBKR BID_ASK daily bars, where the bar's open is the session's average bid and its close the average ask. Not a live snapshot: quotes outside continuous trading are wide and stale, and on 17 Aug 2026 the post-close book put Westgold at 2.25% and Northern Star at 0.56% against RTH-averaged figures of 0.205% and 0.055% — an order of magnitude out, enough to fail eight of fourteen names on an artifact. Median rather than mean so one halted or disorderly session cannot decide a gate; p90 is reported alongside and a name that passes on the median while breaching on p90 is flagged STRAINED rather than failed.",
-  "spread_calibration_note": "OPEN, same shape as the Gate 2 question. Measured 2026-08-17, every name passes with large margin: the widest producer is Ora Banda at 0.453% against a 1.0% cap, and the median producer is at 0.20%. The gate is not binding on this universe. That is arguably correct — these are liquid ASX names and the gate exists to exclude what cannot be traded, not to tilt — but it should be recorded that Gate 3 currently removes nobody. Note also that Rox at 1.353% passes ONLY on the 4.0% developer cap; on the 1.0% producer cap it would fail. If RXL is reclassified as a producer it fails Gate 3 on the same spread, so the sleeve label is doing real work there.",
-  "purity_note": "§5 purity is a GATE and only a gate. The continuous x gold-share-of-NAV multiplier that could sit beside it is not present: it moved the book by 0.22pp on average, 10 of 12 names scored 1.00, and it was a gate wearing a multiplier's clothes. Either these are gold ounces or they are not. The basis is still TTM gold revenue share — the old §13 item 9 wanted forward gold share of NAV, which needs non-gold reserves and decks the data layer does not carry. EVN at 0.78 against a 0.75 floor is the name that decides, and it is now a straight gate call rather than a haircut."
+  "ref": "Methodology §§2, 3, 5 and 6.",
+  "capacity_note": "Reported only: target positions are compared with five days at 20% of 90-session average daily traded volume.",
+  "spread_note": "Median daily regular-hours time-weighted quoted spread; p90 breach on a median pass is reported as strained.",
+  "statement_age_note": "Applied to the source behind every counted ledger category."
  },
  "gate2": {
   "gold_drawdown": 0.4,
@@ -79,23 +67,19 @@
   "stress_price_basis": "spot",
   "producer_max_rescue_capital_of_mcap": 0.3,
   "producer_max_recovery_years": 2.0,
-  "developer_min_study_stage": [
-   "PFS",
-   "DFS"
-  ],
+  "developer_min_study_stage": ["PFS", "DFS"],
   "developer_max_funding_gap_of_mcap": 0.3,
-  "horizon_interval_note": "Project intervals distinguish sourced unavoidable commitments from future discretionary or unresolved capital. A finite upper edge is tested; otherwise the sourced lower edge is used and the health state is at least AMBER. Complete two-year project guidance is not an admission condition.",
-  "ref": "§3 and §3.1. Producer Gate 2 is a health check, not a proof of fully funded survival. It applies a literal 40% drawdown from current AUD spot for two years. A deficit is manageable when rescue capital is no more than 30% of market capitalisation and normalised cash generation repairs it within two years; only RED is excluded.",
-  "unhedged_note": "The test is run UNHEDGED (§3). Revenue is computed at the stress price on all production and any hedge gain is disregarded. Otherwise a company passes survival on the strength of the very forward sales that penalise it under §6 purity — Catalyst's 30 koz sold at A$6,075 would pay off handsomely in exactly this scenario.",
-  "cost_note": "AISC is inflated at cost_inflation_pa, compounding annually over the horizon. Holding it FLAT is also an assumption and it is the optimistic one: in 2013 costs did not fall with the price, which is exactly why so much of the industry went cash-negative. 5% is set below the 8-12% nominal the sector is currently reporting, on the view that some of that is activity-driven and would ease in a downturn.",
-  "capex_note": "Gate 2 subtracts sourced contracted or non-deferrable commitments. It does not assume that discretionary growth programmes continue through a crisis. A finite upper interval edge is conservative; a lower or unresolved edge produces AMBER disclosure rather than a fabricated second-year amount. Established producers use standard EV; gross remaining execution capital remains required in near-producer and developer weight denominators.",
-  "anchor_note": "The trailing real average remains the conservative NAV deck and a reported reference. Gate 2 now uses stress_price_basis=spot because its stated scenario is a literal unforeseen 40% fall from the price currently available to the company. A gate need not exclude a name merely to prove that it ran.",
-  "health_note": "GREEN needs no rescue capital. AMBER may need a bounded recapitalisation or has incomplete commitment evidence but remains eligible. RED means rescue capital exceeds producer_max_rescue_capital_of_mcap or would take more than producer_max_recovery_years of normal-price cash generation to repair; only RED is excluded."
+  "ref": "Methodology §3; rationale in docs/capital-resilience.md.",
+  "horizon_interval_note": "Test a finite adverse upper edge; otherwise use the sourced lower edge and report at least AMBER.",
+  "unhedged_note": "Stress revenue ignores hedge gains.",
+  "capex_note": "Deduct sourced non-deferrable commitments; do not assume discretionary growth continues.",
+  "anchor_note": "The trailing real anchor is reporting-only; Gate 2 stresses current spot.",
+  "health_note": "GREEN and AMBER qualify. RED exceeds the rescue or recovery boundary and is excluded."
  },
  "execution_capital": {
   "materiality_of_ev": 0.01,
   "incumbent_max_carry_forward_months": 6,
-  "ref": "Accepted execution-capital design §§3.2 and 4.3. Aggregate unfinished approved scopes before applying the 1% pre-capex-EV threshold. A carried gross balance is never spent down by assumption and expires after two light quarterly cycles."
+  "ref": "Methodology §3.2. Aggregate unfinished approved scopes before materiality; never spend down a carry-forward by assumption."
  },
  "constraints": {
   "max_single_name": 0.15,
@@ -104,11 +88,9 @@
   "single_asset_pp_share_threshold": 0.8,
   "max_developer_sleeve": 0.15,
   "max_developer_single_name": 0.05,
-  "ref": "§8.1 — every cap here answers ONE question, and it is a question the objective asks: how much of the claim can a single uncorrelated operational failure destroy permanently? §0 already contains P(permanent impairment) ~ 0.",
-  "single_asset_note": "max_single_asset_name replaces an asset-level cap (20%, against an unsourced {asset: share} map). The old cap sat ABOVE the 15% name cap, so by arithmetic it could only bind where two constituents shared one asset — no pair did, and it never ran once. Adopted at 10% in v1.3 and tightened to 7.5% in v1.9, the cap applies where one mine IS the company and binds directly.",
-  "guidance_delivery_note": "§8.2. A HARD_FAIL is excluded. A CAP or CAP_MINIMUM rating is limited to 5%. The ratings and claim-level evidence live in data/guidance_delivery.json and docs/guidance-delivery-candidates-2026-08-24.json; missing guidance counts only after a complete disclosure sweep establishes issuer non-publication rather than a repository acquisition gap.",
-  "single_asset_pp_share_threshold_note": "SOURCED AND WIRED 2026-08-18. The engine no longer reads a hand-set `single_asset` boolean. It DERIVES it: single_asset = largest_asset_pp_share >= this threshold, where largest_asset_pp_share is a sourced float in [0,1] — the share of a company's attributable, Gate-1-ELIGIBLE Proven & Probable Ore Reserves held at its single largest asset (§8.1 defines the asset unit). Seventeen hand-set booleans would have been seventeen unrecorded judgement calls; one declared threshold over seventeen sourced shares is one judgement call that can be argued with and perturbed. 0.80 is set where the cross-section leaves a gap: the sourced shares run 0.490 (RRL) / 0.521 (EVN) / 0.576 (NST) / 0.660 (GMD) / 0.687 (WGX) / 0.700 (CMM) / 0.736 (BC8) / 0.738 (RMS) / 0.772 (VAU), then jump to 1.000 for eight names. Nothing sits between 0.773 and 0.999, so the threshold is not knife-edge anywhere; VAU at 0.772 is the nearest miss and the only name a move to 0.75 would newly flag. TRI-STATE, and this is not optional: an ABSENT share must derive None (UNTESTED), never False. A missing value that read as 0.0 would derive False, silently restore the looser 15% cap, and report it as a test that passed. build_index.derive_single_asset() enforces it and _assert_single_asset_tristate() asserts it on every build.",
-  "withdrawn_note": "NOT A PARAMETER: max_idio_variance_contribution (0.15) and min_effective_n (8.0). The idio cap moved PNR 14.96% -> 9.23%, five times the entire cross-sectional influence of the convexity score it sat beside, on a criterion found nowhere in the objective; it pinned three names at 30.5% of the book so their weights came from a variance estimate rather than from their ounces. min_effective_n ratcheted the name cap down until a diversification statistic cleared a floor — a UCITS instinct in a vehicle whose own §8.1 opens by saying no regulatory regime applies. Eff N is still REPORTED. It is an observation about the book, not a target the book is bent to hit."
+  "ref": "Methodology §8. Caps bound discontinuous permanent-impairment exposure.",
+  "single_asset_note": "Derived from sourced largest_asset_pp_share; absence is UNTESTED, never false.",
+  "guidance_delivery_note": "Ratings are in data/guidance_delivery.json, claim evidence in knowledge/, and rationale in docs/guidance-delivery.md."
  },
  "nav_model": {
   "built": true,
@@ -116,32 +98,27 @@
   "discount_rate_real_development": 0.09,
   "conservative_deck": "trailing_real_reference",
   "conservative_deck_aud_oz": null,
-  "decks": [
-   "spot",
-   "conservative_long_term"
-  ],
+  "decks": ["spot", "conservative_long_term"],
   "non_reserve_conversion": "confidence_weights",
   "delta_bump": 0.1,
   "stress_bump": 0.4,
-  "ref": "§9. REPORTING ONLY, by decision rather than pending one.",
-  "adoption_note": "There is no adoption switch. The model states the gold price at which the market's valuation of a company equals a rules-based DCF of its own disclosed reserves — the implied deck — and that is a sentence about disagreement worth printing. It is not worth weighting, because it moves with a discount rate nobody can source. This closes the old §13 item 3 by deletion: there is no rate left to publish and defend, because nothing depends on it. Measured before the cut, Channel 1 ran +0.87 log-correlated with ounces/EV, so adopting it would mostly have re-multiplied the ledger by itself.",
-  "conservative_deck_note": "'trailing_real_reference' uses the trailing 3-year real average of AUD gold as a conservative reporting-only NAV deck. Gate 2 no longer uses this value: v1.7 applies its literal drawdown to current spot. Set conservative_deck to 'fixed' and conservative_deck_aud_oz to a sourced policy value to override.",
-  "non_reserve_note": "'confidence_weights' values non-reserve material by mining it, not by an in-situ A$/oz. M&I non-reserve and Inferred ounces are converted at the already-adopted §7.2b confidence weights (0.5 and 0.2) and produced AFTER reserves are exhausted, at the same rate and the same AISC. This deliberately avoids inventing an in-situ A$/oz parameter — §6.2 asks for one, and there is no way to set it that is not a judgement call. It also makes gamma emerge rather than be assumed: ounces twenty years out at today's AISC are worth almost nothing at a low gold price and a great deal at a high one, which is precisely the convexity the product exists to hold.",
-  "gamma_note": "LOCAL GAMMA IS IDENTICALLY ZERO IN THIS MODEL AND THAT IS A FINDING. With a fixed mine plan, one AISC and no cut-off-grade response, NAV is exactly A*(deck - AISC) - debt, which is linear in the deck, so every finite difference returns the same delta and the modelled up/down capture ratio is 1.00 by construction. It does not mean these companies have no gamma; it means this model cannot see where it comes from. Real gold-miner convexity is the cut-off grade falling as the price rises, which moves ounces from the M&I non-reserve tranche of the §6 ledger into P&P. Until grade-tonnage curves are sourced, the LEDGER MIX is the honest proxy, and unlike this ratio it is made entirely of disclosed ounces.",
-  "limitations_note": "Three, all stated rather than papered over. (1) Growth capital and the production it buys are BOTH excluded — the model values the current operation at the current rate on the current cost base. Including committed capex without the ounces it unlocks would penalise every builder in the book, and committed capex is unsourced for five names, so including it would also be inconsistent across the cross-section. (2) The model is gold-only, so it cannot yet produce the forward gold-share-of-NAV that §6.1 asks purity to be measured on: that needs non-gold reserve, grade and price inputs the data layer does not carry. Purity stays on TTM revenue and EVN stays the name that distinction was written for. (3) One production rate and one AISC per company, because that is what is disclosed — no grade profile, no mine schedule, no cost curve. §7.2c cost-curve shape is therefore still unmeasured."
+  "ref": "Methodology §9. Reporting only; no NAV output affects eligibility or weight.",
+  "conservative_deck_note": "The trailing three-year real AUD-gold average is the conservative reporting deck.",
+  "non_reserve_note": "Uses the ledger confidence weights and mines non-reserve material after reserves at the disclosed company production rate and AISC.",
+  "limitations_note": "Gold-only, one production rate and one AISC per company; excludes growth capital and the production it could buy."
  },
  "rebalance": {
   "deep": "annual, aligned to reserve statements",
   "light": "quarterly, on quarterly-disclosed items only",
   "event_driven": "corporate actions, jurisdictional events, Gate 1 or Gate 2 breaches — never deferred to the next cycle",
-  "ref": "§12"
+  "ref": "Methodology §12."
  },
  "reporting": {
   "numeraire_primary": "gold_ounces",
   "numeraire_secondary": "EUR",
   "headline_kpi": "aud_per_claimed_ounce",
-  "ref": "§10. PRIMARY: the index's price per claimed ounce, A$ of EV per ounce in the §6 ledger. It is computed from the same numbers as the weights, carries no history, and cannot be survivorship- or look-ahead-biased. The realised asymmetry ratio (tools/asymmetry.py) is still reported and is still NOT a backtest. In ounce terms the index only rises if it outperforms gold; that is the demanding measure and the right one.",
-  "asymmetry_note": "§10.3 is measured TWO ways and the primary one changed on 18 Aug 2026. CONVEXITY = beta_up/beta_dn from r_p = alpha + beta_up*g+ + beta_dn*g- + e, which is drift-free because the intercept absorbs it. The classical compounded capture ratio is still printed as 'raw' but is approximately 97% a realised-return measure — per name it correlated +0.97 with total return over the window, because drift raises up-capture and cushions down-capture at once. It was the headline until 17 Aug and it misled: a -0.09 gap against cap-weighting was reported as a finding and has a 95% interval of about +/-2.5. Every figure now ships with a 2000-draw bootstrap interval over periods, and tools/asymmetry.py refuses the piecewise fit below 24 periods with 8 in each state. No config parameter controls any of this: it is a reporting choice, and no parameter is added for a report."
+  "ref": "Methodology §10. Reporting does not affect weight.",
+  "asymmetry_note": "tools/asymmetry.py reports piecewise beta and confidence intervals; it is not a backtest or weight input."
  },
  "variants": {
   "gate1_cap": {
@@ -149,8 +126,7 @@
    "adoption_date": "2026-08-22",
    "weighting": "full_market_cap",
    "max_constituents": 10,
-   "ref": "§14 — the shared candidate universe passes only Gate 1, retains the ten largest eligible companies, then weights each by sourced shares outstanding times the common-session market price."
+   "ref": "Methodology §14."
   }
- },
- "_resource_split_imputation_deleted": "NOT A PARAMETER. Sixteen of the file's 72 parameter leaves belonged to a rule that had already been disabled under DERIVE OR FAIL. It invented mi_non_reserve_moz and inferred_moz from a cohort-calibrated split; the first calibration used 58% M&I from two observations that both sat at the bottom of the true range, understating M&I non-reserve ounces by 26-65% per name in the weight numerator. The nine observed producer splits it was recalibrated on are preserved in data/SOURCES.md as evidence. The same three disclosed numbers are now used the other way round: build_index.reconcile_resource checks that P&P + M&I non-reserve + Inferred adds back to disclosed total Mineral Resources, and reports the gap."
+ }
 }

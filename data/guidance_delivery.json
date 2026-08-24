@@ -1,8 +1,8 @@
 {
-  "_schema": "Three-year execution-delivery classifications adopted by SJGV v2.0. Operational failures use the 5% production/AISC tolerance. A verified failure to publish required full-year guidance in a producing period is a failure; genuine pre-production is excluded. Ratings are derived from the claim-level appendix named below.",
+  "_schema": "Three-year execution-delivery classifications adopted by SJGV v2.0. Operational failures use the 5% production/AISC tolerance. A verified failure to publish required full-year guidance in a producing period is a failure; genuine pre-production is excluded. Ratings are derived from claim-level evidence retained in the knowledge store.",
   "_sourced": "2026-08-24",
   "methodology": "SJGV v2.0",
-  "study": "docs/guidance-delivery-candidates-2026-08-24.json",
+  "study": "knowledge/claims.jsonl (guidance, actual and disclosure predicates; rationale in docs/guidance-delivery.md)",
   "ratings": {
     "AEM": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 3},
     "BC8": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 2, "revised_failures": 2, "rated_years": 2, "note": "FY2025-FY2026 annual guidance absent; FY2024 pre-production."},
