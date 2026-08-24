@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-24T13:02:20+00:00",
+ "generated": "2026-08-24T13:17:53+00:00",
  "note": "publisher/exchange identifier -> artifact versions in retrieval order; `identifier_verified` is false where the identifier was inferred (e.g. read off a local filename) and not yet checked",
  "identifiers": {
   "asx_api_endpoint:1.0/companies/AAR/key-statistics": {
