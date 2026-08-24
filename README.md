@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/sjgv-mark-v1.png" width="220" alt="SJGV abstract mark: layered contours around a gold core">
+</p>
+
 # SJGV — Stable Jurisdiction Gold Value
 
 > A rules-based index for owning more credible, unhedged gold per dollar—without
