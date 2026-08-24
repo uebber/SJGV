@@ -317,13 +317,6 @@ the comparison. The market may have sound reasons to value one ounce above
 another; the index makes its own trade explicit rather than claiming those
 differences do not exist.
 
-There is also one conspicuous absence: no historical backtest is claimed. An
-honest reconstruction would require the reserve statements, category splits,
-hedge books, balance sheets and states of knowledge that existed at every past
-rebalance. The repository does not possess that point-in-time history. Applying
-today's disclosures to yesterday's prices would produce precision without
-truth. The record therefore begins prospectively, with frozen releases.
-
 The detailed [investment case](docs/investment-case.md) explains where the
 construction should and should not work. The [release validation](docs/validation.md)
 records what v2.0 establishes and what remains unproven.
