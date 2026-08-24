@@ -685,5 +685,79 @@ class RetryScheduleTest(unittest.TestCase):
         self.assertEqual(self.acquire(item), ["https://qro.qld.gov.au/rates.pdf"])
 
 
+class HostAuthorityTest(unittest.TestCase):
+    """24 August 2026 remediation: `q4cdn.com` and `investorroom.com` were
+    removed as blanket T2 rules — a shared, multi-tenant IR-hosting CDN is not
+    an issuer-controlled host, and a table entry for it cannot tell the real
+    tenant from a lookalike host squatting on the same suffix."""
+
+    def test_sec_gov_is_t1(self) -> None:
+        c = kb.classify("https://www.sec.gov/Archives/edgar/data/2809/x/y.htm")
+        self.assertEqual(c["authority_tier"], "T1")
+        self.assertIn("regulator.lodgement", c["authority_domains"])
+
+    def test_oceanagold_issuer_host_mapping_is_untouched(self) -> None:
+        c = kb.classify("https://assets.oceanagold.com/investor/report.pdf")
+        self.assertEqual(c["authority_tier"], "T2")
+        self.assertEqual(c["tier_basis"], "issuer-host:assets.oceanagold.com")
+
+    def test_q4cdn_no_longer_gets_a_blanket_tier(self) -> None:
+        c = kb.classify("https://s24.q4cdn.com/123456/files/doc_financial/release.pdf")
+        self.assertEqual(c["authority_tier"], "T4")
+        self.assertEqual(c["tier_basis"], "unclassified-host")
+
+    def test_investorroom_no_longer_gets_a_blanket_tier(self) -> None:
+        c = kb.classify("https://filecache.investorroom.com/mr5ir/1234/x.pdf")
+        self.assertEqual(c["authority_tier"], "T4")
+
+    def test_a_lookalike_host_never_reached_t2_and_still_does_not(self) -> None:
+        # A host regex anchored only at the end of the string (`q4cdn\.com$`)
+        # matches any host that merely ENDS in that suffix, including one an
+        # attacker registers on purpose. This must resolve to the unclassified
+        # T4 default, not to a lodgement or issuer tier.
+        for host in ("evilq4cdn.com", "not-investorroom.com",
+                     "investorroom.com.evil-mirror.net"):
+            with self.subTest(host=host):
+                c = kb.classify(f"https://{host}/release.pdf")
+                self.assertEqual(c["authority_tier"], "T4")
+
+    def test_an_issuer_owned_host_is_unaffected_by_the_cdn_removal(self) -> None:
+        c = kb.classify("https://www.westgold.com.au/site/report.pdf")
+        self.assertEqual(c["authority_tier"], "T2")
+        self.assertEqual(c["tier_basis"], "issuer-host:www.westgold.com.au")
+
+
+class IssuerVerificationTest(unittest.TestCase):
+    """`verify_document`'s issuer check only ever recognised `ASX:TICKER` —
+    every SEC- or TSX-lodged filing in the store failed issuer verification
+    even when the issuer plainly named itself, because none of them write
+    "ASX:" anywhere. Generalised to other exchange prefixes and to the
+    issuer's own legal name from `data/companies.json`."""
+
+    def test_nyse_tsx_prefixed_ticker_verifies_the_issuer(self) -> None:
+        doc = document(subjects=["AEM"])
+        text = "Toronto (February 23, 2022) - Agnico Eagle Mines Limited (NYSE:AEM, TSX:AEM)"
+
+        self.assertTrue(kb.verify_document(doc, text)["issuer"])
+
+    def test_issuer_legal_name_alone_verifies_without_any_ticker_mention(self) -> None:
+        doc = document(subjects=["OGC"])
+        text = ("Readers should refer to the Company's continuous disclosure "
+                "documents filed by OceanaGold Corporation or its subsidiaries.")
+
+        self.assertTrue(kb.verify_document(doc, text)["issuer"])
+
+    def test_unrelated_text_still_fails_issuer_verification(self) -> None:
+        doc = document(subjects=["OGC"])
+
+        self.assertFalse(kb.verify_document(doc, "a document about something else")["issuer"])
+
+    def test_a_grouped_exclusion_record_resolves_each_ticker_to_its_own_name(self) -> None:
+        names = kb.issuer_names()
+        self.assertIn("Perseus", " ".join(names.get("PRU", [])))
+        self.assertIn("Emerald", " ".join(names.get("EMR", [])))
+        self.assertNotIn("Emerald", " ".join(names.get("PRU", [])))
+
+
 if __name__ == "__main__":
     unittest.main()

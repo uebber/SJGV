@@ -221,6 +221,16 @@ class RegisteredClaimRecordTest(unittest.TestCase):
         self.assertEqual(claim["claim_key"]["as_of"], "2026-03-31")
         self.assertEqual(claim["publication_date"], "2026-04-29")
 
+    def test_a_verification_exception_needs_a_code_and_a_reason(self) -> None:
+        self.refuses("a code and a reason", verification_exception={"code": "X"})
+
+    def test_a_verification_exception_is_recorded_on_the_claim(self) -> None:
+        claim = self.build(verification_exception={
+            "code": "SELF_DESCRIBING_ARTIFACT", "reason": "explained in the audit"})
+
+        self.assertEqual(claim["verification_exception"],
+                         {"code": "SELF_DESCRIBING_ARTIFACT", "reason": "explained in the audit"})
+
 
 class PrecedenceTest(unittest.TestCase):
     """§5.1 run for one normalized key. Authority is the barrier, not recency."""
@@ -401,6 +411,48 @@ class RegisteredQuarantineTest(unittest.TestCase):
             self.assertNotIn(forbidden, record)
 
 
+class DerivationAuditTest(unittest.TestCase):
+    """`build_registered_claim` refuses a derivation missing either half at
+    registration time; the audit checked dependencies but not formula, so a
+    claim written by any other path (or hand-assembled) could carry
+    dependencies with no formula and pass unnoticed."""
+
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.dir = Path(self.tmp.name)
+        for name in ("claims", "quarantine"):
+            patch = mock.patch.object(kb, name.upper(), self.dir / f"{name}.jsonl")
+            patch.start()
+            self.addCleanup(patch.stop)
+
+    @staticmethod
+    def claim(derivation: dict) -> dict:
+        return {"claim_id": "claim:sha256:" + "6" * 64,
+                "claim_key": {"subject": "EMR", "predicate": "production_actual_koz",
+                              "scope": {"unit": "koz"}, "as_of": "2026-06-30"},
+                "value": {"type": "number", "value": 100.406},
+                "evidence": {"locator": {"exact": True}},
+                "state": "ACCEPTED", "projectable": True, "derivation": derivation}
+
+    def test_a_derivation_with_no_formula_is_an_error(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim({"dependencies": ["claim:sha256:" + "1" * 64]})])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, _ = kb.audit_claim_plane({})
+
+        self.assertTrue(any("derivation has no formula" in e for e in errors), errors)
+
+    def test_a_derivation_with_both_is_fine(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim({"formula": "sum(q1..q4)",
+                                               "dependencies": ["claim:sha256:" + "1" * 64]})])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, _ = kb.audit_claim_plane({})
+
+        self.assertFalse([e for e in errors if "derivation has no" in e], errors)
+
+
 class ProjectionBasisAuditTest(unittest.TestCase):
     """One field, one projection basis. Two records claiming it is the silent
     choice the version-history correction exists to prevent."""
@@ -457,6 +509,129 @@ class ProjectionBasisAuditTest(unittest.TestCase):
         errors, _ = kb.audit_claim_plane({})
 
         self.assertTrue(any("supersession projection path" in e for e in errors), errors)
+
+
+class UnverifiedEvidenceAuditTest(unittest.TestCase):
+    """24 August 2026 remediation: a registered (not backfilled) active claim
+    must cite evidence with a verified issuer and publication date — the study
+    that motivated this rule accepted 22 such claims without either check.
+    `verification_exception` is a recorded, reviewed bypass; it still warns."""
+
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.dir = Path(self.tmp.name)
+        for name in ("claims", "quarantine"):
+            patch = mock.patch.object(kb, name.upper(), self.dir / f"{name}.jsonl")
+            patch.start()
+            self.addCleanup(patch.stop)
+
+    @staticmethod
+    def claim(**overrides) -> dict:
+        base = {"claim_id": "claim:sha256:" + "7" * 64,
+                "claim_key": {"subject": "AEM", "predicate": "aisc_actual",
+                              "scope": {"unit": "USD/oz"}, "as_of": "2023-02-23"},
+                "value": {"type": "number", "value": 1030},
+                "evidence": {"document_id": "sha256:" + "b" * 64,
+                             "locator": {"exact": True}},
+                "authority_tier": "T1", "authority_domains": ["regulator.lodgement"],
+                "state": "ACCEPTED", "projectable": True,
+                "decision": {"producing_tool": kb.REGISTER_TOOL}}
+        base.update(overrides)
+        return base
+
+    @staticmethod
+    def docs(**verified) -> dict:
+        v = {"issuer": True, "title": True, "dates": True, "bytes": True}
+        v.update(verified)
+        return {"b" * 64: {"authority_tier": "T1", "authority_domains": ["regulator.lodgement"],
+                           "verified": v}}
+
+    def test_a_registered_claim_with_unverified_issuer_is_refused(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim()])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, _ = kb.audit_claim_plane(self.docs(issuer=False))
+
+        self.assertTrue(any("unverified issuer" in e for e in errors), errors)
+
+    def test_a_registered_claim_with_verified_evidence_is_fine(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim()])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, _ = kb.audit_claim_plane(self.docs())
+
+        self.assertFalse([e for e in errors if "unverified" in e], errors)
+
+    def test_a_backfilled_claim_is_not_subject_to_the_new_rule(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim(
+            decision={"producing_tool": "tools/kb.py backfill-claims"})])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, _ = kb.audit_claim_plane(self.docs(issuer=False, dates=False))
+
+        self.assertFalse([e for e in errors if "unverified" in e], errors)
+
+    def test_an_explicit_exception_downgrades_the_refusal_to_a_warning(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim(verification_exception={
+            "code": "SELF_DESCRIBING_ARTIFACT", "reason": "test override"})])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, warnings = kb.audit_claim_plane(self.docs(issuer=False))
+
+        self.assertFalse([e for e in errors if "unverified" in e], errors)
+        self.assertTrue(any("permitted by exception" in w for w in warnings), warnings)
+
+
+class TierConsistencyAuditTest(unittest.TestCase):
+    """24 August 2026 remediation: a superseded claim's authority_tier is a
+    frozen snapshot of what its evidence was believed to be when the claim was
+    made. It can never be redirected to track a later correction to that
+    document's tier — the same immutability rule that refuses to redirect an
+    already-superseded claim's supersession (`validate_supersession_relation`).
+    Only an active claim must still match its artifact today."""
+
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.dir = Path(self.tmp.name)
+        for name in ("claims", "quarantine"):
+            patch = mock.patch.object(kb, name.upper(), self.dir / f"{name}.jsonl")
+            patch.start()
+            self.addCleanup(patch.stop)
+
+    @staticmethod
+    def claim(state: str) -> dict:
+        return {"claim_id": "claim:sha256:" + "9" * 64,
+                "claim_key": {"subject": "NEM", "predicate": "aisc_guidance",
+                              "scope": {"unit": "USD/oz"}, "as_of": "2021-12-02"},
+                "value": {"type": "number", "value": 1030},
+                "evidence": {"document_id": "sha256:" + "a" * 64,
+                             "locator": {"exact": True}},
+                "authority_tier": "T2", "authority_domains": ["issuer.release"],
+                "state": state, "projectable": state in kb.ACTIVE_CLAIM_STATES}
+
+    @staticmethod
+    def docs() -> dict:
+        # The document was reclassified from T2 to T4 by a later host-authority
+        # fix, after this claim was already registered against it.
+        return {"a" * 64: {"authority_tier": "T4", "authority_domains": ["unclassified"]}}
+
+    def test_an_active_claim_must_match_its_artifacts_current_tier(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim("ACCEPTED")])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, _ = kb.audit_claim_plane(self.docs())
+
+        self.assertTrue(any("authority tier does not match" in e for e in errors), errors)
+
+    def test_a_superseded_claim_is_not_forced_to_track_a_later_tier_correction(self) -> None:
+        kb.write_jsonl(kb.CLAIMS, [self.claim("SUPERSEDED")])
+        kb.write_jsonl(kb.QUARANTINE, [])
+
+        errors, _ = kb.audit_claim_plane(self.docs())
+
+        self.assertFalse([e for e in errors if "authority tier does not match" in e], errors)
 
 
 class RegisterCommandTest(unittest.TestCase):

@@ -160,6 +160,8 @@ HOST_RULES: list[tuple[str, str, list[str], str, str, str]] = [
      "statutory", "official statutory series"),
     (r"^www\.rba\.gov\.au$", "T1", ["monetary.au"], "Reserve Bank of Australia",
      "statutory", "central bank series"),
+    (r"^www\.sec\.gov$", "T1", ["regulator.lodgement"], "U.S. Securities and Exchange Commission",
+     "lodged", "EDGAR-hosted regulator copy of a filing lodged with the SEC (10-K/10-Q/8-K)"),
 
     # ── T2: official agency material outside a controlling instrument ────────
     (r"^www\.pbo\.gov\.au$", "T2", ["macro.fiscal.au"], "Parliamentary Budget Office",
@@ -192,6 +194,18 @@ HOST_RULES: list[tuple[str, str, list[str], str, str, str]] = [
      "mirror", "announcement mirror"),
     (r"prnewswire\.com$", "T2", ["issuer.release"], "PR Newswire",
      "mirror", "wire distribution of an issuer release"),
+
+    # `q4cdn.com` and `investorroom.com` were removed here on remediation
+    # (24 August 2026): both are shared, multi-tenant IR-hosting CDNs, not an
+    # issuer-controlled host, and neither is a lodgement mirror the way
+    # ShareLink/IRM/WebLink/etc. above carry a specific issuer's own
+    # announcements. A document served from one falls through to the T4
+    # default below unless it is also reachable at an exchange/regulator host
+    # (promotes via `assign_tier`'s equivalence check) or a verified exchange
+    # identifier is established (§4.2) — it is not re-added as a table entry,
+    # because a table entry cannot distinguish the issuer whose IR site is
+    # legitimately hosted there from a lookalike host (`evilq4cdn.com` etc.)
+    # or from any other tenant of the same CDN.
 
     # ── T3/T4: secondary and discovery ───────────────────────────────────────
     (r"^classic\.austlii\.edu\.au$", "T3", ["law.qld"], "AustLII", "secondary",
@@ -237,11 +251,50 @@ ISSUER_HOSTS = {
     "roxresources.com.au": "RXL", "www.roxresources.com.au": "RXL",
     "ausgoldlimited.com": "AUC", "www.ausgoldlimited.com": "AUC",
     "astralresources.com.au": "AAR", "www.astralresources.com.au": "AAR",
+    "oceanagold.com": "OGC", "www.oceanagold.com": "OGC", "assets.oceanagold.com": "OGC",
 }
 
 TICKERS = sorted(set(ISSUER_HOSTS.values()))
 
 TIER_ORDER = ["T0", "T1", "T2", "T3", "T4"]
+
+# Common exchange codes a filing or release identifies its own ticker under.
+# ASX is not the only market this store holds evidence for — SEC-lodged and
+# TSX-lodged filings never write "ASX:" anywhere, so a check limited to that
+# one prefix cannot verify the issuer of a document this store already holds.
+EXCHANGE_PREFIXES = ("asx", "nyse", "tsx-v", "tsxv", "tsx", "nasdaq", "lse", "aim", "otcqx", "otc")
+
+_ISSUER_NAMES_CACHE: dict[str, list[str]] | None = None
+
+
+def issuer_names() -> dict[str, list[str]]:
+    """Ticker → issuer legal-name variants, from `data/companies.json` (§4.1:
+    the company record, not this tool, is authoritative for a name). Cached for
+    the life of the process; the file changes only between runs.
+
+    One `excluded` record groups several tickers under one Gate 1 rejection
+    (`"PRU/RSG/WAF/EMR"` / `"Perseus / Resolute / West African / Emerald"`) —
+    split both sides on `/` and pair them positionally rather than trying to
+    match a compound ticker as a single name."""
+    global _ISSUER_NAMES_CACHE
+    if _ISSUER_NAMES_CACHE is not None:
+        return _ISSUER_NAMES_CACHE
+    out: dict[str, list[str]] = {}
+    path = ROOT / "data/companies.json"
+    if path.exists():
+        data = json.loads(path.read_text())
+        for group in ("companies", "excluded"):
+            for c in data.get(group, []):
+                tickers = [t.strip() for t in str(c.get("ticker", "")).split("/") if t.strip()]
+                names = [n.strip() for n in str(c.get("name", "")).split("/") if n.strip()]
+                if len(tickers) == len(names) and tickers:
+                    for t, n in zip(tickers, names):
+                        out.setdefault(t, []).append(n)
+                else:
+                    for t in tickers:
+                        out.setdefault(t, []).extend(names)
+    _ISSUER_NAMES_CACHE = out
+    return out
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -398,6 +451,10 @@ def add_source_id(doc: dict, sid: dict) -> None:
 
 WEBLINK_ID_RE = re.compile(r"headlineid=(\d+)", re.I)
 
+# EDGAR addresses a filing at /Archives/edgar/data/<CIK>/<accession, no dashes>/
+# — the regulator's own directory structure, not a filename someone chose.
+SEC_ACCESSION_RE = re.compile(r"/Archives/edgar/data/(\d+)/(\d{18})\b")
+
 
 def identifiers_in_url(url: str, basis: str, verified: bool) -> list[dict]:
     """Publisher identifiers carried in an address."""
@@ -408,6 +465,17 @@ def identifiers_in_url(url: str, basis: str, verified: bool) -> list[dict]:
     m = WEBLINK_ID_RE.search(url)
     if m:
         out.append(source_id("weblink_headline_id", m.group(1), basis, verified))
+    m = SEC_ACCESSION_RE.search(url)
+    if m:
+        cik, accession = m.groups()
+        out.append(source_id("sec_cik", cik, basis, verified))
+        out.append(source_id("sec_accession_number",
+                              f"{accession[:10]}-{accession[10:12]}-{accession[12:]}",
+                              basis, verified))
+    m = ASX_API_SUBJECT_RE.search(url)
+    if m:
+        endpoint = url.split("/asx-research/", 1)[1] if "/asx-research/" in url else url
+        out.append(source_id("asx_api_endpoint", endpoint, basis, verified))
     return out
 
 
@@ -1328,6 +1396,13 @@ def build_registered_claim(spec: dict, docs: dict[str, dict], run_at: str) -> di
         claim["normalization"] = spec["normalization"]
     if spec.get("note"):
         claim["note"] = spec["note"]
+    if spec.get("verification_exception"):
+        exc = spec["verification_exception"]
+        if not (isinstance(exc, dict) and exc.get("code") and str(exc.get("reason", "")).strip()):
+            raise ClaimSpecError(
+                f"{where}: a verification exception needs a code and a reason — it is a "
+                "recorded, reviewable judgement, not a silent bypass (§8)")
+        claim["verification_exception"] = {"code": exc["code"], "reason": exc["reason"]}
     if spec.get("research"):
         claim["research"] = spec["research"]
     if spec.get("conflicts"):
@@ -1638,7 +1713,38 @@ def date_variants(iso: str) -> list[str]:
         s = dt.strftime(fmt)
         out.append(s)
         out.append(s.lstrip("0").replace(" 0", " "))
+    # An ASX release headed "7th January 2026" or "21st August 2025" is
+    # ordinary house style, not a fourth calendar format — every day-first
+    # pattern above has an ordinal-suffixed twin nothing generated before.
+    day = dt.day
+    suffix = "th" if 11 <= day % 100 <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+    month = dt.strftime("%B")
+    out.append(f"{day}{suffix} {month} {dt.year}")
+    out.append(f"{month} {day}{suffix}, {dt.year}")
     return sorted(set(out))
+
+
+REPORTING_PERIOD_RE = re.compile(
+    r"(?:for the )?(?:half[- ]year|year|period)\s+ended\s+(\d{1,2}\s+\w+\s+\d{4})", re.I)
+
+
+def reporting_period_in_text(head: str) -> str | None:
+    """An Appendix 4D/4E or annual/half-year report states its own reporting
+    period on its cover ("For the year ended 30 June 2024") even when it never
+    restates the day it was lodged — the two are different dates, and checking
+    a filing's text for the day ASX received it was never going to work. Only
+    the cover is searched: the same phrase reappears throughout a financial
+    report for the prior comparative period, and the first match is the
+    document's own period, not whichever one happens to be nearest."""
+    m = REPORTING_PERIOD_RE.search(head)
+    if not m:
+        return None
+    for fmt in ("%d %B %Y", "%d %b %Y"):
+        try:
+            return datetime.strptime(m.group(1), fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            continue
+    return None
 
 
 def extract_derivatives(digest: str, obj: Path, mime: str, force: bool = False) -> dict:
@@ -1722,6 +1828,7 @@ def extracted_text(digest: str, limit: int | None = 400_000) -> str:
 
 
 ASX_KEY_RE = re.compile(r"\b(\d{4})-(\d{8})-(6A\d{7})\b")
+ASX_API_SUBJECT_RE = re.compile(r"/asx-research/[^/]+/companies/([A-Z0-9]+)/", re.I)
 
 
 def verify_document(doc: dict, text: str) -> dict:
@@ -1746,20 +1853,40 @@ def verify_document(doc: dict, text: str) -> dict:
         v.update(issuer=True, title=True, dates=True)
         doc["verification_basis"] = "ASX full-year announcement index (exchange record)"
         return v
+    # The ASX research API addresses each company by ticker in the endpoint
+    # path itself — a numeric JSON key-statistics snapshot never names the
+    # company anywhere in its own body. Text-matching a live, volatile
+    # point-in-time observation the way an announcement would be read makes no
+    # more sense here than it does for a market session above: the address
+    # queried, at the moment it was queried, is the evidence.
+    for alias in doc.get("url_aliases", []):
+        m = ASX_API_SUBJECT_RE.search(alias.get("url", ""))
+        if m and m.group(1).upper() in {s.upper() for s in (doc.get("subjects") or [])}:
+            doc["verification_basis"] = "ASX research API endpoint address names the company queried"
+            return {"bytes": True, "issuer": True, "title": True, "dates": True}
     doc["verification_basis"] = "document text match"
     low = text.lower()
     subjects = doc.get("subjects") or []
+    names = issuer_names()
+    exchange_re = "|".join(EXCHANGE_PREFIXES)
     for ticker in subjects:
         if not ticker:
             continue
-        if re.search(rf"asx\s*:?\s*{ticker.lower()}\b", low) or f"({ticker.lower()})" in low:
+        if re.search(rf"(?:{exchange_re})\s*:?\s*{re.escape(ticker.lower())}\b", low) \
+                or f"({ticker.lower()})" in low:
+            v["issuer"] = True
+            break
+        if any(name.lower() in low for name in names.get(ticker, []) if len(name) >= 4):
             v["issuer"] = True
             break
     title = (doc.get("title") or "")
     tokens = [w for w in re.findall(r"[A-Za-z]{4,}", title)][:12]
     if tokens:
         hits = sum(1 for w in tokens if w.lower() in low)
-        v["title"] = hits >= max(2, int(0.6 * len(tokens)))
+        # `max(2, ...)` alone can demand more hits than a short title has
+        # tokens to give — a one-word title like "Update" could never satisfy
+        # "at least 2 matches" no matter what its body says.
+        v["title"] = hits >= min(len(tokens), max(2, int(0.6 * len(tokens))))
     for d in [doc.get("published_on")] + list(doc.get("reporting_dates") or []):
         if d and any(s.lower() in low for s in date_variants(d)):
             v["dates"] = True
@@ -2578,8 +2705,18 @@ def resolve_title(doc: dict, legacy: dict[str, dict]) -> None:
         doc.pop("legacy", None)
 
 
+def known_tickers() -> set[str]:
+    """Every ticker the repository has an issuer record for — `data/companies.json`
+    `companies` and `excluded` — not only the subset with an issuer-owned
+    website (`ISSUER_HOSTS`/`TICKERS`). Kept separate from `TICKERS`, which
+    also drives the default `asx-acquire` sweep list: an EDGAR-only filer like
+    AEM or NEM is a legitimate research subject, not an ASX code to sweep the
+    exchange's per-ticker index for."""
+    return set(TICKERS) | set(issuer_names().keys())
+
+
 def valid_subject(s: str) -> bool:
-    return bool(s) and (s in TICKERS or re.fullmatch(r"[A-Z]{2}(-[A-Z]{2,4})?", s) is not None
+    return bool(s) and (s in known_tickers() or re.fullmatch(r"[A-Z]{2}(-[A-Z]{2,4})?", s) is not None
                         or re.fullmatch(r"[A-Z][a-z]+(?: [A-Z][a-z]+)*", s) is not None)
 
 
@@ -2589,7 +2726,7 @@ def infer_subject(text: str) -> list[str]:
     'CYL' inside a word would become a subject."""
     head = text[:4000]
     hits = []
-    for t in TICKERS:
+    for t in known_tickers():
         pat = rf"\bASX\s*:?\s*{t}\b|\({t}\)|\bASX\s*code\s*:?\s*{t}\b"
         if re.search(pat, head, re.I) or len(re.findall(pat, text[:200_000], re.I)) >= 3:
             hits.append(t)
@@ -2801,6 +2938,7 @@ def cmd_reverify(args) -> int:
     sessions = repair_market_sessions(docs)
     mislabelled = repair_mislabelled_pdfs(docs)
     withdrawn = 0
+    identified = 0
     for doc in docs.values():
         for url in demote_inferred_aliases(doc):
             withdrawn += 1
@@ -2810,11 +2948,32 @@ def cmd_reverify(args) -> int:
                                    "the 23 Aug 2026 tmp migration is withdrawn: the URL was "
                                    "derived from the artifact's filename and never requested",
                          result_of="kb.py reverify")
+        # A publisher identifier pattern added after a document was archived
+        # never gets applied retroactively unless every alias is re-scanned —
+        # this is how 23 EDGAR filings sat with no accession number despite the
+        # regulator's own directory structure carrying one in the URL all along.
+        before = len(doc["source_ids"])
+        for alias in doc["url_aliases"]:
+            for sid in identifiers_in_url(alias["url"], "retrieval-url", True):
+                add_source_id(doc, sid)
+        identified += len(doc["source_ids"]) - before
         normalize_source_ids(doc)
     coverage_fixed = repair_index_coverage(docs)
     for doc in docs.values():
         assign_tier(doc)
     equivalence = link_equivalents(docs)
+    # A claim already names its own subject and was only accepted against a
+    # document `register-claim` resolved by content hash — that is stronger
+    # evidence of what a document is about than any text heuristic below, and
+    # it is what `valid_subject`'s narrower ticker table (fixed 24 Aug 2026,
+    # but only for runs from here on) should not have been able to strip in
+    # the first place for an EDGAR-only filer with no `ISSUER_HOSTS` entry.
+    claim_subjects: dict[str, set[str]] = {}
+    for claim in read_jsonl(CLAIMS):
+        did = (claim.get("evidence") or {}).get("document_id")
+        subject = (claim.get("claim_key") or {}).get("subject")
+        if did and subject:
+            claim_subjects.setdefault(did.removeprefix("sha256:"), set()).add(subject)
     for doc in docs.values():
         subjects = [s for s in doc.get("subjects", []) if valid_subject(s)]
         for a in doc["url_aliases"]:
@@ -2825,14 +2984,30 @@ def cmd_reverify(args) -> int:
             t = doc["lodgement"]["ticker"]
             if t not in subjects:
                 subjects.insert(0, t)
+        for s in claim_subjects.get(doc["sha256"], ()):
+            if s not in subjects:
+                subjects.append(s)
         if not subjects:
             inferred = infer_subject(extracted_text(doc["sha256"]))
+            if not inferred:
+                # The exchange-code pattern above only fires for an ASX-style
+                # mention. A press release with no such mention still names its
+                # own issuer in its title (e.g. "AGNICO EAGLE REPORTS..."), and
+                # a full legal-name match carries none of the bare-substring
+                # risk the docstring above warns about.
+                title_low = (doc.get("title") or "").lower()
+                inferred = [t for t, names in issuer_names().items()
+                           if any(n.lower() in title_low for n in names if len(n) >= 4)]
             if inferred:
                 subjects = inferred
                 doc["subject_basis"] = "inferred from the document text"
         doc["subjects"] = subjects
         resolve_title(doc, legacy)
         assign_tier(doc)
+        if not doc.get("reporting_dates"):
+            period = reporting_period_in_text(extracted_text(doc["sha256"], limit=6000))
+            if period:
+                doc["reporting_dates"] = [period]
         doc["verified"] = verify_document(doc, extracted_text(doc["sha256"]))
     # An artifact established as the same publication as another takes that
     # publication's title — a title belongs to what was published, not to one
@@ -2857,6 +3032,18 @@ def cmd_reverify(args) -> int:
             # The title is new evidence about the artifact, so its verification
             # state is recomputed here rather than at the next run.
             doc["verified"] = verify_document(doc, extracted_text(doc["sha256"]))
+        # A publication date belongs to the publication, the same as a title —
+        # a local artifact matched to a lodged twin by `route-local` carries no
+        # `published_on` of its own (it was never fetched from an address that
+        # states one), which left `verify_document` nothing to check dates
+        # against even though `equivalence.verified_member` already names the
+        # exact record that was lodged, when and under what date.
+        twin = docs.get((eq.get("verified_member") or "").removeprefix("sha256:"))
+        if twin and not doc.get("published_on") and twin.get("published_on"):
+            doc["published_on"] = twin["published_on"]
+            if not doc.get("reporting_dates") and twin.get("reporting_dates"):
+                doc["reporting_dates"] = list(twin["reporting_dates"])
+            doc["verified"] = verify_document(doc, extracted_text(doc["sha256"]))
         doc["review"] = review_flags(doc)
     save_documents(docs)
     verified = sum(1 for d in docs.values() if all(d["verified"].values()))
@@ -2864,6 +3051,9 @@ def cmd_reverify(args) -> int:
           f"{len(docs) - verified} carrying at least one open flag")
     if withdrawn:
         print(f"withdrew {withdrawn} filename-derived URL aliases to inferred provenance")
+    if identified:
+        print(f"derived {identified} publisher identifiers from already-archived URLs "
+              f"(e.g. SEC accession numbers) that a pattern added after ingestion had missed")
     if sessions:
         print(f"re-attached the approved-provider block to {sessions} market-session "
               f"artifacts loaded before it existed")
@@ -4109,11 +4299,35 @@ def audit_claim_plane(docs: dict[str, dict], *, projection: bool = False) \
         doc = docs.get(did.removeprefix("sha256:")) if isinstance(did, str) else None
         if did and not doc:
             errors.append(f"{cid}: evidence document {did} is not registered")
-        if doc:
+        # A superseded claim is frozen history: its authority_tier is what the
+        # evidence was believed to be when the claim was made, and it can never
+        # be redirected to track a later correction to that document's tier
+        # (validate_supersession_relation refuses to redirect an already-
+        # superseded predecessor — "history is immutable" cuts both ways). Only
+        # an active claim's tier snapshot must still match its artifact today.
+        if doc and state in ACTIVE_CLAIM_STATES:
             if claim.get("authority_tier") != doc.get("authority_tier"):
                 errors.append(f"{cid}: authority tier does not match its artifact")
             if claim.get("authority_domains") != doc.get("authority_domains"):
                 errors.append(f"{cid}: authority domains do not match its artifact")
+        # A registered (not backfilled) active claim is new in the sense that
+        # matters here: it was never grandfathered, and source-knowledge-base.md
+        # §7.2 requires issuer and publication date to be verified in the
+        # artifact before a value is accepted from it. `verification_exception`
+        # is a recorded, reviewed judgement call, not a silent bypass — it still
+        # surfaces as a warning so it stays visible.
+        if (doc and state in ACTIVE_CLAIM_STATES
+                and (claim.get("decision") or {}).get("producing_tool") == REGISTER_TOOL):
+            verified = doc.get("verified") or {}
+            unverified = [dim for dim in ("issuer", "dates") if not verified.get(dim)]
+            if unverified:
+                exc = claim.get("verification_exception")
+                label = " and ".join(unverified)
+                if exc:
+                    warnings.append(f"{cid}: {label} unverified on its evidence, permitted by "
+                                    f"exception {exc['code']!r} ({exc['reason']})")
+                else:
+                    errors.append(f"{cid}: active claim's evidence has unverified {label}")
         exceptions = set((claim.get("migration") or {}).get("exceptions") or [])
         if not key.get("as_of"):
             if "AS_OF_NOT_SEPARATELY_CAPTURED" in exceptions:
@@ -4133,6 +4347,8 @@ def audit_claim_plane(docs: dict[str, dict], *, projection: bool = False) \
                 warnings.append(f"{cid}: legacy derivation dependencies are not atomized")
             else:
                 errors.append(f"{cid}: derivation has no dependency claim IDs")
+        if derivation is not None and not derivation.get("formula"):
+            errors.append(f"{cid}: derivation has no formula")
         if claim.get("projectable") != (state in ACTIVE_CLAIM_STATES):
             # Accepted observations may deliberately be held out until the next
             # reviewed rebalance; their decision code names that state.
