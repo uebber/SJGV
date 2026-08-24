@@ -157,6 +157,32 @@ A verified failure to publish required annual production or cost guidance
 counts as a miss. “Verified” requires a complete search of the company's
 disclosures; absence from the dataset is not proof of absence in the world.
 
+The qualification stage determines something more fundamental than which
+companies survive: it determines where the portfolio can exist. An ASX listing
+does not make a mine Australian for the purposes of the index. The jurisdiction
+gate follows the asset. It looks for a country whose own freely floating,
+non-reserve currency can absorb economic stress; whose currency issuer remains
+inside the published debt and interest limits; and where no disqualifying gold
+control is in operation. The regional test and the company-level limit on
+ineligible assets then narrow the field further.
+
+At the v2.0 effective date, Australia and New Zealand pass the national test.
+Canada's gross debt and federal interest burden breach the solvency limits.
+Finland belongs to the euro currency union, and the United States both issues
+the global reserve currency and breaches the solvency limits. New Zealand has
+no eligible listed vehicle in the present universe. Once ineligible overseas
+ounces are removed—and companies with more than 25% of their value in failing
+jurisdictions are excluded—the gold admitted to the v2.0 weighting ledger is
+therefore Australian.
+
+That is the result of the rule, not an assumption hidden inside it, and it is
+not a declaration that Australia is risk-free. Australia's dormant statutory
+gold-control powers remain a disclosed residual risk, while the concentration
+of the counted claim in one country leaves the portfolio exposed to a common
+legal, fiscal or political event. A future Australian breach would exclude its
+ounces; an eligible New Zealand vehicle could enter. “Stable jurisdiction”
+describes a test that must keep being passed, not a permanent label.
+
 ## Then, count the gold
 
 An ounce mentioned in a geological report is not necessarily an ounce in a mine
@@ -257,6 +283,33 @@ basket. For that build:
 | Largest company weight | 14.50% | The general company limit was respected. |
 | Total developer weight | 5.00% | Pre-production exposure remained bounded. |
 
+### The snapshot index
+
+The release also contains a whole-share basket for an investment of
+€1,000,000. At the recorded exchange rate of A$1.63057 per euro and an assumed
+commission of 0.10%, the target weights became the following positions. “Share
+value” is the recorded A$ price multiplied by the number of shares and excludes
+commission.
+
+| Company | ASX | Target weight | Price | Shares | Share value |
+|---|---:|---:|---:|---:|---:|
+| Northern Star Resources | NST | 14.500% | A$24.270 | 9,732 | A$236,195.64 |
+| Evolution Mining | EVN | 5.632% | A$15.640 | 5,866 | A$91,744.24 |
+| Capricorn Metals | CMM | 9.867% | A$17.750 | 9,055 | A$160,726.25 |
+| Greatland Resources | GGP | 7.500% | A$13.630 | 8,964 | A$122,179.32 |
+| Genesis Minerals | GMD | 11.887% | A$8.590 | 22,542 | A$193,635.78 |
+| Ramelius Resources | RMS | 11.869% | A$4.030 | 47,973 | A$193,331.19 |
+| Regis Resources | RRL | 12.168% | A$8.540 | 23,209 | A$198,204.86 |
+| Westgold Resources | WGX | 5.000% | A$6.340 | 12,846 | A$81,443.64 |
+| Vault Minerals | VAU | 11.577% | A$6.950 | 27,135 | A$188,588.25 |
+| Catalyst Metals | CYL | 5.000% | A$6.770 | 12,030 | A$81,443.10 |
+| Rox Resources | RXL | 5.000% | A$0.580 | 140,426 | A$81,447.08 |
+| **Total** |  | **100.000%** |  |  | **A$1,628,939.35** |
+
+Commission adds A$1,628.94, for total deployment of A$1,630,568.29
+(€999,998.95) and €1.05 left uninvested. The table records one historical
+market session; it is not a live dealing instruction.
+
 The lower price per claimed ounce shows that the weighting rule did what it was
 designed to do on that date. It does not prove that A$922 was intrinsically
 cheap, that the confidence discounts are optimal, or that SJGV will outperform
@@ -292,9 +345,9 @@ More importantly, the safeguards do not turn mining shares into bullion:
   the same disclosure category;
 - a resilient company can still suffer dilution, operational failure or a bad
   acquisition;
-- the current eligible ounces are overwhelmingly Australian, so company
-  diversification does not remove an Australia-wide sovereign or statutory
-  event; and
+- the jurisdiction rules leave the current counted gold claim in Australia
+  alone, so company diversification does not remove an Australia-wide
+  sovereign or statutory event; and
 - the lowest-priced claim need not become the best investment.
 
 The gates are not a promise of safety. They are an attempt to refuse the most
