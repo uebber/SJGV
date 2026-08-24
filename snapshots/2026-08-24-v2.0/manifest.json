@@ -1,0 +1,86 @@
+{
+  "snapshot": "2026-08-24-v2.0",
+  "tag": "v2.0",
+  "taken_utc": "2026-08-24T15:03:01.804509+00:00",
+  "build_generated_utc": "2026-08-24T15:02:56.259267+00:00",
+  "git_commit": "3398b1a3cb745b11e7b21505c1dbd7b2f812b93b",
+  "engine_commit_at_build": "3398b1a3cb745b11e7b21505c1dbd7b2f812b93b",
+  "market_input": {
+    "status": "ok",
+    "engine_commit": "3398b1a3cb745b11e7b21505c1dbd7b2f812b93b",
+    "session_started_utc": "2026-08-24T15:01:48.912519+00:00",
+    "market_data_type_requested": "delayed-frozen",
+    "market_data_type_observed": [
+      "live"
+    ],
+    "price_fields": {
+      "histDailyClose": 11,
+      "marketPrice": 6
+    },
+    "n_requests": 50,
+    "n_series": 36,
+    "bars_rows": 12005,
+    "n_errors": 15,
+    "error_codes": [
+      2104,
+      2106,
+      2158
+    ],
+    "cli_overrides": {
+      "gold_aud": null,
+      "euraud": null
+    },
+    "bundle_sha256": "8b437a95b4965fd27cc74f7ee02bd384cd95421e242d2761bdc673023fddfc46",
+    "bars_sha256": "0c9ad42386b2dc8d5239de82ed7dd082350b1045aaf1412607cd02d4469869d6"
+  },
+  "methodology": "SJGV v2.0",
+  "data_sourced": "2026-08-21",
+  "gold_aud_oz": 6523.9872254484735,
+  "euraud": 1.63057,
+  "gold_reference_aud": 4966.891084568537,
+  "n_constituents": 11,
+  "effective_n": 9.663317165083837,
+  "portfolio_beta_gold": 1.7161753349756255,
+  "weights": {
+    "NST": 0.144999,
+    "EVN": 0.056317,
+    "CMM": 0.098672,
+    "GGP": 0.075,
+    "GMD": 0.118875,
+    "RMS": 0.118687,
+    "RRL": 0.121679,
+    "WGX": 0.05,
+    "VAU": 0.115772,
+    "CYL": 0.05,
+    "RXL": 0.05
+  },
+  "variants": {
+    "gate1_cap": {
+      "methodology": "SJGV Gate 1 Cap-Weighted v1.1",
+      "n_constituents": 10,
+      "weights": {
+        "NST": 0.278299,
+        "EVN": 0.255653,
+        "GMD": 0.081113,
+        "GGP": 0.074007,
+        "CMM": 0.065253,
+        "RMS": 0.06127,
+        "VAU": 0.057867,
+        "RRL": 0.052055,
+        "WGX": 0.048413,
+        "OBM": 0.026071
+      }
+    }
+  },
+  "artefacts": [
+    "data/companies.json",
+    "data/guidance_delivery.json",
+    "data/config.json",
+    "weights.json",
+    "basket.json",
+    "gate1_cap_weights.json",
+    "gate1_cap_basket.json",
+    "market_bundle.json",
+    "market_bars.csv"
+  ]
+}

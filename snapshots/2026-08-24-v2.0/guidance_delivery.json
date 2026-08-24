@@ -1,0 +1,31 @@
+{
+  "_schema": "Three-year execution-delivery classifications adopted by SJGV v2.0. Operational failures use the 5% production/AISC tolerance. A verified failure to publish required full-year guidance in a producing period is a failure; genuine pre-production is excluded. Ratings are derived from the claim-level appendix named below.",
+  "_sourced": "2026-08-24",
+  "methodology": "SJGV v2.0",
+  "study": "docs/guidance-delivery-candidates-2026-08-24.json",
+  "ratings": {
+    "AEM": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 3},
+    "BC8": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 2, "revised_failures": 2, "rated_years": 2, "note": "FY2025-FY2026 annual guidance absent; FY2024 pre-production."},
+    "BGL": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 2, "revised_failures": 1, "rated_years": 3, "note": "FY2024 required AISC guidance absent during a producing period; FY2025 missed original guidance."},
+    "BTR": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 3, "revised_failures": 3, "rated_years": 3},
+    "CMM": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 3},
+    "CYL": {"rating": "CAP_MINIMUM", "portfolio_treatment": "CAP", "original_failures": 1, "revised_failures": 1, "rated_years": 3, "note": "FY2024 disclosure failure; FY2026 original basis not comparable, so hard-fail status remains unresolved but the 5% cap is certain."},
+    "EMR": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 2, "revised_failures": 1, "rated_years": 3},
+    "EVN": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 1, "revised_failures": 0, "rated_years": 3},
+    "GGP": {"rating": "LIMITED_HISTORY_PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 2, "note": "FY2024 genuinely pre-acquisition/pre-production; FY2025-FY2026 clean."},
+    "GMD": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 3},
+    "MEK": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 1, "revised_failures": 1, "rated_years": 1, "note": "No bounded annual guidance in its sole completed producing year: 100% failure rate."},
+    "NEM": {"rating": "CAP_MINIMUM", "portfolio_treatment": "CAP", "original_failures": 1, "revised_failures": 1, "rated_years": 3, "note": "CY2023 not comparable; the 5% cap is certain and hard-fail status remains unresolved."},
+    "NST": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 1, "revised_failures": 0, "rated_years": 3},
+    "OBM": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 3, "revised_failures": 1, "rated_years": 3},
+    "OGC": {"rating": "UNRESOLVED", "portfolio_treatment": "UNRESOLVED", "original_failures": 1, "revised_failures": 0, "rated_years": 3, "note": "CY2024 revised guidance was published but its retained route is inadmissible; no company failure is charged for this repository-side evidence gap."},
+    "PNR": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 3, "revised_failures": 2, "rated_years": 3, "note": "FY2025 revised AISC limb remains unresolved but cannot change the hard-fail result."},
+    "PRU": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 1, "revised_failures": 0, "rated_years": 3},
+    "RMS": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 3},
+    "RRL": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 3},
+    "RSG": {"rating": "HARD_FAIL", "portfolio_treatment": "EXCLUDE", "original_failures": 3, "revised_failures": 1, "rated_years": 3},
+    "VAU": {"rating": "PASS", "portfolio_treatment": "NONE", "original_failures": 0, "revised_failures": 0, "rated_years": 3, "note": "FY2024 resolved on scope-matched King of the Hills production of 210.940koz and AISC of A$2,043/oz."},
+    "WAF": {"rating": "CAP", "portfolio_treatment": "CAP", "original_failures": 1, "revised_failures": 1, "rated_years": 3},
+    "WGX": {"rating": "CAP", "portfolio_treatment": "CAP", "original_failures": 2, "revised_failures": 0, "rated_years": 3}
+  }
+}

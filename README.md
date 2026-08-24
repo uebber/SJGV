@@ -21,13 +21,10 @@ part of the gold-equity proposition while making those failure modes explicit.
 > companies whose survival and operating plans are not endangered by a severe
 > gold drawdown.
 
-The latest frozen v1.7 snapshot holds 12 ASX-listed companies at **A$826 of
-all-in EV per confidence-weighted claimed ounce**. On identical recorded market
-inputs, v1.9 held 14 names at A$818/oz; the v2.0 execution-delivery amendment
-holds 11 at approximately **A$902/oz**, excluding BGL, OBM and PNR and capping
-CYL and WGX at 5%. This is a deterministic activation replay, not a fresh market
-session or a frozen rebalance snapshot. See
-[`docs/guidance-delivery-study-2026-08-24.md`](docs/guidance-delivery-study-2026-08-24.md).
+The current release is **SJGV v2.0**. Its frozen 24 August 2026 TWS build holds
+11 ASX-listed companies at **A$922 of all-in EV per confidence-weighted claimed
+ounce**. See [`snapshots/2026-08-24-v2.0`](snapshots/2026-08-24-v2.0) for the
+complete inputs, market session, weights, and €1m basket.
 
 This is not a forecast and it is not a backtest. It is a transparent statement
 of what the portfolio owns today.
@@ -268,60 +265,22 @@ recorded market session and are frozen together by `tools/snapshot.py`.
 
 ---
 
-## Latest frozen snapshot — v1.7
+## Latest frozen snapshot — v2.0
 
-- **Market session:** 21 August 2026, spot A$6,444/oz
+- **Market session:** 24 August 2026, spot A$6,524/oz, TWS returned live data
 - **Resource data sourced:** 21 August 2026
-- **Constituents:** 12
-- **Headline all-in EV / claimed ounce:** A$826
-- **Same names, market-cap weighted:** A$1,071 — a 23% discount
-- **Claim mix:** 59.1% P&P / 28.7% M&I non-reserve / 12.2% Inferred
-- **Reported gold beta:** 1.76
-- **Effective number of holdings:** 11.1
+- **Constituents:** 11
+- **Headline all-in EV / claimed ounce:** A$922
+- **Same names, market-cap weighted:** A$1,028 — a 10% discount
+- **Claim mix:** 59.4% P&P / 28.6% M&I non-reserve / 11.9% Inferred
+- **Reported gold beta:** 1.72
+- **Effective number of holdings:** 9.7
+- **€1m basket:** €999,998.95 deployed after 0.10% commission assumptions
 
-Both A$/oz figures are emitted by the build. The market-cap comparator used to be
-maintained by hand and had drifted to four different values across the tree — a
-source comment said A$910, this README said A$917, an in-flight branch said A$915,
-and the figure was A$892. It is now computed from the same rows as the headline,
-so the two cannot disagree.
-
-The claim mix is published to one decimal deliberately. The M&I share sat within
-0.01pp of 29.50 on the twelve-name book, so a whole-percent reading flipped
-between 29 and 30 on a move that is not a move — and this is the statistic the
-methodology nominates as the one to watch over time.
-
-Under v1.9, CYL and PNR are capped at 7.5% as single-asset companies; RXL remains
-capped at 5% as a developer. The live build
-writes the complete constituent table and cap effects to
-snapshots/2026-08-21-v1.7-health rather than asking this README to serve as a
-second output file.
-
-Pantoro's v1.3 exclusion exposed a real weakness in the former binary test: the
-verdict flipped across the issuer's own AISC range. Under v1.7 both ends remain
-inside AMBER health, so PNR returns; v1.9 limits it to the 7.5% single-asset
-cap. Ora Banda also
-enters: after the 40% spot shock it needs about A$167m of rescue capital, only
-5.3% of current market capitalisation and 0.61 normal cash-generation years.
-That is damage, but not the existential or multi-year setback Gate 2 exists to
-exclude.
-
-**That staleness closed on 20 August 2026, and it closed in the direction the
-rule predicted.** Westgold's ledger had been running on 30 June 2025 group
-totals. On 18 August the company declared a maiden 1,145 koz Probable reserve at
-Fletcher, and the arithmetic of splicing that one deposit into the stale group
-figures implied a **+14%** claim. It was deliberately not entered, because doing
-so assumes nothing else moved across a year in which the company mined 387 koz.
-The complete FY26 group statement landed two days later and the claim actually
-moved **−2.1%**, from 7.770 to 7.603 Moz: reserves grew 41% and the booking deck
-rose from A$3,800 to A$4,800/oz, but depletion and the divestment of five
-non-core assets more than offset the Fletcher gain. A 16-point error, avoided by
-refusing a convenient patch — which is the clearest illustration in the book of
-why the derive-or-fail rule exists.
-
-The A$826 portfolio figure is the inverse of the portfolio's weighted claim
-yield—a weighted harmonic construction statistic. It is useful for comparing
-two weighting schemes on the same inputs, but it is not literally the equity
-capital paid for a look-through ounce.
+The immutable release record is
+[`snapshots/2026-08-24-v2.0`](snapshots/2026-08-24-v2.0). The methodology change
+and source-level delivery evidence are documented in
+[`docs/guidance-delivery-study-2026-08-24.md`](docs/guidance-delivery-study-2026-08-24.md).
 
 ---
 
