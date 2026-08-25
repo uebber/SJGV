@@ -303,22 +303,24 @@ The release also contains a whole-share basket for an investment of
 €1,000,000. At the recorded exchange rate of A$1.63047 per euro and an assumed
 commission of 0.10%, the target weights became the following positions. “Share
 value” is the recorded A$ price multiplied by the number of shares and excludes
-commission.
+commission. “Gold oz / A$m EV” is claimed unhedged gold ounces divided by
+funded enterprise value; the table is ordered by target weight, then this
+measure where weights are equal.
 
-| Company | ASX | Target weight | Price | Shares | Share value |
-|---|---:|---:|---:|---:|---:|
-| Northern Star Resources | NST | 15.000% | A$24.480 | 9,981 | A$244,334.88 |
-| Evolution Mining | EVN | 2.955% | A$15.890 | 3,029 | A$48,130.81 |
-| Capricorn Metals | CMM | 5.909% | A$17.800 | 5,407 | A$96,244.60 |
-| Greatland Resources | GGP | 7.500% | A$13.590 | 8,989 | A$122,160.51 |
-| Genesis Minerals | GMD | 14.773% | A$8.610 | 27,947 | A$240,623.67 |
-| Ramelius Resources | RMS | 15.000% | A$3.990 | 61,234 | A$244,323.66 |
-| Regis Resources | RRL | 15.000% | A$8.550 | 28,576 | A$244,324.80 |
-| Westgold Resources | WGX | 5.000% | A$6.540 | 12,453 | A$81,442.62 |
-| Vault Minerals | VAU | 8.864% | A$6.970 | 20,713 | A$144,369.61 |
-| Catalyst Metals | CYL | 5.000% | A$6.940 | 11,735 | A$81,440.90 |
-| Rox Resources | RXL | 5.000% | A$0.595 | 136,878 | A$81,442.41 |
-| **Total** |  | **100.000%** |  |  | **A$1,628,838.47** |
+| Company | ASX | Target weight | Gold oz / A$m EV | Price | Shares | Share value |
+|---|---:|---:|---:|---:|---:|---:|
+| Northern Star Resources | NST | 15.000% | 1,241 | A$24.480 | 9,981 | A$244,334.88 |
+| Regis Resources | RRL | 15.000% | 1,049 | A$8.550 | 28,576 | A$244,324.80 |
+| Ramelius Resources | RMS | 15.000% | 1,036 | A$3.990 | 61,234 | A$244,323.66 |
+| Genesis Minerals | GMD | 14.773% | 1,024 | A$8.610 | 27,947 | A$240,623.67 |
+| Vault Minerals | VAU | 8.864% | 997 | A$6.970 | 20,713 | A$144,369.61 |
+| Greatland Resources | GGP | 7.500% | 1,008 | A$13.590 | 8,989 | A$122,160.51 |
+| Capricorn Metals | CMM | 5.909% | 850 | A$17.800 | 5,407 | A$96,244.60 |
+| Catalyst Metals | CYL | 5.000% | 1,756 | A$6.940 | 11,735 | A$81,440.90 |
+| Westgold Resources | WGX | 5.000% | 1,444 | A$6.540 | 12,453 | A$81,442.62 |
+| Rox Resources | RXL | 5.000% | 1,239 | A$0.595 | 136,878 | A$81,442.41 |
+| Evolution Mining | EVN | 2.955% | 479 | A$15.890 | 3,029 | A$48,130.81 |
+| **Total** |  | **100.000%** |  |  |  | **A$1,628,838.47** |
 
 Commission adds A$1,628.84, for total deployment of A$1,630,467.31
 (€999,998.35) and €1.65 left uninvested. All equity prices are the 25 August
