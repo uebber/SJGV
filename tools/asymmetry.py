@@ -354,6 +354,7 @@ def main() -> int:
         return 2
     built = json.loads(wpath.read_text())
     weights = {r["ticker"]: r["weight"] for r in built["weights"]}
+    primary_label = built.get("methodology") or "SJGV"
 
     meta, cons, _, _, _ = B.load_data()
     shares = {c["ticker"]: c.get("shares_out_m") for c in cons}
@@ -421,7 +422,7 @@ def main() -> int:
         for freq, flabel in (("W", "WEEKLY"), ("M", "MONTHLY")):
             gb = simple_returns(resample(clip(gold_aud, frm), freq))
             rows = [
-                ("SJGV v1.0", simple_returns(resample(clip(port, frm), freq))),
+                (primary_label, simple_returns(resample(clip(port, frm), freq))),
                 ("Cap-weighted, same names",
                  simple_returns(resample(clip(capw, frm), freq))),
             ]
@@ -461,7 +462,7 @@ def main() -> int:
             # same periods, which is far more powerful than comparing the two
             # confidence intervals above by eye — the books share their names,
             # so most of the sampling error is common and cancels.
-            base = results.get(f"{wlabel}:{freq}:SJGV v1.0")
+            base = results.get(f"{wlabel}:{freq}:{primary_label}")
             comp = results.get(f"{wlabel}:{freq}:Cap-weighted, same names")
             if base and comp and base.get("convexity") and comp.get("convexity"):
                 pv = {d: p for d, p, _ in base["pairs"]}
@@ -504,7 +505,8 @@ def main() -> int:
     print("  Rising in ounces means outperforming gold. That is the demanding "
           "test and the one that matters.")
 
-    wk = results.get("FULL-COVERAGE:W:SJGV v1.0") or results.get("FULL:W:SJGV v1.0", {})
+    wk = (results.get(f"FULL-COVERAGE:W:{primary_label}")
+          or results.get(f"FULL:W:{primary_label}", {}))
     ci = (wk.get("convexity_ci") or {})
     print("\nREAD THIS BEFORE QUOTING ANY NUMBER ABOVE")
     print(f"  • READ THE INTERVALS, NOT THE POINT ESTIMATES. Weekly full-coverage "

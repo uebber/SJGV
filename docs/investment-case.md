@@ -1,4 +1,4 @@
-# Why SJGV v2.1 fits the mandate
+# Why SJGV v2.2 fits the mandate
 
 SJGV is designed for one view: gold is materially repriced, economically useful
 mine inventory becomes more valuable, and the path is volatile enough that
@@ -56,24 +56,24 @@ free. For established producers, complete company-wide cost-to-completion
 schedules are not normally published, so standard EV is both comparable and
 sourceable.
 
-The ratio orders the eligible universe; it does not size positions in direct
-proportion to its measured magnitude. Public reserve and resource statements
-differ in estimation precision, category mix, attribution basis and reporting
-date, while enterprise value is a point-in-time market observation. Treating a
-measured ratio of 2.00 as exactly twice as deserving of capital as 1.00 claims
-more precision than those inputs support.
+The ratio is the linear portfolio objective. SJGV maximises the weighted sum of
+company ounces/EV while requiring effective N, `1 / sum(weight²)`, to remain at
+least 65% of the number of eligible companies. The floor prevents a cap-filling
+solution while allowing a large value gap—rather than ordinal rank alone—to
+matter. Special 7.5% single-asset and 5% delivery/developer caps remain because
+they address discontinuous impairment risks that the diversification statistic
+does not identify.
 
-SJGV therefore assigns descending linear rank points: with `N` qualifying
-companies, ranks receive `N, N−1, …, 1` points before caps. Exact ties share the
-average points of their occupied ranks. This retains the full value ordering,
-reduces sensitivity to small measurement differences and avoids the cliff and
-estimation concentration of a cap-filling optimiser. It does not maximise the
-portfolio's claimed ounces per dollar; that foregone concentration is the
-explicit robustness cost of v2.1.
+Public reserve and resource statements still differ in estimation precision,
+category mix, attribution basis and reporting date. The 65% threshold is
+therefore a policy choice, not a statistical confidence interval. Its effect is
+explicit and auditable: the optimiser cannot concentrate beyond the stated
+Herfindahl boundary, and a build fails if the special caps make that boundary
+infeasible.
 
-The 25 August 2026 release cost **A$909 per claimed ounce**, versus **A$1,037**
+The 25 August 2026 release cost **A$874 per claimed ounce**, versus **A$1,037**
 for the separately published Gate-1 cap-weighted comparison on the same market
-session. That 12% difference is a point-in-time description, not a forecast or
+session. That 16% difference is a point-in-time description, not a forecast or
 a backtest, but it confirms that the rule currently buys a meaningfully cheaper
 claim than market-cap weighting.
 
@@ -100,8 +100,8 @@ published a partial chart. Company-level marginal costs were also unavailable.
 Any dynamic cut-off model would therefore require invented inputs, contrary to
 the repository's derive-or-fail rule.
 
-In the v2.1 snapshot, the confidence-weighted portfolio ledger was **58.6% P&P,
-29.3% M&I non-reserve and 12.2% Inferred**. The position is mostly reserve-backed
+In the v2.2 snapshot, the confidence-weighted portfolio ledger was **58.3% P&P,
+28.6% M&I non-reserve and 13.0% Inferred**. The position is mostly reserve-backed
 while retaining a material, explicitly discounted optionality sleeve.
 
 ## 4. Why subtract hedges rather than score them
@@ -169,33 +169,34 @@ or failed development can remove an asset rather than shave a few percent from
 its value. A volatility penalty is a poor proxy: daily price noise does not
 measure how much of the physical claim one event can destroy.
 
-SJGV therefore keeps value intact until the portfolio step, then limits any
-company to 15%, a company with at least 80% of eligible P&P at one asset to
-7.5%, any developer to 5%, and the developer sleeve to 15%. A cap-rated delivery
-record is also limited to 5%.
+SJGV therefore keeps value intact until the portfolio step. The optimiser must
+maintain effective N at or above 65% of eligible N. A company with at least 80%
+of eligible P&P at one asset is limited to 7.5%, any developer to 5%, and the
+developer sleeve to 15%. A cap-rated delivery record is also limited to 5%.
+There is no general company cap.
 
 This protection has a visible price: caps move weight away from some of the
-cheapest claims. The release still cost less per claimed ounce than the
-cap-weighted comparison, while its top weight was 15.0%, effective N was 8.72,
-and the developer sleeve was 5%. The method does not optimise effective N; it
-reports it so the investor can see the resulting concentration.
+cheapest claims. The v2.2 release still cost less per claimed ounce than the
+cap-weighted comparison, while its top weight was 25.04%, effective N was 7.15,
+and the developer sleeve was 5%. Effective N is a binding diversification
+constraint rather than a reporting-only statistic.
 
-## 7. Evidence from the v2.1 release
+## 7. Evidence from the v2.2 release
 
 The frozen release is a point-in-time implementation check, not performance
 evidence:
 
 | Measure | 25 August 2026 result | What it demonstrates |
 |---|---:|---|
-| Constituents | 11 | The gates leave a usable, concentrated portfolio |
-| A$ per claimed ounce | 909 | Purchase price of the ledger at that session |
+| Eligible constituents / positive weights | 11 / 10 | Every survivor enters N; one received zero optimal weight |
+| A$ per claimed ounce | 874 | Purchase price of the ledger at that session |
 | Gate-1 cap-weighted comparison | A$1,037/oz | The value rule bought a cheaper claim on identical market inputs |
-| Ledger mix | 58.6% / 29.3% / 12.2% | Reserve / M&I non-reserve / Inferred after confidence weights |
-| Dimson gold beta | 1.72 | Observed gold sensitivity was inside the diagnostic 1.4–1.8 band |
-| Effective N | 8.72 | Concentration after caps, reported rather than targeted |
-| Top weight | 15.0% | General name cap respected |
+| Ledger mix | 58.3% / 28.6% / 13.0% | Reserve / M&I non-reserve / Inferred after confidence weights |
+| Dimson gold beta | 1.70 | Observed gold sensitivity was inside the diagnostic 1.4–1.8 band |
+| Effective N | 7.15 | The 65% × 11 floor bound exactly |
+| Top weight | 25.04% | NST was limited by the effective-N boundary, not a general name cap |
 | Developer sleeve | 5.0% | Pre-production risk remained bounded |
-| Capacity at €1m | A$24.7m binding estimate | Every released position passed the reporting capacity check |
+| Capacity at €1m | A$24.7m binding estimate | Every positive released position passed the reporting capacity check |
 
 The beta uses ASX/gold timing lags and has full constituent coverage, but its
 weighted R² was only 0.21. Gold explains a minority of daily equity variation.
@@ -222,7 +223,7 @@ without look-ahead would require point-in-time inputs the repository does not
 possess. A modern portfolio backfilled with today's disclosures would be
 misleading.
 
-The methodology also does not prove that 1.0/0.5/0.2 are optimal, that A$909 per
+The methodology also does not prove that 1.0/0.5/0.2 are optimal, that A$874 per
 claimed ounce is intrinsically cheap, or that the caps maximise risk-adjusted
 return. It argues that these rules are transparent, sourceable and aligned with
 the mandate. The investment thesis should be judged prospectively by:

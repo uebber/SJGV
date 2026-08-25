@@ -208,24 +208,26 @@ def _evaluate_gate2(companies: list[dict], cfg: dict, prices: dict[str, dict],
 
 def _weight_stages(actual: dict, cfg: dict) -> dict[str, dict]:
     rows = actual.get("weights", [])
-    precap = (actual.get("constraints") or {}).get("precap_weights") or {}
+    precap = (actual.get("constraints") or {}).get("unconstrained_weights") or {}
     out = {}
     for row in rows:
         ticker = row["ticker"]
         raw = row.get("raw")
         # The fixture predates v2.1 and calls this stage
         # ``normalised_raw_weight``. Preserve the key for longitudinal diffs,
-        # but populate it with the current methodology's pre-cap rank weight.
+        # but populate it with v2.2's effective-N-only optimiser weight.
         normalised = precap.get(ticker, row.get("weight", 0.0))
         before_name_caps = precap.get(ticker, normalised)
         final = row.get("weight", 0.0)
+        ceiling = 1.0
         if row.get("sleeve") == "developer":
-            ceiling = min(cfg["constraints"]["max_single_name"],
-                          cfg["constraints"]["max_developer_single_name"])
+            ceiling = min(ceiling, cfg["constraints"]["max_developer_single_name"])
         elif row.get("single_asset") is True:
-            ceiling = cfg["constraints"]["max_single_asset_name"]
-        else:
-            ceiling = cfg["constraints"]["max_single_name"]
+            ceiling = min(ceiling, cfg["constraints"]["max_single_asset_name"])
+        if (row.get("guidance_delivery") or {}).get("portfolio_treatment") == "CAP":
+            ceiling = min(ceiling, cfg["constraints"]["max_guidance_delivery_name"])
+        if ceiling == 1.0:
+            ceiling = None
         out[ticker] = {
             "sleeve": row.get("sleeve"),
             "single_asset": row.get("single_asset"),
@@ -252,7 +254,8 @@ def _weight_stages(actual: dict, cfg: dict) -> dict[str, dict]:
             "total_cap_effect": final - normalised,
             "final_weight": final,
             "cap_ceiling": ceiling,
-            "cap_bound": before_name_caps > ceiling + 1e-9,
+            "cap_bound": (ceiling is not None
+                          and abs(final - ceiling) <= 1e-9),
         }
     return out
 

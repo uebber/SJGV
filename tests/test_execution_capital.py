@@ -323,11 +323,11 @@ class ExecutionCapitalTest(unittest.TestCase):
     def test_infeasible_survivor_set_cannot_breach_caps(self) -> None:
         rows = [
             {"ticker": "P1", "sleeve": "producer", "single_asset": False,
-             "weight": 0.4},
+             "raw": 3.0, "guidance_delivery": {"portfolio_treatment": "CAP"}},
             {"ticker": "P2", "sleeve": "producer", "single_asset": False,
-             "weight": 0.4},
+             "raw": 2.0, "guidance_delivery": {"portfolio_treatment": "CAP"}},
             {"ticker": "D1", "sleeve": "developer", "single_asset": True,
-             "weight": 0.2},
+             "raw": 1.0, "guidance_delivery": None},
         ]
         with self.assertRaisesRegex(ValueError, "constraint set is infeasible"):
             B.apply_constraints(rows, self.cfg)

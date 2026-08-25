@@ -27,20 +27,17 @@ class GuidanceDeliveryTest(unittest.TestCase):
                          {"CYL", "WGX"})
         self.assertEqual(treatments["VAU"], "NONE")
 
-    def test_delivery_cap_is_applied_before_redistribution(self) -> None:
+    def test_delivery_cap_is_enforced_in_optimizer(self) -> None:
         cfg = copy.deepcopy(self.cfg)
         rows = []
         for i in range(8):
             rows.append({
                 "ticker": f"P{i}", "sleeve": "producer",
-                "weight": 0.30 if i == 0 else 0.10,
+                "raw": 100.0 if i == 0 else 8.0 - i,
                 "single_asset": False, "largest_asset_pp_share": 0.5,
                 "guidance_delivery": ({"portfolio_treatment": "CAP"}
                                       if i == 0 else {"portfolio_treatment": "NONE"}),
             })
-        total = sum(r["weight"] for r in rows)
-        for row in rows:
-            row["weight"] /= total
 
         B.apply_constraints(rows, cfg)
 

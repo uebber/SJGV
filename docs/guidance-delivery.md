@@ -1,4 +1,4 @@
-# Guidance delivery in SJGV v2.1
+# Guidance delivery in SJGV v2.2
 
 The delivery rule asks whether management repeatedly failed to deliver the
 production and cost plan on which the gold claim depends. It is not a general
@@ -45,10 +45,11 @@ route is never charged to the company. Pre-production years do not count.
 
 ## Continuing portfolio consequence
 
-In the frozen v2.1 release, BGL, OBM and PNR were excluded from the otherwise
+In the frozen v2.2 release, BGL, OBM and PNR were excluded from the otherwise
 live book; CYL and WGX were capped at 5%. The rule was therefore economically
-material. Its effect is visible in the snapshot's rejected list, pre-cap weights
-and cap notes rather than frozen into this rationale as a permanent statistic.
+material. Its effect is visible in the snapshot's rejected list, unconstrained
+optimiser weights and cap notes rather than frozen into this rationale as a
+permanent statistic.
 
 ## Limits
 
@@ -61,4 +62,4 @@ not by filling missing years.
 The rule also measures delivery against management's public plan, not asset
 quality. A conservative guide can be easier to beat than an ambitious one. That
 is why delivery affects admission or maximum loss, while ounces per funded EV
-continues to determine the value ranking.
+continues to determine the optimisation objective.

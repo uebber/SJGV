@@ -130,11 +130,12 @@ FIELDS = {
                                          "against liquidity",
                             "tools/asx.py --write (ASX key-statistics, "
                             "volumeAverage)", None),
-    # "degrading", not "disclosure". An asset-level cap
-    # (20%) sat ABOVE the 15% name cap, so it could not bind on one company and
-    # sourcing its input was cosmetic. max_single_asset_name (7.5%) sits BELOW it
-    # and binds directly, so an absent share now lets a one-mine company run at
-    # the full 15%. Sourced for all 17 on 18 Aug 2026; it bound on PNR and CYL.
+    # "degrading", not "disclosure". A former asset-level cap (20%) sat above
+    # the then-current 15% name cap, so it could not bind on one company and
+    # sourcing its input was cosmetic. max_single_asset_name (7.5%) binds
+    # directly; an absent share now removes that special ceiling and lets the
+    # effective-N optimiser size the name as unconstrained. Sourced for all 17
+    # on 18 Aug 2026; it bound on PNR and CYL in that release.
     #
     # Note what "degrading" means for a CAP input, and why it is not the weaker
     # "disclosure": absence does not mute a score, it removes a ceiling. The
@@ -142,7 +143,7 @@ FIELDS = {
     # a LARGER position in a company one operational event can destroy.
     "largest_asset_pp_share": ("degrading",
                             "§8.1 single-asset cap cannot be applied — the name "
-                            "runs at the full 15% and reports UNTESTED",
+                            "has no special ceiling and reports UNTESTED",
                             "R&R statement per-asset Ore Reserve table; §8.1 "
                             "defines the asset unit. Also a §11 disclosure", None),
 

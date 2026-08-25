@@ -1,22 +1,27 @@
-# SJGV v2.1 release validation
+# SJGV v2.2 release validation
 
 The authoritative release is
-[`../snapshots/2026-08-25-v2.1`](../snapshots/2026-08-25-v2.1). Its manifest
-identifies engine commit `ca0fc26c369504bb3016bf28fb3c8e89f1ba75a2`, the
-recorded market session, copied inputs and output hashes.
+[`../snapshots/2026-08-25-v2.2`](../snapshots/2026-08-25-v2.2). Its manifest
+identifies engine tree `68d707cc1f8e8569ab43805760a9ba60c9630e57-dirty`,
+the recorded market session, copied inputs and output hashes. The `-dirty`
+suffix records that the v2.2 implementation had not yet been committed when
+the release was frozen; it must not be mistaken for a clean reproducible commit.
 
 ## Frozen result
 
 | Measure | Result |
 |---|---:|
-| Constituents | 11 |
-| A$ per claimed ounce | 908.66 |
+| Eligible constituents / positive weights | 11 / 10 |
+| A$ per claimed ounce | 874.30 |
+| Claimed ounces per A$1m funded EV | 1,143.78 |
 | Gate-1 cap-weighted A$ per claimed ounce | 1,036.71 |
-| Effective N | 8.72 |
-| Dimson gold beta | 1.72 |
+| Effective N | 7.15 |
+| Required effective N | 7.15 (65% × 11) |
+| Dimson gold beta | 1.70 |
 | Weighted beta R² | 0.21 |
-| Top weight | 15.00% |
+| Top weight | 25.04% |
 | Developer sleeve | 5.00% |
+| Modelled gamma | approximately zero |
 | Oldest counted statement | 13.01 months |
 | Reported capacity, binding estimate | A$24.72m |
 
@@ -26,41 +31,46 @@ rows. All 17 candidate equity prices are `histDailyClose` observations dated
 cross-checks and did not set a weight. The primary and Gate-1 comparison indices
 use the same closing prices.
 
-## Change from v2.0
+## Change from v2.1
 
-Version 2.1 replaces magnitude-proportional signal weights with descending
-linear rank weights. It also standardises the equity price input on the latest
-ASX daily close rather than a quote-first fallback ladder. Eligibility, the
-ounce ledger and the portfolio caps are unchanged.
+Version 2.2 replaces descending-linear-rank sizing and the general 15% company
+cap with a convex optimisation:
 
-To isolate the weighting amendment, both target columns below use the identical
-v2.1 company data and 25 August TWS ASX closes. The v2.0 column is the
-magnitude-proportional method reapplied to those common inputs, not the
-historical 24 August v2.0 release. Rows are ordered by v2.1 target weight, then
-alphabetically for ties.
+```text
+maximise sum(weight_i × claimed_ounces_i / funded_EV_i)
+subject to effective N >= 65% × eligible N
+           and the 7.5% single-asset, 5% delivery/developer,
+           and 15% aggregate developer caps
+```
 
-| ASX | v2.0 method | v2.1 method | Change | Gold/EV |
+The comparison below holds company data and 25 August TWS ASX closes constant,
+so only the weighting amendment moves target weights. `Gold/EV` is claimed
+unhedged ounces per A$1 million of funded enterprise value; higher is cheaper.
+
+| ASX | v2.1 weight | v2.2 weight | Change | Gold/EV |
 |---|---:|---:|---:|---:|
-| NST | 14.411% | 15.000% | +0.589 pp | 1,241.3 |
-| RMS | 12.029% | 15.000% | +2.971 pp | 1,036.2 |
-| RRL | 12.181% | 15.000% | +2.819 pp | 1,049.3 |
-| GMD | 11.889% | 14.773% | +2.884 pp | 1,024.1 |
-| VAU | 11.569% | 8.864% | −2.705 pp | 996.5 |
+| NST | 15.000% | 25.042% | +10.042 pp | 1,241.3 |
+| RRL | 15.000% | 13.873% | −1.127 pp | 1,049.3 |
+| RMS | 15.000% | 13.112% | −1.888 pp | 1,036.2 |
+| GMD | 14.773% | 12.409% | −2.363 pp | 1,024.1 |
+| VAU | 8.864% | 10.806% | +1.942 pp | 996.5 |
 | GGP | 7.500% | 7.500% | 0.000 pp | 1,007.6 |
-| CMM | 9.863% | 5.909% | −3.954 pp | 849.6 |
 | CYL | 5.000% | 5.000% | 0.000 pp | 1,756.1 |
-| RXL | 5.000% | 5.000% | 0.000 pp | 1,239.3 |
 | WGX | 5.000% | 5.000% | 0.000 pp | 1,443.8 |
-| EVN | 5.557% | 2.955% | −2.603 pp | 478.7 |
+| RXL | 5.000% | 5.000% | 0.000 pp | 1,239.3 |
+| CMM | 5.909% | 2.258% | −3.652 pp | 849.6 |
+| EVN | 2.955% | 0.000% | −2.955 pp | 478.7 |
 
-`Gold/EV` is confidence-weighted claimed unhedged ounces per A$1 million of
-funded enterprise value, so higher is cheaper. It is one common input to both
-methods, scaled into readable units. Neither frozen snapshot contains a sourced
-earnings or EPS field, so a P/E ratio is omitted rather than retrospectively
-invented.
+The amendment increases portfolio Gold/EV from 1,100.52 to 1,143.78 ounces per
+A$1 million, a 3.93% improvement. A$ per claimed ounce falls from 908.66 to
+874.30. Effective N moves from 8.72 to the binding 7.15 floor. One-way target
+turnover is 11.98%, with no eligibility entries or exits; EVN remains an
+eligible constituent but receives zero optimal weight.
 
-One-way target turnover caused by the weighting amendment alone is 9.26%, with
-no entries or exits.
+Company and portfolio gamma are economically zero under the fixed-mine-plan NAV
+model. The reported values are floating-point noise, not evidence that real
+mine equity has no convexity; the disclosed inputs cannot model price-dependent
+cut-off grades or reserve conversion.
 
 ## Reproduction boundary
 
@@ -90,4 +100,4 @@ The release passed:
 The strict knowledge-store audit reported no errors. Its warnings describe the
 document store's recorded operating boundary, chiefly local-only source bytes
 and grandfathered legacy citation granularity; they do not indicate a failed
-v2.1 input check.
+v2.2 input check.

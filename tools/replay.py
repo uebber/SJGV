@@ -108,7 +108,8 @@ def main() -> int:
         "construction": {
             "signal": "claimed_unhedged_ounces / funded_enterprise_value",
             "weighting": meta["weighting"]["method"],
-            "tie_method": meta["weighting"]["tie_method"],
+            "objective": "maximise sum(weight_i * signal_i)",
+            "effective_n_fraction": meta["weighting"]["effective_n_fraction"],
         },
         "rejected": rejected, "pre_excluded": excluded,
         "resource_reconciliation": impute_notes,

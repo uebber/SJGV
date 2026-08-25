@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SJGV v1.0 §9 — the internal NAV model. REPORTING ONLY.
+SJGV v2.2 §9 — the internal NAV model. REPORTING ONLY.
 
     from nav_model import value_company, value_all, implied_deck
 

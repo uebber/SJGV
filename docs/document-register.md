@@ -6,14 +6,14 @@ not part of the active documentation set.
 
 | Document | Authority | Purpose |
 |---|---|---|
-| [`../index-methodology.md`](../index-methodology.md) | Binding | Complete current v2.1 construction |
+| [`../index-methodology.md`](../index-methodology.md) | Binding | Complete current v2.2 construction |
 | [`../data/README.md`](../data/README.md) | Binding schema | Company-data fields and sourcing rules |
 | [`../source-knowledge-base.md`](../source-knowledge-base.md) | Binding evidence design | Authority, retention, conflicts and claim workflow |
 | [`../README.md`](../README.md) | Orientation | Objective, construction summary and repository map |
-| [`investment-case.md`](investment-case.md) | Current rationale | Why v2.1 fits the investment mandate; evidence and limits |
+| [`investment-case.md`](investment-case.md) | Current rationale | Why v2.2 fits the investment mandate; evidence and limits |
 | [`capital-resilience.md`](capital-resilience.md) | Current rationale | Gate 2 economic logic and limitations |
 | [`guidance-delivery.md`](guidance-delivery.md) | Current rationale | Delivery evidence and treatment logic |
-| [`validation.md`](validation.md) | Release evidence | Frozen v2.1 checks, metrics and reproduction boundary |
+| [`validation.md`](validation.md) | Release evidence | Frozen v2.2 checks, metrics and reproduction boundary |
 | [`primary-source-operations.md`](primary-source-operations.md) | Operations | Current primary-document retrieval mechanics |
 | [`knowledge-store-status.md`](knowledge-store-status.md) | Operations | Implemented evidence controls and live limitations |
 
@@ -21,6 +21,7 @@ Machine-readable evidence remains outside narrative documentation:
 
 - `data/guidance_delivery.json` — active delivery ratings;
 - `knowledge/` — document and claim ledgers;
-- `snapshots/2026-08-25-v2.1/` — current frozen release inputs and outputs;
+- `snapshots/2026-08-25-v2.2/` — current frozen release inputs and outputs;
+- `snapshots/2026-08-25-v2.1/` — immutable prior release;
 - `snapshots/2026-08-24-v2.0/` — immutable prior release; and
 - generated root outputs — latest build only, not historical authority.

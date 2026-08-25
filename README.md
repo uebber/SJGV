@@ -84,7 +84,7 @@ determines the relative weight only after eligibility has been established.
 The construction can be remembered in five verbs:
 
 ```text
-qualify → count → price → rank → cap
+qualify → count → price → optimise within diversification and impairment caps
 ```
 
 That order is the architecture of the index. A failed gate cannot be redeemed
@@ -171,13 +171,13 @@ inside the published debt and interest limits; and where no disqualifying gold
 control is in operation. The regional test and the company-level limit on
 ineligible assets then narrow the field further.
 
-At the v2.1 effective date, Australia and New Zealand pass the national test.
+At the v2.2 effective date, Australia and New Zealand pass the national test.
 Canada's gross debt and federal interest burden breach the solvency limits.
 Finland belongs to the euro currency union, and the United States both issues
 the global reserve currency and breaches the solvency limits. New Zealand has
 no eligible listed vehicle in the present universe. Once ineligible overseas
 ounces are removed—and companies with more than 25% of their value in failing
-jurisdictions are excluded—the gold admitted to the v2.1 weighting ledger is
+jurisdictions are excluded—the gold admitted to the v2.2 weighting ledger is
 therefore Australian.
 
 That is the result of the rule, not an assumption hidden inside it, and it is
@@ -238,11 +238,11 @@ near-producer/developer funded EV
 value signal
   = claimed unhedged ounces / funded EV
 
-rank points
-  = number of qualifying companies + 1 − descending value rank
+portfolio value signal
+  = sum(weight × company value signal)
 
-pre-cap weight
-  = rank points / total rank points
+effective N
+  = 1 / sum(weight²)
 ```
 
 Available project finance may reduce a developer's dilution risk, but it does
@@ -251,23 +251,20 @@ cost. Established producers use ordinary enterprise value because complete,
 company-wide cost-to-completion schedules are not normally published on a
 comparable basis.
 
-There is no composite score, optimiser or discretionary adjustment. The value
-signal orders qualifying companies; descending linear rank points size them.
-Exact ties share the average points of their occupied ranks. This preserves the
-value ordering without pretending that small differences between heterogeneous
-public disclosures are exact ratios of deserved capital. Estimated net asset
-value, share-price sensitivity to gold and other risk statistics are reported
-for context. They cannot feed back into the weights.
+There is no composite score or discretionary adjustment. A constrained solver
+maximises the portfolio value signal while requiring effective N to be at least
+65% of the eligible company count. This permits material value gaps to affect
+position size while retaining a measurable diversification floor. Estimated net
+asset value, share-price sensitivity to gold and other risk statistics are
+reported for context. They cannot feed back into the weights.
 
 ## Finally, limit what one failure can destroy
 
-Rank points are normalised to 100%, then excess weight is redistributed among
-uncapped companies in proportion to their pre-cap rank weights. The tightest
+The special-risk caps are enforced inside the same optimisation. The tightest
 applicable limit governs:
 
 | Exposure | Maximum weight |
 |---|---:|
-| Any company | 15% |
 | Company with at least 80% of eligible reserves in one operating asset | 7.5% |
 | Company whose delivery record requires a cap | 5% |
 | Any developer | 5% |
@@ -275,32 +272,32 @@ applicable limit governs:
 
 These limits acknowledge that mining loss can be discontinuous. A flood,
 geotechnical failure, failed development or tenure event can remove an asset,
-not merely make it a little less valuable. The caps therefore sit after the
-value calculation: they contain the consequence of being wrong without
-quietly redefining what “value” means.
+not merely make it a little less valuable. The caps therefore constrain the
+portfolio after company value signals are calculated: they contain the
+consequence of being wrong without quietly redefining what “value” means.
 
 ## What the current release says
 
-The current release is **SJGV v2.1**, effective 25 August 2026. Its
-[frozen release record](snapshots/2026-08-25-v2.1) preserves the accepted
+The current release is **SJGV v2.2**, effective 25 August 2026. Its
+[frozen release record](snapshots/2026-08-25-v2.2) preserves the accepted
 company data, market session, calculation engine, target weights and generated
 basket. For that build:
 
 | Measure | Result | What it tells us |
 |---|---:|---|
-| Companies held | 11 | The full sequence of gates and caps left a usable but concentrated portfolio. |
-| Funded value per claimed ounce | A$908.66 | The aggregate purchase price of one confidence-weighted claimed ounce. |
+| Eligible constituents / positive weights | 11 / 10 | Every survivor enters N; the optimiser may assign zero weight. |
+| Funded value per claimed ounce | A$874.30 | The aggregate purchase price of one confidence-weighted claimed ounce. |
 | Gate-1 cap-weighted comparison | A$1,036.71/oz | The ten largest jurisdiction-qualified companies, weighted by market value on the same market session, offered fewer claimed ounces per dollar. |
-| Ledger mix | 58.6% / 29.3% / 12.2% | The confidence-weighted claim comprised P&P / M&I outside reserves / Inferred ounces. |
-| Gold beta | 1.72 | The measured shares had greater historical sensitivity to gold; this is an estimate, not a forecast. |
-| Effective number of holdings | 8.72 | Concentration resembled roughly 8.72 equally weighted positions. |
-| Largest company weight | 15.00% | The general company limit bound three names after redistribution. |
+| Ledger mix | 58.3% / 28.6% / 13.0% | The confidence-weighted claim comprised P&P / M&I outside reserves / Inferred ounces. |
+| Gold beta | 1.70 | The measured shares had greater historical sensitivity to gold; this is an estimate, not a forecast. |
+| Effective number of holdings | 7.15 | The 65% × 11 diversification floor bound exactly. |
+| Largest company weight | 25.04% | The effective-N constraint, rather than a general name cap, limited NST. |
 | Total developer weight | 5.00% | Pre-production exposure remained bounded. |
 
 ### The snapshot index
 
 The release also contains a whole-share basket for an investment of
-€1,000,000. At the recorded exchange rate of A$1.63047 per euro and an assumed
+€1,000,000. At the recorded exchange rate of A$1.630995 per euro and an assumed
 commission of 0.10%, the target weights became the following positions. “Share
 value” is the recorded A$ price multiplied by the number of shares and excludes
 commission. “Gold oz / A$m EV” is claimed unhedged gold ounces divided by
@@ -309,26 +306,26 @@ measure where weights are equal.
 
 | Company | ASX | Target weight | Gold oz / A$m EV | Price | Shares | Share value |
 |---|---:|---:|---:|---:|---:|---:|
-| Northern Star Resources | NST | 15.000% | 1,241 | A$24.480 | 9,981 | A$244,334.88 |
-| Regis Resources | RRL | 15.000% | 1,049 | A$8.550 | 28,576 | A$244,324.80 |
-| Ramelius Resources | RMS | 15.000% | 1,036 | A$3.990 | 61,234 | A$244,323.66 |
-| Genesis Minerals | GMD | 14.773% | 1,024 | A$8.610 | 27,947 | A$240,623.67 |
-| Vault Minerals | VAU | 8.864% | 997 | A$6.970 | 20,713 | A$144,369.61 |
-| Greatland Resources | GGP | 7.500% | 1,008 | A$13.590 | 8,989 | A$122,160.51 |
-| Capricorn Metals | CMM | 5.909% | 850 | A$17.800 | 5,407 | A$96,244.60 |
-| Catalyst Metals | CYL | 5.000% | 1,756 | A$6.940 | 11,735 | A$81,440.90 |
-| Westgold Resources | WGX | 5.000% | 1,444 | A$6.540 | 12,453 | A$81,442.62 |
-| Rox Resources | RXL | 5.000% | 1,239 | A$0.595 | 136,878 | A$81,442.41 |
-| Evolution Mining | EVN | 2.955% | 479 | A$15.890 | 3,029 | A$48,130.81 |
-| **Total** |  | **100.000%** |  |  |  | **A$1,628,838.47** |
+| Northern Star Resources | NST | 25.042% | 1,241 | A$24.480 | 16,668 | A$408,032.64 |
+| Regis Resources | RRL | 13.873% | 1,049 | A$8.550 | 26,438 | A$226,044.90 |
+| Ramelius Resources | RMS | 13.112% | 1,036 | A$3.990 | 53,545 | A$213,644.55 |
+| Genesis Minerals | GMD | 12.409% | 1,024 | A$8.610 | 23,483 | A$202,188.63 |
+| Vault Minerals | VAU | 10.806% | 997 | A$6.970 | 25,260 | A$176,062.20 |
+| Greatland Resources | GGP | 7.500% | 1,008 | A$13.590 | 8,992 | A$122,201.28 |
+| Catalyst Metals | CYL | 5.000% | 1,756 | A$6.940 | 11,738 | A$81,461.72 |
+| Westgold Resources | WGX | 5.000% | 1,444 | A$6.540 | 12,457 | A$81,468.78 |
+| Rox Resources | RXL | 5.000% | 1,239 | A$0.595 | 136,921 | A$81,468.00 |
+| Capricorn Metals | CMM | 2.258% | 850 | A$17.800 | 2,067 | A$36,792.60 |
+| Evolution Mining | EVN | 0.000% | 479 | A$15.890 | 0 | A$0.00 |
+| **Total** |  | **100.000%** |  |  |  | **A$1,629,365.30** |
 
-Commission adds A$1,628.84, for total deployment of A$1,630,467.31
-(€999,998.35) and €1.65 left uninvested. All equity prices are the 25 August
+Commission adds A$1,629.37, for total deployment of A$1,630,994.66
+(€999,999.79) and €0.21 left uninvested. All equity prices are the 25 August
 2026 ASX daily closes returned by TWS. The table records one historical market
 session; it is not a live dealing instruction.
 
 The lower price per claimed ounce shows that the weighting rule did what it was
-designed to do on that date. It does not prove that A$909 was intrinsically
+designed to do on that date. It does not prove that A$874 was intrinsically
 cheap, that the confidence discounts are optimal, or that SJGV will outperform
 the comparison. The market may have sound reasons to value one ounce above
 another; the index makes its own trade explicit rather than claiming those
@@ -336,7 +333,7 @@ differences do not exist.
 
 The detailed [investment case](docs/investment-case.md) explains where the
 construction should and should not work. The [release validation](docs/validation.md)
-records what v2.1 establishes and what remains unproven.
+records what v2.2 establishes and what remains unproven.
 
 ## How to read the risks
 
@@ -400,7 +397,7 @@ answer:
 |---|---|
 | the investment idea and its limitations | [the investment case](docs/investment-case.md) |
 | the binding eligibility and weighting rules | [the index methodology](index-methodology.md) |
-| the frozen v2.1 inputs and outputs | [the release snapshot](snapshots/2026-08-25-v2.1) |
+| the frozen v2.2 inputs and outputs | [the release snapshot](snapshots/2026-08-25-v2.2) |
 | what the release proves | [the validation record](docs/validation.md) |
 | the meaning and acceptance rules for each input | [the data specification](data/README.md) |
 | which sources prevail and how conflicts are handled | [the source knowledge base](source-knowledge-base.md) |

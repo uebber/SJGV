@@ -6,72 +6,79 @@ import unittest
 import build_index as B
 
 
-class RankWeightingTest(unittest.TestCase):
+class OptimisedWeightingTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.cfg, *_ = B.load_data()
 
-    def test_descending_linear_rank_points_replace_signal_magnitudes(self) -> None:
-        rows = [
-            {"ticker": "HIGH", "raw": 100.0},
-            {"ticker": "MID", "raw": 2.0},
-            {"ticker": "LOW", "raw": 1.0},
+    @staticmethod
+    def rows(signals: list[float]) -> list[dict]:
+        return [
+            {
+                "ticker": f"P{i}", "raw": signal, "sleeve": "producer",
+                "single_asset": False, "largest_asset_pp_share": 0.5,
+                "guidance_delivery": {"portfolio_treatment": "NONE"},
+            }
+            for i, signal in enumerate(signals)
         ]
 
-        B.apply_rank_weights(rows, self.cfg)
+    def test_optimiser_maximises_value_at_effective_n_floor(self) -> None:
+        rows = self.rows([4.0, 3.0, 2.0, 1.0])
+        result = B.apply_constraints(rows, self.cfg)
 
-        by_ticker = {row["ticker"]: row for row in rows}
-        self.assertEqual(by_ticker["HIGH"]["value_rank"], 1.0)
-        self.assertEqual(by_ticker["MID"]["value_rank"], 2.0)
-        self.assertEqual(by_ticker["LOW"]["value_rank"], 3.0)
-        self.assertEqual(by_ticker["HIGH"]["rank_points"], 3.0)
-        self.assertEqual(by_ticker["MID"]["rank_points"], 2.0)
-        self.assertEqual(by_ticker["LOW"]["rank_points"], 1.0)
-        self.assertAlmostEqual(by_ticker["HIGH"]["weight"], 3 / 6)
-        self.assertAlmostEqual(by_ticker["MID"]["weight"], 2 / 6)
-        self.assertAlmostEqual(by_ticker["LOW"]["weight"], 1 / 6)
-
-    def test_exact_ties_share_average_occupied_rank_points(self) -> None:
-        rows = [
-            {"ticker": "A", "raw": 3.0},
-            {"ticker": "B", "raw": 2.0},
-            {"ticker": "C", "raw": 2.0},
-            {"ticker": "D", "raw": 1.0},
-        ]
-
-        B.apply_rank_weights(rows, self.cfg)
-
-        by_ticker = {row["ticker"]: row for row in rows}
-        self.assertEqual(by_ticker["B"]["value_rank"], 2.5)
-        self.assertEqual(by_ticker["C"]["value_rank"], 2.5)
-        self.assertEqual(by_ticker["B"]["rank_points"], 2.5)
-        self.assertEqual(by_ticker["C"]["rank_points"], 2.5)
-        self.assertEqual(by_ticker["B"]["weight"], by_ticker["C"]["weight"])
-        self.assertAlmostEqual(sum(row["rank_points"] for row in rows), 10.0)
         self.assertAlmostEqual(sum(row["weight"] for row in rows), 1.0)
+        self.assertAlmostEqual(B.effective_n(rows), 2.6, places=8)
+        self.assertAlmostEqual(result["effective_n_target"], 2.6)
+        self.assertGreater(rows[0]["weight"], rows[1]["weight"])
+        self.assertGreater(rows[1]["weight"], rows[2]["weight"])
+        self.assertGreaterEqual(rows[2]["weight"], rows[3]["weight"])
+
+    def test_large_signal_gap_can_exceed_old_general_cap(self) -> None:
+        rows = self.rows([100.0, 2.0, 1.0])
+        B.apply_constraints(rows, self.cfg)
+
+        self.assertGreater(rows[0]["weight"], 0.15)
+        self.assertAlmostEqual(B.effective_n(rows), 1.95, places=8)
+
+    def test_exact_ties_receive_equal_weights_when_equally_constrained(self) -> None:
+        rows = self.rows([3.0, 2.0, 2.0, 1.0])
+        B.assign_value_ranks(rows, self.cfg)
+        B.apply_constraints(rows, self.cfg)
+
+        self.assertEqual(rows[1]["value_rank"], 2.5)
+        self.assertEqual(rows[2]["value_rank"], 2.5)
+        self.assertAlmostEqual(rows[1]["weight"], rows[2]["weight"])
+
+    def test_single_asset_and_delivery_caps_remain_binding(self) -> None:
+        rows = self.rows([100.0, 90.0] + [float(i) for i in range(8, 0, -1)])
+        rows[0]["single_asset"] = True
+        rows[0]["largest_asset_pp_share"] = 0.9
+        rows[1]["guidance_delivery"] = {"portfolio_treatment": "CAP"}
+
+        B.apply_constraints(rows, self.cfg)
+
+        self.assertAlmostEqual(rows[0]["weight"], 0.075)
+        self.assertAlmostEqual(rows[1]["weight"], 0.05)
 
     def test_unknown_weighting_configuration_fails_closed(self) -> None:
         cfg = copy.deepcopy(self.cfg)
-        cfg["weighting"]["method"] = "proportional_signal"
-        with self.assertRaisesRegex(ValueError, "supports 'descending_linear_rank'"):
-            B.apply_rank_weights([{"ticker": "A", "raw": 1.0}], cfg)
+        cfg["weighting"]["method"] = "descending_linear_rank"
+        with self.assertRaisesRegex(ValueError, "max_oz_per_ev_at_effective_n"):
+            B.assign_value_ranks([{"ticker": "A", "raw": 1.0}], cfg)
 
-    def test_nonpositive_signal_cannot_receive_a_rank_weight(self) -> None:
+    def test_nonpositive_signal_cannot_enter_optimizer(self) -> None:
+        rows = self.rows([1.0, 0.0])
         with self.assertRaisesRegex(ValueError, "requires every value signal"):
-            B.apply_rank_weights([{"ticker": "A", "raw": 0.0}], self.cfg)
+            B.apply_constraints(rows, self.cfg)
 
-    def test_cap_audit_includes_names_hit_during_redistribution(self) -> None:
-        rows = [
-            {"ticker": "A", "weight": 0.40},
-            {"ticker": "B", "weight": 0.30},
-            {"ticker": "C", "weight": 0.30},
-        ]
-        bound = B._cap_and_redistribute(rows, {"A": 0.20, "B": 0.35, "C": 0.60})
-
-        self.assertEqual(bound, {"A", "B"})
-        self.assertAlmostEqual(rows[0]["weight"], 0.20)
-        self.assertAlmostEqual(rows[1]["weight"], 0.35)
-        self.assertAlmostEqual(rows[2]["weight"], 0.45)
+    def test_infeasible_effective_n_fails_closed(self) -> None:
+        cfg = copy.deepcopy(self.cfg)
+        cfg["weighting"]["effective_n_fraction"] = 1.0
+        rows = self.rows([3.0, 2.0, 1.0])
+        rows[0]["single_asset"] = True
+        rows[0]["largest_asset_pp_share"] = 1.0
+        with self.assertRaisesRegex(ValueError, "effective N"):
+            B.apply_constraints(rows, cfg)
 
     def test_unsupported_equity_price_basis_fails_before_tws_connection(self) -> None:
         with self.assertRaisesRegex(ValueError, "latest_asx_daily_close"):

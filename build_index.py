@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-SJGV v2.1 — index construction and basket sizing.
+SJGV v2.2 — index construction and basket sizing.
 
 Computes the basket from the data layer rather than from a hardcoded list, and
 May-2026 weights (including RUP, delisted 16 Jun 2026 into Agnico Eagle).
 
 What changed structurally
 -------------------------
-Companies are ranked on an ounce-ledger value signal:
+Companies are evaluated on an ounce-ledger value signal:
 
     signal_i = ClaimedUnhedgedOunces_i ÷ FundedEV_i
-    points_i = N + 1 - rank_descending(signal_i)
-    pre-cap weight_i = points_i ÷ sum(points)
+    maximise Σ weight_i × signal_i
+    subject to 1 / Σ weight_i² >= 65% × N
 
 where the numerator is built by subtraction, never by scoring:
 
@@ -50,10 +50,10 @@ constituents, the same delta, and a book holding MORE ounces per dollar:
 A$642/oz of EV against A$682/oz. The current design principle is documented in
 docs/investment-case.md §2.
 
-The rule that replaced them: a term enters the value rank only if it changes how
-many ounces are claimed, or what was paid for them. Linear descending rank
-points set position size so small measurement differences do not claim false
-precision. Nothing else is a weight.
+The rule that replaced them: a term enters the objective only if it changes how
+many ounces are claimed, or what was paid for them. The optimiser maximises the
+portfolio's claimed ounces per dollar subject to a minimum effective number of
+holdings and the permanent-impairment caps. Nothing else is a weight.
 
 Market cap is NOT a weight driver — it enters only through EV (as the equity
 component) and via the reported capacity number. Constituent fundamentals live
@@ -358,9 +358,9 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
         "engine", "§6.3 months of production a disclosed hedge book covers"),
 
     "weighting.method": (
-        "engine", "§7 descending linear rank weighting of the ounce/EV signal"),
-    "weighting.tie_method": (
-        "engine", "§7 exact ties share average occupied rank points"),
+        "engine", "§7 maximum portfolio ounce/EV optimisation"),
+    "weighting.effective_n_fraction": (
+        "engine", "§7 minimum effective N as a fraction of eligible N"),
 
     "market_data.equity_price_basis": (
         "engine", "§1 latest ASX daily TRADES close returned by TWS"),
@@ -401,7 +401,6 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "execution_capital.incumbent_max_carry_forward_months": (
         "engine", "build_index.resolve_execution_capital — maximum age of an "
                   "unchanged gross incumbent capital balance"),
-    "constraints.max_single_name": ("engine", "§8.1 impairment cap"),
     "constraints.max_single_asset_name": (
         "engine", "§8.1 tighter cap for single-asset companies"),
     "constraints.max_guidance_delivery_name": (
@@ -3028,13 +3027,12 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
                         navs: dict[str, dict] | None = None,
                         as_of: str | None = None,
                         ) -> tuple[list[dict], list[dict]]:
-    """Build the §7 value signal and descending-linear-rank weights. Returns
+    """Build the §7 value signal and value ranks. Returns
     (weighted rows, rejected rows).
 
     There is no composite score or risk denominator. Claimed ounces per dollar
-    of funded EV orders the survivors; descending linear rank points size them.
-    This preserves the value ordering without treating disclosure and EV
-    measurement differences as exact ratios of deserved capital.
+    of funded EV orders the survivors. apply_constraints() subsequently solves
+    the §7 portfolio optimisation and applies the §8 caps in one problem.
 
     gold_aud is spot, used for Gate 2, the breaking-point diagnostic and the §9
     NAV report. anchor_gold is the conservative reporting deck; it does not
@@ -3252,32 +3250,21 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             "guidance_delivery": delivery,
         })
 
-    apply_rank_weights(rows, meta)
+    assign_value_ranks(rows, meta)
     return rows, rejected
 
 
-def apply_rank_weights(rows: list[dict], meta: dict) -> None:
-    """§7 descending-linear ranks, with exact ties sharing occupied points.
-
-    For N survivors, distinct ranks receive N, N-1, ..., 1 points. Exact signal
-    ties receive the average of the points their tied positions occupy. This
-    preserves the N(N+1)/2 total and prevents an alphabetical tie-break from
-    moving capital. Caps remain a later, separate operation.
-    """
+def assign_value_ranks(rows: list[dict], meta: dict) -> None:
+    """Record the value ordering used for reporting; ranks do not size v2.2."""
     weighting = meta["weighting"]
     method = weighting["method"]
-    tie_method = weighting["tie_method"]
-    if method != "descending_linear_rank":
+    if method != "max_oz_per_ev_at_effective_n":
         raise ValueError(
             f"weighting.method is {method!r}; the §7 implementation supports "
-            "'descending_linear_rank' and nothing else")
-    if tie_method != "average_occupied_rank_points":
-        raise ValueError(
-            f"weighting.tie_method is {tie_method!r}; the §7 implementation "
-            "supports 'average_occupied_rank_points' and nothing else")
+            "'max_oz_per_ev_at_effective_n' and nothing else")
     if any(not isinstance(r.get("raw"), (int, float)) or r["raw"] <= 0
            for r in rows):
-        raise ValueError("§7 rank weighting requires every value signal to be positive")
+        raise ValueError("§7 optimisation requires every value signal to be positive")
 
     ordered = sorted(rows, key=lambda r: (-r["raw"], r["ticker"]))
     n = len(ordered)
@@ -3289,49 +3276,184 @@ def apply_rank_weights(rows: list[dict], meta: dict) -> None:
         first_rank = start + 1
         last_rank = end
         average_rank = (first_rank + last_rank) / 2.0
-        points = n + 1.0 - average_rank
         for row in ordered[start:end]:
             row["value_rank"] = average_rank
-            row["rank_points"] = points
         start = end
 
-    total_points = sum(r["rank_points"] for r in ordered)
-    for row in ordered:
-        row["weight"] = row["rank_points"] / total_points if total_points else 0.0
 
+def _bounded_affine_weights(scores: list[float], caps: list[float],
+                            total: float, beta: float) -> list[float]:
+    """Projection form for a capped simplex at one Lagrange multiplier.
 
-def _cap_and_redistribute(rows: list[dict], caps: dict[str, float]) -> set[str]:
-    """Cap names and push the excess pro rata onto the uncapped, until no cap is
-    breached. In place on rows['weight'].
-
-    The loop is still here because redistribution can push a previously-free
-    name over its own cap, but it now converges in a pass or two: the ceilings
-    are constants. Were they not — as with an idiosyncratic-variance
-    ceilings moved with the weights they constrained, so this ran inside a
-    200-iteration fixed point that had its own non-convergence warning.
+    KKT conditions for the §7 problem give
+    ``w_i = clip(alpha + beta * score_i, 0, cap_i)``.  For a fixed non-negative
+    beta, bisection on alpha enforces the requested group total.  Keeping this
+    small solver local avoids making the production engine depend on SciPy.
     """
-    bound: set[str] = set()
+    if not scores:
+        if abs(total) <= 1e-12:
+            return []
+        raise ValueError("constraint set is infeasible: an empty group has weight")
+    if total < -1e-12 or total > sum(caps) + 1e-12:
+        raise ValueError(
+            f"constraint set is infeasible: requested {total:.1%} from "
+            f"{sum(caps):.1%} name-cap capacity")
+    if total <= 1e-15:
+        return [0.0] * len(scores)
+
+    lo = min(-beta * score for score in scores) - max(caps) - 1.0
+    hi = max(cap - beta * score for score, cap in zip(scores, caps)) + 1.0
     for _ in range(100):
-        breached = [r for r in rows if r["weight"] > caps[r["ticker"]] + 1e-12]
-        if not breached:
-            return bound
-        bound.update(r["ticker"] for r in breached)
-        excess = 0.0
-        for r in breached:
-            excess += r["weight"] - caps[r["ticker"]]
-            r["weight"] = caps[r["ticker"]]
-        free = [r for r in rows if r["weight"] < caps[r["ticker"]] - 1e-12]
-        pool = sum(r["weight"] for r in free)
-        if not free or pool <= 0:
-            # Every name is at its cap; renormalise and accept the shortfall.
-            tot = sum(r["weight"] for r in rows)
-            if tot > 0:
-                for r in rows:
-                    r["weight"] /= tot
-            return bound
-        for r in free:
-            r["weight"] += excess * (r["weight"] / pool)
-    raise RuntimeError("cap redistribution did not converge in 100 passes")
+        alpha = (lo + hi) / 2.0
+        allocated = sum(min(cap, max(0.0, alpha + beta * score))
+                        for score, cap in zip(scores, caps))
+        if allocated < total:
+            lo = alpha
+        else:
+            hi = alpha
+    alpha = (lo + hi) / 2.0
+    weights = [min(cap, max(0.0, alpha + beta * score))
+               for score, cap in zip(scores, caps)]
+    # Remove the final floating-point residue without changing the active set.
+    residue = total - sum(weights)
+    if abs(residue) > 1e-14:
+        free = [i for i, (weight, cap) in enumerate(zip(weights, caps))
+                if (residue > 0 and weight < cap - 1e-12)
+                or (residue < 0 and weight > 1e-12)]
+        if free:
+            weights[free[0]] += residue
+    return weights
+
+
+def _optimise_at_group_total(scores: list[float], caps: list[float],
+                             target_ssq: float,
+                             developer: list[bool] | None = None,
+                             developer_total: float | None = None
+                             ) -> list[float]:
+    """Maximise a linear score at a fixed Herfindahl ceiling.
+
+    With no active sleeve constraint there is one simplex multiplier.  When the
+    developer sleeve binds there is one multiplier per side of that equality;
+    the quadratic multiplier (beta) remains common.  The squared-weight sum is
+    monotone in beta, so a second bisection reaches the effective-N boundary.
+    """
+    n = len(scores)
+    if n != len(caps) or not n:
+        raise ValueError("§7 optimisation requires a non-empty aligned universe")
+
+    spread = max(scores) - min(scores)
+    scaled = ([0.0] * n if spread <= 1e-15 else
+              [(score - min(scores)) / spread for score in scores])
+
+    if developer_total is None:
+        groups = [(list(range(n)), 1.0)]
+    else:
+        if developer is None or len(developer) != n:
+            raise ValueError("developer flags must align with optimiser inputs")
+        dev_idx = [i for i, is_dev in enumerate(developer) if is_dev]
+        other_idx = [i for i, is_dev in enumerate(developer) if not is_dev]
+        groups = [(dev_idx, developer_total), (other_idx, 1.0 - developer_total)]
+
+    def weights_at(beta: float) -> list[float]:
+        out = [0.0] * n
+        for indexes, total in groups:
+            group = _bounded_affine_weights(
+                [scaled[i] for i in indexes], [caps[i] for i in indexes],
+                total, beta)
+            for i, weight in zip(indexes, group):
+                out[i] = weight
+        return out
+
+    minimum = weights_at(0.0)
+    minimum_ssq = sum(weight * weight for weight in minimum)
+    if minimum_ssq > target_ssq + 1e-10:
+        requested_n = 1.0 / target_ssq
+        possible_n = 1.0 / minimum_ssq
+        raise ValueError(
+            "constraint set is infeasible: caps permit effective N of at most "
+            f"{possible_n:.6g}, below the required {requested_n:.6g}")
+    if spread <= 1e-15 or abs(minimum_ssq - target_ssq) <= 1e-12:
+        return minimum
+
+    lo, hi = 0.0, 1.0
+    upper = weights_at(hi)
+    upper_ssq = sum(weight * weight for weight in upper)
+    previous = minimum
+    for _ in range(100):
+        if upper_ssq >= target_ssq - 1e-12:
+            break
+        if max(abs(a - b) for a, b in zip(upper, previous)) <= 1e-14:
+            # Caps have already produced the unconstrained linear optimum.  If
+            # it is more diversified than required, there is no reason to add
+            # concentration that cannot improve the objective.
+            return upper
+        previous = upper
+        hi *= 2.0
+        upper = weights_at(hi)
+        upper_ssq = sum(weight * weight for weight in upper)
+    else:
+        return upper
+
+    for _ in range(100):
+        beta = (lo + hi) / 2.0
+        candidate = weights_at(beta)
+        ssq = sum(weight * weight for weight in candidate)
+        if ssq < target_ssq:
+            lo = beta
+        else:
+            hi = beta
+    return weights_at((lo + hi) / 2.0)
+
+
+def optimise_value_weights(rows: list[dict], caps: dict[str, float],
+                           effective_n_fraction: float,
+                           max_developer_sleeve: float) -> dict:
+    """Solve v2.2's linear value objective under diversification and caps."""
+    if not 0 < effective_n_fraction <= 1:
+        raise ValueError("weighting.effective_n_fraction must be in (0, 1]")
+    if not 0 <= max_developer_sleeve <= 1:
+        raise ValueError("constraints.max_developer_sleeve must be in [0, 1]")
+    if any(not isinstance(row.get("raw"), (int, float)) or row["raw"] <= 0
+           for row in rows):
+        raise ValueError("§7 optimisation requires every value signal to be positive")
+
+    scores = [row["raw"] for row in rows]
+    ceilings = [caps[row["ticker"]] for row in rows]
+    developers = [row["sleeve"] == "developer" for row in rows]
+    if sum(ceilings) < 1.0 - 1e-12:
+        raise ValueError("constraint set is infeasible: name caps provide less than 100%")
+    producer_capacity = sum(cap for cap, is_dev in zip(ceilings, developers)
+                            if not is_dev)
+    developer_capacity = min(
+        max_developer_sleeve,
+        sum(cap for cap, is_dev in zip(ceilings, developers) if is_dev),
+    )
+    if producer_capacity + developer_capacity < 1.0 - 1e-12:
+        raise ValueError(
+            "constraint set is infeasible for the surviving universe: name and "
+            f"sleeve caps provide only {producer_capacity + developer_capacity:.1%} "
+            "total capacity")
+
+    target_effective_n = effective_n_fraction * len(rows)
+    target_ssq = 1.0 / target_effective_n
+    weights = _optimise_at_group_total(scores, ceilings, target_ssq)
+    sleeve_bound = (sum(weight for weight, is_dev in zip(weights, developers)
+                        if is_dev) > max_developer_sleeve + 1e-10)
+    if sleeve_bound:
+        weights = _optimise_at_group_total(
+            scores, ceilings, target_ssq, developers, max_developer_sleeve)
+
+    for row, weight in zip(rows, weights):
+        row["weight"] = 0.0 if abs(weight) < 1e-14 else weight
+
+    achieved_ssq = sum(weight * weight for weight in weights)
+    return {
+        "effective_n_target": target_effective_n,
+        "effective_n": 1.0 / achieved_ssq,
+        "objective_oz_per_aud": sum(weight * score
+                                    for weight, score in zip(weights, scores)),
+        "developer_sleeve_bound": sleeve_bound,
+    }
 
 
 def effective_n(rows: list[dict]) -> float:
@@ -3353,7 +3475,7 @@ def derive_single_asset(c: dict, meta: dict) -> bool | None:
     argued with, and leaves the data layer holding only a measured quantity.
 
     THE `None` IS LOAD-BEARING. `largest_asset_pp_share` absent must not be read
-    as 0.0: that derives False, silently restores the looser 15% name cap, and
+    as 0.0: that derives False, silently removes the 7.5% special cap, and
     reports it as a test that PASSED. This is the silent-zero trap
     pointed the dangerous way — the direction where absence makes a test easier
     — and it is the same failure Gate 3's two unread spread limits were. A test
@@ -3376,8 +3498,8 @@ def _assert_single_asset_tristate(meta: dict) -> None:
     """
     th = meta["constraints"]["single_asset_pp_share_threshold"]
     # A share is a share. A threshold above 1.0 would disable the cap silently
-    # — every name multi-asset, every ceiling back at 15%, and nothing in the
-    # output saying so — which is the same failure as an absence reading False.
+    # — every name multi-asset, every special ceiling removed, and nothing in
+    # the output saying so — which is the same failure as an absence reading False.
     if not 0.0 < th <= 1.0:
         raise ValueError(
             f"constraints.single_asset_pp_share_threshold is {th}; it is a share "
@@ -3394,7 +3516,7 @@ def _assert_single_asset_tristate(meta: dict) -> None:
             raise AssertionError(
                 f"derive_single_asset({rec}) returned {got!r}, expected {want!r}. "
                 f"An absent largest_asset_pp_share MUST derive None (UNTESTED); "
-                f"deriving False would restore the 15% cap and report it as a "
+                f"deriving False would remove the 7.5% cap and report it as a "
                 f"test that passed (§8.1).")
 
 
@@ -3414,9 +3536,9 @@ def single_asset_names(rows: list[dict]) -> tuple[list[str], list[str]]:
     Absent means UNTESTED and is reported as such, never read as False — the
     Gate 3 precedent: a test that never ran is not a test that passed. The old
     `single_asset_shares` {asset: share} map two revisions back was unsourced
-    for all seventeen names and fed a 20% cap sitting ABOVE the 15% name cap, so
-    it could not bind on one company however concentrated. This one can, and as
-    at 18 Aug 2026 it binds on two: PNR and CYL.
+    for all seventeen names and fed a 20% cap sitting above the then-current 15%
+    name cap, so it could not bind on one company however concentrated. The
+    current 7.5% cap can bind directly.
     """
     flagged = [r["ticker"] for r in rows if r.get("single_asset") is True]
     untested = [r["ticker"] for r in rows if r.get("single_asset") is None]
@@ -3470,94 +3592,58 @@ def capacity(rows: list[dict], aum_aud: float, cfg: dict) -> dict:
 
 
 def apply_constraints(rows: list[dict], meta: dict) -> dict:
-    """§8.1 — three caps, all derived from P(permanent impairment) ≈ 0.
-
-        max_single_name             15%   no one company is the index
-        max_single_asset_name      7.5%   tighter where one mine is the company
-        max_guidance_delivery_name   5%   repeated delivery weakness
-        max_developer_sleeve        15%   pre-production names can fail outright
-        max_developer_single_name    5%
-
-    Nothing here is a risk-model output. Each cap answers the same question —
-    how much of the claim can one uncorrelated operational failure destroy — and
-    that question is in the objective function. What is NOT here any more:
-
-    * the idiosyncratic-variance cap, which moved Pinnacle 14.96% → 9.23%, five
-      times the entire cross-sectional influence of the convexity score it sat
-      beside, on a criterion found nowhere in §0. It pinned three names at 30.5%
-      of the book so their weights came from a variance estimate rather than
-      from their ounces.
-    * the minimum-effective-N ratchet, which tightened the name cap until a
-      diversification statistic cleared a floor. Eff N is still reported. It is
-      an observation about the book, not a target the book is bent to hit.
-
-    Caps are applied to convergence with the excess pushed pro rata onto the
-    uncapped, which is a fixed point in one pass because the ceilings are
-    constants — the old inner loop existed only because the idio ceilings moved
-    with the weights they constrained.
-    """
+    """Solve §7 subject to the §8 permanent-impairment caps."""
     con = meta["constraints"]
     notes: list[str] = []
-    single = con["max_single_name"]
     single_asset_cap = con["max_single_asset_name"]
     delivery_cap = con["max_guidance_delivery_name"]
     flagged, untested = single_asset_names(rows)
 
     if not rows:
         return {"effective_n": 0.0, "notes": ["no constituents to constrain"],
-                "single_name_cap": single, "single_asset_cap": single_asset_cap,
+                "effective_n_target": 0.0,
+                "single_asset_cap": single_asset_cap,
                 "single_asset_names": [], "single_asset_untested": []}
-
-    dev_total = sum(r["weight"] for r in rows if r["sleeve"] == "developer")
-    if dev_total > con["max_developer_sleeve"] and dev_total > 0:
-        scale = con["max_developer_sleeve"] / dev_total
-        freed = dev_total - con["max_developer_sleeve"]
-        for r in rows:
-            if r["sleeve"] == "developer":
-                r["weight"] *= scale
-        others = [r for r in rows if r["sleeve"] != "developer"]
-        pool = sum(r["weight"] for r in others)
-        if pool > 0:
-            for r in others:
-                r["weight"] += freed * (r["weight"] / pool)
-        notes.append(
-            f"developer sleeve scaled {dev_total:.1%} → {con['max_developer_sleeve']:.1%}")
 
     def ceiling(r: dict) -> float:
         if r["sleeve"] == "developer":
-            return min(single, con["max_developer_single_name"])
-        cap = single_asset_cap if r.get("single_asset") is True else single
+            return con["max_developer_single_name"]
+        cap = single_asset_cap if r.get("single_asset") is True else 1.0
         if (r.get("guidance_delivery") or {}).get("portfolio_treatment") == "CAP":
             cap = min(cap, delivery_cap)
         return cap
 
     caps = {r["ticker"]: ceiling(r) for r in rows}
-    producer_capacity = sum(caps[r["ticker"]] for r in rows
-                            if r["sleeve"] != "developer")
-    developer_capacity = min(
-        con["max_developer_sleeve"],
-        sum(caps[r["ticker"]] for r in rows if r["sleeve"] == "developer"),
-    )
-    feasible_capacity = producer_capacity + developer_capacity
-    if feasible_capacity < 1.0 - 1e-12:
-        raise ValueError(
-            "constraint set is infeasible for the surviving universe: name and "
-            f"sleeve caps provide only {feasible_capacity:.1%} total capacity")
-    precap = {r["ticker"]: r["weight"] for r in rows}
-    bound = _cap_and_redistribute(rows, caps)
+    fraction = meta["weighting"]["effective_n_fraction"]
+
+    # Report what the diversification-only optimiser wanted before the
+    # permanent-impairment caps altered the feasible set.
+    unconstrained_rows = [dict(r) for r in rows]
+    optimise_value_weights(
+        unconstrained_rows,
+        {r["ticker"]: 1.0 for r in unconstrained_rows},
+        fraction, 1.0)
+    unconstrained_weights = {r["ticker"]: r["weight"]
+                             for r in unconstrained_rows}
+
+    solved = optimise_value_weights(
+        rows, caps, fraction, con["max_developer_sleeve"])
     breaches = [r["ticker"] for r in rows
                 if r["weight"] > caps[r["ticker"]] + 1e-9]
     if breaches:
-        raise AssertionError("cap redistribution left breaches: "
+        raise AssertionError("optimiser left name-cap breaches: "
                              + ", ".join(sorted(breaches)))
+    if effective_n(rows) + 1e-8 < solved["effective_n_target"]:
+        raise AssertionError("optimiser missed the effective-N constraint")
 
+    bound = [r["ticker"] for r in rows
+             if caps[r["ticker"]] < 1.0
+             and abs(r["weight"] - caps[r["ticker"]]) <= 1e-9]
     if bound:
         detail = ", ".join(
-            (f"{t} {precap[t]:.1%}→{caps[t]:.1%}"
-             if precap[t] > caps[t] + 1e-9 else
-             f"{t} {precap[t]:.1%}→{caps[t]:.1%} after redistribution")
+            f"{t} {unconstrained_weights[t]:.1%}→{caps[t]:.1%}"
             for t in sorted(bound))
-        notes.append(f"name caps bound on {len(bound)}: {detail} (§8.1/§8.2)")
+        notes.append(f"name caps bound on {len(bound)}: {detail} (§8)")
 
     if flagged:
         th = con["single_asset_pp_share_threshold"]
@@ -3565,46 +3651,41 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
             f"{t} {next(r['largest_asset_pp_share'] for r in rows if r['ticker'] == t):.0%}"
             for t in flagged)
         notes.append(
-            f"single-asset companies at the {single_asset_cap:.0%} cap: {detail} "
+            f"single-asset companies at the {single_asset_cap:.1%} cap: {detail} "
             f"— reserve share at one asset at or above the {th:.0%} threshold, "
             f"so one mine carries the claim (§8.1, §11)")
     if untested:
         notes.append(
             f"single-asset status UNTESTED for {len(untested)}/{len(rows)}: "
             f"{', '.join(untested)} — `largest_asset_pp_share` unsourced, so the "
-            f"tighter cap could not be applied and these names ran at {single:.0%}")
+            "7.5% cap could not be applied")
 
     dev_final = sum(r["weight"] for r in rows if r["sleeve"] == "developer")
-    if dev_total > 0:
-        per_name_bound = any(
-            r["sleeve"] == "developer"
-            and abs(r["weight"] - con["max_developer_single_name"]) < 1e-9
-            for r in rows)
-        if abs(dev_final - dev_total) < 1e-9:
-            notes.append(
-                f"developer sleeve {dev_final:.1%} — under the "
-                f"{con['max_developer_sleeve']:.0%} cap, sized to qualifiers "
-                f"not forced (§4.1)")
-        else:
-            why = (f"the {con['max_developer_single_name']:.0%} per-name developer cap"
-                   if per_name_bound else "the caps above")
-            notes.append(
-                f"developer sleeve {dev_total:.1%} pre-cap rank weight → "
-                f"{dev_final:.1%} shipped, "
-                f"bound by {why}, not by the "
-                f"{con['max_developer_sleeve']:.0%} sleeve cap (§4.1)")
+    if any(r["sleeve"] == "developer" for r in rows):
+        notes.append(
+            f"developer sleeve {dev_final:.1%}; aggregate ceiling "
+            f"{con['max_developer_sleeve']:.0%}"
+            + (" bound" if solved["developer_sleeve_bound"] else " not bound"))
 
-    return {"effective_n": effective_n(rows), "notes": notes,
-            "single_name_cap": single, "single_asset_cap": single_asset_cap,
+    notes.insert(0,
+        f"maximised portfolio ounces/EV at effective N "
+        f"{solved['effective_n']:.2f} (minimum "
+        f"{solved['effective_n_target']:.2f} = {fraction:.0%} × {len(rows)})")
+
+    return {"effective_n": solved["effective_n"],
+            "effective_n_target": solved["effective_n_target"],
+            "effective_n_fraction": fraction,
+            "objective_oz_per_aud": solved["objective_oz_per_aud"],
+            "notes": notes, "single_asset_cap": single_asset_cap,
             "guidance_delivery_cap": delivery_cap,
             "single_asset_names": flagged, "single_asset_untested": untested,
-            "precap_weights": precap}
+            "unconstrained_weights": unconstrained_weights,
+            "name_caps": caps,
+            "developer_sleeve_bound": solved["developer_sleeve_bound"]}
 
 
 def portfolio_stats(rows: list[dict], meta: dict) -> dict:
-    """What the book is, measured. Nothing here is a target except beta_target,
-    and that is a band the mandate is checked against rather than optimised to.
-    """
+    """Measure the solved book; effective N is the §7 binding input."""
     w = {r["ticker"]: r["weight"] for r in rows}
     tot = sum(w.values()) or 1.0
 
@@ -3676,6 +3757,7 @@ def portfolio_stats(rows: list[dict], meta: dict) -> dict:
         "portfolio_beta_gold": regressed,
         "beta_coverage": coverage("beta_gold"),
         "portfolio_modelled_delta": wavg("modelled_delta"),
+        "portfolio_modelled_gamma": wavg("modelled_gamma"),
         "portfolio_beta_contemporaneous": wavg("beta_contemporaneous"),
         "beta_target": [lo, hi],
         "beta_in_target": (lo <= regressed <= hi) if regressed is not None else None,
@@ -4044,10 +4126,10 @@ def print_nav(rows: list[dict], navs: dict[str, dict], constituents: list[dict],
 def print_concentration(rows: list[dict], con: dict, stats: dict, meta: dict) -> None:
     """§8.1 / §11 — where one operational failure would land."""
     print("\nCONCENTRATION (§8.1, §11)")
-    precap = con.get("precap_weights") or {}
-    print(f"  {'TICK':<6}{'WEIGHT':>9}{'PRE-CAP':>10}{'A$/oz':>10}"
-          f"{'VALUE RANK':>12}{'POINTS':>8}{'1-ASSET':>9}")
-    print("  " + "─" * 67)
+    unconstrained = con.get("unconstrained_weights") or {}
+    print(f"  {'TICK':<6}{'WEIGHT':>9}{'EFF-N ONLY':>12}{'A$/oz':>10}"
+          f"{'VALUE RANK':>12}{'CAP':>8}{'1-ASSET':>9}")
+    print("  " + "─" * 69)
     for r in sorted(rows, key=lambda x: -x["weight"]):
         t = r["ticker"]
         # The SHARE, not the boolean it derives. A defect hides in a composite:
@@ -4056,17 +4138,19 @@ def print_concentration(rows: list[dict], con: dict, stats: dict, meta: dict) ->
         share = r.get("largest_asset_pp_share")
         col = "UNTESTED" if share is None else f"{share:>7.0%}"
         sa = "  ◆ single-asset" if r.get("single_asset") is True else ""
-        print(f"  {t:<6}{r['weight']*100:>8.2f}%{precap.get(t, r['weight'])*100:>9.2f}%"
+        cap = (con.get("name_caps") or {}).get(t, 1.0)
+        cap_label = "—" if cap >= 1.0 else f"{cap:.0%}"
+        print(f"  {t:<6}{r['weight']*100:>8.2f}%"
+              f"{unconstrained.get(t, r['weight'])*100:>11.2f}%"
               f"{r['aud_per_oz']:>10,.0f}{r['value_rank']:>12g}"
-              f"{r['rank_points']:>8g}{col:>9}{sa}")
-    print(f"    VALUE RANK orders claimed ounces / funded EV; descending linear "
-          f"POINTS set pre-cap weight (§7).")
-    print(f"    Exact signal ties share average occupied rank points. Caps then "
-          f"redistribute in proportion to those weights.")
+              f"{cap_label:>8}{col:>9}{sa}")
+    print(f"    The solver maximises portfolio claimed ounces / funded EV while "
+          f"effective N remains at least {con['effective_n_fraction']:.0%} × N.")
+    print("    EFF-N ONLY removes the §8 name and developer caps for comparison.")
     th = meta["constraints"]["single_asset_pp_share_threshold"]
     print(f"    1-ASSET is largest_asset_pp_share: the share of ELIGIBLE P&P reserves")
     print(f"    at one asset. ◆ at or above {th:.0%} (§8.1) → the "
-          f"{con['single_asset_cap']:.0%} cap, not {con['single_name_cap']:.0%}.")
+          f"{con['single_asset_cap']:.1%} cap.")
     if con["single_asset_untested"]:
         print(f"  Single-asset status UNSOURCED for "
               f"{len(con['single_asset_untested'])}/{len(rows)}. The "
@@ -4094,7 +4178,7 @@ def print_capacity(cap: dict, euraud: float) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Build the SJGV v2.1 index and optionally size a basket.")
+        description="Build the SJGV v2.2 index and optionally size a basket.")
     ap.add_argument("amount", nargs="?", type=float, default=None,
                     help="EUR amount to size the basket for (e.g. 1000000).")
     ap.add_argument("--euraud", type=float, default=None,
@@ -4136,8 +4220,8 @@ def main() -> int:
 
     # §8.1. The tri-state is a property of the code, not of the data, so it is
     # asserted rather than eyeballed — an absent largest_asset_pp_share deriving
-    # False would restore the 15% cap on every unsourced name and report it as a
-    # test that PASSED. Runs before the IBKR session so it fails in a second.
+    # False would remove the 7.5% cap from every unsourced name and report it as
+    # a test that PASSED. Runs before the IBKR session so it fails in a second.
     _assert_single_asset_tristate(meta)
 
     print(f"{meta['methodology']} — adopted {meta['adopted']}")
@@ -4414,9 +4498,10 @@ def main() -> int:
         "construction": {
             "signal": "claimed_unhedged_ounces / funded_enterprise_value",
             "weighting": meta["weighting"]["method"],
-            "tie_method": meta["weighting"]["tie_method"],
-            "pre_cap_formula": "rank_points / sum(rank_points)",
-            "rank_points": "n_constituents + 1 - descending_value_rank",
+            "objective": "maximise sum(weight_i * signal_i)",
+            "effective_n_constraint": (
+                "1 / sum(weight_i^2) >= effective_n_fraction * n_constituents"),
+            "effective_n_fraction": meta["weighting"]["effective_n_fraction"],
         },
         "stats": stats, "constraints": con,
         "weights": rows,
@@ -4439,7 +4524,7 @@ def main() -> int:
     (HERE / "weights.json").write_text(json.dumps(out, indent=2, default=str))
     with (HERE / "weights.csv").open("w", newline="") as f:
         cols = ["ticker", "name", "sleeve", "weight", "value_rank",
-                "rank_points", "raw", "claimed_moz", "aud_per_oz",
+                "raw", "claimed_moz", "aud_per_oz",
                 "aud_per_oz_ex_execution_capital", "all_in_ev_aud_m",
                 "remaining_execution_capex_aud_m",
                 "execution_capital_in_denominator_aud_m",

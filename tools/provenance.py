@@ -14,7 +14,7 @@ Why this matters more than it sounds: the load-bearing fields are the worst
 affected. On the 2026-08-17 baseline, 67 of 228 values (29.4%) were secondary,
 including AISC for eight names — and AISC is a GATE 2 input, so a health gate
 was being decided on aggregator reporting. Pantoro carried nine secondary values
-against one primary while holding the 15% single-name cap.
+against one primary while sitting at the former 15% single-name cap.
 
 The tiers are the ones data/companies.json already declares per document:
 
@@ -23,7 +23,7 @@ The tiers are the ones data/companies.json already declares per document:
   none       no document cited at all, which should never happen
 
 Weighted names are flagged, because a secondary value on a rejected name costs
-nothing and a secondary value on a 15% position costs a great deal.
+nothing and a secondary value on a large position costs a great deal.
 """
 
 from __future__ import annotations

@@ -12,8 +12,8 @@ A gap that cannot move a weight by more than a rounding error is not a gap worth
 working, and treating it as one crowds out the gaps that matter.
 
 So: for each missing input, substitute the most and least favourable values it
-could plausibly take, re-run the whole pipeline — gates, scores, caps, the
-effective-N ratchet — and measure the largest change in any final weight, in
+could plausibly take, re-run the whole pipeline — gates, value objective,
+effective-N constraint and caps — and measure the largest change in any final weight, in
 percentage points. Anything under the threshold is closed. Anything over it is
 work.
 
@@ -42,8 +42,8 @@ notional weight impact.
 
 CAP inputs are the third kind, added 18 Aug 2026 with largest_asset_pp_share.
 They are continuous in the data and discontinuous in the weight: nothing happens
-until the share crosses §8.1's threshold, at which point one name's ceiling
-drops from 15% to 7.5% and the excess redistributes across everyone else. They
+until the share crosses §8.1's threshold, at which point a 7.5% ceiling enters
+the optimisation and the whole portfolio is re-solved. They
 get their own section, and — unlike the other two — that section reports every
 name rather than only the unsourced ones. A cap input that is fully sourced
 still MOVES weight, and a register that fell silent the moment it was sourced
@@ -148,8 +148,8 @@ def build_ranges(flat: list[dict]) -> dict:
                                   "A$ committed capex per oz of annual production")
     # §8.1 cap input. Behaves like neither of the two kinds above: it is
     # continuous in the data and DISCONTINUOUS in the weight, because nothing
-    # happens until the share crosses the threshold and the ceiling drops from
-    # 15% to 7.5%. Perturbing it across the observed cross-section is still the
+    # happens until the share crosses the threshold and the 7.5% ceiling becomes
+    # active. Perturbing it across the observed cross-section is still the
     # right bound — the endpoints straddle the threshold by construction, since
     # the cohort runs from 0.49 to 1.00.
     la = vals("largest_asset_pp_share")
@@ -193,8 +193,8 @@ GATE_FIELDS = ["committed_capex_aud_m"]
 # §8.1 cap inputs — a third kind, added 18 Aug 2026 with
 # largest_asset_pp_share. A score input moves a weight continuously; a gate
 # input does nothing until it removes the name entirely; a CAP input does
-# nothing until it lowers one name's ceiling, at which point that name's excess
-# redistributes pro rata across everyone else.
+# nothing until it adds a 7.5% ceiling, at which point the constrained optimiser
+# re-solves the whole portfolio.
 #
 # They are perturbed alongside SCORE_FIELDS wherever a value is MISSING, which
 # is what stops an unsourced cap input reading as "no gap" in this register.
@@ -377,9 +377,9 @@ def main() -> int:
     print("\n" + "═" * 78)
     print("CAP INPUTS — what the §8.1 single-asset cap moves, per name")
     print("═" * 78)
-    print(f"largest_asset_pp_share >= {th:.0%} → ceiling drops from "
-          f"{meta['constraints']['max_single_name']:.0%} to "
-          f"{meta['constraints']['max_single_asset_name']:.0%}.")
+    print(f"largest_asset_pp_share >= {th:.0%} → a "
+          f"{meta['constraints']['max_single_asset_name']:.1%} ceiling applies; "
+          "otherwise the effective-N constraint determines concentration.")
     print("Δw is the largest weight change from reclassifying THIS name alone.\n")
     print(f"{'TICK':<6}{'W?':<4}{'SHARE':>8}{'CLASS':>12}{'MARGIN':>9}"
           f"{'Δw IF FLIPPED':>15}  VERDICT")
@@ -520,12 +520,10 @@ def main() -> int:
     print("because NOTHING READS IT — not because anyone sourced it. PNR's deck")
     print("was the worst open gap here at 0.59pp and it closed by deletion.")
     print("\nWhat remains genuinely perturbable is the §6 ounce ledger and EV:")
-    print("how many ounces, and what was paid for them. Note also that PNR and CYL")
-    print("both sit AT the 7.5% single-asset cap, so ledger inputs on those names")
-    print("cannot move their weights either — a cap doing its job, not a gap being")
-    print("closed. That is three of fourteen names pinned by a ceiling rather than")
-    print("priced by their ounces, up from one; read the PRE-CAP column in the")
-    print("build's concentration table to see what the ounces alone would have said.")
+    print("how many ounces, and what was paid for them. A name sitting at a special")
+    print("cap may not move under a small ledger perturbation — a cap doing its job,")
+    print("not a gap being closed. Read the EFF-N ONLY column in the build's")
+    print("concentration table to see what the value objective alone would have said.")
     print("\nNever read 0.000pp as \"known\".")
     return 0
 

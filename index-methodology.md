@@ -1,8 +1,8 @@
-# Index methodology — SJGV v2.1
+# Index methodology — SJGV v2.2
 
 **Index:** Stable Jurisdiction Gold Value (SJGV)
 
-**Version:** 2.1
+**Version:** 2.2
 
 **Effective:** 25 August 2026
 
@@ -22,9 +22,9 @@ SJGV gives more capital to qualifying companies offering a stronger sourceable
 claim on future unhedged gold ounces per unit of enterprise value, without
 accepting a foreseeable route to permanent impairment through financial
 failure, undeliverable plans, an untradeable security, or excessive single-name
-risk. It uses ranks rather than exact signal magnitudes because heterogeneous
-public reserve, resource and balance-sheet disclosures do not support that
-degree of sizing precision.
+risk. It uses the disclosed signal magnitudes inside an explicit diversification
+boundary so economically meaningful value gaps affect capital without allowing
+the portfolio to collapse into only the cheapest names.
 
 ```text
 candidate universe
@@ -36,20 +36,20 @@ candidate universe
   → execution-delivery treatment
   → claimed-unhedged-ounce ledger
   → ledger / funded enterprise value signal
-  → descending linear rank weights
-  → concentration caps and redistribution
+  → maximum portfolio ounces/EV optimisation
+  → effective-N floor and permanent-impairment caps
 ```
 
-There is no composite score or optimiser. A term may affect the value rank only
+There is no composite score. A term may affect the objective only
 by changing the ounces claimed or the capital paid for them. Risk, NAV and beta
 statistics are reporting only unless this document defines a gate or cap.
 
-Version 2.1 replaces magnitude-proportional signal weights with descending
-linear rank weights. The value ordering is unchanged; the exact distance
-between two disclosed ratios no longer determines the distance between their
-positions. This is a robustness choice, not a claim that rank weights maximise
-ounces per invested dollar. Version 2.0 remains recoverable from Git and its
-frozen snapshot.
+Version 2.2 replaces descending-linear-rank sizing with a constrained optimiser.
+It maximises the portfolio's claimed ounces per funded dollar while requiring
+the effective number of holdings to remain at least 65% of the eligible count.
+This lets an economically material value gap affect position size without
+allowing the solution to collapse into only the cheapest names. Version 2.1
+remains recoverable from Git and its frozen snapshot.
 
 All numeric parameters are declared in `data/config.json`. Every parameter must
 name its consumer in `build_index.CONFIG_PARAMS`; an undocumented hard-coded
@@ -230,33 +230,36 @@ producer funded EV
 near-producer/developer funded EV
   = market capitalisation + net debt + gross remaining execution capital
 
-rank_i   = descending rank of signal_i, where 1 is strongest
-points_i = N + 1 − rank_i
-pre-cap weight_i = points_i / sum(points)
+portfolio signal = sum(weight_i × signal_i)
+effective N      = 1 / sum(weight_i²)
+
+maximise portfolio signal
+subject to:
+  sum(weight_i) = 1
+  weight_i ≥ 0
+  effective N ≥ 0.65 × N
+  the §8 caps
 ```
 
 Market capitalisation uses the current recorded price and sourced full issued
 share count. Net debt is debt less cash and bullion. Funded EV must be positive.
-Every positive-signal survivor is ranked. Distinct ranks receive `N, N−1, …, 1`
-points. Exact ties share the average rank and average points of the positions
-they occupy, so an alphabetical tie-break cannot move capital. Rank points are
-normalised before caps.
-
-This is capped linear-rank weighting, not magnitude-proportional weighting or
-cap-filling optimisation. It preserves the signal's ordering while declining
-to treat small measured differences as exact position-size ratios. Gold spot
-does not enter the signal, though it can change eligibility through Gate 2.
+Every positive-signal survivor enters `N`, including a survivor whose optimal
+weight is zero. The effective-N constraint is equivalently
+`sum(weight_i²) ≤ 1 / (0.65 × N)`. The linear objective and convex feasible set
+produce a global optimum. When the signal is constant across a set of otherwise
+equivalent names, the solver assigns them equally. If the caps prevent the
+effective-N floor or full investment, the build fails rather than relaxing a
+rule. Gold spot does not enter the signal, though it can change eligibility
+through Gate 2.
 
 ## 8. Constraints
 
 ### 8.1 Portfolio caps
 
-Caps are applied iteratively, redistributing excess in proportion to uncapped
-pre-cap rank weights until no constraint is breached:
+The following caps are enforced inside the optimisation:
 
 | Constraint | Maximum |
 |---|---:|
-| Any company | 15% |
 | Single-asset company | 7.5% |
 | Delivery-cap company | 5% |
 | Any developer | 5% |
@@ -268,8 +271,9 @@ the deposits feeding it form one asset; issuer production-hub groupings are
 used. Where two groupings are defensible, record the more concentrated. An
 absent share is UNTESTED, never false.
 
-The effective ceiling is the tightest applicable cap. Caps need not be filled
-and cannot make an otherwise infeasible universe valid.
+There is no general company cap: the effective-N floor controls overall
+concentration. The effective ceiling is the tightest applicable special cap.
+Caps need not be filled and cannot make an otherwise infeasible universe valid.
 
 ### 8.2 Execution-delivery discipline
 
@@ -310,9 +314,9 @@ effects, diagnostics and market provenance. A sized build also publishes the
 basket. The dated snapshot, not narrative prose, is authoritative for a build.
 
 The primary reporting numéraire is gold ounces and EUR is secondary. The
-headline KPI is A$ of funded EV per claimed ounce. Gold beta, R-squared,
-idiosyncratic volatility, effective N, NAV, implied deck, capacity and ledger
-mix are diagnostics only.
+headline KPI is A$ of funded EV per claimed ounce. Effective N is a binding
+weight constraint. Gold beta, R-squared, idiosyncratic volatility, NAV, implied
+deck, capacity and ledger mix are diagnostics only.
 
 ## 11. Concentration disclosure
 
@@ -342,11 +346,11 @@ engine/config/test changes, and a frozen successful build. A sourced-data
 correction is not a methodology amendment, but its source, as-of date and
 snapshot effect must remain auditable.
 
-The v2.1 release snapshot is
-[`snapshots/2026-08-25-v2.1`](snapshots/2026-08-25-v2.1). It records the engine
-commit, inputs, market session and output hashes. The v2.0 snapshot remains
-immutable; earlier development history is available in Git and is not part of
-this specification.
+The v2.2 release snapshot is
+[`snapshots/2026-08-25-v2.2`](snapshots/2026-08-25-v2.2). It records the engine
+tree state, inputs, market session and output hashes. The v2.1 and v2.0
+snapshots remain immutable; earlier development history is available in Git and
+is not part of this specification.
 
 ## 14. Gate 1 cap-weighted variant
 

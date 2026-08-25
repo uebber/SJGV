@@ -1,0 +1,89 @@
+{
+  "snapshot": "2026-08-25-v2.2",
+  "tag": "v2.2",
+  "taken_utc": "2026-08-25T13:47:45.389610+00:00",
+  "build_generated_utc": "2026-08-25T13:47:19.997028+00:00",
+  "git_commit": "68d707cc1f8e8569ab43805760a9ba60c9630e57-dirty",
+  "engine_commit_at_build": "68d707cc1f8e8569ab43805760a9ba60c9630e57-dirty",
+  "market_input": {
+    "status": "ok",
+    "engine_commit": "68d707cc1f8e8569ab43805760a9ba60c9630e57-dirty",
+    "session_started_utc": "2026-08-25T13:46:01.650322+00:00",
+    "market_data_type_requested": "delayed-frozen",
+    "market_data_type_observed": [
+      "live"
+    ],
+    "equity_price_basis": "latest_asx_daily_close",
+    "equity_price_dates": [
+      "2026-08-25"
+    ],
+    "price_fields": {
+      "histDailyClose": 17
+    },
+    "n_requests": 50,
+    "n_series": 36,
+    "bars_rows": 12022,
+    "n_errors": 17,
+    "error_codes": [
+      2104,
+      2106,
+      2158
+    ],
+    "cli_overrides": {
+      "gold_aud": null,
+      "euraud": null
+    },
+    "bundle_sha256": "5a12fa173a46b759516114d1d3edabba6c85bd824556ad6fbeb5577882421143",
+    "bars_sha256": "bcc9c40da59834a5495f5e3fdb44bf876599b9bc840cc4d73c6c9fd4dff074ec"
+  },
+  "methodology": "SJGV v2.2",
+  "data_sourced": "2026-08-21",
+  "gold_aud_oz": 6442.598662370971,
+  "euraud": 1.630995,
+  "gold_reference_aud": 4971.6495955569735,
+  "n_constituents": 11,
+  "effective_n": 7.150000000000002,
+  "portfolio_beta_gold": 1.701664408804057,
+  "weights": {
+    "NST": 0.25042,
+    "EVN": 0.0,
+    "CMM": 0.022575,
+    "GGP": 0.075,
+    "GMD": 0.124094,
+    "RMS": 0.131121,
+    "RRL": 0.138734,
+    "WGX": 0.05,
+    "VAU": 0.108056,
+    "CYL": 0.05,
+    "RXL": 0.05
+  },
+  "variants": {
+    "gate1_cap": {
+      "methodology": "SJGV Gate 1 Cap-Weighted v1.1",
+      "n_constituents": 10,
+      "weights": {
+        "NST": 0.278945,
+        "EVN": 0.258109,
+        "GMD": 0.080791,
+        "GGP": 0.073326,
+        "CMM": 0.065026,
+        "RMS": 0.060281,
+        "VAU": 0.057669,
+        "RRL": 0.051789,
+        "WGX": 0.049626,
+        "OBM": 0.024438
+      }
+    }
+  },
+  "artefacts": [
+    "data/companies.json",
+    "data/guidance_delivery.json",
+    "data/config.json",
+    "weights.json",
+    "basket.json",
+    "gate1_cap_weights.json",
+    "gate1_cap_basket.json",
+    "market_bundle.json",
+    "market_bars.csv"
+  ]
+}

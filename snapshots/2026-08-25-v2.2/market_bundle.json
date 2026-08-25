@@ -1,0 +1,3716 @@
+{
+  "_schema": "Raw IBKR/TWS session for one build: request parameters, contract identifiers, quote fields, market-data type and the index of every historical series. Bars themselves are in market_bars.csv, keyed on `series`. Written by build_index.py; frozen by tools/snapshot.py.",
+  "session": {
+    "host": "127.0.0.1",
+    "port": 7497,
+    "client_id": 45,
+    "readonly": true,
+    "market_data_type_requested": 4,
+    "market_data_type_requested_label": "delayed-frozen",
+    "engine_commit": "68d707cc1f8e8569ab43805760a9ba60c9630e57-dirty",
+    "started_utc": "2026-08-25T13:46:01.650322+00:00",
+    "ib_insync_version": "0.9.86",
+    "tws_server_version": 176,
+    "tws_server_time_utc": "2026-08-25T13:46:02+00:00",
+    "history_duration": "2 Y",
+    "spread_duration": "3 M",
+    "gold_history_duration": "5 Y",
+    "equity_price_basis": "latest_asx_daily_close",
+    "tickers_requested": [
+      "NST",
+      "EVN",
+      "CMM",
+      "GGP",
+      "GMD",
+      "RMS",
+      "RRL",
+      "WGX",
+      "VAU",
+      "BGL",
+      "OBM",
+      "CYL",
+      "PNR",
+      "BC8",
+      "RXL",
+      "AAR",
+      "AUC"
+    ],
+    "connection_stats": {
+      "duration_s": 77.281,
+      "msgs_sent": 86,
+      "msgs_recv": 1946,
+      "bytes_sent": 5403,
+      "bytes_recv": 853837
+    },
+    "finished_utc": "2026-08-25T13:47:18.628284+00:00"
+  },
+  "requests": [
+    {
+      "seq": 1,
+      "call": "connect",
+      "params": {
+        "host": "127.0.0.1",
+        "port": 7497,
+        "clientId": 45,
+        "readonly": true
+      },
+      "sent_utc": "2026-08-25T13:46:01.650722+00:00",
+      "result": {
+        "server_version": 176
+      },
+      "received_utc": "2026-08-25T13:46:02.221293+00:00"
+    },
+    {
+      "seq": 2,
+      "call": "reqCurrentTime",
+      "params": {},
+      "sent_utc": "2026-08-25T13:46:02.221357+00:00",
+      "result": {
+        "server_time_utc": "2026-08-25T13:46:02+00:00"
+      },
+      "received_utc": "2026-08-25T13:46:02.222520+00:00"
+    },
+    {
+      "seq": 3,
+      "call": "reqMarketDataType",
+      "params": {
+        "marketDataType": 4,
+        "label": "delayed-frozen"
+      },
+      "sent_utc": "2026-08-25T13:46:02.222581+00:00",
+      "received_utc": "2026-08-25T13:46:02.222748+00:00"
+    },
+    {
+      "seq": 4,
+      "call": "qualifyContracts",
+      "params": {
+        "contracts": [
+          {
+            "secType": "STK",
+            "symbol": "NST",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "EVN",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "CMM",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "GGP",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "GMD",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "RMS",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "RRL",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "WGX",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "VAU",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "BGL",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "OBM",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "CYL",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "PNR",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "BC8",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "RXL",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "AAR",
+            "exchange": "ASX",
+            "currency": "AUD"
+          },
+          {
+            "secType": "STK",
+            "symbol": "AUC",
+            "exchange": "ASX",
+            "currency": "AUD"
+          }
+        ]
+      },
+      "sent_utc": "2026-08-25T13:46:02.222853+00:00",
+      "result": [
+        {
+          "conId": 44202785,
+          "secType": "STK",
+          "symbol": "NST",
+          "localSymbol": "NST",
+          "tradingClass": "NST",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 96616475,
+          "secType": "STK",
+          "symbol": "EVN",
+          "localSymbol": "EVN",
+          "tradingClass": "EVN",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 221920910,
+          "secType": "STK",
+          "symbol": "CMM",
+          "localSymbol": "CMM",
+          "tradingClass": "CMM",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 794335689,
+          "secType": "STK",
+          "symbol": "GGP",
+          "localSymbol": "GGP",
+          "tradingClass": "GGP",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 45549471,
+          "secType": "STK",
+          "symbol": "GMD",
+          "localSymbol": "GMD",
+          "tradingClass": "GMD",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 44205169,
+          "secType": "STK",
+          "symbol": "RMS",
+          "localSymbol": "RMS",
+          "tradingClass": "RMS",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 47519420,
+          "secType": "STK",
+          "symbol": "RRL",
+          "localSymbol": "RRL",
+          "tradingClass": "RRL",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 257776024,
+          "secType": "STK",
+          "symbol": "WGX",
+          "localSymbol": "WGX",
+          "tradingClass": "WGX",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 732435627,
+          "secType": "STK",
+          "symbol": "VAU",
+          "localSymbol": "VAU",
+          "tradingClass": "VAU",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 327301423,
+          "secType": "STK",
+          "symbol": "BGL",
+          "localSymbol": "BGL",
+          "tradingClass": "BGL",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 372597050,
+          "secType": "STK",
+          "symbol": "OBM",
+          "localSymbol": "OBM",
+          "tradingClass": "OBM",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 44188609,
+          "secType": "STK",
+          "symbol": "CYL",
+          "localSymbol": "CYL",
+          "tradingClass": "CYL",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 70715550,
+          "secType": "STK",
+          "symbol": "PNR",
+          "localSymbol": "PNR",
+          "tradingClass": "PNR",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 304949994,
+          "secType": "STK",
+          "symbol": "BC8",
+          "localSymbol": "BC8",
+          "tradingClass": "BC8",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 44205439,
+          "secType": "STK",
+          "symbol": "RXL",
+          "localSymbol": "RXL",
+          "tradingClass": "RXL",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 14061890,
+          "secType": "STK",
+          "symbol": "AAR",
+          "localSymbol": "AAR",
+          "tradingClass": "AAR",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        },
+        {
+          "conId": 70961940,
+          "secType": "STK",
+          "symbol": "AUC",
+          "localSymbol": "AUC",
+          "tradingClass": "AUC",
+          "exchange": "ASX",
+          "primaryExchange": "ASX",
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        }
+      ],
+      "received_utc": "2026-08-25T13:46:03.750269+00:00"
+    },
+    {
+      "seq": 5,
+      "call": "reqTickers",
+      "params": {
+        "conIds": [
+          44202785,
+          96616475,
+          221920910,
+          794335689,
+          45549471,
+          44205169,
+          47519420,
+          257776024,
+          732435627,
+          327301423,
+          372597050,
+          44188609,
+          70715550,
+          304949994,
+          44205439,
+          14061890,
+          70961940
+        ],
+        "symbols": [
+          "NST",
+          "EVN",
+          "CMM",
+          "GGP",
+          "GMD",
+          "RMS",
+          "RRL",
+          "WGX",
+          "VAU",
+          "BGL",
+          "OBM",
+          "CYL",
+          "PNR",
+          "BC8",
+          "RXL",
+          "AAR",
+          "AUC"
+        ]
+      },
+      "sent_utc": "2026-08-25T13:46:03.750488+00:00",
+      "result": {
+        "n_tickers": 17
+      },
+      "received_utc": "2026-08-25T13:46:15.868875+00:00"
+    },
+    {
+      "seq": 6,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "NST:TRADES:2Y",
+        "con_id": 44202785,
+        "symbol": "NST",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:15.870303+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:20.746296+00:00"
+    },
+    {
+      "seq": 7,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "NST:BID_ASK:3M",
+        "con_id": 44202785,
+        "symbol": "NST",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:20.749219+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:25.131910+00:00"
+    },
+    {
+      "seq": 8,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "EVN:TRADES:2Y",
+        "con_id": 96616475,
+        "symbol": "EVN",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:25.132474+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:26.234212+00:00"
+    },
+    {
+      "seq": 9,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "EVN:BID_ASK:3M",
+        "con_id": 96616475,
+        "symbol": "EVN",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:26.238564+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:27.497899+00:00"
+    },
+    {
+      "seq": 10,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "CMM:TRADES:2Y",
+        "con_id": 221920910,
+        "symbol": "CMM",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:27.498588+00:00",
+      "result": {
+        "n_bars": 505
+      },
+      "received_utc": "2026-08-25T13:46:28.534705+00:00"
+    },
+    {
+      "seq": 11,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "CMM:BID_ASK:3M",
+        "con_id": 221920910,
+        "symbol": "CMM",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:28.537726+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:29.445336+00:00"
+    },
+    {
+      "seq": 12,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "GGP:TRADES:2Y",
+        "con_id": 794335689,
+        "symbol": "GGP",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:29.446443+00:00",
+      "result": {
+        "n_bars": 299
+      },
+      "received_utc": "2026-08-25T13:46:30.112481+00:00"
+    },
+    {
+      "seq": 13,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "GGP:BID_ASK:3M",
+        "con_id": 794335689,
+        "symbol": "GGP",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:30.114646+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:31.033689+00:00"
+    },
+    {
+      "seq": 14,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "GMD:TRADES:2Y",
+        "con_id": 45549471,
+        "symbol": "GMD",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:31.034278+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:31.965091+00:00"
+    },
+    {
+      "seq": 15,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "GMD:BID_ASK:3M",
+        "con_id": 45549471,
+        "symbol": "GMD",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:31.968328+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:32.864459+00:00"
+    },
+    {
+      "seq": 16,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "RMS:TRADES:2Y",
+        "con_id": 44205169,
+        "symbol": "RMS",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:32.866378+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:33.853239+00:00"
+    },
+    {
+      "seq": 17,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "RMS:BID_ASK:3M",
+        "con_id": 44205169,
+        "symbol": "RMS",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:33.857715+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:34.762767+00:00"
+    },
+    {
+      "seq": 18,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "RRL:TRADES:2Y",
+        "con_id": 47519420,
+        "symbol": "RRL",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:34.764200+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:35.760059+00:00"
+    },
+    {
+      "seq": 19,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "RRL:BID_ASK:3M",
+        "con_id": 47519420,
+        "symbol": "RRL",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:35.764193+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:36.769867+00:00"
+    },
+    {
+      "seq": 20,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "WGX:TRADES:2Y",
+        "con_id": 257776024,
+        "symbol": "WGX",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:36.770523+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:37.878443+00:00"
+    },
+    {
+      "seq": 21,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "WGX:BID_ASK:3M",
+        "con_id": 257776024,
+        "symbol": "WGX",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:37.881594+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:38.894970+00:00"
+    },
+    {
+      "seq": 22,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "VAU:TRADES:2Y",
+        "con_id": 732435627,
+        "symbol": "VAU",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:38.895517+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:40.755802+00:00"
+    },
+    {
+      "seq": 23,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "VAU:BID_ASK:3M",
+        "con_id": 732435627,
+        "symbol": "VAU",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:40.758896+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:41.701252+00:00"
+    },
+    {
+      "seq": 24,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "BGL:TRADES:2Y",
+        "con_id": 327301423,
+        "symbol": "BGL",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:41.701947+00:00",
+      "result": {
+        "n_bars": 494
+      },
+      "received_utc": "2026-08-25T13:46:42.722421+00:00"
+    },
+    {
+      "seq": 25,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "BGL:BID_ASK:3M",
+        "con_id": 327301423,
+        "symbol": "BGL",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:42.728628+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:43.682088+00:00"
+    },
+    {
+      "seq": 26,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "OBM:TRADES:2Y",
+        "con_id": 372597050,
+        "symbol": "OBM",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:43.682726+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:44.593747+00:00"
+    },
+    {
+      "seq": 27,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "OBM:BID_ASK:3M",
+        "con_id": 372597050,
+        "symbol": "OBM",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:44.596875+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:45.553908+00:00"
+    },
+    {
+      "seq": 28,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "CYL:TRADES:2Y",
+        "con_id": 44188609,
+        "symbol": "CYL",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:45.554579+00:00",
+      "result": {
+        "n_bars": 500
+      },
+      "received_utc": "2026-08-25T13:46:46.481706+00:00"
+    },
+    {
+      "seq": 29,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "CYL:BID_ASK:3M",
+        "con_id": 44188609,
+        "symbol": "CYL",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:46.487038+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:47.183665+00:00"
+    },
+    {
+      "seq": 30,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "PNR:TRADES:2Y",
+        "con_id": 70715550,
+        "symbol": "PNR",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:47.184558+00:00",
+      "result": {
+        "n_bars": 507
+      },
+      "received_utc": "2026-08-25T13:46:48.537975+00:00"
+    },
+    {
+      "seq": 31,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "PNR:BID_ASK:3M",
+        "con_id": 70715550,
+        "symbol": "PNR",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:48.541133+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:49.466659+00:00"
+    },
+    {
+      "seq": 32,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "BC8:TRADES:2Y",
+        "con_id": 304949994,
+        "symbol": "BC8",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:49.468634+00:00",
+      "result": {
+        "n_bars": 503
+      },
+      "received_utc": "2026-08-25T13:46:50.531437+00:00"
+    },
+    {
+      "seq": 33,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "BC8:BID_ASK:3M",
+        "con_id": 304949994,
+        "symbol": "BC8",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:50.536245+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:51.475277+00:00"
+    },
+    {
+      "seq": 34,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "RXL:TRADES:2Y",
+        "con_id": 44205439,
+        "symbol": "RXL",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:51.476641+00:00",
+      "result": {
+        "n_bars": 500
+      },
+      "received_utc": "2026-08-25T13:46:52.570875+00:00"
+    },
+    {
+      "seq": 35,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "RXL:BID_ASK:3M",
+        "con_id": 44205439,
+        "symbol": "RXL",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:52.574940+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:53.570863+00:00"
+    },
+    {
+      "seq": 36,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "AAR:TRADES:2Y",
+        "con_id": 14061890,
+        "symbol": "AAR",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:53.572316+00:00",
+      "result": {
+        "n_bars": 502
+      },
+      "received_utc": "2026-08-25T13:46:54.562083+00:00"
+    },
+    {
+      "seq": 37,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "AAR:BID_ASK:3M",
+        "con_id": 14061890,
+        "symbol": "AAR",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:54.565907+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:55.456544+00:00"
+    },
+    {
+      "seq": 38,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "AUC:TRADES:2Y",
+        "con_id": 70961940,
+        "symbol": "AUC",
+        "endDateTime": "",
+        "durationStr": "2 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "TRADES",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:55.459246+00:00",
+      "result": {
+        "n_bars": 501
+      },
+      "received_utc": "2026-08-25T13:46:56.401533+00:00"
+    },
+    {
+      "seq": 39,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "AUC:BID_ASK:3M",
+        "con_id": 70961940,
+        "symbol": "AUC",
+        "endDateTime": "",
+        "durationStr": "3 M",
+        "barSizeSetting": "1 day",
+        "whatToShow": "BID_ASK",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:56.404374+00:00",
+      "result": {
+        "n_bars": 63
+      },
+      "received_utc": "2026-08-25T13:46:57.155322+00:00"
+    },
+    {
+      "seq": 40,
+      "call": "qualifyContracts",
+      "params": {
+        "contracts": [
+          {
+            "secType": "CMDTY",
+            "symbol": "XAUUSD",
+            "exchange": "SMART",
+            "currency": "USD"
+          }
+        ]
+      },
+      "sent_utc": "2026-08-25T13:46:57.156410+00:00",
+      "result": [
+        {
+          "conId": 69067924,
+          "secType": "CMDTY",
+          "symbol": "XAUUSD",
+          "localSymbol": "XAUUSD",
+          "tradingClass": "XAUUSD",
+          "exchange": "SMART",
+          "primaryExchange": null,
+          "currency": "USD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        }
+      ],
+      "received_utc": "2026-08-25T13:46:57.383826+00:00"
+    },
+    {
+      "seq": 41,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "XAUUSD:MIDPOINT:5Y",
+        "con_id": 69067924,
+        "symbol": "XAUUSD",
+        "endDateTime": "",
+        "durationStr": "5 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "MIDPOINT",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:57.383906+00:00",
+      "result": {
+        "n_bars": 1288
+      },
+      "received_utc": "2026-08-25T13:46:59.182206+00:00"
+    },
+    {
+      "seq": 42,
+      "call": "qualifyContracts",
+      "params": {
+        "contracts": [
+          {
+            "secType": "CASH",
+            "pair": "AUDUSD",
+            "exchange": "IDEALPRO"
+          }
+        ]
+      },
+      "sent_utc": "2026-08-25T13:46:59.194732+00:00",
+      "result": [
+        {
+          "conId": 14433401,
+          "secType": "CASH",
+          "symbol": "AUD",
+          "localSymbol": "AUD.USD",
+          "tradingClass": "AUD.USD",
+          "exchange": "IDEALPRO",
+          "primaryExchange": null,
+          "currency": "USD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        }
+      ],
+      "received_utc": "2026-08-25T13:46:59.382962+00:00"
+    },
+    {
+      "seq": 43,
+      "call": "reqHistoricalData",
+      "params": {
+        "series": "AUD.USD:MIDPOINT:5Y",
+        "con_id": 14433401,
+        "symbol": "AUD",
+        "endDateTime": "",
+        "durationStr": "5 Y",
+        "barSizeSetting": "1 day",
+        "whatToShow": "MIDPOINT",
+        "useRTH": true,
+        "formatDate": 1
+      },
+      "sent_utc": "2026-08-25T13:46:59.383036+00:00",
+      "result": {
+        "n_bars": 1296
+      },
+      "received_utc": "2026-08-25T13:47:06.330005+00:00"
+    },
+    {
+      "seq": 44,
+      "call": "qualifyContracts",
+      "params": {
+        "contracts": [
+          {
+            "secType": "CMDTY",
+            "symbol": "XAUUSD",
+            "exchange": "SMART",
+            "currency": "USD"
+          }
+        ]
+      },
+      "sent_utc": "2026-08-25T13:47:06.366523+00:00",
+      "result": [
+        {
+          "conId": 69067924,
+          "secType": "CMDTY",
+          "symbol": "XAUUSD",
+          "localSymbol": "XAUUSD",
+          "tradingClass": "XAUUSD",
+          "exchange": "SMART",
+          "primaryExchange": null,
+          "currency": "USD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        }
+      ],
+      "received_utc": "2026-08-25T13:47:06.690225+00:00"
+    },
+    {
+      "seq": 45,
+      "call": "reqTickers",
+      "params": {
+        "conIds": [
+          69067924
+        ],
+        "symbols": [
+          "XAUUSD"
+        ]
+      },
+      "sent_utc": "2026-08-25T13:47:06.690314+00:00",
+      "result": {
+        "XAUUSD": {
+          "marketDataType": 1.0,
+          "bid": 4609.23,
+          "bidSize": 100.0,
+          "ask": 4609.42,
+          "askSize": 100.0,
+          "last": null,
+          "lastSize": null,
+          "prevBid": null,
+          "prevAsk": null,
+          "prevLast": null,
+          "volume": null,
+          "open": null,
+          "high": 4697.3,
+          "low": 4609.1,
+          "close": 4651.54,
+          "vwap": null,
+          "halted": 0.0,
+          "delayedBid": null,
+          "delayedAsk": null,
+          "delayedLast": null,
+          "delayedClose": null,
+          "marketDataTypeLabel": "live",
+          "_derived": {
+            "marketPrice": 4609.325,
+            "midpoint": 4609.325
+          },
+          "time_utc": "2026-08-25T13:47:06.792364+00:00"
+        }
+      },
+      "received_utc": "2026-08-25T13:47:17.917551+00:00"
+    },
+    {
+      "seq": 46,
+      "call": "qualifyContracts",
+      "params": {
+        "contracts": [
+          {
+            "secType": "CASH",
+            "pair": "AUDUSD",
+            "exchange": "IDEALPRO"
+          }
+        ]
+      },
+      "sent_utc": "2026-08-25T13:47:17.917615+00:00",
+      "result": [
+        {
+          "conId": 14433401,
+          "secType": "CASH",
+          "symbol": "AUD",
+          "localSymbol": "AUD.USD",
+          "tradingClass": "AUD.USD",
+          "exchange": "IDEALPRO",
+          "primaryExchange": null,
+          "currency": "USD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        }
+      ],
+      "received_utc": "2026-08-25T13:47:18.131537+00:00"
+    },
+    {
+      "seq": 47,
+      "call": "reqTickers",
+      "params": {
+        "conIds": [
+          14433401
+        ],
+        "symbols": [
+          "AUDUSD"
+        ]
+      },
+      "sent_utc": "2026-08-25T13:47:18.131643+00:00",
+      "result": {
+        "AUDUSD": {
+          "marketDataType": 1.0,
+          "bid": 0.71544,
+          "bidSize": 4000000.0,
+          "ask": 0.71545,
+          "askSize": 150000.0,
+          "last": null,
+          "lastSize": null,
+          "prevBid": null,
+          "prevAsk": null,
+          "prevLast": null,
+          "volume": null,
+          "open": null,
+          "high": 0.71625,
+          "low": 0.71375,
+          "close": 0.715,
+          "vwap": null,
+          "halted": 0.0,
+          "delayedBid": null,
+          "delayedAsk": null,
+          "delayedLast": null,
+          "delayedClose": null,
+          "marketDataTypeLabel": "live",
+          "_derived": {
+            "marketPrice": 0.715445,
+            "midpoint": 0.715445
+          },
+          "time_utc": "2026-08-25T13:47:18.139081+00:00"
+        }
+      },
+      "received_utc": "2026-08-25T13:47:18.141099+00:00"
+    },
+    {
+      "seq": 48,
+      "call": "qualifyContracts",
+      "params": {
+        "contracts": [
+          {
+            "secType": "CASH",
+            "pair": "EURAUD",
+            "exchange": "IDEALPRO"
+          }
+        ]
+      },
+      "sent_utc": "2026-08-25T13:47:18.141172+00:00",
+      "result": [
+        {
+          "conId": 15016065,
+          "secType": "CASH",
+          "symbol": "EUR",
+          "localSymbol": "EUR.AUD",
+          "tradingClass": "EUR.AUD",
+          "exchange": "IDEALPRO",
+          "primaryExchange": null,
+          "currency": "AUD",
+          "multiplier": null,
+          "lastTradeDateOrContractMonth": null
+        }
+      ],
+      "received_utc": "2026-08-25T13:47:18.329732+00:00"
+    },
+    {
+      "seq": 49,
+      "call": "reqTickers",
+      "params": {
+        "conIds": [
+          15016065
+        ],
+        "symbols": [
+          "EURAUD"
+        ]
+      },
+      "sent_utc": "2026-08-25T13:47:18.329787+00:00",
+      "result": {
+        "EURAUD": {
+          "marketDataType": 1.0,
+          "bid": 1.63096,
+          "bidSize": 1000000.0,
+          "ask": 1.63103,
+          "askSize": 2000000.0,
+          "last": null,
+          "lastSize": null,
+          "prevBid": null,
+          "prevAsk": null,
+          "prevLast": null,
+          "volume": null,
+          "open": null,
+          "high": 1.6333,
+          "low": 1.62935,
+          "close": 1.6313,
+          "vwap": null,
+          "halted": 0.0,
+          "delayedBid": null,
+          "delayedAsk": null,
+          "delayedLast": null,
+          "delayedClose": null,
+          "marketDataTypeLabel": "live",
+          "_derived": {
+            "marketPrice": 1.630995,
+            "midpoint": 1.630995
+          },
+          "time_utc": "2026-08-25T13:47:18.625406+00:00"
+        }
+      },
+      "received_utc": "2026-08-25T13:47:18.626809+00:00"
+    },
+    {
+      "seq": 50,
+      "call": "disconnect",
+      "params": {},
+      "sent_utc": "2026-08-25T13:47:18.626967+00:00",
+      "result": {
+        "duration_s": 77.281,
+        "msgs_sent": 86,
+        "msgs_recv": 1946,
+        "bytes_sent": 5403,
+        "bytes_recv": 853837
+      },
+      "received_utc": "2026-08-25T13:47:18.628250+00:00"
+    }
+  ],
+  "errors": [
+    {
+      "utc": "2026-08-25T13:46:01.989715+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:cafarm",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.989835+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:hfarm",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.989871+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:eufarmnj",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.989891+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:cashfarm",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.989908+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:uscrypto",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991682+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:afarm",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991731+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:usopt.nj",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991769+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:usfarm.nj",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991800+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:jfarm",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991828+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:eufarm",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991857+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:usfarm",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991875+00:00",
+      "req_id": -1,
+      "code": 2104,
+      "message": "Market data farm connection is OK:usopt",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991908+00:00",
+      "req_id": -1,
+      "code": 2106,
+      "message": "HMDS data farm connection is OK:apachmds",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991925+00:00",
+      "req_id": -1,
+      "code": 2106,
+      "message": "HMDS data farm connection is OK:euhmds",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991941+00:00",
+      "req_id": -1,
+      "code": 2106,
+      "message": "HMDS data farm connection is OK:cashhmds",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991957+00:00",
+      "req_id": -1,
+      "code": 2106,
+      "message": "HMDS data farm connection is OK:ushmds",
+      "con_id": null,
+      "symbol": null
+    },
+    {
+      "utc": "2026-08-25T13:46:01.991972+00:00",
+      "req_id": -1,
+      "code": 2158,
+      "message": "Sec-def data farm connection is OK:secdefnj",
+      "con_id": null,
+      "symbol": null
+    }
+  ],
+  "contracts": {
+    "44202785": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "NST",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 44202785,
+        "secType": "STK",
+        "symbol": "NST",
+        "localSymbol": "NST",
+        "tradingClass": "NST",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "96616475": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "EVN",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 96616475,
+        "secType": "STK",
+        "symbol": "EVN",
+        "localSymbol": "EVN",
+        "tradingClass": "EVN",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "221920910": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "CMM",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 221920910,
+        "secType": "STK",
+        "symbol": "CMM",
+        "localSymbol": "CMM",
+        "tradingClass": "CMM",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "794335689": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "GGP",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 794335689,
+        "secType": "STK",
+        "symbol": "GGP",
+        "localSymbol": "GGP",
+        "tradingClass": "GGP",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "45549471": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "GMD",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 45549471,
+        "secType": "STK",
+        "symbol": "GMD",
+        "localSymbol": "GMD",
+        "tradingClass": "GMD",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "44205169": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "RMS",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 44205169,
+        "secType": "STK",
+        "symbol": "RMS",
+        "localSymbol": "RMS",
+        "tradingClass": "RMS",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "47519420": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "RRL",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 47519420,
+        "secType": "STK",
+        "symbol": "RRL",
+        "localSymbol": "RRL",
+        "tradingClass": "RRL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "257776024": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "WGX",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 257776024,
+        "secType": "STK",
+        "symbol": "WGX",
+        "localSymbol": "WGX",
+        "tradingClass": "WGX",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "732435627": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "VAU",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 732435627,
+        "secType": "STK",
+        "symbol": "VAU",
+        "localSymbol": "VAU",
+        "tradingClass": "VAU",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "327301423": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "BGL",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 327301423,
+        "secType": "STK",
+        "symbol": "BGL",
+        "localSymbol": "BGL",
+        "tradingClass": "BGL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "372597050": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "OBM",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 372597050,
+        "secType": "STK",
+        "symbol": "OBM",
+        "localSymbol": "OBM",
+        "tradingClass": "OBM",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "44188609": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "CYL",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 44188609,
+        "secType": "STK",
+        "symbol": "CYL",
+        "localSymbol": "CYL",
+        "tradingClass": "CYL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "70715550": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "PNR",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 70715550,
+        "secType": "STK",
+        "symbol": "PNR",
+        "localSymbol": "PNR",
+        "tradingClass": "PNR",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "304949994": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "BC8",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 304949994,
+        "secType": "STK",
+        "symbol": "BC8",
+        "localSymbol": "BC8",
+        "tradingClass": "BC8",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "44205439": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "RXL",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 44205439,
+        "secType": "STK",
+        "symbol": "RXL",
+        "localSymbol": "RXL",
+        "tradingClass": "RXL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "14061890": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "AAR",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 14061890,
+        "secType": "STK",
+        "symbol": "AAR",
+        "localSymbol": "AAR",
+        "tradingClass": "AAR",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "70961940": {
+      "requested": {
+        "secType": "STK",
+        "symbol": "AUC",
+        "exchange": "ASX",
+        "currency": "AUD"
+      },
+      "qualified": {
+        "conId": 70961940,
+        "secType": "STK",
+        "symbol": "AUC",
+        "localSymbol": "AUC",
+        "tradingClass": "AUC",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "69067924": {
+      "requested": {
+        "secType": "CMDTY",
+        "symbol": "XAUUSD",
+        "exchange": "SMART",
+        "currency": "USD"
+      },
+      "qualified": {
+        "conId": 69067924,
+        "secType": "CMDTY",
+        "symbol": "XAUUSD",
+        "localSymbol": "XAUUSD",
+        "tradingClass": "XAUUSD",
+        "exchange": "SMART",
+        "primaryExchange": null,
+        "currency": "USD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "14433401": {
+      "requested": {
+        "secType": "CASH",
+        "pair": "AUDUSD",
+        "exchange": "IDEALPRO"
+      },
+      "qualified": {
+        "conId": 14433401,
+        "secType": "CASH",
+        "symbol": "AUD",
+        "localSymbol": "AUD.USD",
+        "tradingClass": "AUD.USD",
+        "exchange": "IDEALPRO",
+        "primaryExchange": null,
+        "currency": "USD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    },
+    "15016065": {
+      "requested": {
+        "secType": "CASH",
+        "pair": "EURAUD",
+        "exchange": "IDEALPRO"
+      },
+      "qualified": {
+        "conId": 15016065,
+        "secType": "CASH",
+        "symbol": "EUR",
+        "localSymbol": "EUR.AUD",
+        "tradingClass": "EUR.AUD",
+        "exchange": "IDEALPRO",
+        "primaryExchange": null,
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      }
+    }
+  },
+  "quotes": {
+    "44202785": {
+      "contract": {
+        "conId": 44202785,
+        "secType": "STK",
+        "symbol": "NST",
+        "localSymbol": "NST",
+        "tradingClass": "NST",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:04.189475+00:00"
+      }
+    },
+    "96616475": {
+      "contract": {
+        "conId": 96616475,
+        "secType": "STK",
+        "symbol": "EVN",
+        "localSymbol": "EVN",
+        "tradingClass": "EVN",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.156289+00:00"
+      }
+    },
+    "221920910": {
+      "contract": {
+        "conId": 221920910,
+        "secType": "STK",
+        "symbol": "CMM",
+        "localSymbol": "CMM",
+        "tradingClass": "CMM",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.156289+00:00"
+      }
+    },
+    "794335689": {
+      "contract": {
+        "conId": 794335689,
+        "secType": "STK",
+        "symbol": "GGP",
+        "localSymbol": "GGP",
+        "tradingClass": "GGP",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": 13.56,
+        "bidSize": 940.0,
+        "ask": 13.57,
+        "askSize": 848.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 13.565000000000001,
+          "midpoint": 13.565000000000001
+        },
+        "time_utc": "2026-08-25T13:46:07.156289+00:00"
+      }
+    },
+    "45549471": {
+      "contract": {
+        "conId": 45549471,
+        "secType": "STK",
+        "symbol": "GMD",
+        "localSymbol": "GMD",
+        "tradingClass": "GMD",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.156289+00:00"
+      }
+    },
+    "44205169": {
+      "contract": {
+        "conId": 44205169,
+        "secType": "STK",
+        "symbol": "RMS",
+        "localSymbol": "RMS",
+        "tradingClass": "RMS",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.156289+00:00"
+      }
+    },
+    "47519420": {
+      "contract": {
+        "conId": 47519420,
+        "secType": "STK",
+        "symbol": "RRL",
+        "localSymbol": "RRL",
+        "tradingClass": "RRL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.156289+00:00"
+      }
+    },
+    "257776024": {
+      "contract": {
+        "conId": 257776024,
+        "secType": "STK",
+        "symbol": "WGX",
+        "localSymbol": "WGX",
+        "tradingClass": "WGX",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.156289+00:00"
+      }
+    },
+    "732435627": {
+      "contract": {
+        "conId": 732435627,
+        "secType": "STK",
+        "symbol": "VAU",
+        "localSymbol": "VAU",
+        "tradingClass": "VAU",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.428725+00:00"
+      }
+    },
+    "327301423": {
+      "contract": {
+        "conId": 327301423,
+        "secType": "STK",
+        "symbol": "BGL",
+        "localSymbol": "BGL",
+        "tradingClass": "BGL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": 1.715,
+        "lastSize": 15614.0,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": 0.0,
+        "open": 1.695,
+        "high": null,
+        "low": null,
+        "close": 1.7,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 1.715,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:10.221740+00:00"
+      }
+    },
+    "372597050": {
+      "contract": {
+        "conId": 372597050,
+        "secType": "STK",
+        "symbol": "OBM",
+        "localSymbol": "OBM",
+        "tradingClass": "OBM",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": 1.585,
+        "lastSize": 2.0,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": 0.0,
+        "open": 1.675,
+        "high": null,
+        "low": null,
+        "close": 1.675,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 1.585,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:10.221740+00:00"
+      }
+    },
+    "44188609": {
+      "contract": {
+        "conId": 44188609,
+        "secType": "STK",
+        "symbol": "CYL",
+        "localSymbol": "CYL",
+        "tradingClass": "CYL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.836680+00:00"
+      }
+    },
+    "70715550": {
+      "contract": {
+        "conId": 70715550,
+        "secType": "STK",
+        "symbol": "PNR",
+        "localSymbol": "PNR",
+        "tradingClass": "PNR",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": 2.51,
+        "lastSize": 600.0,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": 0.0,
+        "open": 2.59,
+        "high": null,
+        "low": null,
+        "close": 2.59,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 2.51,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:10.226527+00:00"
+      }
+    },
+    "304949994": {
+      "contract": {
+        "conId": 304949994,
+        "secType": "STK",
+        "symbol": "BC8",
+        "localSymbol": "BC8",
+        "tradingClass": "BC8",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": 1.155,
+        "lastSize": 3485.0,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": 0.0,
+        "open": 1.16,
+        "high": null,
+        "low": null,
+        "close": 1.15,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 1.155,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:10.226527+00:00"
+      }
+    },
+    "44205439": {
+      "contract": {
+        "conId": 44205439,
+        "secType": "STK",
+        "symbol": "RXL",
+        "localSymbol": "RXL",
+        "tradingClass": "RXL",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": null,
+        "low": null,
+        "close": null,
+        "vwap": null,
+        "halted": null,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": null,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:07.836680+00:00"
+      }
+    },
+    "14061890": {
+      "contract": {
+        "conId": 14061890,
+        "secType": "STK",
+        "symbol": "AAR",
+        "localSymbol": "AAR",
+        "tradingClass": "AAR",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": 0.195,
+        "lastSize": 8499.0,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": 0.0,
+        "open": 0.195,
+        "high": null,
+        "low": null,
+        "close": 0.195,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 0.195,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:10.226527+00:00"
+      }
+    },
+    "70961940": {
+      "contract": {
+        "conId": 70961940,
+        "secType": "STK",
+        "symbol": "AUC",
+        "localSymbol": "AUC",
+        "tradingClass": "AUC",
+        "exchange": "ASX",
+        "primaryExchange": "ASX",
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": -1.0,
+        "bidSize": 0.0,
+        "ask": -1.0,
+        "askSize": 0.0,
+        "last": 1.44,
+        "lastSize": 1.0,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": 0.0,
+        "open": 1.42,
+        "high": null,
+        "low": null,
+        "close": 1.45,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 1.44,
+          "midpoint": null
+        },
+        "time_utc": "2026-08-25T13:46:10.221740+00:00"
+      }
+    },
+    "69067924": {
+      "contract": {
+        "conId": 69067924,
+        "secType": "CMDTY",
+        "symbol": "XAUUSD",
+        "localSymbol": "XAUUSD",
+        "tradingClass": "XAUUSD",
+        "exchange": "SMART",
+        "primaryExchange": null,
+        "currency": "USD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": 4609.23,
+        "bidSize": 100.0,
+        "ask": 4609.42,
+        "askSize": 100.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": 4697.3,
+        "low": 4609.1,
+        "close": 4651.54,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 4609.325,
+          "midpoint": 4609.325
+        },
+        "time_utc": "2026-08-25T13:47:06.792364+00:00"
+      }
+    },
+    "14433401": {
+      "contract": {
+        "conId": 14433401,
+        "secType": "CASH",
+        "symbol": "AUD",
+        "localSymbol": "AUD.USD",
+        "tradingClass": "AUD.USD",
+        "exchange": "IDEALPRO",
+        "primaryExchange": null,
+        "currency": "USD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": 0.71544,
+        "bidSize": 4000000.0,
+        "ask": 0.71545,
+        "askSize": 150000.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": 0.71625,
+        "low": 0.71375,
+        "close": 0.715,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 0.715445,
+          "midpoint": 0.715445
+        },
+        "time_utc": "2026-08-25T13:47:18.139081+00:00"
+      }
+    },
+    "15016065": {
+      "contract": {
+        "conId": 15016065,
+        "secType": "CASH",
+        "symbol": "EUR",
+        "localSymbol": "EUR.AUD",
+        "tradingClass": "EUR.AUD",
+        "exchange": "IDEALPRO",
+        "primaryExchange": null,
+        "currency": "AUD",
+        "multiplier": null,
+        "lastTradeDateOrContractMonth": null
+      },
+      "ticker": {
+        "marketDataType": 1.0,
+        "bid": 1.63096,
+        "bidSize": 1000000.0,
+        "ask": 1.63103,
+        "askSize": 2000000.0,
+        "last": null,
+        "lastSize": null,
+        "prevBid": null,
+        "prevAsk": null,
+        "prevLast": null,
+        "volume": null,
+        "open": null,
+        "high": 1.6333,
+        "low": 1.62935,
+        "close": 1.6313,
+        "vwap": null,
+        "halted": 0.0,
+        "delayedBid": null,
+        "delayedAsk": null,
+        "delayedLast": null,
+        "delayedClose": null,
+        "marketDataTypeLabel": "live",
+        "_derived": {
+          "marketPrice": 1.630995,
+          "midpoint": 1.630995
+        },
+        "time_utc": "2026-08-25T13:47:18.625406+00:00"
+      }
+    }
+  },
+  "prices": {
+    "NST": {
+      "price": 24.48,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 44202785,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "EVN": {
+      "price": 15.89,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 96616475,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "CMM": {
+      "price": 17.8,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 221920910,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "GGP": {
+      "price": 13.59,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": 13.56,
+      "ask": 13.57,
+      "spread_pct": 0.07371913011426307,
+      "market_data_type": "live",
+      "con_id": 794335689,
+      "candidates": {
+        "marketPrice": 13.565000000000001,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "GMD": {
+      "price": 8.61,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 45549471,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "RMS": {
+      "price": 3.99,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 44205169,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "RRL": {
+      "price": 8.55,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 47519420,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "WGX": {
+      "price": 6.54,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 257776024,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "VAU": {
+      "price": 6.97,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 732435627,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "BGL": {
+      "price": 1.71,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 327301423,
+      "candidates": {
+        "marketPrice": 1.715,
+        "last": 1.715,
+        "close": 1.7,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "OBM": {
+      "price": 1.58,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 372597050,
+      "candidates": {
+        "marketPrice": 1.585,
+        "last": 1.585,
+        "close": 1.675,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "CYL": {
+      "price": 6.94,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 44188609,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "PNR": {
+      "price": 2.52,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 70715550,
+      "candidates": {
+        "marketPrice": 2.51,
+        "last": 2.51,
+        "close": 2.59,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "BC8": {
+      "price": 1.16,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 304949994,
+      "candidates": {
+        "marketPrice": 1.155,
+        "last": 1.155,
+        "close": 1.15,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "RXL": {
+      "price": 0.595,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 44205439,
+      "candidates": {
+        "marketPrice": null,
+        "last": null,
+        "close": null,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "AAR": {
+      "price": 0.197,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 14061890,
+      "candidates": {
+        "marketPrice": 0.195,
+        "last": 0.195,
+        "close": 0.195,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    },
+    "AUC": {
+      "price": 1.455,
+      "field": "histDailyClose",
+      "price_as_of": "2026-08-25",
+      "bid": null,
+      "ask": null,
+      "spread_pct": null,
+      "market_data_type": "live",
+      "con_id": 70961940,
+      "candidates": {
+        "marketPrice": 1.44,
+        "last": 1.44,
+        "close": 1.45,
+        "delayedLast": null,
+        "delayedClose": null
+      }
+    }
+  },
+  "series": {
+    "NST:TRADES:2Y": {
+      "con_id": 44202785,
+      "symbol": "NST",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "NST:BID_ASK:3M": {
+      "con_id": 44202785,
+      "symbol": "NST",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "EVN:TRADES:2Y": {
+      "con_id": 96616475,
+      "symbol": "EVN",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "EVN:BID_ASK:3M": {
+      "con_id": 96616475,
+      "symbol": "EVN",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "CMM:TRADES:2Y": {
+      "con_id": 221920910,
+      "symbol": "CMM",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 505,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "CMM:BID_ASK:3M": {
+      "con_id": 221920910,
+      "symbol": "CMM",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "GGP:TRADES:2Y": {
+      "con_id": 794335689,
+      "symbol": "GGP",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 299,
+      "first": "2025-06-24",
+      "last": "2026-08-25"
+    },
+    "GGP:BID_ASK:3M": {
+      "con_id": 794335689,
+      "symbol": "GGP",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "GMD:TRADES:2Y": {
+      "con_id": 45549471,
+      "symbol": "GMD",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "GMD:BID_ASK:3M": {
+      "con_id": 45549471,
+      "symbol": "GMD",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "RMS:TRADES:2Y": {
+      "con_id": 44205169,
+      "symbol": "RMS",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "RMS:BID_ASK:3M": {
+      "con_id": 44205169,
+      "symbol": "RMS",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "RRL:TRADES:2Y": {
+      "con_id": 47519420,
+      "symbol": "RRL",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "RRL:BID_ASK:3M": {
+      "con_id": 47519420,
+      "symbol": "RRL",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "WGX:TRADES:2Y": {
+      "con_id": 257776024,
+      "symbol": "WGX",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "WGX:BID_ASK:3M": {
+      "con_id": 257776024,
+      "symbol": "WGX",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "VAU:TRADES:2Y": {
+      "con_id": 732435627,
+      "symbol": "VAU",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "VAU:BID_ASK:3M": {
+      "con_id": 732435627,
+      "symbol": "VAU",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "BGL:TRADES:2Y": {
+      "con_id": 327301423,
+      "symbol": "BGL",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 494,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "BGL:BID_ASK:3M": {
+      "con_id": 327301423,
+      "symbol": "BGL",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "OBM:TRADES:2Y": {
+      "con_id": 372597050,
+      "symbol": "OBM",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "OBM:BID_ASK:3M": {
+      "con_id": 372597050,
+      "symbol": "OBM",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "CYL:TRADES:2Y": {
+      "con_id": 44188609,
+      "symbol": "CYL",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 500,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "CYL:BID_ASK:3M": {
+      "con_id": 44188609,
+      "symbol": "CYL",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "PNR:TRADES:2Y": {
+      "con_id": 70715550,
+      "symbol": "PNR",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 507,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "PNR:BID_ASK:3M": {
+      "con_id": 70715550,
+      "symbol": "PNR",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "BC8:TRADES:2Y": {
+      "con_id": 304949994,
+      "symbol": "BC8",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 503,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "BC8:BID_ASK:3M": {
+      "con_id": 304949994,
+      "symbol": "BC8",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "RXL:TRADES:2Y": {
+      "con_id": 44205439,
+      "symbol": "RXL",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 500,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "RXL:BID_ASK:3M": {
+      "con_id": 44205439,
+      "symbol": "RXL",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "AAR:TRADES:2Y": {
+      "con_id": 14061890,
+      "symbol": "AAR",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 502,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "AAR:BID_ASK:3M": {
+      "con_id": 14061890,
+      "symbol": "AAR",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "AUC:TRADES:2Y": {
+      "con_id": 70961940,
+      "symbol": "AUC",
+      "endDateTime": "",
+      "durationStr": "2 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "TRADES",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "TRADES",
+      "used": true,
+      "n_bars": 501,
+      "first": "2024-08-26",
+      "last": "2026-08-25"
+    },
+    "AUC:BID_ASK:3M": {
+      "con_id": 70961940,
+      "symbol": "AUC",
+      "endDateTime": "",
+      "durationStr": "3 M",
+      "barSizeSetting": "1 day",
+      "whatToShow": "BID_ASK",
+      "useRTH": true,
+      "formatDate": 1,
+      "used": true,
+      "bid_ask_convention": "open = session time-weighted average bid, close = average ask",
+      "n_bars": 63,
+      "first": "2026-05-28",
+      "last": "2026-08-25"
+    },
+    "XAUUSD:MIDPOINT:5Y": {
+      "con_id": 69067924,
+      "symbol": "XAUUSD",
+      "endDateTime": "",
+      "durationStr": "5 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "MIDPOINT",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "MIDPOINT",
+      "used": true,
+      "n_bars": 1288,
+      "first": "2021-08-27",
+      "last": "2026-08-25"
+    },
+    "AUD.USD:MIDPOINT:5Y": {
+      "con_id": 14433401,
+      "symbol": "AUD",
+      "endDateTime": "",
+      "durationStr": "5 Y",
+      "barSizeSetting": "1 day",
+      "whatToShow": "MIDPOINT",
+      "useRTH": true,
+      "formatDate": 1,
+      "requested_what_to_show": "MIDPOINT",
+      "used": true,
+      "n_bars": 1296,
+      "first": "2021-08-27",
+      "last": "2026-08-25"
+    }
+  },
+  "bars_file": {
+    "path": "market_bars.csv",
+    "columns": [
+      "series",
+      "date",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume",
+      "average",
+      "bar_count"
+    ],
+    "n_rows": 12022,
+    "sha256": "bcc9c40da59834a5495f5e3fdb44bf876599b9bc840cc4d73c6c9fd4dff074ec"
+  }
+}
