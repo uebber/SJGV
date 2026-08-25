@@ -1,4 +1,4 @@
-# Capital resilience in SJGV v2.0
+# Capital resilience in SJGV v2.1
 
 Gate 2 protects the future gold claim from a path-dependent failure: severe
 down-cycle financing that permanently dilutes or disables the later upside. It

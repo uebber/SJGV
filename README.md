@@ -84,7 +84,7 @@ determines the relative weight only after eligibility has been established.
 The construction can be remembered in five verbs:
 
 ```text
-qualify → count → price → weight → cap
+qualify → count → price → rank → cap
 ```
 
 That order is the architecture of the index. A failed gate cannot be redeemed
@@ -235,8 +235,14 @@ near-producer/developer funded EV
   = market capitalisation + net debt
   + gross remaining execution capital
 
-raw weight
-  ∝ claimed unhedged ounces / funded EV
+value signal
+  = claimed unhedged ounces / funded EV
+
+rank points
+  = number of qualifying companies + 1 − descending value rank
+
+pre-cap weight
+  = rank points / total rank points
 ```
 
 Available project finance may reduce a developer's dilution risk, but it does
@@ -245,16 +251,19 @@ cost. Established producers use ordinary enterprise value because complete,
 company-wide cost-to-completion schedules are not normally published on a
 comparable basis.
 
-There is no composite score, optimiser or discretionary adjustment. A term may
-change a raw weight only by changing the gold claimed or the capital paid for
-it. Estimated net asset value, share-price sensitivity to gold and other risk
-statistics are reported for context. They cannot feed back into the weights.
+There is no composite score, optimiser or discretionary adjustment. The value
+signal orders qualifying companies; descending linear rank points size them.
+Exact ties share the average points of their occupied ranks. This preserves the
+value ordering without pretending that small differences between heterogeneous
+public disclosures are exact ratios of deserved capital. Estimated net asset
+value, share-price sensitivity to gold and other risk statistics are reported
+for context. They cannot feed back into the weights.
 
 ## Finally, limit what one failure can destroy
 
-Raw weights are normalised to 100%, then excess weight is redistributed among
-uncapped companies in proportion to their raw weights. The tightest applicable
-limit governs:
+Rank points are normalised to 100%, then excess weight is redistributed among
+uncapped companies in proportion to their pre-cap rank weights. The tightest
+applicable limit governs:
 
 | Exposure | Maximum weight |
 |---|---:|

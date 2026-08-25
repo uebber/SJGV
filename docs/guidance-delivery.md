@@ -1,4 +1,4 @@
-# Guidance delivery in SJGV v2.0
+# Guidance delivery in SJGV v2.1
 
 The delivery rule asks whether management repeatedly failed to deliver the
 production and cost plan on which the gold claim depends. It is not a general

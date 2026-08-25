@@ -1,4 +1,4 @@
-# Why SJGV v2.0 fits the mandate
+# Why SJGV v2.1 fits the mandate
 
 SJGV is designed for one view: gold is materially repriced, economically useful
 mine inventory becomes more valuable, and the path is volatile enough that
@@ -6,9 +6,9 @@ financing, jurisdiction and execution determine who retains that upside.
 
 The mandate is therefore not “own gold miners” in general. It is:
 
-> Own the largest sourceable claim on future unhedged gold ounces per unit of
-> enterprise value, in qualifying jurisdictions, while limiting avoidable ways
-> that the claim can be lost before it pays off.
+> Give more capital to stronger sourceable claims on future unhedged gold ounces
+> per unit of enterprise value, in qualifying jurisdictions, while limiting
+> avoidable ways that the claim can be lost before it pays off.
 
 The binding rules are in [`../index-methodology.md`](../index-methodology.md).
 This document explains why that construction is the best fit for the mandate
@@ -55,6 +55,21 @@ capital: available financing may solve dilution, but it does not make the plant
 free. For established producers, complete company-wide cost-to-completion
 schedules are not normally published, so standard EV is both comparable and
 sourceable.
+
+The ratio orders the eligible universe; it does not size positions in direct
+proportion to its measured magnitude. Public reserve and resource statements
+differ in estimation precision, category mix, attribution basis and reporting
+date, while enterprise value is a point-in-time market observation. Treating a
+measured ratio of 2.00 as exactly twice as deserving of capital as 1.00 claims
+more precision than those inputs support.
+
+SJGV therefore assigns descending linear rank points: with `N` qualifying
+companies, ranks receive `N, N−1, …, 1` points before caps. Exact ties share the
+average points of their occupied ranks. This retains the full value ordering,
+reduces sensitivity to small measurement differences and avoids the cliff and
+estimation concentration of a cap-filling optimiser. It does not maximise the
+portfolio's claimed ounces per dollar; that foregone concentration is the
+explicit robustness cost of v2.1.
 
 The 24 August 2026 release cost **A$922 per claimed ounce**, versus **A$1,028**
 for the separately published Gate-1 cap-weighted comparison on the same market

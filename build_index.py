@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-SJGV v2.0 — index construction and basket sizing.
+SJGV v2.1 — index construction and basket sizing.
 
 Computes the basket from the data layer rather than from a hardcoded list, and
 May-2026 weights (including RUP, delisted 16 Jun 2026 into Agnico Eagle).
 
 What changed structurally
 -------------------------
-Weights are computed from an ounce ledger:
+Companies are ranked on an ounce-ledger value signal:
 
-    w_i  ∝   ClaimedUnhedgedOunces_i  ÷  FundedEV_i
+    signal_i = ClaimedUnhedgedOunces_i ÷ FundedEV_i
+    points_i = N + 1 - rank_descending(signal_i)
+    pre-cap weight_i = points_i ÷ sum(points)
 
 where the numerator is built by subtraction, never by scoring:
 
@@ -35,8 +37,8 @@ Near-producers and developers still pay gross remaining execution capital;
 developer project funding stays separate and reduces only the residual funding
 gap used by developer Gate 2, never the denominator.
 
-There is no scoring layer between that ledger and the
-weight: a five-channel convexity score, a purity multiplier, an inverse-σ_idio
+There is no composite scoring layer between that ledger and the value rank: a
+five-channel convexity score, a purity multiplier, an inverse-σ_idio
 denominator, and an idiosyncratic-variance cap. They were measured against the
 book on 17 August 2026 and the finding was unambiguous — the channels were
 monotone restatements of the ledger (c1 +0.87, c2b +0.55 and c3 +0.56 in log
@@ -48,8 +50,10 @@ constituents, the same delta, and a book holding MORE ounces per dollar:
 A$642/oz of EV against A$682/oz. The current design principle is documented in
 docs/investment-case.md §2.
 
-The rule that replaced them: a term enters the weight only if it changes how
-many ounces are claimed, or what was paid for them. Nothing else is a weight.
+The rule that replaced them: a term enters the value rank only if it changes how
+many ounces are claimed, or what was paid for them. Linear descending rank
+points set position size so small measurement differences do not claim false
+precision. Nothing else is a weight.
 
 Market cap is NOT a weight driver — it enters only through EV (as the equity
 component) and via the reported capacity number. Constituent fundamentals live
@@ -352,6 +356,14 @@ CONFIG_PARAMS: dict[str, tuple[str, str]] = {
     "confidence_weights.inferred": ("engine", "§6 Inferred ounce weight"),
     "confidence_weights.hedge_horizon_years": (
         "engine", "§6.3 months of production a disclosed hedge book covers"),
+
+    "weighting.method": (
+        "engine", "§7 descending linear rank weighting of the ounce/EV signal"),
+    "weighting.tie_method": (
+        "engine", "§7 exact ties share average occupied rank points"),
+
+    "market_data.equity_price_basis": (
+        "engine", "§1 latest ASX daily TRADES close returned by TWS"),
 
     "gates.purity_floor_gold_nav_share": ("engine", "§5 hard floor"),
     "gates.max_ineligible_nav_share": ("engine", "§2.4 entity-level cap"),
@@ -1370,6 +1382,8 @@ def write_market_bundle(bundle: dict, bar_rows: list[list]) -> dict:
     for p in bundle["prices"].values():
         k = p["field"] or "unresolved"
         fields[k] = fields.get(k, 0) + 1
+    price_dates = sorted({p.get("price_as_of") for p in bundle["prices"].values()
+                          if p.get("price_as_of")})
     return {
         "bundle": "market_bundle.json",
         "bundle_sha256": hashlib.sha256(text.encode()).hexdigest(),
@@ -1382,6 +1396,8 @@ def write_market_bundle(bundle: dict, bar_rows: list[list]) -> dict:
         "market_data_type_requested":
             bundle["session"]["market_data_type_requested_label"],
         "market_data_type_observed": observed,
+        "equity_price_basis": bundle["session"].get("equity_price_basis"),
+        "equity_price_dates": price_dates,
         # Where the prices in this build actually came from. Kept next to the
         # market-data type because the two together are the honest statement and
         # either alone is not: "live" over a set of histDailyClose fields means
@@ -1597,8 +1613,9 @@ def _join(a: list[tuple[str, float]],
 
 
 def fetch_market_data(tickers: list[str], history_duration: str | None = None,
-                      spread_duration: str | None = None) -> dict:
-    """One IBKR session: spot prices, daily history, gold history, FX.
+                      spread_duration: str | None = None,
+                      equity_price_basis: str = "latest_asx_daily_close") -> dict:
+    """One IBKR session: ASX closes, daily history, gold history and FX.
 
     The two windows are methodology parameters (risk.regression_window and
     gates.spread_window), not implementation details — the estimation window is
@@ -1612,6 +1629,10 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
     """
     history_duration = history_duration or HISTORY_DURATION_DEFAULT
     spread_duration = spread_duration or SPREAD_DURATION_DEFAULT
+    if equity_price_basis != "latest_asx_daily_close":
+        raise ValueError(
+            f"market_data.equity_price_basis is {equity_price_basis!r}; the "
+            "engine supports 'latest_asx_daily_close' and nothing else")
     import ib_insync
     from ib_insync import IB, Contract, Forex, Stock, util
 
@@ -1643,6 +1664,7 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
             "history_duration": history_duration,
             "spread_duration": spread_duration,
             "gold_history_duration": GOLD_HISTORY_DURATION,
+            "equity_price_basis": equity_price_basis,
             "tickers_requested": list(tickers),
         })
 
@@ -1679,9 +1701,6 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
                 ("delayedLast", _pos(getattr(tk, "delayedLast", None))),
                 ("delayedClose", _pos(getattr(tk, "delayedClose", None))),
             ]
-            price = next((v for _, v in candidates if v is not None), None)
-            field = next((n for n, v in candidates if v is not None), None)
-
             # Live top-of-book, kept only as a cross-check. It is NOT what Gate 3
             # reads — see _spread_history.
             bid, ask = _pos(tk.bid), _pos(tk.ask)
@@ -1690,11 +1709,13 @@ def fetch_market_data(tickers: list[str], history_duration: str | None = None,
             closes = _history(ib, tk.contract, duration=history_duration, rec=rec)
             result["spreads"][sym] = spread_stats(
                 _spread_history(ib, tk.contract, spread_duration, rec=rec))
-            if price is None and closes:
-                price, field = closes[-1][1], "histDailyClose"
+            price = closes[-1][1] if closes else None
+            price_as_of = closes[-1][0] if closes else None
+            field = "histDailyClose" if closes else None
 
             result["prices"][sym] = {
                 "price": price, "field": field,
+                "price_as_of": price_as_of,
                 "bid": bid, "ask": ask, "spread_pct": spread_pct,
                 "market_data_type": MARKET_DATA_TYPE_LABELS.get(
                     getattr(tk, "marketDataType", None),
@@ -2968,6 +2989,7 @@ def compute_gate1_cap_weights(constituents: list[dict], prices: dict,
             "market_cap_aud_m": market_cap,
             "mcap_aud_m": market_cap,
             "price_aud": price,
+            "price_as_of": (prices.get(ticker) or {}).get("price_as_of"),
             "shares_out_m": shares,
             "eligible_ounce_share": eligible_share,
             "ineligible_nav_share": ineligible_nav_share,
@@ -3006,13 +3028,13 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
                         navs: dict[str, dict] | None = None,
                         as_of: str | None = None,
                         ) -> tuple[list[dict], list[dict]]:
-    """Apply the §7 formula — claimed unhedged ounces ÷ all-in EV. Returns
+    """Build the §7 value signal and descending-linear-rank weights. Returns
     (weighted rows, rejected rows).
 
-    There is nothing between the ledger and the weight. No score, no tilt, no
-    risk denominator. A name's weight is the share of the index's total claimed
-    ounces that its ounces represent, per dollar of enterprise value paid for
-    them, and that is the entire statement of the strategy.
+    There is no composite score or risk denominator. Claimed ounces per dollar
+    of funded EV orders the survivors; descending linear rank points size them.
+    This preserves the value ordering without treating disclosure and EV
+    measurement differences as exact ratios of deserved capital.
 
     gold_aud is spot, used for Gate 2, the breaking-point diagnostic and the §9
     NAV report. anchor_gold is the conservative reporting deck; it does not
@@ -3182,6 +3204,7 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             "claimed_moz": oz, "ledger": ledger, "purity": purity,
             "statement_age_months": age_months,
             "ev_aud_m": ev_aud_m, "mcap_aud_m": mcap_aud_m, "price_aud": px,
+            "price_as_of": pq.get("price_as_of"),
             "remaining_execution_capex_aud_m": reported_execution_capital,
             "execution_capital_in_denominator_aud_m": denominator_execution_capital,
             "execution_capital": execution,
@@ -3229,13 +3252,55 @@ def compute_raw_weights(constituents: list[dict], prices: dict,
             "guidance_delivery": delivery,
         })
 
-    total = sum(r["raw"] for r in rows)
-    for r in rows:
-        r["weight"] = r["raw"] / total if total > 0 else 0.0
+    apply_rank_weights(rows, meta)
     return rows, rejected
 
 
-def _cap_and_redistribute(rows: list[dict], caps: dict[str, float]) -> None:
+def apply_rank_weights(rows: list[dict], meta: dict) -> None:
+    """§7 descending-linear ranks, with exact ties sharing occupied points.
+
+    For N survivors, distinct ranks receive N, N-1, ..., 1 points. Exact signal
+    ties receive the average of the points their tied positions occupy. This
+    preserves the N(N+1)/2 total and prevents an alphabetical tie-break from
+    moving capital. Caps remain a later, separate operation.
+    """
+    weighting = meta["weighting"]
+    method = weighting["method"]
+    tie_method = weighting["tie_method"]
+    if method != "descending_linear_rank":
+        raise ValueError(
+            f"weighting.method is {method!r}; the §7 implementation supports "
+            "'descending_linear_rank' and nothing else")
+    if tie_method != "average_occupied_rank_points":
+        raise ValueError(
+            f"weighting.tie_method is {tie_method!r}; the §7 implementation "
+            "supports 'average_occupied_rank_points' and nothing else")
+    if any(not isinstance(r.get("raw"), (int, float)) or r["raw"] <= 0
+           for r in rows):
+        raise ValueError("§7 rank weighting requires every value signal to be positive")
+
+    ordered = sorted(rows, key=lambda r: (-r["raw"], r["ticker"]))
+    n = len(ordered)
+    start = 0
+    while start < n:
+        end = start + 1
+        while end < n and ordered[end]["raw"] == ordered[start]["raw"]:
+            end += 1
+        first_rank = start + 1
+        last_rank = end
+        average_rank = (first_rank + last_rank) / 2.0
+        points = n + 1.0 - average_rank
+        for row in ordered[start:end]:
+            row["value_rank"] = average_rank
+            row["rank_points"] = points
+        start = end
+
+    total_points = sum(r["rank_points"] for r in ordered)
+    for row in ordered:
+        row["weight"] = row["rank_points"] / total_points if total_points else 0.0
+
+
+def _cap_and_redistribute(rows: list[dict], caps: dict[str, float]) -> set[str]:
     """Cap names and push the excess pro rata onto the uncapped, until no cap is
     breached. In place on rows['weight'].
 
@@ -3245,10 +3310,12 @@ def _cap_and_redistribute(rows: list[dict], caps: dict[str, float]) -> None:
     ceilings moved with the weights they constrained, so this ran inside a
     200-iteration fixed point that had its own non-convergence warning.
     """
+    bound: set[str] = set()
     for _ in range(100):
         breached = [r for r in rows if r["weight"] > caps[r["ticker"]] + 1e-12]
         if not breached:
-            return
+            return bound
+        bound.update(r["ticker"] for r in breached)
         excess = 0.0
         for r in breached:
             excess += r["weight"] - caps[r["ticker"]]
@@ -3261,9 +3328,10 @@ def _cap_and_redistribute(rows: list[dict], caps: dict[str, float]) -> None:
             if tot > 0:
                 for r in rows:
                     r["weight"] /= tot
-            return
+            return bound
         for r in free:
             r["weight"] += excess * (r["weight"] / pool)
+    raise RuntimeError("cap redistribution did not converge in 100 passes")
 
 
 def effective_n(rows: list[dict]) -> float:
@@ -3476,18 +3544,19 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
             "constraint set is infeasible for the surviving universe: name and "
             f"sleeve caps provide only {feasible_capacity:.1%} total capacity")
     precap = {r["ticker"]: r["weight"] for r in rows}
-    _cap_and_redistribute(rows, caps)
+    bound = _cap_and_redistribute(rows, caps)
     breaches = [r["ticker"] for r in rows
                 if r["weight"] > caps[r["ticker"]] + 1e-9]
     if breaches:
         raise AssertionError("cap redistribution left breaches: "
                              + ", ".join(sorted(breaches)))
 
-    bound = [r["ticker"] for r in rows
-             if precap[r["ticker"]] > caps[r["ticker"]] + 1e-9]
     if bound:
         detail = ", ".join(
-            f"{t} {precap[t]:.1%}→{caps[t]:.0%}" for t in sorted(bound))
+            (f"{t} {precap[t]:.1%}→{caps[t]:.1%}"
+             if precap[t] > caps[t] + 1e-9 else
+             f"{t} {precap[t]:.1%}→{caps[t]:.1%} after redistribution")
+            for t in sorted(bound))
         notes.append(f"name caps bound on {len(bound)}: {detail} (§8.1/§8.2)")
 
     if flagged:
@@ -3520,7 +3589,8 @@ def apply_constraints(rows: list[dict], meta: dict) -> dict:
             why = (f"the {con['max_developer_single_name']:.0%} per-name developer cap"
                    if per_name_bound else "the caps above")
             notes.append(
-                f"developer sleeve {dev_total:.1%} raw → {dev_final:.1%} shipped, "
+                f"developer sleeve {dev_total:.1%} pre-cap rank weight → "
+                f"{dev_final:.1%} shipped, "
                 f"bound by {why}, not by the "
                 f"{con['max_developer_sleeve']:.0%} sleeve cap (§4.1)")
 
@@ -3729,19 +3799,22 @@ def print_gate1_cap_weights(rows: list[dict], rejected: list[dict],
 
 def print_weights(rows: list[dict], stats: dict, con: dict) -> None:
     """The book. Weight, the claim behind it, and what was paid for it."""
-    print(f"\n{'TICK':<6} {'SLEEVE':<14} {'WEIGHT':>8} {'CLAIM Moz':>10} "
-          f"{'A$/oz':>8} {'ALL-IN EV':>10} {'β_Au':>6} {'R²':>6} {'SPREAD':>7}")
-    print("─" * 88)
+    print(f"\n{'TICK':<6} {'SLEEVE':<14} {'WEIGHT':>8} {'RANK':>5} "
+          f"{'CLAIM Moz':>10} {'A$/oz':>8} {'ALL-IN EV':>10} "
+          f"{'β_Au':>6} {'R²':>6} {'SPREAD':>7}")
+    print("─" * 94)
     for r in sorted(rows, key=lambda x: -x["weight"]):
         fmt = lambda v, p=2: f"{v:.{p}f}" if v is not None else "—"  # noqa: E731
         spread = f"{r['spread_pct']:.2f}%" if r.get("spread_pct") is not None else "—"
         sa = " ◆" if r.get("single_asset") is True else ""
+        rank = f"{r['value_rank']:g}" if r.get("value_rank") is not None else "—"
         print(f"{r['ticker']:<6} {r['sleeve']:<14} {r['weight']*100:>7.2f}% "
+              f"{rank:>5} "
               f"{r['claimed_moz']:>10.2f} {r['aud_per_oz']:>8,.0f} "
               f"{r['all_in_ev_aud_m']:>10,.0f} {fmt(r['beta_gold']):>6} "
               f"{fmt(r['r2']):>6} {spread:>7}{sa}")
 
-    print("─" * 88)
+    print("─" * 94)
     print(f"Constituents {stats['n_constituents']}   "
           f"Eff N {stats['effective_n']:.1f}   "
           f"Top weight {stats['top_weight']*100:.1f}%   "
@@ -3972,14 +4045,11 @@ def print_concentration(rows: list[dict], con: dict, stats: dict, meta: dict) ->
     """§8.1 / §11 — where one operational failure would land."""
     print("\nCONCENTRATION (§8.1, §11)")
     precap = con.get("precap_weights") or {}
-    print(f"  {'TICK':<6}{'WEIGHT':>9}{'PRE-CAP':>10}{'CLAIM Moz':>11}"
-          f"{'oz RANK':>9}{'σ_idio':>9}{'1-ASSET':>9}")
-    print("  " + "─" * 65)
-    by_oz = {r["ticker"]: i + 1 for i, r in
-             enumerate(sorted(rows, key=lambda x: -x["claimed_moz"]))}
+    print(f"  {'TICK':<6}{'WEIGHT':>9}{'PRE-CAP':>10}{'A$/oz':>10}"
+          f"{'VALUE RANK':>12}{'POINTS':>8}{'1-ASSET':>9}")
+    print("  " + "─" * 67)
     for r in sorted(rows, key=lambda x: -x["weight"]):
         t = r["ticker"]
-        sig = f"{r['sigma_idio']:.2f}" if r.get("sigma_idio") else "—"
         # The SHARE, not the boolean it derives. A defect hides in a composite:
         # printing only ◆/blank would hide both how far a flagged name is past
         # the threshold and how close an unflagged one is to it.
@@ -3987,14 +4057,12 @@ def print_concentration(rows: list[dict], con: dict, stats: dict, meta: dict) ->
         col = "UNTESTED" if share is None else f"{share:>7.0%}"
         sa = "  ◆ single-asset" if r.get("single_asset") is True else ""
         print(f"  {t:<6}{r['weight']*100:>8.2f}%{precap.get(t, r['weight'])*100:>9.2f}%"
-              f"{r['claimed_moz']:>11.2f}{by_oz[t]:>9}{sig:>9}{col:>9}{sa}")
-    print(f"    oz RANK is the name's rank by claimed ounces. Weight rank and oz rank")
-    print(f"    differ only through EV — that is the whole strategy, visible in two "
-          f"columns.")
-    print(f"    σ_idio is printed and unused. It was the weight denominator until "
-          f"17 Aug 2026,")
-    print(f"    when it measured +0.77 correlated with ounces/EV — cancelling the "
-          f"signal it divided.")
+              f"{r['aud_per_oz']:>10,.0f}{r['value_rank']:>12g}"
+              f"{r['rank_points']:>8g}{col:>9}{sa}")
+    print(f"    VALUE RANK orders claimed ounces / funded EV; descending linear "
+          f"POINTS set pre-cap weight (§7).")
+    print(f"    Exact signal ties share average occupied rank points. Caps then "
+          f"redistribute in proportion to those weights.")
     th = meta["constraints"]["single_asset_pp_share_threshold"]
     print(f"    1-ASSET is largest_asset_pp_share: the share of ELIGIBLE P&P reserves")
     print(f"    at one asset. ◆ at or above {th:.0%} (§8.1) → the "
@@ -4026,7 +4094,7 @@ def print_capacity(cap: dict, euraud: float) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Build the SJGV v2.0 index and optionally size a basket.")
+        description="Build the SJGV v2.1 index and optionally size a basket.")
     ap.add_argument("amount", nargs="?", type=float, default=None,
                     help="EUR amount to size the basket for (e.g. 1000000).")
     ap.add_argument("--euraud", type=float, default=None,
@@ -4081,9 +4149,12 @@ def main() -> int:
         print(f"  RESOURCE RECONCILIATION: {n}")
 
     try:
-        md = fetch_market_data(tickers,
-                               history_duration=meta["risk"]["regression_window"],
-                               spread_duration=meta["gates"]["spread_window"])
+        md = fetch_market_data(
+            tickers,
+            history_duration=meta["risk"]["regression_window"],
+            spread_duration=meta["gates"]["spread_window"],
+            equity_price_basis=meta["market_data"]["equity_price_basis"],
+        )
     except Exception as exc:
         print(f"ERROR: IBKR fetch failed: {exc}", file=sys.stderr)
         print("Start TWS/IB Gateway with the API enabled, or pass "
@@ -4110,10 +4181,11 @@ def main() -> int:
              f"{', '.join(str(c) for c in bundle['error_codes'])}"
              if bundle["n_errors"] else ""))
     if bundle["price_fields"].get("histDailyClose"):
-        print(f"  {bundle['price_fields']['histDailyClose']} price(s) are a "
-              f"historical daily close, not a quote: the quote channel returned "
-              f"nothing for those contracts on this session. Per-name detail in "
-              f"market_bundle.json → prices.")
+        dates = ", ".join(bundle.get("equity_price_dates") or [])
+        print(f"  Equity price basis: latest ASX daily TRADES close from TWS"
+              + (f" ({dates})" if dates else "") + ".")
+        print("  Quote fields are retained in market_bundle.json as cross-checks; "
+              "they do not set weights.")
     print("  Wrote → market_bundle.json, market_bars.csv")
 
     fx = md["fx"]
@@ -4154,9 +4226,9 @@ def main() -> int:
     risk = compute_risk_stats(md["history"], md["gold_history"],
                               md.get("audusd_history"), meta)
 
-    # β_gold is the §0 mandate constraint and σ_idio divides every raw weight,
-    # so the regressor and its sample size are results in their own right, not
-    # plumbing. State them; never let a silent USD fallback pass for the answer.
+    # β_gold is the §10 diagnostic mandate check. The regressor and its sample
+    # size are results in their own right, not plumbing. State them; never let a
+    # silent USD fallback pass for the answer.
     bases = sorted({s["basis"] for s in risk.values() if s.get("basis")})
     n_obs = [s["n_obs"] for s in risk.values() if s.get("n_obs")]
     if not risk:
@@ -4339,6 +4411,13 @@ def main() -> int:
         "gold_reference": anchor,
         "resource_reconciliation": impute_notes,
         "reserve_deck_unsourced": no_deck,
+        "construction": {
+            "signal": "claimed_unhedged_ounces / funded_enterprise_value",
+            "weighting": meta["weighting"]["method"],
+            "tie_method": meta["weighting"]["tie_method"],
+            "pre_cap_formula": "rank_points / sum(rank_points)",
+            "rank_points": "n_constituents + 1 - descending_value_rank",
+        },
         "stats": stats, "constraints": con,
         "weights": rows,
         "ledger": {r["ticker"]: r["ledger"] for r in rows},
@@ -4359,7 +4438,8 @@ def main() -> int:
     }
     (HERE / "weights.json").write_text(json.dumps(out, indent=2, default=str))
     with (HERE / "weights.csv").open("w", newline="") as f:
-        cols = ["ticker", "name", "sleeve", "weight", "claimed_moz", "aud_per_oz",
+        cols = ["ticker", "name", "sleeve", "weight", "value_rank",
+                "rank_points", "raw", "claimed_moz", "aud_per_oz",
                 "aud_per_oz_ex_execution_capital", "all_in_ev_aud_m",
                 "remaining_execution_capex_aud_m",
                 "execution_capital_in_denominator_aud_m",
@@ -4367,7 +4447,7 @@ def main() -> int:
                 "residual_funding_gap_state",
                 "aud_per_oz_ex_gap", "funded_ev_aud_m", "funding_gap_aud_m",
                 "pp_moz", "mi_moz", "inferred_moz", "eligible_share", "hedged_moz",
-                "ev_aud_m", "price_aud", "beta_gold", "r2", "spread_pct",
+                "ev_aud_m", "price_aud", "price_as_of", "beta_gold", "r2", "spread_pct",
                 "largest_asset_pp_share", "single_asset"]
         wr = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         wr.writeheader()

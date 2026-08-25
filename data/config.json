@@ -1,7 +1,7 @@
 {
- "_schema": "SJGV v2.0 parameters. index-methodology.md is binding; current rationale is in docs/. Keys ending in _note or named ref/rule/why are documentation, not parameters.",
- "methodology": "SJGV v2.0",
- "adopted": "2026-08-24",
+ "_schema": "SJGV v2.1 parameters. index-methodology.md is binding; current rationale is in docs/. Keys ending in _note or named ref/rule/why are documentation, not parameters.",
+ "methodology": "SJGV v2.1",
+ "adopted": "2026-08-25",
  "objective": {
   "beta_target": [1.4, 1.8],
   "ref": "Methodology §10. Diagnostic only; no risk statistic affects a weight."
@@ -39,6 +39,16 @@
   "hedge_horizon_years": 2.0,
   "ref": "Methodology §6. Policy discounts for category confidence and development distance.",
   "hedge_horizon_note": "Converts the disclosed 24-month forward-production share into ounces; sold ounces are removed from P&P first."
+ },
+ "weighting": {
+  "method": "descending_linear_rank",
+  "tie_method": "average_occupied_rank_points",
+  "ref": "Methodology §7. Rank the positive claimed-ounce/funded-EV signal; descending linear rank points, not signal magnitudes, set pre-cap weights.",
+  "robustness_note": "Ranks preserve the value ordering without treating small differences in heterogeneous reserve/resource disclosures and point-in-time EV as exact sizing information."
+ },
+ "market_data": {
+  "equity_price_basis": "latest_asx_daily_close",
+  "ref": "Methodology §1. The release price is the latest ASX daily TRADES close returned by TWS; quote fields are retained only as cross-checks."
  },
  "gates": {
   "purity_floor_gold_nav_share": 0.75,

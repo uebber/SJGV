@@ -6,11 +6,11 @@ not part of the active documentation set.
 
 | Document | Authority | Purpose |
 |---|---|---|
-| [`../index-methodology.md`](../index-methodology.md) | Binding | Complete current v2.0 construction |
+| [`../index-methodology.md`](../index-methodology.md) | Binding | Complete current v2.1 construction |
 | [`../data/README.md`](../data/README.md) | Binding schema | Company-data fields and sourcing rules |
 | [`../source-knowledge-base.md`](../source-knowledge-base.md) | Binding evidence design | Authority, retention, conflicts and claim workflow |
 | [`../README.md`](../README.md) | Orientation | Objective, construction summary and repository map |
-| [`investment-case.md`](investment-case.md) | Current rationale | Why v2.0 fits the investment mandate; evidence and limits |
+| [`investment-case.md`](investment-case.md) | Current rationale | Why v2.1 fits the investment mandate; evidence and limits |
 | [`capital-resilience.md`](capital-resilience.md) | Current rationale | Gate 2 economic logic and limitations |
 | [`guidance-delivery.md`](guidance-delivery.md) | Current rationale | Delivery evidence and treatment logic |
 | [`validation.md`](validation.md) | Release evidence | Frozen v2.0 checks, metrics and reproduction boundary |

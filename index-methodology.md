@@ -1,10 +1,10 @@
-# Index methodology — SJGV v2.0
+# Index methodology — SJGV v2.1
 
 **Index:** Stable Jurisdiction Gold Value (SJGV)
 
-**Version:** 2.0
+**Version:** 2.1
 
-**Effective:** 24 August 2026
+**Effective:** 25 August 2026
 
 **Status:** in force
 
@@ -18,10 +18,13 @@ a rule stated here.
 
 ## 0. Objective and construction
 
-SJGV seeks the largest sourceable claim on future unhedged gold ounces per unit
-of enterprise value, in qualifying jurisdictions, without accepting a
-foreseeable route to permanent impairment through financial failure,
-undeliverable plans, an untradeable security, or excessive single-name risk.
+SJGV gives more capital to qualifying companies offering a stronger sourceable
+claim on future unhedged gold ounces per unit of enterprise value, without
+accepting a foreseeable route to permanent impairment through financial
+failure, undeliverable plans, an untradeable security, or excessive single-name
+risk. It uses ranks rather than exact signal magnitudes because heterogeneous
+public reserve, resource and balance-sheet disclosures do not support that
+degree of sizing precision.
 
 ```text
 candidate universe
@@ -32,13 +35,21 @@ candidate universe
   → current-statement gate
   → execution-delivery treatment
   → claimed-unhedged-ounce ledger
-  → ledger / funded enterprise value
-  → concentration caps and normalisation
+  → ledger / funded enterprise value signal
+  → descending linear rank weights
+  → concentration caps and redistribution
 ```
 
-There is no composite score or optimiser. A term may affect a raw weight only
+There is no composite score or optimiser. A term may affect the value rank only
 by changing the ounces claimed or the capital paid for them. Risk, NAV and beta
 statistics are reporting only unless this document defines a gate or cap.
+
+Version 2.1 replaces magnitude-proportional signal weights with descending
+linear rank weights. The value ordering is unchanged; the exact distance
+between two disclosed ratios no longer determines the distance between their
+positions. This is a robustness choice, not a claim that rank weights maximise
+ounces per invested dollar. Version 2.0 remains recoverable from Git and its
+frozen snapshot.
 
 All numeric parameters are declared in `data/config.json`. Every parameter must
 name its consumer in `build_index.CONFIG_PARAMS`; an undocumented hard-coded
@@ -48,7 +59,10 @@ default or a declared but unread parameter is a defect.
 
 The candidate universe is the maintained set of ASX-listed gold companies in
 `data/companies.json`. A security requires complete positive price and share-
-count inputs at calculation time. Delisted securities are excluded.
+count inputs at calculation time. Equity prices are the latest ASX daily TRADES
+close returned by TWS; quote fields are retained only as cross-checks. The
+market bundle records the price date and contract identity. Delisted securities
+are excluded.
 
 The data cut-off is the build's recorded sourcing date. Market observations use
 the recorded IBKR session and UTC timestamps in `market_bundle.json`; no market
@@ -208,28 +222,37 @@ reconciles categories to disclosed total resources but never repairs a mismatch.
 ## 7. Weighting
 
 ```text
-raw_i = claimed_unhedged_ounces_i / funded_EV_i
+signal_i = claimed_unhedged_ounces_i / funded_EV_i
 
 producer funded EV
   = market capitalisation + net debt
 
 near-producer/developer funded EV
   = market capitalisation + net debt + gross remaining execution capital
+
+rank_i   = descending rank of signal_i, where 1 is strongest
+points_i = N + 1 − rank_i
+pre-cap weight_i = points_i / sum(points)
 ```
 
 Market capitalisation uses the current recorded price and sourced full issued
 share count. Net debt is debt less cash and bullion. Funded EV must be positive.
-Raw signals are normalised before caps.
+Every positive-signal survivor is ranked. Distinct ranks receive `N, N−1, …, 1`
+points. Exact ties share the average rank and average points of the positions
+they occupy, so an alphabetical tie-break cannot move capital. Rank points are
+normalised before caps.
 
-This is proportional signal weighting, not cap-filling optimisation. Gold spot
-does not enter the raw formula, though it can change eligibility through Gate 2.
+This is capped linear-rank weighting, not magnitude-proportional weighting or
+cap-filling optimisation. It preserves the signal's ordering while declining
+to treat small measured differences as exact position-size ratios. Gold spot
+does not enter the signal, though it can change eligibility through Gate 2.
 
 ## 8. Constraints
 
 ### 8.1 Portfolio caps
 
 Caps are applied iteratively, redistributing excess in proportion to uncapped
-raw weights until no constraint is breached:
+pre-cap rank weights until no constraint is breached:
 
 | Constraint | Maximum |
 |---|---:|
@@ -319,10 +342,11 @@ engine/config/test changes, and a frozen successful build. A sourced-data
 correction is not a methodology amendment, but its source, as-of date and
 snapshot effect must remain auditable.
 
-The v2.0 release snapshot is
-[`snapshots/2026-08-24-v2.0`](snapshots/2026-08-24-v2.0). It records the engine
-commit, inputs, market session and output hashes. Earlier development history is
-available in Git and is not part of this specification.
+The v2.1 release snapshot is
+[`snapshots/2026-08-25-v2.1`](snapshots/2026-08-25-v2.1). It records the engine
+commit, inputs, market session and output hashes. The v2.0 snapshot remains
+immutable; earlier development history is available in Git and is not part of
+this specification.
 
 ## 14. Gate 1 cap-weighted variant
 

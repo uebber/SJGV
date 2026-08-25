@@ -208,13 +208,15 @@ def _evaluate_gate2(companies: list[dict], cfg: dict, prices: dict[str, dict],
 
 def _weight_stages(actual: dict, cfg: dict) -> dict[str, dict]:
     rows = actual.get("weights", [])
-    raw_total = sum(row.get("raw") or 0.0 for row in rows)
     precap = (actual.get("constraints") or {}).get("precap_weights") or {}
     out = {}
     for row in rows:
         ticker = row["ticker"]
         raw = row.get("raw")
-        normalised = raw / raw_total if raw is not None and raw_total else 0.0
+        # The fixture predates v2.1 and calls this stage
+        # ``normalised_raw_weight``. Preserve the key for longitudinal diffs,
+        # but populate it with the current methodology's pre-cap rank weight.
+        normalised = precap.get(ticker, row.get("weight", 0.0))
         before_name_caps = precap.get(ticker, normalised)
         final = row.get("weight", 0.0)
         if row.get("sleeve") == "developer":
@@ -241,6 +243,8 @@ def _weight_stages(actual: dict, cfg: dict) -> dict[str, dict]:
                                          row.get("funded_ev_aud_m")),
             "aud_per_oz": row.get("aud_per_oz"),
             "raw_score": raw,
+            "value_rank": row.get("value_rank"),
+            "rank_points": row.get("rank_points"),
             "normalised_raw_weight": normalised,
             "pre_name_cap_weight": before_name_caps,
             "sleeve_cap_effect": before_name_caps - normalised,

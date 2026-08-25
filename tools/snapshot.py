@@ -124,6 +124,8 @@ def market_integrity(dest: Path, market: dict) -> dict:
         "session_started_utc": market.get("session_started_utc"),
         "market_data_type_requested": market.get("market_data_type_requested"),
         "market_data_type_observed": market.get("market_data_type_observed"),
+        "equity_price_basis": market.get("equity_price_basis"),
+        "equity_price_dates": market.get("equity_price_dates"),
         # Carried into the manifest rather than left in the bundle because it
         # is the line that decides how much the prices in this snapshot are
         # worth: a book priced from histDailyClose is priced from session

@@ -105,6 +105,11 @@ def main() -> int:
             "session_finished_utc": bundle["session"]["finished_utc"],
         },
         "gold_reference": anchor, "constraints": constraints, "weights": rows,
+        "construction": {
+            "signal": "claimed_unhedged_ounces / funded_enterprise_value",
+            "weighting": meta["weighting"]["method"],
+            "tie_method": meta["weighting"]["tie_method"],
+        },
         "rejected": rejected, "pre_excluded": excluded,
         "resource_reconciliation": impute_notes,
         "variants": {
