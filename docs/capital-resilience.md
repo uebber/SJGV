@@ -42,7 +42,7 @@ sourced unavoidable commitments still enter the stress test.
 
 ## Release evidence
 
-The 24 August snapshot records a stress price of about A$3,914/oz. All admitted
+The 25 August v2.1 snapshot records a stress price of about A$3,893/oz. All admitted
 producers were GREEN or AMBER; AMBER chiefly recorded incomplete commitment
 coverage rather than a required rescue. Six companies were rejected after the
 full construction: four for execution delivery and two developers for approval

@@ -71,9 +71,9 @@ estimation concentration of a cap-filling optimiser. It does not maximise the
 portfolio's claimed ounces per dollar; that foregone concentration is the
 explicit robustness cost of v2.1.
 
-The 24 August 2026 release cost **A$922 per claimed ounce**, versus **A$1,028**
+The 25 August 2026 release cost **A$909 per claimed ounce**, versus **A$1,037**
 for the separately published Gate-1 cap-weighted comparison on the same market
-session. That 10% difference is a point-in-time description, not a forecast or
+session. That 12% difference is a point-in-time description, not a forecast or
 a backtest, but it confirms that the rule currently buys a meaningfully cheaper
 claim than market-cap weighting.
 
@@ -100,8 +100,8 @@ published a partial chart. Company-level marginal costs were also unavailable.
 Any dynamic cut-off model would therefore require invented inputs, contrary to
 the repository's derive-or-fail rule.
 
-In the v2.0 snapshot, the confidence-weighted portfolio ledger was **59.4% P&P,
-28.6% M&I non-reserve and 11.9% Inferred**. The position is mostly reserve-backed
+In the v2.1 snapshot, the confidence-weighted portfolio ledger was **58.6% P&P,
+29.3% M&I non-reserve and 12.2% Inferred**. The position is mostly reserve-backed
 while retaining a material, explicitly discounted optionality sleeve.
 
 ## 4. Why subtract hedges rather than score them
@@ -176,26 +176,26 @@ record is also limited to 5%.
 
 This protection has a visible price: caps move weight away from some of the
 cheapest claims. The release still cost less per claimed ounce than the
-cap-weighted comparison, while its top weight was 14.5%, effective N was 9.66,
+cap-weighted comparison, while its top weight was 15.0%, effective N was 8.72,
 and the developer sleeve was 5%. The method does not optimise effective N; it
 reports it so the investor can see the resulting concentration.
 
-## 7. Evidence from the v2.0 release
+## 7. Evidence from the v2.1 release
 
 The frozen release is a point-in-time implementation check, not performance
 evidence:
 
-| Measure | 24 August 2026 result | What it demonstrates |
+| Measure | 25 August 2026 result | What it demonstrates |
 |---|---:|---|
 | Constituents | 11 | The gates leave a usable, concentrated portfolio |
-| A$ per claimed ounce | 922 | Purchase price of the ledger at that session |
-| Gate-1 cap-weighted comparison | A$1,028/oz | The value rule bought a cheaper claim on identical market inputs |
-| Ledger mix | 59.4% / 28.6% / 11.9% | Reserve / M&I non-reserve / Inferred after confidence weights |
+| A$ per claimed ounce | 909 | Purchase price of the ledger at that session |
+| Gate-1 cap-weighted comparison | A$1,037/oz | The value rule bought a cheaper claim on identical market inputs |
+| Ledger mix | 58.6% / 29.3% / 12.2% | Reserve / M&I non-reserve / Inferred after confidence weights |
 | Dimson gold beta | 1.72 | Observed gold sensitivity was inside the diagnostic 1.4–1.8 band |
-| Effective N | 9.66 | Concentration after caps, reported rather than targeted |
-| Top weight | 14.5% | General name cap respected |
+| Effective N | 8.72 | Concentration after caps, reported rather than targeted |
+| Top weight | 15.0% | General name cap respected |
 | Developer sleeve | 5.0% | Pre-production risk remained bounded |
-| Capacity at €1m | A$24.1m binding estimate | Every released position passed the reporting capacity check |
+| Capacity at €1m | A$24.7m binding estimate | Every released position passed the reporting capacity check |
 
 The beta uses ASX/gold timing lags and has full constituent coverage, but its
 weighted R² was only 0.21. Gold explains a minority of daily equity variation.
@@ -222,7 +222,7 @@ without look-ahead would require point-in-time inputs the repository does not
 possess. A modern portfolio backfilled with today's disclosures would be
 misleading.
 
-The methodology also does not prove that 1.0/0.5/0.2 are optimal, that A$922 per
+The methodology also does not prove that 1.0/0.5/0.2 are optimal, that A$909 per
 claimed ounce is intrinsically cheap, or that the caps maximise risk-adjusted
 return. It argues that these rules are transparent, sourceable and aligned with
 the mandate. The investment thesis should be judged prospectively by:

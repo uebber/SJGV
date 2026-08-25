@@ -171,13 +171,13 @@ inside the published debt and interest limits; and where no disqualifying gold
 control is in operation. The regional test and the company-level limit on
 ineligible assets then narrow the field further.
 
-At the v2.0 effective date, Australia and New Zealand pass the national test.
+At the v2.1 effective date, Australia and New Zealand pass the national test.
 Canada's gross debt and federal interest burden breach the solvency limits.
 Finland belongs to the euro currency union, and the United States both issues
 the global reserve currency and breaches the solvency limits. New Zealand has
 no eligible listed vehicle in the present universe. Once ineligible overseas
 ounces are removed—and companies with more than 25% of their value in failing
-jurisdictions are excluded—the gold admitted to the v2.0 weighting ledger is
+jurisdictions are excluded—the gold admitted to the v2.1 weighting ledger is
 therefore Australian.
 
 That is the result of the rule, not an assumption hidden inside it, and it is
@@ -281,51 +281,52 @@ quietly redefining what “value” means.
 
 ## What the current release says
 
-The current release is **SJGV v2.0**, effective 24 August 2026. Its
-[frozen release record](snapshots/2026-08-24-v2.0) preserves the accepted
+The current release is **SJGV v2.1**, effective 25 August 2026. Its
+[frozen release record](snapshots/2026-08-25-v2.1) preserves the accepted
 company data, market session, calculation engine, target weights and generated
 basket. For that build:
 
 | Measure | Result | What it tells us |
 |---|---:|---|
 | Companies held | 11 | The full sequence of gates and caps left a usable but concentrated portfolio. |
-| Funded value per claimed ounce | A$922.23 | The aggregate purchase price of one confidence-weighted claimed ounce. |
-| Gate-1 cap-weighted comparison | A$1,027.57/oz | The ten largest jurisdiction-qualified companies, weighted by market value on the same market session, offered fewer claimed ounces per dollar. |
-| Ledger mix | 59.4% / 28.6% / 11.9% | The confidence-weighted claim comprised P&P / M&I outside reserves / Inferred ounces. |
+| Funded value per claimed ounce | A$908.66 | The aggregate purchase price of one confidence-weighted claimed ounce. |
+| Gate-1 cap-weighted comparison | A$1,036.71/oz | The ten largest jurisdiction-qualified companies, weighted by market value on the same market session, offered fewer claimed ounces per dollar. |
+| Ledger mix | 58.6% / 29.3% / 12.2% | The confidence-weighted claim comprised P&P / M&I outside reserves / Inferred ounces. |
 | Gold beta | 1.72 | The measured shares had greater historical sensitivity to gold; this is an estimate, not a forecast. |
-| Effective number of holdings | 9.66 | Concentration resembled roughly 9.66 equally weighted positions. |
-| Largest company weight | 14.50% | The general company limit was respected. |
+| Effective number of holdings | 8.72 | Concentration resembled roughly 8.72 equally weighted positions. |
+| Largest company weight | 15.00% | The general company limit bound three names after redistribution. |
 | Total developer weight | 5.00% | Pre-production exposure remained bounded. |
 
 ### The snapshot index
 
 The release also contains a whole-share basket for an investment of
-€1,000,000. At the recorded exchange rate of A$1.63057 per euro and an assumed
+€1,000,000. At the recorded exchange rate of A$1.63047 per euro and an assumed
 commission of 0.10%, the target weights became the following positions. “Share
 value” is the recorded A$ price multiplied by the number of shares and excludes
 commission.
 
 | Company | ASX | Target weight | Price | Shares | Share value |
 |---|---:|---:|---:|---:|---:|
-| Northern Star Resources | NST | 14.500% | A$24.270 | 9,732 | A$236,195.64 |
-| Evolution Mining | EVN | 5.632% | A$15.640 | 5,866 | A$91,744.24 |
-| Capricorn Metals | CMM | 9.867% | A$17.750 | 9,055 | A$160,726.25 |
-| Greatland Resources | GGP | 7.500% | A$13.630 | 8,964 | A$122,179.32 |
-| Genesis Minerals | GMD | 11.887% | A$8.590 | 22,542 | A$193,635.78 |
-| Ramelius Resources | RMS | 11.869% | A$4.030 | 47,973 | A$193,331.19 |
-| Regis Resources | RRL | 12.168% | A$8.540 | 23,209 | A$198,204.86 |
-| Westgold Resources | WGX | 5.000% | A$6.340 | 12,846 | A$81,443.64 |
-| Vault Minerals | VAU | 11.577% | A$6.950 | 27,135 | A$188,588.25 |
-| Catalyst Metals | CYL | 5.000% | A$6.770 | 12,030 | A$81,443.10 |
-| Rox Resources | RXL | 5.000% | A$0.580 | 140,426 | A$81,447.08 |
-| **Total** |  | **100.000%** |  |  | **A$1,628,939.35** |
+| Northern Star Resources | NST | 15.000% | A$24.480 | 9,981 | A$244,334.88 |
+| Evolution Mining | EVN | 2.955% | A$15.890 | 3,029 | A$48,130.81 |
+| Capricorn Metals | CMM | 5.909% | A$17.800 | 5,407 | A$96,244.60 |
+| Greatland Resources | GGP | 7.500% | A$13.590 | 8,989 | A$122,160.51 |
+| Genesis Minerals | GMD | 14.773% | A$8.610 | 27,947 | A$240,623.67 |
+| Ramelius Resources | RMS | 15.000% | A$3.990 | 61,234 | A$244,323.66 |
+| Regis Resources | RRL | 15.000% | A$8.550 | 28,576 | A$244,324.80 |
+| Westgold Resources | WGX | 5.000% | A$6.540 | 12,453 | A$81,442.62 |
+| Vault Minerals | VAU | 8.864% | A$6.970 | 20,713 | A$144,369.61 |
+| Catalyst Metals | CYL | 5.000% | A$6.940 | 11,735 | A$81,440.90 |
+| Rox Resources | RXL | 5.000% | A$0.595 | 136,878 | A$81,442.41 |
+| **Total** |  | **100.000%** |  |  | **A$1,628,838.47** |
 
-Commission adds A$1,628.94, for total deployment of A$1,630,568.29
-(€999,998.95) and €1.05 left uninvested. The table records one historical
-market session; it is not a live dealing instruction.
+Commission adds A$1,628.84, for total deployment of A$1,630,467.31
+(€999,998.35) and €1.65 left uninvested. All equity prices are the 25 August
+2026 ASX daily closes returned by TWS. The table records one historical market
+session; it is not a live dealing instruction.
 
 The lower price per claimed ounce shows that the weighting rule did what it was
-designed to do on that date. It does not prove that A$922 was intrinsically
+designed to do on that date. It does not prove that A$909 was intrinsically
 cheap, that the confidence discounts are optimal, or that SJGV will outperform
 the comparison. The market may have sound reasons to value one ounce above
 another; the index makes its own trade explicit rather than claiming those
@@ -333,7 +334,7 @@ differences do not exist.
 
 The detailed [investment case](docs/investment-case.md) explains where the
 construction should and should not work. The [release validation](docs/validation.md)
-records what v2.0 establishes and what remains unproven.
+records what v2.1 establishes and what remains unproven.
 
 ## How to read the risks
 
@@ -397,7 +398,7 @@ answer:
 |---|---|
 | the investment idea and its limitations | [the investment case](docs/investment-case.md) |
 | the binding eligibility and weighting rules | [the index methodology](index-methodology.md) |
-| the frozen v2.0 inputs and outputs | [the release snapshot](snapshots/2026-08-24-v2.0) |
+| the frozen v2.1 inputs and outputs | [the release snapshot](snapshots/2026-08-25-v2.1) |
 | what the release proves | [the validation record](docs/validation.md) |
 | the meaning and acceptance rules for each input | [the data specification](data/README.md) |
 | which sources prevail and how conflicts are handled | [the source knowledge base](source-knowledge-base.md) |

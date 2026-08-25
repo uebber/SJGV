@@ -13,7 +13,7 @@ not part of the active documentation set.
 | [`investment-case.md`](investment-case.md) | Current rationale | Why v2.1 fits the investment mandate; evidence and limits |
 | [`capital-resilience.md`](capital-resilience.md) | Current rationale | Gate 2 economic logic and limitations |
 | [`guidance-delivery.md`](guidance-delivery.md) | Current rationale | Delivery evidence and treatment logic |
-| [`validation.md`](validation.md) | Release evidence | Frozen v2.0 checks, metrics and reproduction boundary |
+| [`validation.md`](validation.md) | Release evidence | Frozen v2.1 checks, metrics and reproduction boundary |
 | [`primary-source-operations.md`](primary-source-operations.md) | Operations | Current primary-document retrieval mechanics |
 | [`knowledge-store-status.md`](knowledge-store-status.md) | Operations | Implemented evidence controls and live limitations |
 
@@ -21,5 +21,6 @@ Machine-readable evidence remains outside narrative documentation:
 
 - `data/guidance_delivery.json` — active delivery ratings;
 - `knowledge/` — document and claim ledgers;
-- `snapshots/2026-08-24-v2.0/` — frozen release inputs and outputs; and
+- `snapshots/2026-08-25-v2.1/` — current frozen release inputs and outputs;
+- `snapshots/2026-08-24-v2.0/` — immutable prior release; and
 - generated root outputs — latest build only, not historical authority.

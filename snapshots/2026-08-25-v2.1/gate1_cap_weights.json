@@ -1,0 +1,405 @@
+{
+  "generated_utc": "2026-08-25T10:53:13.667754+00:00",
+  "methodology": "SJGV Gate 1 Cap-Weighted v1.1",
+  "adopted": "2026-08-22",
+  "data_sourced": "2026-08-21",
+  "construction": {
+    "universe": "shared data/companies.json candidate universe",
+    "eligibility": "Gate 1 only",
+    "selection": "largest 10 eligible companies by full market capitalisation",
+    "weighting": "full_market_cap",
+    "formula": "shares_out_m * price_aud / total_market_cap_aud_m",
+    "not_applied": [
+      "Gate 2",
+      "Gate 3",
+      "resource-statement currency",
+      "ounce ledger",
+      "enterprise-value weighting",
+      "section 8 caps"
+    ]
+  },
+  "gate1": {
+    "max_ineligible_nav_share": 0.25,
+    "mixed_jurisdiction_treatment": "admit the whole company when the entity cap passes; do not haircut market capitalisation by eligible-ounce share"
+  },
+  "market_input": {
+    "bundle": "market_bundle.json",
+    "bundle_sha256": "da3157f2f9270dc617f6cbfa0c3bc9f55db3053f1a00635d0f335834ce93955f",
+    "bars": "market_bars.csv",
+    "bars_sha256": "d36b987acf02ad1ebe3163fda62a2a90a75b89f8be1fd27eafea3f59b6914ce0",
+    "bars_rows": 12022,
+    "engine_commit": "ca0fc26c369504bb3016bf28fb3c8e89f1ba75a2",
+    "session_started_utc": "2026-08-25T10:52:10.295401+00:00",
+    "session_finished_utc": "2026-08-25T10:53:13.604591+00:00",
+    "market_data_type_requested": "delayed-frozen",
+    "market_data_type_observed": [
+      "live"
+    ],
+    "equity_price_basis": "latest_asx_daily_close",
+    "equity_price_dates": [
+      "2026-08-25"
+    ],
+    "price_fields": {
+      "histDailyClose": 17
+    },
+    "n_requests": 50,
+    "n_contracts": 20,
+    "n_series": 36,
+    "n_errors": 17,
+    "error_codes": [
+      2104,
+      2106,
+      2158
+    ],
+    "cli_overrides": {
+      "gold_aud": null,
+      "euraud": null
+    }
+  },
+  "stats": {
+    "n_constituents": 10,
+    "max_constituents": 10,
+    "total_market_cap_aud_m": 125040.3844,
+    "selected_market_cap_aud_m": 125040.3844,
+    "eligible_market_cap_aud_m": 133230.71594999998,
+    "eligible_market_cap_coverage": 0.9385252005020094,
+    "effective_n": 5.771532337787049,
+    "top_weight": 0.2789446702948556
+  },
+  "weights": [
+    {
+      "ticker": "NST",
+      "name": "Northern Star Resources",
+      "sleeve": "producer",
+      "weight": 0.2789446702948556,
+      "market_cap_aud_m": 34879.3488,
+      "mcap_aud_m": 34879.3488,
+      "price_aud": 24.48,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 1424.81,
+      "eligible_ounce_share": 0.91,
+      "ineligible_nav_share": 0.09,
+      "shares_src": "data",
+      "market_cap_rank": 1
+    },
+    {
+      "ticker": "EVN",
+      "name": "Evolution Mining",
+      "sleeve": "producer",
+      "weight": 0.2581087722567814,
+      "market_cap_aud_m": 32274.0201,
+      "mcap_aud_m": 32274.0201,
+      "price_aud": 15.89,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 2031.09,
+      "eligible_ounce_share": 0.801,
+      "ineligible_nav_share": 0.17,
+      "shares_src": "data",
+      "market_cap_rank": 2
+    },
+    {
+      "ticker": "GMD",
+      "name": "Genesis Minerals",
+      "sleeve": "producer",
+      "weight": 0.08079149107286332,
+      "market_cap_aud_m": 10102.199099999998,
+      "mcap_aud_m": 10102.199099999998,
+      "price_aud": 8.61,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 1173.31,
+      "eligible_ounce_share": 1.0,
+      "ineligible_nav_share": 0.0,
+      "shares_src": "data",
+      "market_cap_rank": 3
+    },
+    {
+      "ticker": "GGP",
+      "name": "Greatland Resources",
+      "sleeve": "producer",
+      "weight": 0.07332643244817151,
+      "market_cap_aud_m": 9168.7653,
+      "mcap_aud_m": 9168.7653,
+      "price_aud": 13.59,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 674.67,
+      "eligible_ounce_share": 1.0,
+      "ineligible_nav_share": 0.0,
+      "shares_src": "data",
+      "market_cap_rank": 4
+    },
+    {
+      "ticker": "CMM",
+      "name": "Capricorn Metals",
+      "sleeve": "producer",
+      "weight": 0.06502588774831054,
+      "market_cap_aud_m": 8130.862000000001,
+      "mcap_aud_m": 8130.862000000001,
+      "price_aud": 17.8,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 456.79,
+      "eligible_ounce_share": 1.0,
+      "ineligible_nav_share": 0.0,
+      "shares_src": "data",
+      "market_cap_rank": 5
+    },
+    {
+      "ticker": "RMS",
+      "name": "Ramelius Resources",
+      "sleeve": "producer",
+      "weight": 0.0602809159310294,
+      "market_cap_aud_m": 7537.5489,
+      "mcap_aud_m": 7537.5489,
+      "price_aud": 3.99,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 1889.11,
+      "eligible_ounce_share": 1.0,
+      "ineligible_nav_share": 0.0,
+      "shares_src": "data",
+      "market_cap_rank": 6
+    },
+    {
+      "ticker": "VAU",
+      "name": "Vault Minerals",
+      "sleeve": "producer",
+      "weight": 0.057668991778947215,
+      "market_cap_aud_m": 7210.952899999999,
+      "mcap_aud_m": 7210.952899999999,
+      "price_aud": 6.97,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 1034.57,
+      "eligible_ounce_share": 0.929,
+      "ineligible_nav_share": 0.07,
+      "shares_src": "data",
+      "market_cap_rank": 7
+    },
+    {
+      "ticker": "RRL",
+      "name": "Regis Resources",
+      "sleeve": "producer",
+      "weight": 0.051788744341064265,
+      "market_cap_aud_m": 6475.6845,
+      "mcap_aud_m": 6475.6845,
+      "price_aud": 8.55,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 757.39,
+      "eligible_ounce_share": 1.0,
+      "ineligible_nav_share": 0.0,
+      "shares_src": "data",
+      "market_cap_rank": 8
+    },
+    {
+      "ticker": "WGX",
+      "name": "Westgold Resources",
+      "sleeve": "producer",
+      "weight": 0.04962622939601264,
+      "market_cap_aud_m": 6205.2828,
+      "mcap_aud_m": 6205.2828,
+      "price_aud": 6.54,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 948.82,
+      "eligible_ounce_share": 1.0,
+      "ineligible_nav_share": 0.0,
+      "shares_src": "data",
+      "market_cap_rank": 9
+    },
+    {
+      "ticker": "OBM",
+      "name": "Ora Banda Mining",
+      "sleeve": "producer",
+      "weight": 0.02443786473196415,
+      "market_cap_aud_m": 3055.7200000000003,
+      "mcap_aud_m": 3055.7200000000003,
+      "price_aud": 1.58,
+      "price_as_of": "2026-08-25",
+      "shares_out_m": 1934.0,
+      "eligible_ounce_share": 1.0,
+      "ineligible_nav_share": 0.0,
+      "shares_src": "data",
+      "market_cap_rank": 10
+    }
+  ],
+  "rejected": [
+    {
+      "ticker": "BGL",
+      "name": "Bellevue Gold",
+      "sleeve": "producer",
+      "market_cap_aud_m": 2549.0286,
+      "market_cap_rank": 11,
+      "reason": "CONSTITUENT LIMIT \u2014 market-cap rank 11 is outside the largest 10 Gate-1-eligible companies"
+    },
+    {
+      "ticker": "CYL",
+      "name": "Catalyst Metals",
+      "sleeve": "producer",
+      "market_cap_aud_m": 1829.8698000000002,
+      "market_cap_rank": 12,
+      "reason": "CONSTITUENT LIMIT \u2014 market-cap rank 12 is outside the largest 10 Gate-1-eligible companies"
+    },
+    {
+      "ticker": "PNR",
+      "name": "Pantoro Gold",
+      "sleeve": "producer",
+      "market_cap_aud_m": 982.0944000000001,
+      "market_cap_rank": 13,
+      "reason": "CONSTITUENT LIMIT \u2014 market-cap rank 13 is outside the largest 10 Gate-1-eligible companies"
+    },
+    {
+      "ticker": "BC8",
+      "name": "Black Cat Syndicate",
+      "sleeve": "near_producer",
+      "market_cap_aud_m": 845.5587999999999,
+      "market_cap_rank": 14,
+      "reason": "CONSTITUENT LIMIT \u2014 market-cap rank 14 is outside the largest 10 Gate-1-eligible companies"
+    },
+    {
+      "ticker": "RXL",
+      "name": "Rox Resources",
+      "sleeve": "developer",
+      "market_cap_aud_m": 829.1741499999999,
+      "market_cap_rank": 15,
+      "reason": "CONSTITUENT LIMIT \u2014 market-cap rank 15 is outside the largest 10 Gate-1-eligible companies"
+    },
+    {
+      "ticker": "AUC",
+      "name": "Ausgold",
+      "sleeve": "developer",
+      "market_cap_aud_m": 799.7989500000001,
+      "market_cap_rank": 16,
+      "reason": "CONSTITUENT LIMIT \u2014 market-cap rank 16 is outside the largest 10 Gate-1-eligible companies"
+    },
+    {
+      "ticker": "AAR",
+      "name": "Astral Resources",
+      "sleeve": "developer",
+      "market_cap_aud_m": 354.80685,
+      "market_cap_rank": 17,
+      "reason": "CONSTITUENT LIMIT \u2014 market-cap rank 17 is outside the largest 10 Gate-1-eligible companies"
+    }
+  ],
+  "outside_shared_candidate_records": {
+    "records": [
+      {
+        "ticker": "MEK",
+        "name": "Meeka Metals",
+        "gate": "Gate 3 Tradability",
+        "reason": "At A$0.10 the 0.5c ASX tick is a 5.0% structural minimum spread \u2014 cannot quote inside the 1.0% producer limit at any volume. Excluded on tick structure, not quality."
+      },
+      {
+        "ticker": "AZY",
+        "name": "Antipa Minerals",
+        "gate": "Gate 2 D1 and D3",
+        "reason": "Minyari Dome is scoping-study stage only (130 koz/yr, A$306m capex, AISC A$1,721). D1 requires PFS minimum. Also fails D3: A$36.5m cash against A$306m capex on a ~A$365m market cap."
+      },
+      {
+        "ticker": "BTR",
+        "name": "Brightstar Resources",
+        "gate": "Insufficient data",
+        "reason": "4 Moz resources, Laverton mill due mid-2027, ~A$350m cap (down 37% YTD). Study stage and funding gap not sourced. Not excluded on merit."
+      },
+      {
+        "ticker": "OGC",
+        "name": "OceanaGold",
+        "gate": "Gate 1 eligible ounce share",
+        "reason": "Haile (US, ~315 koz 2026) and Didipio (Philippines, 80%) dominate; Macraes and Waihi (NZ) are a minority. New Zealand passes Tier A on 3 of 4 tests but offers no eligible listed pure-play."
+      },
+      {
+        "ticker": "RUP",
+        "name": "Rupert Resources",
+        "gate": "Delisted",
+        "reason": "Agnico Eagle arrangement closed 16 Jun 2026, TSX delisting on close. Finland also fails Tier A on 3 of 4."
+      },
+      {
+        "ticker": "NEM",
+        "name": "Newmont",
+        "gate": "Gate 1 eligible ounce share",
+        "reason": "Australian assets a minority of a global portfolio."
+      },
+      {
+        "ticker": "AEM",
+        "name": "Agnico Eagle",
+        "gate": "Gate 1 Tier A",
+        "reason": "Canada fails Tier A on A2 (solvency) and that is the sole basis. \u00a712.2 item 4 CLOSED 19 Aug 2026 by amending A2 rather than by sourcing it, because the sourcing came back the other way: Canadian general government net debt is ~10-13% of GDP \u2014 below Australia's ~19% \u2014 and general government interest is 8.8% of revenue, so Canada PASSED A2 as v1.1 wrote it. A2 v1.2 measures the currency issuer and adds a gross-debt limb at 85% of GDP; Canada fails on gross (105-110%) and on federal interest (10.3% of revenue). This exclusion does not survive the v1.1 rule and the amendment record says so. The Foreign Exchange Control Act 1939-51 requisition precedent is retained as a disclosure and no longer fails A4, which is present-tense as of v1.1."
+      },
+      {
+        "ticker": "PRU/RSG/WAF/EMR",
+        "name": "Perseus / Resolute / West African / Emerald",
+        "gate": "Gate 1 Tier A",
+        "reason": "West Africa, Cambodia. No production in a Tier A jurisdiction."
+      }
+    ],
+    "note": "Carried for universe audit only. These records are outside the shared data/companies.json candidate set and were not tested or excluded by this variant's post-selection rules."
+  },
+  "config_reads_observed": [
+    "adopted",
+    "confidence_weights",
+    "confidence_weights.hedge_horizon_years",
+    "confidence_weights.inferred",
+    "confidence_weights.measured_indicated_non_reserve",
+    "confidence_weights.proven_probable",
+    "constraints",
+    "constraints.max_developer_single_name",
+    "constraints.max_developer_sleeve",
+    "constraints.max_guidance_delivery_name",
+    "constraints.max_single_asset_name",
+    "constraints.max_single_name",
+    "constraints.single_asset_pp_share_threshold",
+    "execution_capital",
+    "execution_capital.incumbent_max_carry_forward_months",
+    "execution_capital.materiality_of_ev",
+    "gate2",
+    "gate2.anchor",
+    "gate2.anchor_inflation_pa",
+    "gate2.anchor_years",
+    "gate2.cost_inflation_pa",
+    "gate2.count_undrawn_facilities",
+    "gate2.developer_max_funding_gap_of_mcap",
+    "gate2.developer_min_study_stage",
+    "gate2.gold_drawdown",
+    "gate2.horizon_years",
+    "gate2.producer_max_recovery_years",
+    "gate2.producer_max_rescue_capital_of_mcap",
+    "gate2.stress_price_basis",
+    "gate2.tax_rate",
+    "gates",
+    "gates.capacity_max_days_advt",
+    "gates.capacity_max_participation",
+    "gates.developer_max_spread_pct",
+    "gates.max_ineligible_nav_share",
+    "gates.max_resource_statement_age_months",
+    "gates.producer_max_spread_pct",
+    "gates.purity_floor_gold_nav_share",
+    "gates.spread_measure",
+    "gates.spread_window",
+    "market_data",
+    "market_data.equity_price_basis",
+    "methodology",
+    "nav_model",
+    "nav_model.built",
+    "nav_model.conservative_deck",
+    "nav_model.decks",
+    "nav_model.delta_bump",
+    "nav_model.discount_rate_real_development",
+    "nav_model.discount_rate_real_producing",
+    "nav_model.non_reserve_conversion",
+    "nav_model.stress_bump",
+    "objective",
+    "objective.beta_target",
+    "reporting",
+    "reporting.numeraire_primary",
+    "reporting.numeraire_secondary",
+    "risk",
+    "risk.beta_estimator",
+    "risk.dimson_lags",
+    "risk.regression_window",
+    "variants",
+    "variants.gate1_cap",
+    "variants.gate1_cap.adoption_date",
+    "variants.gate1_cap.max_constituents",
+    "variants.gate1_cap.methodology",
+    "variants.gate1_cap.weighting",
+    "weighting",
+    "weighting.method",
+    "weighting.tie_method"
+  ],
+  "config_keys_missing": []
+}

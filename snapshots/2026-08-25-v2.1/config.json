@@ -1,0 +1,142 @@
+{
+ "_schema": "SJGV v2.1 parameters. index-methodology.md is binding; current rationale is in docs/. Keys ending in _note or named ref/rule/why are documentation, not parameters.",
+ "methodology": "SJGV v2.1",
+ "adopted": "2026-08-25",
+ "objective": {
+  "beta_target": [1.4, 1.8],
+  "ref": "Methodology §10. Diagnostic only; no risk statistic affects a weight."
+ },
+ "risk": {
+  "beta_estimator": "dimson",
+  "dimson_lags": 1,
+  "regression_window": "2 Y",
+  "ref": "Reporting only. AUD gold is the preferred regressor for AUD-cost companies.",
+  "dimson_note": "The ASX closes before the same-date XAUUSD daily bar. The lagged estimator addresses this non-synchronous trading; a USD fallback is flagged."
+ },
+ "estimation_policy": {
+  "rule": "DERIVE OR FAIL. No field value may be invented.",
+  "adopted": "2026-08-18",
+  "permitted_provenance": {
+   "sourced": "read from a document, which the field cites by key",
+   "derived": "computed from other SOURCED fields by an arithmetic identity or an explicitly stated formula — e.g. inferred = mr_total - M&I, net_debt = debt - cash, or the midpoint of a range the issuer itself published. The inputs must all be sourced and the formula recorded in the note.",
+   "bound": "a conservative limit that runs AGAINST the name, stated as such. Not an estimate of the true value, a value the true one cannot be worse than."
+  },
+  "forbidden": [
+   "cohort or calibrated imputation",
+   "run-rate extrapolation into an undisclosed period",
+   "judgemental allocation of a multi-year programme",
+   "midpoint of an analyst-created range",
+   "a figure without recorded arithmetic"
+  ],
+  "on_absence": "Remain absent; the engine reports, degrades or rejects according to the binding field rule.",
+  "materiality_bar_pp": 0.2,
+  "materiality_note": "tools/sensitivity.py measures whether an unresolved reporting gap could move any final weight by more than 0.2 percentage points."
+ },
+ "confidence_weights": {
+  "proven_probable": 1.0,
+  "measured_indicated_non_reserve": 0.5,
+  "inferred": 0.2,
+  "hedge_horizon_years": 2.0,
+  "ref": "Methodology §6. Policy discounts for category confidence and development distance.",
+  "hedge_horizon_note": "Converts the disclosed 24-month forward-production share into ounces; sold ounces are removed from P&P first."
+ },
+ "weighting": {
+  "method": "descending_linear_rank",
+  "tie_method": "average_occupied_rank_points",
+  "ref": "Methodology §7. Rank the positive claimed-ounce/funded-EV signal; descending linear rank points, not signal magnitudes, set pre-cap weights.",
+  "robustness_note": "Ranks preserve the value ordering without treating small differences in heterogeneous reserve/resource disclosures and point-in-time EV as exact sizing information."
+ },
+ "market_data": {
+  "equity_price_basis": "latest_asx_daily_close",
+  "ref": "Methodology §1. The release price is the latest ASX daily TRADES close returned by TWS; quote fields are retained only as cross-checks."
+ },
+ "gates": {
+  "purity_floor_gold_nav_share": 0.75,
+  "max_ineligible_nav_share": 0.25,
+  "producer_max_spread_pct": 1.0,
+  "developer_max_spread_pct": 4.0,
+  "spread_measure": "median_daily_rth_time_weighted_quoted",
+  "spread_window": "3 M",
+  "capacity_max_days_advt": 5.0,
+  "capacity_max_participation": 0.2,
+  "max_resource_statement_age_months": 18,
+  "ref": "Methodology §§2, 3, 5 and 6.",
+  "capacity_note": "Reported only: target positions are compared with five days at 20% of 90-session average daily traded volume.",
+  "spread_note": "Median daily regular-hours time-weighted quoted spread; p90 breach on a median pass is reported as strained.",
+  "statement_age_note": "Applied to the source behind every counted ledger category."
+ },
+ "gate2": {
+  "gold_drawdown": 0.4,
+  "anchor": "trailing_average",
+  "anchor_years": 3.0,
+  "anchor_inflation_pa": 0.03,
+  "cost_inflation_pa": 0.05,
+  "horizon_years": 2.0,
+  "tax_rate": 0.3,
+  "count_undrawn_facilities": true,
+  "stress_price_basis": "spot",
+  "producer_max_rescue_capital_of_mcap": 0.3,
+  "producer_max_recovery_years": 2.0,
+  "developer_min_study_stage": ["PFS", "DFS"],
+  "developer_max_funding_gap_of_mcap": 0.3,
+  "ref": "Methodology §3; rationale in docs/capital-resilience.md.",
+  "horizon_interval_note": "Test a finite adverse upper edge; otherwise use the sourced lower edge and report at least AMBER.",
+  "unhedged_note": "Stress revenue ignores hedge gains.",
+  "capex_note": "Deduct sourced non-deferrable commitments; do not assume discretionary growth continues.",
+  "anchor_note": "The trailing real anchor is reporting-only; Gate 2 stresses current spot.",
+  "health_note": "GREEN and AMBER qualify. RED exceeds the rescue or recovery boundary and is excluded."
+ },
+ "execution_capital": {
+  "materiality_of_ev": 0.01,
+  "incumbent_max_carry_forward_months": 6,
+  "ref": "Methodology §3.2. Aggregate unfinished approved scopes before materiality; never spend down a carry-forward by assumption."
+ },
+ "constraints": {
+  "max_single_name": 0.15,
+  "max_single_asset_name": 0.075,
+  "max_guidance_delivery_name": 0.05,
+  "single_asset_pp_share_threshold": 0.8,
+  "max_developer_sleeve": 0.15,
+  "max_developer_single_name": 0.05,
+  "ref": "Methodology §8. Caps bound discontinuous permanent-impairment exposure.",
+  "single_asset_note": "Derived from sourced largest_asset_pp_share; absence is UNTESTED, never false.",
+  "guidance_delivery_note": "Ratings are in data/guidance_delivery.json, claim evidence in knowledge/, and rationale in docs/guidance-delivery.md."
+ },
+ "nav_model": {
+  "built": true,
+  "discount_rate_real_producing": 0.05,
+  "discount_rate_real_development": 0.09,
+  "conservative_deck": "trailing_real_reference",
+  "conservative_deck_aud_oz": null,
+  "decks": ["spot", "conservative_long_term"],
+  "non_reserve_conversion": "confidence_weights",
+  "delta_bump": 0.1,
+  "stress_bump": 0.4,
+  "ref": "Methodology §9. Reporting only; no NAV output affects eligibility or weight.",
+  "conservative_deck_note": "The trailing three-year real AUD-gold average is the conservative reporting deck.",
+  "non_reserve_note": "Uses the ledger confidence weights and mines non-reserve material after reserves at the disclosed company production rate and AISC.",
+  "limitations_note": "Gold-only, one production rate and one AISC per company; excludes growth capital and the production it could buy."
+ },
+ "rebalance": {
+  "deep": "annual, aligned to reserve statements",
+  "light": "quarterly, on quarterly-disclosed items only",
+  "event_driven": "corporate actions, jurisdictional events, Gate 1 or Gate 2 breaches — never deferred to the next cycle",
+  "ref": "Methodology §12."
+ },
+ "reporting": {
+  "numeraire_primary": "gold_ounces",
+  "numeraire_secondary": "EUR",
+  "headline_kpi": "aud_per_claimed_ounce",
+  "ref": "Methodology §10. Reporting does not affect weight.",
+  "asymmetry_note": "tools/asymmetry.py reports piecewise beta and confidence intervals; it is not a backtest or weight input."
+ },
+ "variants": {
+  "gate1_cap": {
+   "methodology": "SJGV Gate 1 Cap-Weighted v1.1",
+   "adoption_date": "2026-08-22",
+   "weighting": "full_market_cap",
+   "max_constituents": 10,
+   "ref": "Methodology §14."
+  }
+ }
+}

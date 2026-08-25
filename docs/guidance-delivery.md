@@ -43,10 +43,10 @@ as failure. That conclusion is permitted only after a complete disclosure sweep
 establishes non-publication. A missing local artifact or unresolved acquisition
 route is never charged to the company. Pre-production years do not count.
 
-## v2.0 consequence
+## Continuing portfolio consequence
 
-In the frozen release, BGL, OBM and PNR were excluded from the otherwise live
-book; CYL and WGX were capped at 5%. The rule was therefore economically
+In the frozen v2.1 release, BGL, OBM and PNR were excluded from the otherwise
+live book; CYL and WGX were capped at 5%. The rule was therefore economically
 material. Its effect is visible in the snapshot's rejected list, pre-cap weights
 and cap notes rather than frozen into this rationale as a permanent statistic.
 
