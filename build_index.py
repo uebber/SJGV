@@ -4140,7 +4140,7 @@ def main() -> int:
     # test that PASSED. Runs before the IBKR session so it fails in a second.
     _assert_single_asset_tristate(meta)
 
-    print(f"SJGV {meta['methodology']} — adopted {meta['adopted']}")
+    print(f"{meta['methodology']} — adopted {meta['adopted']}")
     print(f"Data layer sourced {market['_ledger_sourced']}"
           + ("" if market["_ledger_sourced"] == market["_sourced"]
              else f" (market fallbacks {market['_sourced']})"))
