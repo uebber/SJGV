@@ -33,24 +33,34 @@ linear rank weights. It also standardises the equity price input on the latest
 ASX daily close rather than a quote-first fallback ladder. Eligibility, the
 ounce ledger and the portfolio caps are unchanged.
 
-| ASX | v2.0 | v2.1 | Change |
-|---|---:|---:|---:|
-| NST | 14.500% | 15.000% | +0.500 pp |
-| EVN | 5.632% | 2.955% | −2.677 pp |
-| CMM | 9.867% | 5.909% | −3.958 pp |
-| GGP | 7.500% | 7.500% | 0.000 pp |
-| GMD | 11.887% | 14.773% | +2.885 pp |
-| RMS | 11.869% | 15.000% | +3.131 pp |
-| RRL | 12.168% | 15.000% | +2.832 pp |
-| WGX | 5.000% | 5.000% | 0.000 pp |
-| VAU | 11.577% | 8.864% | −2.714 pp |
-| CYL | 5.000% | 5.000% | 0.000 pp |
-| RXL | 5.000% | 5.000% | 0.000 pp |
+To isolate the weighting amendment, both target columns below use the identical
+v2.1 company data and 25 August TWS ASX closes. The v2.0 column is the
+magnitude-proportional method reapplied to those common inputs, not the
+historical 24 August v2.0 release. Rows are ordered by v2.1 target weight, then
+alphabetically for ties.
 
-One-way target turnover is 9.35%, with no entries or exits. This is a
-release-to-release comparison, so it includes both the weighting amendment and
-the change from the 24 August market observations to the 25 August ASX closes.
-No company-data field changed between the snapshots.
+| ASX | v2.0 method | v2.1 method | Change | Gold/EV |
+|---|---:|---:|---:|---:|
+| NST | 14.411% | 15.000% | +0.589 pp | 1,241.3 |
+| RMS | 12.029% | 15.000% | +2.971 pp | 1,036.2 |
+| RRL | 12.181% | 15.000% | +2.819 pp | 1,049.3 |
+| GMD | 11.889% | 14.773% | +2.884 pp | 1,024.1 |
+| VAU | 11.569% | 8.864% | −2.705 pp | 996.5 |
+| GGP | 7.500% | 7.500% | 0.000 pp | 1,007.6 |
+| CMM | 9.863% | 5.909% | −3.954 pp | 849.6 |
+| CYL | 5.000% | 5.000% | 0.000 pp | 1,756.1 |
+| RXL | 5.000% | 5.000% | 0.000 pp | 1,239.3 |
+| WGX | 5.000% | 5.000% | 0.000 pp | 1,443.8 |
+| EVN | 5.557% | 2.955% | −2.603 pp | 478.7 |
+
+`Gold/EV` is confidence-weighted claimed unhedged ounces per A$1 million of
+funded enterprise value, so higher is cheaper. It is one common input to both
+methods, scaled into readable units. Neither frozen snapshot contains a sourced
+earnings or EPS field, so a P/E ratio is omitted rather than retrospectively
+invented.
+
+One-way target turnover caused by the weighting amendment alone is 9.26%, with
+no entries or exits.
 
 ## Reproduction boundary
 
